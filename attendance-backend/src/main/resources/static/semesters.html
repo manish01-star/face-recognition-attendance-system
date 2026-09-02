@@ -1,0 +1,2111 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    ```
+    <title>Semesters | Admin Panel</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Inter, Arial, sans-serif;
+        }
+
+        body {
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+        /* =========================
+       LAYOUT
+    ========================= */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* =========================
+       SIDEBAR
+    ========================= */
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            transition: 0.3s;
+        }
+
+        .brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            font-size: 20px;
+            font-weight: 700;
+            border-bottom: 1px solid #273244;
+        }
+
+        .brand span {
+            color: #60a5fa;
+            margin-right: 8px;
+        }
+
+        .menu {
+            padding: 20px 12px;
+        }
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            padding: 0 12px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 12px 14px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+        /* =========================
+       MAIN
+    ========================= */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
+
+        /* =========================
+       NAVBAR
+    ========================= */
+
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 500;
+        }
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .admin-info {
+            text-align: right;
+        }
+
+        .admin-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .admin-role {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        /* =========================
+       CONTENT
+    ========================= */
+
+        .content {
+            padding: 30px;
+        }
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+        .breadcrumb span {
+            color: #2563eb;
+        }
+
+        /* =========================
+       STATS
+    ========================= */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+        .stat-value {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+        .blue {
+            background: #dbeafe;
+        }
+
+        .green {
+            background: #dcfce7;
+        }
+
+        .gray {
+            background: #f1f5f9;
+        }
+
+        /* =========================
+       CARD
+    ========================= */
+
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+        /* =========================
+       BUTTONS
+    ========================= */
+
+        .btn {
+            border: none;
+            border-radius: 7px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-edit {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+        /* =========================
+       FILTERS
+    ========================= */
+
+        .filters {
+            padding: 18px 20px;
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .search {
+            flex: 1;
+        }
+
+        .input,
+        .select {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            padding: 10px 12px;
+            outline: none;
+            background: white;
+            font-size: 13px;
+        }
+
+        .input:focus,
+        .select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px #dbeafe;
+        }
+
+        .filter-select {
+            width: 220px;
+        }
+
+        /* =========================
+       TABLE
+    ========================= */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        th {
+            background: #f8fafc;
+            text-align: left;
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            padding: 13px 18px;
+            letter-spacing: 0.4px;
+        }
+
+        td {
+            padding: 15px 18px;
+            border-top: 1px solid #eef2f7;
+            font-size: 13px;
+        }
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+        .course-name {
+            font-weight: 600;
+        }
+
+        .course-code {
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+        .semester-number {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 36px;
+            height: 30px;
+            padding: 0 10px;
+            border-radius: 7px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            font-weight: 700;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-active {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-inactive {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .actions {
+            display: flex;
+            gap: 7px;
+        }
+
+        .action-btn {
+            border: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        /* =========================
+       MODAL
+    ========================= */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 550px;
+            background: white;
+            border-radius: 12px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .close {
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+        .modal-body {
+            padding: 22px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 17px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+        }
+
+        .required {
+            color: #dc2626;
+        }
+
+        .modal-footer {
+            padding: 18px 22px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* =========================
+       TOAST
+    ========================= */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            min-width: 280px;
+            max-width: 400px;
+            background: #111827;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 8px;
+            display: none;
+            z-index: 3000;
+            font-size: 13px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .toast.show {
+            display: block;
+        }
+
+        .toast.success {
+            background: #15803d;
+        }
+
+        .toast.error {
+            background: #dc2626;
+        }
+
+        /* =========================
+       LOADER / EMPTY
+    ========================= */
+
+        .loader {
+            text-align: center;
+            padding: 35px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 45px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        /* =========================
+       FOOTER
+    ========================= */
+
+        footer {
+            padding: 20px 30px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+        /* =========================
+       RESPONSIVE
+    ========================= */
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+            .card-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            .filters {
+                flex-direction: column;
+            }
+
+            .filter-select {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 600px) {
+
+            .content {
+                padding: 18px;
+            }
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+            .admin-info {
+                display: none;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+
+            .modal {
+                max-height: 95vh;
+            }
+        }
+    </style>
+    ```
+
+</head>
+
+<body>
+
+    <div class="app">
+
+        ```
+        <!-- =========================
+     SIDEBAR
+========================== -->
+
+        <aside class="sidebar" id="sidebar">
+
+            <div class="brand">
+                <span>◆</span>
+                College Attendance
+            </div>
+
+            <div class="menu">
+
+                <div class="menu-title">
+                    Main
+                </div>
+
+                <a href="dashboard.html">
+                    <span class="menu-icon">▦</span>
+                    Dashboard
+                </a>
+
+                <div class="menu-title">
+                    Management
+                </div>
+
+                <a href="students.html">
+                    <span class="menu-icon">👨‍🎓</span>
+                    Students
+                </a>
+
+                <a href="teachers.html">
+                    <span class="menu-icon">👨‍🏫</span>
+                    Teachers
+                </a>
+
+                <a href="departments.html">
+                    <span class="menu-icon">🏢</span>
+                    Departments
+                </a>
+
+                <a href="courses.html">
+                    <span class="menu-icon">📚</span>
+                    Courses
+                </a>
+
+                <a href="semesters.html" class="active">
+                    <span class="menu-icon">📖</span>
+                    Semesters
+                </a>
+
+                <a href="sections.html">
+                    <span class="menu-icon">§</span>
+                    Sections
+                </a>
+
+                <div class="menu-title">
+                    Attendance
+                </div>
+
+                <a href="attendance.html">
+                    <span class="menu-icon">✓</span>
+                    Attendance
+                </a>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =========================
+     MAIN
+========================== -->
+
+        <main class="main">
+
+            <!-- NAVBAR -->
+
+            <nav class="navbar">
+
+                <div style="display:flex;align-items:center;gap:15px;">
+
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        ☰
+                    </button>
+
+                    <div class="page-title">
+                        Semesters
+                    </div>
+
+                </div>
+
+                <div class="nav-right">
+
+                    <div class="admin-info">
+
+                        <div class="admin-name">
+                            Administrator
+                        </div>
+
+                        <div class="admin-role">
+                            System Admin
+                        </div>
+
+                    </div>
+
+                    <div class="avatar">
+                        A
+                    </div>
+
+                </div>
+
+            </nav>
+
+
+            <!-- CONTENT -->
+
+            <section class="content">
+
+                <div class="breadcrumb">
+                    Admin / <span>Semesters</span>
+                </div>
+
+
+                <!-- =========================
+             STATS
+        ========================== -->
+
+                <div class="stats">
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Total Semesters
+                            </div>
+
+                            <div class="stat-value" id="totalSemesters">
+                                0
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon blue">
+                            📖
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Active Semesters
+                            </div>
+
+                            <div class="stat-value" id="activeSemesters">
+                                0
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon green">
+                            ✓
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Inactive Semesters
+                            </div>
+
+                            <div class="stat-value" id="inactiveSemesters">
+                                0
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon gray">
+                            —
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+             SEMESTER TABLE
+        ========================== -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <div class="card-title">
+                                Semester Management
+                            </div>
+
+                            <div class="card-subtitle">
+                                Create, update and manage course semesters
+                            </div>
+
+                        </div>
+
+                        <button class="btn btn-primary" onclick="openAddModal()">
+                            + Add Semester
+                        </button>
+
+                    </div>
+
+
+                    <!-- FILTERS -->
+
+                    <div class="filters">
+
+                        <div class="search">
+
+                            <input type="text" id="searchInput" class="input"
+                                placeholder="Search by course name, course code or semester..."
+                                oninput="filterSemesters()">
+
+                        </div>
+
+                        <div class="filter-select">
+
+                            <select id="courseFilter" class="select" onchange="filterSemesters()">
+
+                                <option value="ALL">
+                                    All Courses
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="filter-select">
+
+                            <select id="statusFilter" class="select" onchange="filterSemesters()">
+
+                                <option value="ALL">
+                                    All Status
+                                </option>
+
+                                <option value="ACTIVE">
+                                    Active
+                                </option>
+
+                                <option value="INACTIVE">
+                                    Inactive
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TABLE -->
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        #
+                                    </th>
+
+                                    <th>
+                                        Course
+                                    </th>
+
+                                    <th>
+                                        Semester
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="semesterTableBody">
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <footer>
+                © 2026 College Attendance System. All rights reserved.
+            </footer>
+
+        </main>
+        ```
+
+    </div>
+
+    <!-- =========================
+     ADD / EDIT MODAL
+========================= -->
+
+    <div class="modal-overlay" id="semesterModal">
+
+        ```
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div class="modal-title" id="modalTitle">
+                    Add Semester
+                </div>
+
+                <button class="close" onclick="closeModal()">
+                    ×
+                </button>
+
+            </div>
+
+
+            <form id="semesterForm" onsubmit="saveSemester(event)">
+
+                <div class="modal-body">
+
+                    <div class="form-grid">
+
+                        <!-- COURSE -->
+
+                        <div class="form-group full">
+
+                            <label class="form-label">
+
+                                Course
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <select id="courseId" class="select" required>
+
+                                <option value="">
+                                    Select Course
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- SEMESTER NUMBER -->
+
+                        <div class="form-group full">
+
+                            <label class="form-label">
+
+                                Semester Number
+                                <span class="required">*</span>
+
+                            </label>
+
+                            <select id="semesterNumber" class="select" required>
+
+                                <option value="">
+                                    Select Semester
+                                </option>
+
+                                <option value="1">
+                                    Semester 1
+                                </option>
+
+                                <option value="2">
+                                    Semester 2
+                                </option>
+
+                                <option value="3">
+                                    Semester 3
+                                </option>
+
+                                <option value="4">
+                                    Semester 4
+                                </option>
+
+                                <option value="5">
+                                    Semester 5
+                                </option>
+
+                                <option value="6">
+                                    Semester 6
+                                </option>
+
+                                <option value="7">
+                                    Semester 7
+                                </option>
+
+                                <option value="8">
+                                    Semester 8
+                                </option>
+
+                                <option value="9">
+                                    Semester 9
+                                </option>
+
+                                <option value="10">
+                                    Semester 10
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-primary" id="saveBtn">
+                        Save Semester
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+        ```
+
+    </div>
+
+    <!-- =========================
+     TOAST
+========================= -->
+
+    <div class="toast" id="toast">
+    </div>
+
+    <script src="js/auth.js"></script>
+
+    <script>
+
+        /*
+         * Change this if your backend
+         * is running on another host/port.
+         */
+        const API_BASE_URL = "http://localhost:8080";
+
+
+        let semesters = [];
+        let courses = [];
+        let editingSemesterId = null;
+
+
+        // ==========================================
+        // INITIAL LOAD
+        // ==========================================
+
+        document.addEventListener("DOMContentLoaded", async () => {
+
+            await loadCourses();
+            await loadSemesters();
+
+        });
+
+
+        // ==========================================
+        // LOAD COURSES
+        // ==========================================
+
+        async function loadCourses() {
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/admin/courses`
+                    );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to load courses"
+                    );
+                }
+
+                courses = await response.json();
+
+
+                populateCourseDropdown();
+
+
+                populateCourseFilter();
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                showToast(
+                    "Unable to load courses",
+                    "error"
+                );
+            }
+        }
+
+
+        // ==========================================
+        // COURSE DROPDOWN
+        // ==========================================
+
+        function populateCourseDropdown() {
+
+            const select =
+                document.getElementById(
+                    "courseId"
+                );
+
+
+            select.innerHTML = `
+            <option value="">
+                Select Course
+            </option>
+        `;
+
+
+            courses.forEach(course => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = course.id;
+
+                option.textContent =
+                    `${course.name} (${course.code})`;
+
+                select.appendChild(option);
+
+            });
+        }
+
+
+        // ==========================================
+        // COURSE FILTER
+        // ==========================================
+
+        function populateCourseFilter() {
+
+            const select =
+                document.getElementById(
+                    "courseFilter"
+                );
+
+
+            select.innerHTML = `
+            <option value="ALL">
+                All Courses
+            </option>
+        `;
+
+
+            courses.forEach(course => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = course.id;
+
+                option.textContent =
+                    `${course.name} (${course.code})`;
+
+                select.appendChild(option);
+
+            });
+        }
+
+
+        // ==========================================
+        // LOAD SEMESTERS
+        // ==========================================
+
+        async function loadSemesters() {
+
+            const tbody =
+                document.getElementById(
+                    "semesterTableBody"
+                );
+
+
+            tbody.innerHTML = `
+            <tr>
+                <td colspan="5">
+                    <div class="loader">
+                        Loading semesters...
+                    </div>
+                </td>
+            </tr>
+        `;
+
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/admin/semesters`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to load semesters"
+                    );
+                }
+
+
+                semesters =
+                    await response.json();
+
+
+                updateStats();
+
+                renderSemesters(semesters);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        <div class="empty">
+                            Failed to load semesters.
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+
+                showToast(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        // ==========================================
+        // GET COURSE
+        // ==========================================
+
+        function getCourse(courseId) {
+
+            return courses.find(
+                course =>
+                    Number(course.id) ===
+                    Number(courseId)
+            );
+        }
+
+
+        // ==========================================
+        // GET COURSE NAME
+        // ==========================================
+
+        function getCourseName(courseId) {
+
+            const course =
+                getCourse(courseId);
+
+
+            if (!course) {
+                return "-";
+            }
+
+
+            return course.name || "-";
+        }
+
+
+        // ==========================================
+        // RENDER SEMESTERS
+        // ==========================================
+
+        function renderSemesters(data) {
+
+            const tbody =
+                document.getElementById(
+                    "semesterTableBody"
+                );
+
+
+            if (!data.length) {
+
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="5">
+                        <div class="empty">
+                            No semesters found.
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+                return;
+            }
+
+
+            tbody.innerHTML =
+                data.map(
+                    (semester, index) => {
+
+                        const course =
+                            getCourse(
+                                semester.courseId
+                            );
+
+
+                        const statusClass =
+                            semester.status === "ACTIVE"
+                                ? "badge-active"
+                                : "badge-inactive";
+
+
+                        return `
+                        <tr>
+
+                            <td>
+                                ${index + 1}
+                            </td>
+
+
+                            <td>
+
+                                <div class="course-name">
+                                    ${escapeHtml(
+                            course
+                                ? course.name
+                                : "Unknown Course"
+                        )}
+                                </div>
+
+                                <div class="course-code">
+                                    Code:
+                                    ${escapeHtml(
+                            course
+                                ? course.code
+                                : "-"
+                        )}
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="semester-number">
+                                    Semester
+                                    ${escapeHtml(
+                            semester.semesterNumber
+                        )}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="badge ${statusClass}">
+                                    ${escapeHtml(
+                            semester.status || "-"
+                        )}
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <button
+                                        class="action-btn btn-edit"
+                                        onclick="editSemester(${semester.id})">
+                                        Edit
+                                    </button>
+
+                                    ${semester.status === "ACTIVE"
+                                ?
+                                `
+                                        <button
+                                            class="action-btn btn-danger"
+                                            onclick="deactivateSemester(${semester.id})">
+                                            Deactivate
+                                        </button>
+                                        `
+                                :
+                                ""
+                            }
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    `;
+                    }
+                ).join("");
+        }
+
+
+        // ==========================================
+        // FILTER
+        // ==========================================
+
+        function filterSemesters() {
+
+            const search =
+                document
+                    .getElementById("searchInput")
+                    .value
+                    .toLowerCase()
+                    .trim();
+
+
+            const courseFilter =
+                document.getElementById(
+                    "courseFilter"
+                ).value;
+
+
+            const statusFilter =
+                document.getElementById(
+                    "statusFilter"
+                ).value;
+
+
+            const filtered =
+                semesters.filter(semester => {
+
+                    const course =
+                        getCourse(
+                            semester.courseId
+                        );
+
+
+                    const courseName =
+                        course
+                            ? course.name || ""
+                            : "";
+
+
+                    const courseCode =
+                        course
+                            ? course.code || ""
+                            : "";
+
+
+                    const semesterNumber =
+                        semester.semesterNumber
+                        || "";
+
+
+                    const searchable =
+                        `
+                    ${courseName}
+                    ${courseCode}
+                    ${semesterNumber}
+                    semester
+                    `.toLowerCase();
+
+
+                    const matchesSearch =
+                        searchable.includes(
+                            search
+                        );
+
+
+                    const matchesCourse =
+                        courseFilter === "ALL"
+                        ||
+                        Number(
+                            semester.courseId
+                        ) === Number(
+                            courseFilter
+                        );
+
+
+                    const matchesStatus =
+                        statusFilter === "ALL"
+                        ||
+                        semester.status === statusFilter;
+
+
+                    return (
+                        matchesSearch
+                        &&
+                        matchesCourse
+                        &&
+                        matchesStatus
+                    );
+
+                });
+
+
+            renderSemesters(filtered);
+        }
+
+
+        // ==========================================
+        // STATS
+        // ==========================================
+
+        function updateStats() {
+
+            const total =
+                semesters.length;
+
+
+            const active =
+                semesters.filter(
+                    semester =>
+                        semester.status === "ACTIVE"
+                ).length;
+
+
+            const inactive =
+                semesters.filter(
+                    semester =>
+                        semester.status === "INACTIVE"
+                ).length;
+
+
+            document.getElementById(
+                "totalSemesters"
+            ).textContent = total;
+
+
+            document.getElementById(
+                "activeSemesters"
+            ).textContent = active;
+
+
+            document.getElementById(
+                "inactiveSemesters"
+            ).textContent = inactive;
+        }
+
+
+        // ==========================================
+        // OPEN ADD MODAL
+        // ==========================================
+
+        function openAddModal() {
+
+            editingSemesterId = null;
+
+
+            document.getElementById(
+                "modalTitle"
+            ).textContent =
+                "Add Semester";
+
+
+            document.getElementById(
+                "saveBtn"
+            ).textContent =
+                "Save Semester";
+
+
+            document
+                .getElementById("semesterForm")
+                .reset();
+
+
+            document
+                .getElementById("semesterModal")
+                .classList.add("show");
+        }
+
+
+        // ==========================================
+        // EDIT SEMESTER
+        // ==========================================
+
+        function editSemester(id) {
+
+            const semester =
+                semesters.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
+
+
+            if (!semester) {
+                return;
+            }
+
+
+            editingSemesterId =
+                id;
+
+
+            document.getElementById(
+                "modalTitle"
+            ).textContent =
+                "Edit Semester";
+
+
+            document.getElementById(
+                "saveBtn"
+            ).textContent =
+                "Update Semester";
+
+
+            document.getElementById(
+                "courseId"
+            ).value =
+                semester.courseId || "";
+
+
+            document.getElementById(
+                "semesterNumber"
+            ).value =
+                semester.semesterNumber || "";
+
+
+            document
+                .getElementById("semesterModal")
+                .classList.add("show");
+        }
+
+
+        // ==========================================
+        // SAVE / UPDATE
+        // ==========================================
+
+        async function saveSemester(event) {
+
+            event.preventDefault();
+
+
+            const saveBtn =
+                document.getElementById(
+                    "saveBtn"
+                );
+
+
+            const courseId =
+                document.getElementById(
+                    "courseId"
+                ).value;
+
+
+            const semesterNumber =
+                document.getElementById(
+                    "semesterNumber"
+                ).value;
+
+
+            if (!courseId) {
+
+                showToast(
+                    "Please select a course",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!semesterNumber) {
+
+                showToast(
+                    "Please select semester number",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const request = {
+
+                courseId:
+                    Number(courseId),
+
+                semesterNumber:
+                    Number(semesterNumber)
+
+            };
+
+
+            try {
+
+                saveBtn.disabled = true;
+
+
+                saveBtn.textContent =
+                    editingSemesterId
+                        ? "Updating..."
+                        : "Saving...";
+
+
+                let url =
+                    `${API_BASE_URL}/api/admin/semesters`;
+
+
+                let method = "POST";
+
+
+                if (editingSemesterId) {
+
+                    url =
+                        `${API_BASE_URL}/api/admin/semesters/${editingSemesterId}`;
+
+                    method = "PUT";
+                }
+
+
+                const response =
+                    await apiFetch(
+                        url,
+                        {
+                            method: method,
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(request)
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    let message =
+                        "Unable to save semester";
+
+
+                    try {
+
+                        const error =
+                            await response.json();
+
+
+                        message =
+                            error.message
+                            ||
+                            error.error
+                            ||
+                            message;
+
+
+                    } catch (e) {
+
+                        // Ignore invalid JSON
+
+                    }
+
+
+                    throw new Error(
+                        message
+                    );
+                }
+
+
+                await response.json();
+
+
+                const wasEditing =
+                    !!editingSemesterId;
+
+
+                closeModal();
+
+
+                await loadSemesters();
+
+
+                showToast(
+                    wasEditing
+                        ? "Semester updated successfully"
+                        : "Semester created successfully",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                showToast(
+                    error.message,
+                    "error"
+                );
+
+
+            } finally {
+
+                saveBtn.disabled = false;
+
+
+                saveBtn.textContent =
+                    editingSemesterId
+                        ? "Update Semester"
+                        : "Save Semester";
+            }
+        }
+
+
+        // ==========================================
+        // DEACTIVATE
+        // ==========================================
+
+        async function deactivateSemester(id) {
+
+            const semester =
+                semesters.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
+
+
+            if (!semester) {
+                return;
+            }
+
+
+            const course =
+                getCourse(
+                    semester.courseId
+                );
+
+
+            const courseName =
+                course
+                    ? course.name
+                    : "this course";
+
+
+            const confirmed =
+                confirm(
+                    `Are you sure you want to deactivate Semester ${semester.semesterNumber} of ${courseName}?`
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/admin/semesters/${id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Failed to deactivate semester"
+                    );
+                }
+
+
+                await loadSemesters();
+
+
+                showToast(
+                    "Semester deactivated successfully",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(error);
+
+
+                showToast(
+                    error.message,
+                    "error"
+                );
+            }
+        }
+
+
+        // ==========================================
+        // CLOSE MODAL
+        // ==========================================
+
+        function closeModal() {
+
+            document
+                .getElementById("semesterModal")
+                .classList.remove("show");
+        }
+
+
+        // ==========================================
+        // SIDEBAR MOBILE
+        // ==========================================
+
+        function toggleSidebar() {
+
+            document
+                .getElementById("sidebar")
+                .classList.toggle("open");
+        }
+
+
+        // ==========================================
+        // TOAST
+        // ==========================================
+
+        function showToast(
+            message,
+            type = "success"
+        ) {
+
+            const toast =
+                document.getElementById(
+                    "toast"
+                );
+
+
+            toast.textContent =
+                message;
+
+
+            toast.className =
+                `toast show ${type}`;
+
+
+            setTimeout(() => {
+
+                toast.classList.remove(
+                    "show"
+                );
+
+            }, 3000);
+        }
+
+
+        // ==========================================
+        // HTML ESCAPE
+        // ==========================================
+
+        function escapeHtml(value) {
+
+            return String(value)
+                .replaceAll(
+                    "&",
+                    "&amp;"
+                )
+                .replaceAll(
+                    "<",
+                    "&lt;"
+                )
+                .replaceAll(
+                    ">",
+                    "&gt;"
+                )
+                .replaceAll(
+                    '"',
+                    "&quot;"
+                )
+                .replaceAll(
+                    "'",
+                    "&#039;"
+                );
+        }
+
+
+        // ==========================================
+        // CLOSE MODAL OUTSIDE
+        // ==========================================
+
+        document
+            .getElementById("semesterModal")
+            .addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        event.target === this
+                    ) {
+
+                        closeModal();
+                    }
+                }
+            );
+
+    </script>
+
+</body>
+
+</html>

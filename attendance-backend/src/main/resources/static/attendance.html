@@ -1,0 +1,4568 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Attendance Management | College Attendance</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            background: #f5f7fb;
+            color: #1f2937;
+            font-family: Inter, system-ui, -apple-system,
+                BlinkMacSystemFont, "Segoe UI", sans-serif;
+        }
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+            min-height: 70px;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .brand {
+            display: inline-flex;
+            align-items: center;
+            text-decoration: none;
+            color: #111827;
+            font-size: 21px;
+            font-weight: 700;
+        }
+
+        .brand-icon {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+            border-radius: 11px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background: #111827;
+            color: white;
+        }
+
+        /* =====================================================
+           PAGE
+        ===================================================== */
+
+        .page-wrapper {
+            padding: 35px 15px 60px;
+        }
+
+        .page-title {
+            margin: 0;
+            font-size: 30px;
+            font-weight: 700;
+        }
+
+        .page-subtitle {
+            margin-top: 6px;
+            color: #6b7280;
+        }
+
+        /* =====================================================
+           CARDS
+        ===================================================== */
+
+        .dashboard-card {
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            box-shadow: 0 6px 25px rgba(0, 0, 0, .035);
+        }
+
+        /* =====================================================
+           SUMMARY
+        ===================================================== */
+
+        .summary-card {
+            padding: 20px;
+            height: 100%;
+        }
+
+        .summary-icon {
+            width: 43px;
+            height: 43px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        .summary-label {
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        .summary-value {
+            margin-top: 3px;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .summary-subtext {
+            margin-top: 4px;
+            color: #9ca3af;
+            font-size: 11px;
+        }
+
+        .icon-present {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .icon-absent {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .icon-holiday {
+            background: #f3e8df;
+            color: #8b5e3c;
+        }
+
+        .icon-working {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .icon-hours {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        /* =====================================================
+           FILTER CARD
+        ===================================================== */
+
+        .filter-card {
+            padding: 22px;
+            margin-top: 25px;
+        }
+
+        .filter-title {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 3px;
+        }
+
+        .filter-subtitle {
+            color: #6b7280;
+            font-size: 12px;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 7px;
+        }
+
+        .form-control,
+        .form-select {
+            height: 46px;
+            border-radius: 10px;
+            border: 1px solid #d1d5db;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #6b7280;
+            box-shadow: 0 0 0 3px rgba(107, 114, 128, .12);
+        }
+
+        /* =====================================================
+           TYPE BUTTONS
+        ===================================================== */
+
+        .type-buttons {
+            display: flex;
+            gap: 7px;
+            padding: 4px;
+            background: #f3f4f6;
+            border-radius: 11px;
+            height: 46px;
+        }
+
+        .type-btn {
+            flex: 1;
+            border: none;
+            border-radius: 8px;
+            background: transparent;
+            color: #6b7280;
+            font-size: 13px;
+            font-weight: 600;
+            transition: .15s ease;
+        }
+
+        .type-btn:hover {
+            color: #111827;
+        }
+
+        .type-btn.active {
+            background: #111827;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+        }
+
+        /* =====================================================
+           PERSON SELECTOR
+        ===================================================== */
+
+        .person-selector {
+            position: relative;
+        }
+
+        .search-wrapper {
+            position: relative;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            z-index: 2;
+        }
+
+        #personSearch {
+            padding-left: 42px;
+        }
+
+        .person-results {
+            margin-top: 8px;
+            max-height: 330px;
+            overflow-y: auto;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            background: #ffffff;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
+        }
+
+        .person-result {
+            padding: 13px 15px;
+            border-bottom: 1px solid #f1f3f5;
+            cursor: pointer;
+            transition: .12s ease;
+        }
+
+        .person-result:last-child {
+            border-bottom: none;
+        }
+
+        .person-result:hover {
+            background: #f9fafb;
+        }
+
+        .person-result-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .person-main {
+            display: flex;
+            align-items: center;
+            gap: 11px;
+            min-width: 0;
+        }
+
+        .person-avatar {
+            width: 38px;
+            height: 38px;
+            min-width: 38px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .avatar-student {
+            background: #e0e7ff;
+            color: #4338ca;
+        }
+
+        .avatar-staff {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .person-name {
+            font-size: 13px;
+            font-weight: 700;
+            color: #111827;
+        }
+
+        .person-id {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 2px;
+        }
+
+        .person-type {
+            font-size: 10px;
+            font-weight: 700;
+            padding: 4px 8px;
+            border-radius: 20px;
+            white-space: nowrap;
+        }
+
+        .type-student {
+            background: #eef2ff;
+            color: #4338ca;
+        }
+
+        .type-staff {
+            background: #ecfdf5;
+            color: #15803d;
+        }
+
+        .person-meta {
+            display: flex;
+            gap: 15px;
+            margin-left: 49px;
+            margin-top: 6px;
+            font-size: 10px;
+            color: #6b7280;
+            flex-wrap: wrap;
+        }
+
+        .person-meta span {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .results-header {
+            padding: 10px 15px;
+            background: #f9fafb;
+            border-bottom: 1px solid #e5e7eb;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .no-results {
+            padding: 30px 15px;
+            text-align: center;
+            color: #9ca3af;
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           SELECTED PERSON
+        ===================================================== */
+
+        .selected-person-card {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            border: 1px solid #dbeafe;
+            background: #f8fbff;
+            border-radius: 12px;
+        }
+
+        .selected-person-card.show {
+            display: block;
+        }
+
+        .selected-person {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .selected-avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .selected-name {
+            font-size: 14px;
+            font-weight: 700;
+        }
+
+        .selected-details {
+            margin-top: 3px;
+            color: #6b7280;
+            font-size: 11px;
+        }
+
+        .remove-selected {
+            margin-left: auto;
+            width: 32px;
+            height: 32px;
+            border: none;
+            border-radius: 8px;
+            background: #ffffff;
+            color: #6b7280;
+        }
+
+        .remove-selected:hover {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        /* =====================================================
+           LOAD BUTTON
+        ===================================================== */
+
+        .btn-load {
+            height: 46px;
+            border-radius: 10px;
+            font-weight: 600;
+            background: #111827;
+            color: white;
+            border: none;
+        }
+
+        .btn-load:hover {
+            background: #000000;
+            color: white;
+        }
+
+        .btn-load:disabled {
+            opacity: .5;
+            cursor: not-allowed;
+        }
+
+        /* =====================================================
+           CALENDAR CARD
+        ===================================================== */
+
+        .calendar-card {
+            margin-top: 25px;
+            overflow: hidden;
+        }
+
+        .calendar-header {
+            padding: 20px 22px;
+            border-bottom: 1px solid #eef0f3;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .calendar-title {
+            margin: 0;
+            font-size: 19px;
+            font-weight: 700;
+        }
+
+        .calendar-subtitle {
+            color: #6b7280;
+            font-size: 13px;
+            margin-top: 3px;
+        }
+
+        .month-controls {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .month-controls button {
+            width: 40px;
+            height: 40px;
+            border-radius: 9px;
+            border: 1px solid #d1d5db;
+            background: white;
+        }
+
+        .month-controls button:hover {
+            background: #f9fafb;
+        }
+
+        .month-name {
+            min-width: 150px;
+            text-align: center;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* =====================================================
+           CALENDAR
+        ===================================================== */
+
+        .calendar-wrapper {
+            padding: 20px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            border-top: 1px solid #e5e7eb;
+            border-left: 1px solid #e5e7eb;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .weekday {
+            min-height: 45px;
+            padding: 12px 8px;
+            background: #f9fafb;
+            border-right: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            text-align: center;
+            color: #6b7280;
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .day {
+            min-height: 125px;
+            padding: 9px;
+            background: #ffffff;
+            border-right: 1px solid #e5e7eb;
+            border-bottom: 1px solid #e5e7eb;
+            cursor: pointer;
+            transition: .15s ease;
+            position: relative;
+        }
+
+        .day:hover {
+            transform: translateY(-1px);
+            box-shadow: inset 0 0 0 1px #d1d5db;
+            z-index: 2;
+        }
+
+        .day.empty {
+            background: #fafafa;
+            cursor: default;
+        }
+
+        .day-number {
+            width: 29px;
+            height: 29px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .day.today .day-number {
+            background: #111827;
+            color: white;
+        }
+
+        .day-status {
+            margin-top: 11px;
+            border-radius: 8px;
+            padding: 7px 6px;
+            font-size: 10px;
+            font-weight: 700;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .day.present {
+            background: #f0fdf4;
+        }
+
+        .day.present .day-status {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .day.absent {
+            background: #fff7f7;
+        }
+
+        .day.absent .day-status {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .day.incomplete {
+            background: #fffbeb;
+        }
+
+        .day.incomplete .day-status {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .day.holiday {
+            background: #fbf7f3;
+        }
+
+        .day.holiday .day-status {
+            background: #eadbcf;
+            color: #795548;
+        }
+
+        .day.future {
+            background: #fafafa;
+            color: #9ca3af;
+        }
+
+        .day.future .day-status {
+            background: #f3f4f6;
+            color: #9ca3af;
+        }
+
+        .day-time {
+            margin-top: 4px;
+            font-size: 9px;
+            color: #6b7280;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .day-hours {
+            margin-top: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 3px;
+            font-size: 10px;
+            font-weight: 700;
+            color: #374151;
+        }
+
+        .day-hours i {
+            font-size: 9px;
+        }
+
+        .required-hours {
+            font-size: 9px;
+            color: #9ca3af;
+            text-align: center;
+            margin-top: 2px;
+        }
+
+        /* =====================================================
+           LEGEND
+        ===================================================== */
+
+        .legend {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px;
+            padding: 18px 20px;
+            border-top: 1px solid #eef0f3;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #6b7280;
+            font-size: 12px;
+        }
+
+        .legend-dot {
+            width: 11px;
+            height: 11px;
+            border-radius: 50%;
+        }
+
+        .legend-present {
+            background: #22c55e;
+        }
+
+        .legend-absent {
+            background: #ef4444;
+        }
+
+        .legend-incomplete {
+            background: #f59e0b;
+        }
+
+        .legend-holiday {
+            background: #8b5e3c;
+        }
+
+        .legend-future {
+            background: #d1d5db;
+        }
+
+        /* =====================================================
+           EMPTY STATE
+        ===================================================== */
+
+        .empty-state {
+            padding: 55px 20px;
+            text-align: center;
+            color: #6b7280;
+        }
+
+        .empty-state i {
+            display: block;
+            font-size: 45px;
+            margin-bottom: 12px;
+            color: #9ca3af;
+        }
+
+        .empty-state-title {
+            color: #374151;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .detail-label {
+            color: #6b7280;
+            font-size: 13px;
+        }
+
+        .detail-value {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .detail-row {
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .badge-present {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .badge-absent {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+        .badge-incomplete {
+            background: #fef3c7;
+            color: #b45309;
+        }
+
+        .badge-holiday {
+            background: #eadbcf;
+            color: #795548;
+        }
+
+        .hours-highlight {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 12px;
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+        }
+
+        .hours-main {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .hours-required {
+            color: #6b7280;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .hours-progress {
+            height: 7px;
+            margin-top: 10px;
+            border-radius: 10px;
+            background: #e5e7eb;
+            overflow: hidden;
+        }
+
+        .hours-progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            background: #22c55e;
+        }
+
+        .hours-progress-bar.warning {
+            background: #f59e0b;
+        }
+
+        .loading {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        /* =====================================================
+           MOBILE
+        ===================================================== */
+
+        @media (max-width: 767px) {
+
+            .page-wrapper {
+                padding: 25px 12px 40px;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .calendar-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .month-controls {
+                width: 100%;
+                justify-content: space-between;
+            }
+
+            .month-name {
+                flex: 1;
+            }
+
+            .calendar-wrapper {
+                padding: 10px;
+                overflow-x: auto;
+            }
+
+            .calendar-grid {
+                min-width: 720px;
+            }
+
+            .legend {
+                gap: 10px;
+            }
+
+            .person-meta {
+                flex-wrap: wrap;
+                gap: 5px 12px;
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================================
+     NAVBAR
+========================================================= -->
+
+    <nav class="navbar">
+
+        <div class="container">
+
+            <a href="#" class="brand">
+
+                <span class="brand-icon">
+                    <i class="bi bi-calendar-check"></i>
+                </span>
+
+                College Attendance
+
+            </a>
+
+        </div>
+
+    </nav>
+
+
+    <!-- =========================================================
+     PAGE
+========================================================= -->
+
+    <div class="container page-wrapper">
+
+
+        <!-- HEADER -->
+
+        <div>
+
+            <h1 class="page-title">
+                Attendance Management
+            </h1>
+
+            <p class="page-subtitle">
+                Monitor student and staff attendance, working hours and daily status.
+            </p>
+
+        </div>
+
+
+        <!-- =====================================================
+         SUMMARY
+    ====================================================== -->
+
+        <div class="row g-3 mt-2">
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="dashboard-card summary-card">
+
+                    <div class="summary-icon icon-working">
+                        <i class="bi bi-calendar-week"></i>
+                    </div>
+
+                    <div class="summary-label">
+                        Working Days
+                    </div>
+
+                    <div id="workingDays" class="summary-value">
+                        0
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="dashboard-card summary-card">
+
+                    <div class="summary-icon icon-present">
+                        <i class="bi bi-check-circle"></i>
+                    </div>
+
+                    <div class="summary-label">
+                        Present
+                    </div>
+
+                    <div id="presentDays" class="summary-value">
+                        0
+                    </div>
+
+                    <div class="summary-subtext">
+                        6+ hours completed
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="dashboard-card summary-card">
+
+                    <div class="summary-icon icon-absent">
+                        <i class="bi bi-x-circle"></i>
+                    </div>
+
+                    <div class="summary-label">
+                        Absent
+                    </div>
+
+                    <div id="absentDays" class="summary-value">
+                        0
+                    </div>
+
+                    <div class="summary-subtext">
+                        Includes incomplete days
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="dashboard-card summary-card">
+
+                    <div class="summary-icon icon-holiday">
+                        <i class="bi bi-cup-hot"></i>
+                    </div>
+
+                    <div class="summary-label">
+                        Holidays
+                    </div>
+
+                    <div id="holidayDays" class="summary-value">
+                        0
+                    </div>
+
+                    <div class="summary-subtext">
+                        Saturday & Sunday
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="col-6 col-lg-3">
+
+                <div class="dashboard-card summary-card">
+
+                    <div class="summary-icon icon-hours">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+
+                    <div class="summary-label">
+                        Total Working Hours
+                    </div>
+
+                    <div id="totalWorkingHours" class="summary-value">
+                        0h 0m
+                    </div>
+
+                    <div class="summary-subtext">
+                        Current month
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+         DYNAMIC PERSON FILTER
+    ====================================================== -->
+
+        <div class="dashboard-card filter-card">
+
+            <div class="filter-title">
+                Select Student / Staff
+            </div>
+
+            <div class="filter-subtitle">
+                Search and select the person whose attendance you want to view.
+            </div>
+
+
+            <div class="row g-3 align-items-end">
+
+
+                <!-- STUDENT / STAFF -->
+
+                <div class="col-lg-3">
+
+                    <label class="form-label">
+                        User Type
+                    </label>
+
+                    <div class="type-buttons">
+
+                        <button type="button" class="type-btn active" data-type="ALL">
+
+                            All
+
+                        </button>
+
+                        <button type="button" class="type-btn" data-type="STUDENT">
+
+                            Student
+
+                        </button>
+
+                        <button type="button" class="type-btn" data-type="STAFF">
+
+                            Staff
+
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- COURSE -->
+
+                <div class="col-lg-2">
+
+                    <label for="courseFilter" class="form-label">
+
+                        Course
+
+                    </label>
+
+                    <select id="courseFilter" class="form-select">
+
+                        <option value="ALL">
+                            All Courses
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- SEMESTER -->
+
+                <div class="col-lg-2">
+
+                    <label for="semesterFilter" class="form-label">
+
+                        Semester
+
+                    </label>
+
+                    <select id="semesterFilter" class="form-select">
+
+                        <option value="ALL">
+                            All Semesters
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- MONTH -->
+
+                <div class="col-lg-2">
+
+                    <label for="monthPicker" class="form-label">
+
+                        Month
+
+                    </label>
+
+                    <input type="month" id="monthPicker" class="form-control">
+
+                </div>
+
+
+                <!-- LOAD -->
+
+                <div class="col-lg-3">
+
+                    <button id="loadBtn" class="btn btn-load w-100" disabled>
+
+                        <i class="bi bi-search me-1"></i>
+
+                        Load Attendance
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+             SEARCH
+        ================================================== -->
+
+            <div class="mt-3">
+
+                <label for="personSearch" class="form-label">
+
+                    Search Person
+
+                </label>
+
+
+                <div class="search-wrapper">
+
+                    <i class="bi bi-search search-icon"></i>
+
+                    <input type="text" id="personSearch" class="form-control"
+                        placeholder="Search by name, User ID, roll number or employee code...">
+
+                </div>
+
+
+                <!-- RESULTS -->
+
+                <div id="personResults" class="person-results">
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+             SELECTED PERSON
+        ================================================== -->
+
+            <div id="selectedPersonCard" class="selected-person-card">
+
+            </div>
+
+        </div>
+
+
+        <!-- =====================================================
+         CALENDAR
+    ====================================================== -->
+
+        <div class="dashboard-card calendar-card">
+
+
+            <div class="calendar-header">
+
+
+                <div>
+
+                    <h5 id="calendarStudent" class="calendar-title">
+
+                        Attendance Calendar
+
+                    </h5>
+
+                    <div class="calendar-subtitle">
+
+                        Required working hours:
+                        <strong>6 hours/day</strong>.
+                        Less than 6 hours or missing checkout is incomplete.
+
+                    </div>
+
+                </div>
+
+
+                <div class="month-controls">
+
+
+                    <button id="previousMonth" title="Previous Month">
+
+                        <i class="bi bi-chevron-left"></i>
+
+                    </button>
+
+
+                    <div id="monthName" class="month-name">
+
+                        Month
+
+                    </div>
+
+
+                    <button id="nextMonth" title="Next Month">
+
+                        <i class="bi bi-chevron-right"></i>
+
+                    </button>
+
+                </div>
+
+            </div>
+
+
+            <div id="calendarContainer">
+
+                <div class="empty-state">
+
+                    <i class="bi bi-person-check"></i>
+
+                    <div class="empty-state-title">
+                        Select a student or staff member
+                    </div>
+
+                    <div>
+                        Search and select a person above to view attendance.
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- LEGEND -->
+
+            <div class="legend">
+
+                <div class="legend-item">
+                    <span class="legend-dot legend-present"></span>
+                    Present
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-dot legend-absent"></span>
+                    Absent
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-dot legend-incomplete"></span>
+                    Incomplete / Short Hours
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-dot legend-holiday"></span>
+                    Holiday
+                </div>
+
+                <div class="legend-item">
+                    <span class="legend-dot legend-future"></span>
+                    Future
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+     ATTENDANCE DETAIL MODAL
+========================================================= -->
+
+    <div class="modal fade" id="attendanceModal" tabindex="-1">
+
+        <div class="modal-dialog modal-dialog-centered">
+
+            <div class="modal-content border-0 rounded-4">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        <i class="bi bi-calendar-event me-2"></i>
+
+                        Attendance Details
+
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div id="modalBody" class="modal-body">
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="js/auth.js"></script>
+
+    <script>
+
+        /* =========================================================
+           CONFIG
+        ========================================================= */
+
+        const REQUIRED_WORKING_HOURS = 6;
+
+        const API_BASE_URL = "http://localhost:8080";
+
+
+        /* =========================================================
+           STATE
+        ========================================================= */
+
+        let users = [];
+
+        let selectedUser = null;
+
+        let selectedType = "ALL";
+
+        let attendanceData = [];
+
+        let attendanceMap = new Map();
+
+        let currentDate = new Date();
+
+
+        /* =========================================================
+           DOM
+        ========================================================= */
+
+        const personSearch =
+            document.getElementById("personSearch");
+
+        const personResults =
+            document.getElementById("personResults");
+
+        const courseFilter =
+            document.getElementById("courseFilter");
+
+        const semesterFilter =
+            document.getElementById("semesterFilter");
+
+        const loadBtn =
+            document.getElementById("loadBtn");
+
+        const selectedPersonCard =
+            document.getElementById("selectedPersonCard");
+
+        const monthPicker =
+            document.getElementById("monthPicker");
+
+        const calendarContainer =
+            document.getElementById("calendarContainer");
+
+        const monthName =
+            document.getElementById("monthName");
+
+        const calendarStudent =
+            document.getElementById("calendarStudent");
+
+
+        /* =========================================================
+           INITIALIZATION
+        ========================================================= */
+
+        document.addEventListener(
+            "DOMContentLoaded",
+            initialize
+        );
+
+
+        function initialize() {
+
+            initializeMonth();
+
+            loadUsers();
+
+        }
+
+
+        /* =========================================================
+           LOAD USERS FROM API
+        ========================================================= */
+
+        async function loadUsers() {
+
+            personResults.innerHTML = `
+
+        <div class="loading">
+
+            <div
+                class="spinner-border spinner-border-sm text-dark"
+                role="status">
+            </div>
+
+            <div class="mt-2 text-muted">
+                Loading users...
+            </div>
+
+        </div>
+
+    `;
+
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/admin/attendance/users`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Accept": "*/*"
+                            }
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    let message =
+                        "Unable to load users.";
+
+
+                    try {
+
+                        const error =
+                            await response.json();
+
+                        message =
+                            error.message ||
+                            error.error ||
+                            message;
+
+                    } catch (e) { }
+
+
+                    throw new Error(message);
+
+                }
+
+
+                const apiUsers =
+                    await response.json();
+
+
+                /*
+                 * API response ko frontend structure
+                 * me normalize kar rahe hain.
+                 */
+
+                users =
+                    Array.isArray(apiUsers)
+                        ? apiUsers.map(
+                            mapApiUser
+                        )
+                        : [];
+
+
+                sortUsers();
+
+                populateCourseFilter();
+
+                populateSemesterFilter();
+
+                renderPersonResults();
+
+
+            } catch (error) {
+
+                console.error(
+                    "User Load Error:",
+                    error
+                );
+
+
+                users = [];
+
+
+                personResults.innerHTML = `
+
+            <div class="no-results">
+
+                <i class="bi bi-exclamation-triangle d-block fs-4 mb-2 text-danger"></i>
+
+                ${escapeHtml(
+                    error.message ||
+                    "Unable to load users."
+                )}
+
+            </div>
+
+        `;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           MAP API USER
+        ========================================================= */
+
+        function mapApiUser(apiUser) {
+
+            return {
+
+                /*
+                 * Main user information
+                 */
+
+                id: apiUser.userId,
+
+                name: apiUser.name,
+
+                type:
+                    String(
+                        apiUser.type || ""
+                    ).toUpperCase(),
+
+
+                /*
+                 * Student information
+                 */
+
+                rollNumber:
+                    apiUser.rollNumber || null,
+
+                courseName:
+                    apiUser.courseName || null,
+
+                courseCode:
+                    apiUser.courseCode || null,
+
+                semester:
+                    apiUser.semester ?? null,
+
+                sectionName:
+                    apiUser.sectionName || null,
+
+
+                /*
+                 * Staff / common information
+                 */
+
+                departmentName:
+                    apiUser.departmentName || null,
+
+                employeeCode:
+                    apiUser.employeeCode || null
+
+            };
+
+        }
+
+
+        /* =========================================================
+           SORT USERS
+        ========================================================= */
+
+        function sortUsers() {
+
+            users.sort(
+                (a, b) =>
+                    String(a.name || "")
+                        .localeCompare(
+                            String(b.name || ""),
+                            "en",
+                            {
+                                sensitivity: "base"
+                            }
+                        )
+            );
+
+        }
+
+
+        /* =========================================================
+           TYPE BUTTONS
+        ========================================================= */
+
+        document
+            .querySelectorAll(".type-btn")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+
+                        document
+                            .querySelectorAll(".type-btn")
+                            .forEach(btn =>
+                                btn.classList.remove("active")
+                            );
+
+                        button.classList.add("active");
+
+                        selectedType =
+                            button.dataset.type;
+
+
+                        /*
+                         * Student-only filters relevant hain.
+                         * Staff select hone par unko ALL kar dete hain.
+                         */
+
+                        if (
+                            selectedType === "STAFF"
+                        ) {
+
+                            courseFilter.value = "ALL";
+
+                            semesterFilter.value = "ALL";
+
+                        }
+
+
+                        renderPersonResults();
+
+                    }
+                );
+
+            });
+
+
+        /* =========================================================
+           SEARCH
+        ========================================================= */
+
+        personSearch.addEventListener(
+            "input",
+            () => {
+
+                renderPersonResults();
+
+            }
+        );
+
+
+        /* =========================================================
+           COURSE FILTER
+        ========================================================= */
+
+        courseFilter.addEventListener(
+            "change",
+            () => {
+
+                renderPersonResults();
+
+            }
+        );
+
+
+        /* =========================================================
+           SEMESTER FILTER
+        ========================================================= */
+
+        semesterFilter.addEventListener(
+            "change",
+            () => {
+
+                renderPersonResults();
+
+            }
+        );
+
+
+        /* =========================================================
+           POPULATE COURSE FILTER
+        ========================================================= */
+
+        function populateCourseFilter() {
+
+            const courses =
+                [
+                    ...new Set(
+                        users
+                            .filter(
+                                user =>
+                                    user.type === "STUDENT" &&
+                                    user.courseCode
+                            )
+                            .map(
+                                user => ({
+                                    code:
+                                        user.courseCode,
+
+                                    name:
+                                        user.courseName ||
+                                        user.courseCode
+                                })
+                            )
+                            .reduce(
+                                (map, course) => {
+
+                                    map.set(
+                                        course.code,
+                                        course
+                                    );
+
+                                    return map;
+
+                                },
+                                new Map()
+                            )
+                            .values()
+                    )
+                ]
+                    .sort(
+                        (a, b) =>
+                            String(a.name)
+                                .localeCompare(
+                                    String(b.name)
+                                )
+                    );
+
+
+            courseFilter.innerHTML = `
+
+        <option value="ALL">
+            All Courses
+        </option>
+
+    `;
+
+
+            courses.forEach(
+                course => {
+
+                    courseFilter.innerHTML += `
+
+                <option value="${escapeHtml(
+                        course.code
+                    )}">
+
+                    ${escapeHtml(
+                        course.name
+                    )}
+
+                    ${course.code &&
+                            course.name !== course.code
+                            ? ` (${escapeHtml(course.code)})`
+                            : ""
+                        }
+
+                </option>
+
+            `;
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           POPULATE SEMESTER
+        ========================================================= */
+
+        function populateSemesterFilter() {
+
+            const semesters =
+                [
+                    ...new Set(
+                        users
+                            .filter(
+                                user =>
+                                    user.type === "STUDENT" &&
+                                    user.semester !== null &&
+                                    user.semester !== undefined
+                            )
+                            .map(
+                                user =>
+                                    String(
+                                        user.semester
+                                    )
+                            )
+                    )
+                ]
+                    .sort(
+                        (a, b) =>
+                            Number(a) - Number(b)
+                    );
+
+
+            semesterFilter.innerHTML = `
+
+        <option value="ALL">
+            All Semesters
+        </option>
+
+    `;
+
+
+            semesters.forEach(
+                semester => {
+
+                    semesterFilter.innerHTML += `
+
+                <option value="${escapeHtml(
+                        semester
+                    )}">
+
+                    Semester ${escapeHtml(
+                        semester
+                    )}
+
+                </option>
+
+            `;
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           FILTER USERS
+        ========================================================= */
+
+        function getFilteredUsers() {
+
+            const search =
+                personSearch.value
+                    .trim()
+                    .toLowerCase();
+
+
+            const course =
+                courseFilter.value;
+
+
+            const semester =
+                semesterFilter.value;
+
+
+            return users.filter(
+                user => {
+
+
+                    /*
+                     * TYPE
+                     */
+
+                    if (
+                        selectedType !== "ALL" &&
+                        user.type !== selectedType
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    /*
+                     * SEARCH
+                     *
+                     * Name
+                     * User ID
+                     * Roll Number
+                     * Employee Code
+                     * Course
+                     * Department
+                     */
+
+                    if (search) {
+
+                        const searchableValues = [
+
+                            user.name,
+
+                            user.id,
+
+                            user.rollNumber,
+
+                            user.employeeCode,
+
+                            user.courseName,
+
+                            user.courseCode,
+
+                            user.departmentName,
+
+                            user.sectionName
+
+                        ];
+
+
+                        const matches =
+                            searchableValues.some(
+                                value =>
+                                    value !== null &&
+                                    value !== undefined &&
+                                    String(value)
+                                        .toLowerCase()
+                                        .includes(search)
+                            );
+
+
+                        if (!matches) {
+
+                            return false;
+
+                        }
+
+                    }
+
+
+                    /*
+                     * COURSE
+                     */
+
+                    if (
+                        course !== "ALL" &&
+                        user.courseCode !== course
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    /*
+                     * SEMESTER
+                     */
+
+                    if (
+                        semester !== "ALL" &&
+                        String(user.semester) !== semester
+                    ) {
+
+                        return false;
+
+                    }
+
+
+                    return true;
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           RENDER PERSON RESULTS
+        ========================================================= */
+
+        function renderPersonResults() {
+
+            const filteredUsers =
+                getFilteredUsers();
+
+
+            if (!filteredUsers.length) {
+
+                personResults.innerHTML = `
+
+            <div class="no-results">
+
+                <i class="bi bi-person-x d-block fs-4 mb-2"></i>
+
+                No student or staff found.
+
+            </div>
+
+        `;
+
+                return;
+
+            }
+
+
+            personResults.innerHTML = `
+
+        <div class="results-header">
+
+            ${filteredUsers.length}
+
+            person${filteredUsers.length > 1 ? "s" : ""}
+
+            found
+
+        </div>
+
+    `;
+
+
+            filteredUsers.forEach(
+                user => {
+
+                    personResults.innerHTML +=
+                        createPersonResultHtml(user);
+
+                }
+            );
+
+
+            /*
+             * Click events
+             */
+
+            document
+                .querySelectorAll(".person-result")
+                .forEach(element => {
+
+                    element.addEventListener(
+                        "click",
+                        () => {
+
+                            const userId =
+                                Number(
+                                    element.dataset.userId
+                                );
+
+
+                            const user =
+                                users.find(
+                                    item =>
+                                        Number(item.id) ===
+                                        userId
+                                );
+
+
+                            if (user) {
+
+                                selectPerson(user);
+
+                            }
+
+                        }
+                    );
+
+                });
+
+        }
+
+
+        /* =========================================================
+           PERSON RESULT HTML
+        ========================================================= */
+
+        function createPersonResultHtml(user) {
+
+            const isStudent =
+                user.type === "STUDENT";
+
+
+            const initials =
+                getInitials(
+                    user.name
+                );
+
+
+            let details = "";
+
+
+            if (isStudent) {
+
+                if (user.courseName) {
+
+                    details += `
+
+                <span>
+
+                    <i class="bi bi-book"></i>
+
+                    ${escapeHtml(
+                        user.courseName
+                    )}
+
+                </span>
+
+            `;
+
+                }
+
+
+                if (user.courseCode) {
+
+                    details += `
+
+                <span>
+
+                    <i class="bi bi-code-square"></i>
+
+                    ${escapeHtml(
+                        user.courseCode
+                    )}
+
+                </span>
+
+            `;
+
+                }
+
+
+                if (
+                    user.semester !== null &&
+                    user.semester !== undefined
+                ) {
+
+                    details += `
+
+                <span>
+
+                    <i class="bi bi-layers"></i>
+
+                    Semester ${escapeHtml(
+                        user.semester
+                    )}
+
+                </span>
+
+            `;
+
+                }
+
+
+                if (user.sectionName) {
+
+                    details += `
+
+                <span>
+
+                    <i class="bi bi-grid"></i>
+
+                    Section ${escapeHtml(
+                        user.sectionName
+                    )}
+
+                </span>
+
+            `;
+
+                }
+
+
+            } else {
+
+                if (user.employeeCode) {
+
+                    details += `
+
+                <span>
+
+                    <i class="bi bi-person-badge"></i>
+
+                    ${escapeHtml(
+                        user.employeeCode
+                    )}
+
+                </span>
+
+            `;
+
+                }
+
+
+                if (user.departmentName) {
+
+                    details += `
+
+                <span>
+
+                    <i class="bi bi-building"></i>
+
+                    ${escapeHtml(
+                        user.departmentName
+                    )}
+
+                </span>
+
+            `;
+
+                }
+
+            }
+
+
+            return `
+
+        <div
+            class="person-result"
+            data-user-id="${escapeHtml(
+                user.id
+            )}">
+
+
+            <div class="person-result-top">
+
+
+                <div class="person-main">
+
+
+                    <div
+                        class="person-avatar ${isStudent
+                    ? "avatar-student"
+                    : "avatar-staff"
+                }">
+
+                        ${escapeHtml(
+                    initials
+                )}
+
+                    </div>
+
+
+                    <div>
+
+                        <div class="person-name">
+
+                            ${escapeHtml(
+                    user.name
+                )}
+
+                        </div>
+
+
+                        <div class="person-id">
+
+                            User ID:
+                            ${escapeHtml(
+                    user.id
+                )}
+
+                            ${isStudent &&
+                    user.rollNumber
+                    ? ` · Roll No: ${escapeHtml(user.rollNumber)}`
+                    : ""
+                }
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <span
+                    class="person-type ${isStudent
+                    ? "type-student"
+                    : "type-staff"
+                }">
+
+                    ${isStudent
+                    ? "STUDENT"
+                    : "STAFF"
+                }
+
+                </span>
+
+
+            </div>
+
+
+            ${details
+                    ? `
+                        <div class="person-meta">
+
+                            ${details}
+
+                        </div>
+                    `
+                    : ""
+                }
+
+
+        </div>
+
+    `;
+
+        }
+
+
+        /* =========================================================
+           SELECT PERSON
+        ========================================================= */
+
+        function selectPerson(user) {
+
+            selectedUser = user;
+
+
+            renderSelectedPerson();
+
+
+            loadBtn.disabled = false;
+
+
+            /*
+             * Hide result list
+             */
+
+            personResults.innerHTML = "";
+
+
+            /*
+             * Search field me selected name
+             */
+
+            personSearch.value =
+                user.name;
+
+
+            /*
+             * Automatically load attendance
+             */
+
+            loadAttendance();
+
+        }
+
+
+        /* =========================================================
+           SELECTED PERSON CARD
+        ========================================================= */
+
+        function renderSelectedPerson() {
+
+            if (!selectedUser) {
+
+                selectedPersonCard.classList.remove("show");
+
+                selectedPersonCard.innerHTML = "";
+
+                return;
+
+            }
+
+
+            const isStudent =
+                selectedUser.type === "STUDENT";
+
+
+            const initials =
+                getInitials(
+                    selectedUser.name
+                );
+
+
+            let details = "";
+
+
+            if (isStudent) {
+
+                const parts = [];
+
+
+                if (selectedUser.rollNumber) {
+
+                    parts.push(
+                        `Roll No: ${escapeHtml(
+                            selectedUser.rollNumber
+                        )}`
+                    );
+
+                }
+
+
+                if (selectedUser.courseName) {
+
+                    parts.push(
+                        escapeHtml(
+                            selectedUser.courseName
+                        )
+                    );
+
+                }
+
+
+                if (
+                    selectedUser.semester !== null &&
+                    selectedUser.semester !== undefined
+                ) {
+
+                    parts.push(
+                        `Semester ${escapeHtml(
+                            selectedUser.semester
+                        )}`
+                    );
+
+                }
+
+
+                if (selectedUser.sectionName) {
+
+                    parts.push(
+                        `Section ${escapeHtml(
+                            selectedUser.sectionName
+                        )}`
+                    );
+
+                }
+
+
+                details =
+                    parts.join(" · ");
+
+
+            } else {
+
+                const parts = [];
+
+
+                if (selectedUser.employeeCode) {
+
+                    parts.push(
+                        `Employee Code: ${escapeHtml(
+                            selectedUser.employeeCode
+                        )}`
+                    );
+
+                }
+
+
+                if (selectedUser.departmentName) {
+
+                    parts.push(
+                        escapeHtml(
+                            selectedUser.departmentName
+                        )
+                    );
+
+                }
+
+
+                details =
+                    parts.join(" · ");
+
+            }
+
+
+            selectedPersonCard.innerHTML = `
+
+        <div class="selected-person">
+
+
+            <div
+                class="selected-avatar ${isStudent
+                    ? "avatar-student"
+                    : "avatar-staff"
+                }">
+
+                ${escapeHtml(
+                    initials
+                )}
+
+            </div>
+
+
+            <div>
+
+                <div class="selected-name">
+
+                    ${escapeHtml(
+                    selectedUser.name
+                )}
+
+                    <span
+                        class="person-type ms-1 ${isStudent
+                    ? "type-student"
+                    : "type-staff"
+                }">
+
+                        ${isStudent
+                    ? "STUDENT"
+                    : "STAFF"
+                }
+
+                    </span>
+
+                </div>
+
+
+                <div class="selected-details">
+
+                    User ID:
+                    ${escapeHtml(
+                    selectedUser.id
+                )}
+
+                    ${details
+                    ? ` · ${details}`
+                    : ""
+                }
+
+                </div>
+
+            </div>
+
+
+            <button
+                type="button"
+                id="removeSelected"
+                class="remove-selected"
+                title="Remove selection">
+
+                <i class="bi bi-x-lg"></i>
+
+            </button>
+
+
+        </div>
+
+    `;
+
+
+            selectedPersonCard.classList.add("show");
+
+
+            document
+                .getElementById("removeSelected")
+                .addEventListener(
+                    "click",
+                    clearSelectedPerson
+                );
+
+        }
+
+
+        /* =========================================================
+           CLEAR SELECTED PERSON
+        ========================================================= */
+
+        function clearSelectedPerson() {
+
+            selectedUser = null;
+
+            loadBtn.disabled = true;
+
+            personSearch.value = "";
+
+            selectedPersonCard.classList.remove("show");
+
+            selectedPersonCard.innerHTML = "";
+
+            calendarStudent.innerText =
+                "Attendance Calendar";
+
+
+            calendarContainer.innerHTML = `
+
+        <div class="empty-state">
+
+            <i class="bi bi-person-check"></i>
+
+            <div class="empty-state-title">
+
+                Select a student or staff member
+
+            </div>
+
+            <div>
+
+                Search and select a person above
+                to view attendance.
+
+            </div>
+
+        </div>
+
+    `;
+
+
+            resetSummary();
+
+            renderPersonResults();
+
+        }
+
+
+        /* =========================================================
+           LOAD BUTTON
+        ========================================================= */
+
+        loadBtn.addEventListener(
+            "click",
+            loadAttendance
+        );
+
+
+        /* =========================================================
+           LOAD ATTENDANCE
+        ========================================================= */
+
+        async function loadAttendance() {
+
+            if (!selectedUser) {
+
+                alert(
+                    "Please select a student or staff member."
+                );
+
+                return;
+
+            }
+
+
+            showLoading();
+
+
+            try {
+
+                /*
+                 * Existing attendance API
+                 *
+                 * GET /api/admin/attendance/user/{id}
+                 */
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/admin/attendance/user/${selectedUser.id}`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Accept": "*/*"
+                            }
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    let message =
+                        "Unable to load attendance.";
+
+
+                    try {
+
+                        const error =
+                            await response.json();
+
+                        message =
+                            error.message ||
+                            error.error ||
+                            message;
+
+                    } catch (e) { }
+
+
+                    throw new Error(message);
+
+                }
+
+
+                attendanceData =
+                    await response.json();
+
+
+                if (!Array.isArray(attendanceData)) {
+
+                    attendanceData = [];
+
+                }
+
+
+                buildAttendanceMap();
+
+
+                calendarStudent.innerText =
+                    `Attendance — ${selectedUser.name}`;
+
+
+                renderCalendar();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Attendance Load Error:",
+                    error
+                );
+
+
+                attendanceData = [];
+
+                buildAttendanceMap();
+
+
+                calendarStudent.innerText =
+                    `Attendance — ${selectedUser.name}`;
+
+
+                calendarContainer.innerHTML = `
+
+            <div class="empty-state">
+
+                <i class="bi bi-exclamation-triangle text-danger"></i>
+
+                <div class="empty-state-title">
+
+                    Unable to load attendance
+
+                </div>
+
+                <div>
+
+                    ${escapeHtml(
+                    error.message ||
+                    "Something went wrong while loading attendance."
+                )}
+
+                </div>
+
+            </div>
+
+        `;
+
+
+                resetSummary();
+
+            }
+
+        }
+
+
+        /* =========================================================
+           ATTENDANCE MAP
+        ========================================================= */
+
+        function buildAttendanceMap() {
+
+            attendanceMap =
+                new Map();
+
+
+            attendanceData.forEach(
+                attendance => {
+
+                    if (
+                        !attendance ||
+                        !attendance.attendanceDate
+                    ) {
+
+                        return;
+
+                    }
+
+
+                    attendanceMap.set(
+                        normalizeDate(
+                            attendance.attendanceDate
+                        ),
+                        attendance
+                    );
+
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           RENDER CALENDAR
+        ========================================================= */
+
+        function renderCalendar() {
+
+            const year =
+                currentDate.getFullYear();
+
+            const month =
+                currentDate.getMonth();
+
+
+            monthName.innerText =
+                currentDate.toLocaleDateString(
+                    "en-IN",
+                    {
+                        month: "long",
+                        year: "numeric"
+                    }
+                );
+
+
+            const firstDay =
+                new Date(
+                    year,
+                    month,
+                    1
+                ).getDay();
+
+
+            const daysInMonth =
+                new Date(
+                    year,
+                    month + 1,
+                    0
+                ).getDate();
+
+
+            let html = `
+
+        <div class="calendar-wrapper">
+
+            <div class="calendar-grid">
+
+                <div class="weekday">Sun</div>
+                <div class="weekday">Mon</div>
+                <div class="weekday">Tue</div>
+                <div class="weekday">Wed</div>
+                <div class="weekday">Thu</div>
+                <div class="weekday">Fri</div>
+                <div class="weekday">Sat</div>
+
+    `;
+
+
+            for (
+                let i = 0;
+                i < firstDay;
+                i++
+            ) {
+
+                html += `
+            <div class="day empty"></div>
+        `;
+
+            }
+
+
+            let workingDays = 0;
+
+            let presentDays = 0;
+
+            let absentDays = 0;
+
+            let holidayDays = 0;
+
+            let totalWorkingMinutes = 0;
+
+
+            const today =
+                new Date();
+
+            today.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            for (
+                let day = 1;
+                day <= daysInMonth;
+                day++
+            ) {
+
+                const date =
+                    new Date(
+                        year,
+                        month,
+                        day
+                    );
+
+
+                const dayOfWeek =
+                    date.getDay();
+
+
+                const dateString =
+                    formatDate(date);
+
+
+                const isWeekend =
+                    dayOfWeek === 0 ||
+                    dayOfWeek === 6;
+
+
+                const isFuture =
+                    date > today;
+
+
+                const isToday =
+                    date.getTime() ===
+                    today.getTime();
+
+
+                const attendance =
+                    attendanceMap.get(
+                        dateString
+                    );
+
+
+                let status =
+                    "future";
+
+
+                let statusText =
+                    "Future";
+
+
+                let workingMinutes = 0;
+
+
+                if (isWeekend) {
+
+                    status =
+                        "holiday";
+
+                    statusText =
+                        "Holiday";
+
+                    holidayDays++;
+
+                }
+
+                else if (isFuture) {
+
+                    status =
+                        "future";
+
+                    statusText =
+                        "Future";
+
+                }
+
+                else {
+
+                    workingDays++;
+
+
+                    workingMinutes =
+                        calculateWorkingMinutes(
+                            attendance
+                        );
+
+
+                    totalWorkingMinutes +=
+                        workingMinutes;
+
+
+                    if (!attendance) {
+
+                        status =
+                            "absent";
+
+                        statusText =
+                            "Absent";
+
+                        absentDays++;
+
+                    }
+
+                    else {
+
+                        const result =
+                            getAttendanceStatus(
+                                attendance
+                            );
+
+
+                        status =
+                            result.status;
+
+                        statusText =
+                            result.text;
+
+
+                        if (
+                            status === "present"
+                        ) {
+
+                            presentDays++;
+
+                        }
+
+                        else {
+
+                            absentDays++;
+
+                        }
+
+                    }
+
+                }
+
+
+                html += `
+
+            <div
+                class="day ${status} ${isToday
+                        ? "today"
+                        : ""
+                    }"
+                data-date="${dateString}">
+
+
+                <div class="day-number">
+
+                    ${day}
+
+                </div>
+
+
+                <div class="day-status">
+
+                    ${statusText}
+
+                </div>
+
+        `;
+
+
+                if (
+                    attendance &&
+                    !isWeekend
+                ) {
+
+                    if (
+                        attendance.checkInTime
+                    ) {
+
+                        html += `
+
+                    <div class="day-time">
+
+                        In:
+                        ${escapeHtml(
+                            formatTime(
+                                attendance.checkInTime
+                            )
+                        )}
+
+                    </div>
+
+                `;
+
+                    }
+
+
+                    if (
+                        attendance.checkOutTime
+                    ) {
+
+                        html += `
+
+                    <div class="day-time">
+
+                        Out:
+                        ${escapeHtml(
+                            formatTime(
+                                attendance.checkOutTime
+                            )
+                        )}
+
+                    </div>
+
+                `;
+
+                    }
+
+
+                    if (
+                        attendance.checkInTime
+                    ) {
+
+                        html += `
+
+                    <div class="day-hours">
+
+                        <i class="bi bi-clock"></i>
+
+                        ${formatMinutes(
+                            workingMinutes
+                        )}
+
+                    </div>
+
+                    <div class="required-hours">
+
+                        Required:
+                        ${REQUIRED_WORKING_HOURS}h
+
+                    </div>
+
+                `;
+
+                    }
+
+                }
+
+
+                html += `
+
+            </div>
+
+        `;
+
+            }
+
+
+            const totalCells =
+                firstDay +
+                daysInMonth;
+
+
+            const remaining =
+                totalCells % 7 === 0
+                    ? 0
+                    : 7 -
+                    (totalCells % 7);
+
+
+            for (
+                let i = 0;
+                i < remaining;
+                i++
+            ) {
+
+                html += `
+            <div class="day empty"></div>
+        `;
+
+            }
+
+
+            html += `
+
+            </div>
+
+        </div>
+
+    `;
+
+
+            calendarContainer.innerHTML =
+                html;
+
+
+            updateSummary(
+                workingDays,
+                presentDays,
+                absentDays,
+                holidayDays,
+                totalWorkingMinutes
+            );
+
+
+            document
+                .querySelectorAll(
+                    ".day:not(.empty)"
+                )
+                .forEach(
+                    element => {
+
+                        element.addEventListener(
+                            "click",
+                            () => {
+
+                                showDayDetails(
+                                    element.dataset.date
+                                );
+
+                            }
+                        );
+
+                    }
+                );
+
+        }
+
+
+        /* =========================================================
+           SUMMARY
+        ========================================================= */
+
+        function updateSummary(
+            workingDays,
+            presentDays,
+            absentDays,
+            holidayDays,
+            totalWorkingMinutes
+        ) {
+
+            document.getElementById(
+                "workingDays"
+            ).innerText =
+                workingDays;
+
+
+            document.getElementById(
+                "presentDays"
+            ).innerText =
+                presentDays;
+
+
+            document.getElementById(
+                "absentDays"
+            ).innerText =
+                absentDays;
+
+
+            document.getElementById(
+                "holidayDays"
+            ).innerText =
+                holidayDays;
+
+
+            document.getElementById(
+                "totalWorkingHours"
+            ).innerText =
+                formatMinutesLong(
+                    totalWorkingMinutes
+                );
+
+        }
+
+
+        /* =========================================================
+           RESET SUMMARY
+        ========================================================= */
+
+        function resetSummary() {
+
+            updateSummary(
+                0,
+                0,
+                0,
+                0,
+                0
+            );
+
+        }
+
+
+        /* =========================================================
+           ATTENDANCE STATUS
+        ========================================================= */
+
+        function getAttendanceStatus(
+            attendance
+        ) {
+
+            if (
+                !attendance.checkInTime ||
+                !attendance.checkOutTime
+            ) {
+
+                return {
+
+                    status: "incomplete",
+
+                    text: "Incomplete"
+
+                };
+
+            }
+
+
+            const minutes =
+                calculateWorkingMinutes(
+                    attendance
+                );
+
+
+            const requiredMinutes =
+                REQUIRED_WORKING_HOURS *
+                60;
+
+
+            if (
+                minutes < requiredMinutes
+            ) {
+
+                return {
+
+                    status: "incomplete",
+
+                    text: "Short Hours"
+
+                };
+
+            }
+
+
+            return {
+
+                status: "present",
+
+                text: "Present"
+
+            };
+
+        }
+
+
+        /* =========================================================
+           CALCULATE WORKING MINUTES
+        ========================================================= */
+
+        function calculateWorkingMinutes(
+            attendance
+        ) {
+
+            if (!attendance) {
+
+                return 0;
+
+            }
+
+
+            if (
+                !attendance.checkInTime ||
+                !attendance.checkOutTime
+            ) {
+
+                return 0;
+
+            }
+
+
+            const checkIn =
+                parseTimeToMinutes(
+                    attendance.checkInTime
+                );
+
+
+            const checkOut =
+                parseTimeToMinutes(
+                    attendance.checkOutTime
+                );
+
+
+            if (
+                checkIn === null ||
+                checkOut === null
+            ) {
+
+                return 0;
+
+            }
+
+
+            let difference =
+                checkOut -
+                checkIn;
+
+
+            if (difference < 0) {
+
+                difference +=
+                    24 * 60;
+
+            }
+
+
+            return difference;
+
+        }
+
+
+        /* =========================================================
+           PARSE TIME
+        ========================================================= */
+
+        function parseTimeToMinutes(
+            timeValue
+        ) {
+
+            if (
+                timeValue === null ||
+                timeValue === undefined
+            ) {
+
+                return null;
+
+            }
+
+
+            const value =
+                String(
+                    timeValue
+                ).trim();
+
+
+            const match =
+                value.match(
+                    /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/
+                );
+
+
+            if (!match) {
+
+                const date =
+                    new Date(value);
+
+
+                if (
+                    !Number.isNaN(
+                        date.getTime()
+                    )
+                ) {
+
+                    return (
+                        date.getHours() * 60 +
+                        date.getMinutes()
+                    );
+
+                }
+
+
+                return null;
+
+            }
+
+
+            return (
+                Number(match[1]) * 60 +
+                Number(match[2])
+            );
+
+        }
+
+
+        /* =========================================================
+           FORMAT MINUTES
+        ========================================================= */
+
+        function formatMinutes(
+            minutes
+        ) {
+
+            if (
+                minutes === null ||
+                minutes === undefined ||
+                minutes < 0
+            ) {
+
+                return "-";
+
+            }
+
+
+            const hours =
+                Math.floor(
+                    minutes / 60
+                );
+
+
+            const mins =
+                minutes % 60;
+
+
+            return `${hours}h ${String(mins).padStart(2, "0")}m`;
+
+        }
+
+
+        /* =========================================================
+           FORMAT LONG MINUTES
+        ========================================================= */
+
+        function formatMinutesLong(
+            minutes
+        ) {
+
+            if (
+                !minutes ||
+                minutes <= 0
+            ) {
+
+                return "0h 0m";
+
+            }
+
+
+            const hours =
+                Math.floor(
+                    minutes / 60
+                );
+
+
+            const mins =
+                minutes % 60;
+
+
+            return `${hours}h ${mins}m`;
+
+        }
+
+
+        /* =========================================================
+           FORMAT TIME
+        ========================================================= */
+
+        function formatTime(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "-";
+
+            }
+
+
+            const stringValue =
+                String(value);
+
+
+            const match =
+                stringValue.match(
+                    /^(\d{1,2}):(\d{2})(?::(\d{2}))?$/
+                );
+
+
+            if (match) {
+
+                return (
+                    String(
+                        match[1]
+                    ).padStart(2, "0") +
+                    ":" +
+                    match[2]
+                );
+
+            }
+
+
+            const date =
+                new Date(
+                    stringValue
+                );
+
+
+            if (
+                !Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return date.toLocaleTimeString(
+                    "en-IN",
+                    {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true
+                    }
+                );
+
+            }
+
+
+            return stringValue;
+
+        }
+
+
+        /* =========================================================
+           MONTH PICKER
+        ========================================================= */
+
+        function initializeMonth() {
+
+            const year =
+                currentDate.getFullYear();
+
+
+            const month =
+                String(
+                    currentDate.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            monthPicker.value =
+                `${year}-${month}`;
+
+        }
+
+
+        monthPicker.addEventListener(
+            "change",
+            () => {
+
+                const value =
+                    monthPicker.value;
+
+
+                if (!value) {
+
+                    return;
+
+                }
+
+
+                const [
+                    year,
+                    month
+                ] =
+                    value.split("-");
+
+
+                currentDate =
+                    new Date(
+                        Number(year),
+                        Number(month) - 1,
+                        1
+                    );
+
+
+                if (selectedUser) {
+
+                    loadAttendance();
+
+                }
+
+            }
+        );
+
+
+        /* =========================================================
+           PREVIOUS MONTH
+        ========================================================= */
+
+        document
+            .getElementById("previousMonth")
+            .addEventListener(
+                "click",
+                () => {
+
+                    currentDate =
+                        new Date(
+                            currentDate.getFullYear(),
+                            currentDate.getMonth() - 1,
+                            1
+                        );
+
+
+                    syncMonthPicker();
+
+
+                    if (selectedUser) {
+
+                        loadAttendance();
+
+                    }
+                    else {
+
+                        renderCalendar();
+
+                    }
+
+                }
+            );
+
+
+        /* =========================================================
+           NEXT MONTH
+        ========================================================= */
+
+        document
+            .getElementById("nextMonth")
+            .addEventListener(
+                "click",
+                () => {
+
+                    currentDate =
+                        new Date(
+                            currentDate.getFullYear(),
+                            currentDate.getMonth() + 1,
+                            1
+                        );
+
+
+                    syncMonthPicker();
+
+
+                    if (selectedUser) {
+
+                        loadAttendance();
+
+                    }
+                    else {
+
+                        renderCalendar();
+
+                    }
+
+                }
+            );
+
+
+        /* =========================================================
+           SYNC MONTH PICKER
+        ========================================================= */
+
+        function syncMonthPicker() {
+
+            const year =
+                currentDate.getFullYear();
+
+
+            const month =
+                String(
+                    currentDate.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            monthPicker.value =
+                `${year}-${month}`;
+
+        }
+
+
+        /* =========================================================
+           DAY DETAILS
+        ========================================================= */
+
+        function showDayDetails(
+            dateString
+        ) {
+
+            const date =
+                new Date(
+                    dateString +
+                    "T00:00:00"
+                );
+
+
+            const dayOfWeek =
+                date.getDay();
+
+
+            const isWeekend =
+                dayOfWeek === 0 ||
+                dayOfWeek === 6;
+
+
+            const attendance =
+                attendanceMap.get(
+                    dateString
+                );
+
+
+            let status;
+
+            let badgeClass;
+
+            let statusIcon;
+
+
+            if (isWeekend) {
+
+                status =
+                    "Holiday";
+
+                badgeClass =
+                    "badge-holiday";
+
+                statusIcon =
+                    "bi bi-cup-hot";
+
+            }
+
+            else if (attendance) {
+
+                const result =
+                    getAttendanceStatus(
+                        attendance
+                    );
+
+
+                status =
+                    result.text;
+
+
+                if (
+                    result.status ===
+                    "present"
+                ) {
+
+                    badgeClass =
+                        "badge-present";
+
+                    statusIcon =
+                        "bi bi-check-circle";
+
+                }
+
+                else {
+
+                    badgeClass =
+                        "badge-incomplete";
+
+                    statusIcon =
+                        "bi bi-exclamation-triangle";
+
+                }
+
+            }
+
+            else {
+
+                status =
+                    "Absent";
+
+                badgeClass =
+                    "badge-absent";
+
+                statusIcon =
+                    "bi bi-x-circle";
+
+            }
+
+
+            const workingMinutes =
+                calculateWorkingMinutes(
+                    attendance
+                );
+
+
+            const requiredMinutes =
+                REQUIRED_WORKING_HOURS *
+                60;
+
+
+            const percentage =
+                Math.min(
+                    100,
+                    Math.round(
+                        (
+                            workingMinutes /
+                            requiredMinutes
+                        ) * 100
+                    )
+                );
+
+
+            let html = `
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Date
+            </div>
+
+            <div class="detail-value">
+                ${formatReadableDate(date)}
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Name
+            </div>
+
+            <div class="detail-value">
+
+                ${selectedUser
+                    ? escapeHtml(
+                        selectedUser.name
+                    )
+                    : "-"
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                User ID
+            </div>
+
+            <div class="detail-value">
+
+                ${selectedUser
+                    ? escapeHtml(
+                        selectedUser.id
+                    )
+                    : "-"
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                User Type
+            </div>
+
+            <div class="detail-value">
+
+                ${selectedUser
+                    ? escapeHtml(
+                        selectedUser.type
+                    )
+                    : "-"
+                }
+
+            </div>
+
+        </div>
+
+
+        <div class="detail-row">
+
+            <div class="detail-label">
+                Status
+            </div>
+
+            <div class="mt-1">
+
+                <span class="status-badge ${badgeClass}">
+
+                    <i class="${statusIcon}"></i>
+
+                    ${escapeHtml(status)}
+
+                </span>
+
+            </div>
+
+        </div>
+
+    `;
+
+
+            if (attendance) {
+
+                html += `
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    Check In
+                </div>
+
+                <div class="detail-value">
+
+                    ${escapeHtml(
+                    formatTime(
+                        attendance.checkInTime
+                    )
+                )}
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    Check Out
+                </div>
+
+                <div class="detail-value">
+
+                    ${escapeHtml(
+                    formatTime(
+                        attendance.checkOutTime
+                    )
+                )}
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    Working Hours
+                </div>
+
+                <div class="detail-value">
+
+                    ${formatMinutes(
+                    workingMinutes
+                )}
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    Required Working Hours
+                </div>
+
+                <div class="detail-value">
+
+                    ${REQUIRED_WORKING_HOURS}h 00m
+
+                </div>
+
+            </div>
+
+        `;
+
+
+                if (
+                    attendance.checkInTime
+                ) {
+
+                    html += `
+
+                <div class="hours-highlight">
+
+                    <div class="d-flex justify-content-between">
+
+                        <div>
+
+                            <div class="detail-label">
+                                Daily Working Hours
+                            </div>
+
+                            <div class="hours-main">
+                                ${formatMinutes(
+                        workingMinutes
+                    )}
+                            </div>
+
+                        </div>
+
+
+                        <div class="text-end">
+
+                            <div class="detail-label">
+                                Completion
+                            </div>
+
+                            <div class="hours-main">
+                                ${percentage}%
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hours-progress">
+
+                        <div
+                            class="hours-progress-bar ${percentage < 100
+                            ? "warning"
+                            : ""
+                        }"
+                            style="width: ${percentage}%">
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="hours-required">
+
+                        Required:
+                        ${REQUIRED_WORKING_HOURS} hours
+
+                    </div>
+
+                </div>
+
+            `;
+
+                }
+
+
+                html += `
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    Face Recognition Confidence
+                </div>
+
+                <div class="detail-value">
+
+                    ${formatConfidence(
+                    attendance.confidence
+                )}
+
+                </div>
+
+            </div>
+
+        `;
+
+            }
+
+
+            if (
+                attendance &&
+                !attendance.checkOutTime
+            ) {
+
+                html += `
+
+            <div class="alert alert-warning mt-3 mb-0">
+
+                <i class="bi bi-exclamation-triangle me-1"></i>
+
+                Check-out was not recorded.
+                This day is marked as
+                <strong>Incomplete</strong>
+                and is counted as absent.
+
+            </div>
+
+        `;
+
+            }
+
+            else if (
+                attendance &&
+                workingMinutes <
+                requiredMinutes
+            ) {
+
+                html += `
+
+            <div class="alert alert-warning mt-3 mb-0">
+
+                <i class="bi bi-clock me-1"></i>
+
+                Required working time is
+                <strong>
+                    ${REQUIRED_WORKING_HOURS} hours
+                </strong>.
+
+                Completed:
+                <strong>
+                    ${formatMinutes(
+                    workingMinutes
+                )}
+                </strong>.
+
+                The day is therefore counted as absent.
+
+            </div>
+
+        `;
+
+            }
+
+
+            if (isWeekend) {
+
+                html += `
+
+            <div class="alert alert-secondary mt-3 mb-0">
+
+                <i class="bi bi-cup-hot me-1"></i>
+
+                Saturday/Sunday is a weekly holiday.
+
+            </div>
+
+        `;
+
+            }
+
+
+            if (
+                !isWeekend &&
+                !attendance
+            ) {
+
+                html += `
+
+            <div class="alert alert-danger mt-3 mb-0">
+
+                <i class="bi bi-x-circle me-1"></i>
+
+                No attendance record was found
+                for this working day.
+
+            </div>
+
+        `;
+
+            }
+
+
+            document.getElementById(
+                "modalBody"
+            ).innerHTML =
+                html;
+
+
+            const modal =
+                new bootstrap.Modal(
+                    document.getElementById(
+                        "attendanceModal"
+                    )
+                );
+
+
+            modal.show();
+
+        }
+
+
+        /* =========================================================
+           LOADING
+        ========================================================= */
+
+        function showLoading() {
+
+            calendarContainer.innerHTML = `
+
+        <div class="loading">
+
+            <div
+                class="spinner-border text-dark"
+                role="status">
+            </div>
+
+            <div class="mt-3 text-muted">
+
+                Loading attendance...
+
+            </div>
+
+        </div>
+
+    `;
+
+        }
+
+
+        /* =========================================================
+           DATE FORMAT
+        ========================================================= */
+
+        function formatDate(
+            date
+        ) {
+
+            const year =
+                date.getFullYear();
+
+
+            const month =
+                String(
+                    date.getMonth() + 1
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            const day =
+                String(
+                    date.getDate()
+                ).padStart(
+                    2,
+                    "0"
+                );
+
+
+            return `${year}-${month}-${day}`;
+
+        }
+
+
+        /* =========================================================
+           NORMALIZE DATE
+        ========================================================= */
+
+        function normalizeDate(
+            value
+        ) {
+
+            if (!value) {
+
+                return null;
+
+            }
+
+
+            const stringValue =
+                String(value);
+
+
+            if (
+                /^\d{4}-\d{2}-\d{2}$/.test(
+                    stringValue
+                )
+            ) {
+
+                return stringValue;
+
+            }
+
+
+            if (
+                stringValue.includes("T")
+            ) {
+
+                return stringValue
+                    .split("T")[0];
+
+            }
+
+
+            return stringValue.substring(
+                0,
+                10
+            );
+
+        }
+
+
+        /* =========================================================
+           READABLE DATE
+        ========================================================= */
+
+        function formatReadableDate(
+            date
+        ) {
+
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    weekday: "long",
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           CONFIDENCE
+        ========================================================= */
+
+        function formatConfidence(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "-";
+
+            }
+
+
+            const number =
+                Number(value);
+
+
+            if (
+                Number.isNaN(number)
+            ) {
+
+                return "-";
+
+            }
+
+
+            if (
+                number <= 1
+            ) {
+
+                return (
+                    number * 100
+                ).toFixed(2) + "%";
+
+            }
+
+
+            return number.toFixed(2) + "%";
+
+        }
+
+
+        /* =========================================================
+           INITIALS
+        ========================================================= */
+
+        function getInitials(
+            name
+        ) {
+
+            if (!name) {
+
+                return "?";
+
+            }
+
+
+            const parts =
+                name
+                    .trim()
+                    .split(/\s+/);
+
+
+            if (
+                parts.length === 1
+            ) {
+
+                return parts[0]
+                    .substring(0, 2)
+                    .toUpperCase();
+
+            }
+
+
+            return (
+                parts[0][0] +
+                parts[parts.length - 1][0]
+            ).toUpperCase();
+
+        }
+
+
+        /* =========================================================
+           HTML ESCAPE
+        ========================================================= */
+
+        function escapeHtml(
+            value
+        ) {
+
+            if (
+                value === null ||
+                value === undefined
+            ) {
+
+                return "";
+
+            }
+
+
+            return String(value)
+
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+    </script>
+
+</body>
+
+</html>
