@@ -15,8 +15,17 @@ public class AuthController {
 
     private final AuthService authService;
 
+
     /**
-     * Admin login
+     * ============================================================
+     * USER LOGIN
+     * ============================================================
+     *
+     * Supports:
+     *
+     * ADMIN
+     * TEACHER
+     * STUDENT
      */
     @PostMapping("/login")
     public ResponseEntity<LoginResponse> login(

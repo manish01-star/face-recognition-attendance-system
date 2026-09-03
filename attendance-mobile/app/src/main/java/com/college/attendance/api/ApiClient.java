@@ -7,10 +7,7 @@ import com.college.attendance.utils.SessionManager;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
-
-import java.io.IOException;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
@@ -27,7 +24,9 @@ public class ApiClient {
         if (retrofit == null) {
 
             SessionManager sessionManager =
-                    new SessionManager(context.getApplicationContext());
+                    new SessionManager(
+                            context.getApplicationContext()
+                    );
 
             // Logging
             HttpLoggingInterceptor loggingInterceptor =
@@ -42,13 +41,15 @@ public class ApiClient {
 
                 Request originalRequest = chain.request();
 
-                String token = sessionManager.getAccessToken();
+                String token =
+                        sessionManager.getAccessToken();
 
                 Request.Builder requestBuilder =
                         originalRequest.newBuilder();
 
                 // Add JWT only when token exists
-                if (token != null && !token.trim().isEmpty()) {
+                if (token != null &&
+                        !token.trim().isEmpty()) {
 
                     requestBuilder.addHeader(
                             "Authorization",
@@ -56,10 +57,9 @@ public class ApiClient {
                     );
                 }
 
-                Request authenticatedRequest =
-                        requestBuilder.build();
-
-                return chain.proceed(authenticatedRequest);
+                return chain.proceed(
+                        requestBuilder.build()
+                );
             };
 
             // OkHttp Client
@@ -82,7 +82,9 @@ public class ApiClient {
         return retrofit;
     }
 
-    public static ApiService getApiService(Context context) {
+    public static ApiService getApiService(
+            Context context
+    ) {
 
         return getRetrofit(context)
                 .create(ApiService.class);

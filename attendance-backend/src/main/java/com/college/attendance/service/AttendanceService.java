@@ -24,6 +24,7 @@ import com.college.attendance.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -58,6 +59,20 @@ public class AttendanceService {
     private final FaceRecognitionClient faceRecognitionClient;
 
     private final ObjectMapper objectMapper;
+
+
+    // ============================================================
+    // ATTENDANCE LOCATION CONFIGURATION
+    // ============================================================
+
+    @Value("${attendance.location.latitude}")
+    private double collegeLatitude;
+
+    @Value("${attendance.location.longitude}")
+    private double collegeLongitude;
+
+    @Value("${attendance.location.radius-meters:100}")
+    private double attendanceRadiusMeters;
 
 
     // ============================================================
@@ -429,7 +444,7 @@ public class AttendanceService {
 
     ) throws Exception {
 
-        // Validate GPS
+        // Validate GPS + college geofence
         validateLocation(
                 latitude,
                 longitude);
@@ -521,7 +536,7 @@ public class AttendanceService {
 
     ) throws Exception {
 
-        // Validate GPS
+        // Validate GPS + college geofence
         validateLocation(
                 latitude,
                 longitude);
@@ -602,41 +617,21 @@ public class AttendanceService {
 
     ) throws Exception {
 
-        // Validate userId
         if (userId == null) {
 
             throw new AttendanceException(
                     "User ID is required");
         }
 
-        // Validate image
         validateFaceFile(file);
 
-        // User
         User user =
                 userRepository.findById(userId)
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "User not found"));
 
-        // Active user
         validateActiveUser(user);
-
-        /*
-         * Machine already provides userId.
-         *
-         * We do NOT identify the user from the image.
-         *
-         * userId
-         *   ↓
-         * registered embedding
-         *   ↓
-         * current image
-         *   ↓
-         * Python
-         *   ↓
-         * verified
-         */
 
         FaceVerificationResult faceResult =
                 verifyFace(
@@ -653,7 +648,6 @@ public class AttendanceService {
                                 today)
                         .orElse(null);
 
-        // Already checked in
         if (attendance != null
                 && attendance.getCheckInTime() != null) {
 
@@ -663,7 +657,6 @@ public class AttendanceService {
                     "Attendance already marked today");
         }
 
-        // Create attendance
         if (attendance == null) {
 
             attendance = new Attendance();
@@ -715,27 +708,22 @@ public class AttendanceService {
 
     ) throws Exception {
 
-        // Validate userId
         if (userId == null) {
 
             throw new AttendanceException(
                     "User ID is required");
         }
 
-        // Validate image
         validateFaceFile(file);
 
-        // User
         User user =
                 userRepository.findById(userId)
                         .orElseThrow(() ->
                                 new ResourceNotFoundException(
                                         "User not found"));
 
-        // Active user
         validateActiveUser(user);
 
-        // Face verification
         FaceVerificationResult faceResult =
                 verifyFace(
                         userId,
@@ -753,14 +741,12 @@ public class AttendanceService {
                                 new AttendanceException(
                                         "Please check-in first"));
 
-        // Check-in required
         if (attendance.getCheckInTime() == null) {
 
             throw new AttendanceException(
                     "Please check-in first");
         }
 
-        // Already checked out
         if (attendance.getCheckOutTime() != null) {
 
             return buildAlreadyMarkedResponse(
@@ -769,7 +755,6 @@ public class AttendanceService {
                     "Attendance already checked out today");
         }
 
-        // Check-out
         attendance.setCheckOutTime(
                 LocalTime.now());
 
@@ -800,20 +785,6 @@ public class AttendanceService {
     // FACE VERIFICATION
     // ============================================================
 
-    /**
-     * Common face verification method.
-     *
-     * Steps:
-     *
-     * 1. Validate image
-     * 2. Find registered face
-     * 3. Read registered embedding
-     * 4. Anti-spoof current image
-     * 5. Require exactly one face
-     * 6. Require live face
-     * 7. Verify current image against registered embedding
-     * 8. Return verification result
-     */
     private FaceVerificationResult verifyFace(
 
             Long userId,
@@ -1181,17 +1152,6 @@ public class AttendanceService {
     // CONFIDENCE
     // ============================================================
 
-    /**
-     * Converts distance into a simple confidence percentage.
-     *
-     * IMPORTANT:
-     *
-     * Python distance is the actual verification metric.
-     * Confidence here is only a display value.
-     *
-     * verified should always be based on Python's
-     * verified=true result.
-     */
     private Double calculateConfidence(
             FaceVerificationResult result) {
 
@@ -1405,7 +1365,7 @@ public class AttendanceService {
 
 
     // ============================================================
-    // LOCATION VALIDATION
+    // LOCATION VALIDATION / COLLEGE GEOFENCE
     // ============================================================
 
     private void validateLocation(
@@ -1413,6 +1373,10 @@ public class AttendanceService {
             Double latitude,
 
             Double longitude) {
+
+        // --------------------------------------------------------
+        // 1. Basic GPS validation
+        // --------------------------------------------------------
 
         if (latitude == null
                 || longitude == null) {
@@ -1438,6 +1402,98 @@ public class AttendanceService {
             throw new AttendanceException(
                     "Invalid longitude");
         }
+
+
+        // --------------------------------------------------------
+        // 2. Calculate distance from college
+        // --------------------------------------------------------
+
+        double distanceMeters =
+                calculateDistanceInMeters(
+                        latitude,
+                        longitude,
+                        collegeLatitude,
+                        collegeLongitude);
+
+
+        log.info(
+                "Attendance location validation: " +
+                "userLatitude={}, userLongitude={}, " +
+                "collegeLatitude={}, collegeLongitude={}, " +
+                "distanceMeters={}, allowedRadiusMeters={}",
+                latitude,
+                longitude,
+                collegeLatitude,
+                collegeLongitude,
+                distanceMeters,
+                attendanceRadiusMeters);
+
+
+        // --------------------------------------------------------
+        // 3. College geofence validation
+        // --------------------------------------------------------
+
+        if (distanceMeters > attendanceRadiusMeters) {
+
+            throw new AttendanceException(
+                    String.format(
+                            "You are outside the college attendance area. " +
+                            "You are approximately %.0f meters away. " +
+                            "Allowed radius is %.0f meters.",
+                            distanceMeters,
+                            attendanceRadiusMeters
+                    )
+            );
+        }
+    }
+
+
+    // ============================================================
+    // DISTANCE CALCULATION
+    // ============================================================
+
+    private double calculateDistanceInMeters(
+
+            double latitude1,
+
+            double longitude1,
+
+            double latitude2,
+
+            double longitude2) {
+
+        final double EARTH_RADIUS_METERS =
+                6371000.0;
+
+        double latitude1Radians =
+                Math.toRadians(latitude1);
+
+        double latitude2Radians =
+                Math.toRadians(latitude2);
+
+        double deltaLatitude =
+                Math.toRadians(
+                        latitude2 - latitude1);
+
+        double deltaLongitude =
+                Math.toRadians(
+                        longitude2 - longitude1);
+
+        double a =
+                Math.sin(deltaLatitude / 2)
+                        * Math.sin(deltaLatitude / 2)
+                        +
+                        Math.cos(latitude1Radians)
+                                * Math.cos(latitude2Radians)
+                                * Math.sin(deltaLongitude / 2)
+                                * Math.sin(deltaLongitude / 2);
+
+        double c =
+                2 * Math.atan2(
+                        Math.sqrt(a),
+                        Math.sqrt(1 - a));
+
+        return EARTH_RADIUS_METERS * c;
     }
 
 

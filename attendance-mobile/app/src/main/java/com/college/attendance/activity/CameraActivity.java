@@ -26,6 +26,7 @@ import com.college.attendance.R;
 import com.college.attendance.api.ApiClient;
 import com.college.attendance.api.ApiService;
 import com.college.attendance.dto.AttendanceMarkResponse;
+import com.college.attendance.utils.SessionManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
@@ -34,12 +35,11 @@ import com.google.common.util.concurrent.ListenableFuture;
 
 import java.io.File;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -64,11 +64,10 @@ public class CameraActivity extends AppCompatActivity {
 
     private ImageCapture imageCapture;
 
-    private ExecutorService cameraExecutor;
-
     private FusedLocationProviderClient fusedLocationClient;
 
     private ApiService apiService;
+    private SessionManager sessionManager;
 
     private String attendanceAction;
 
@@ -86,6 +85,14 @@ public class CameraActivity extends AppCompatActivity {
 
         initializeViews();
 
+        sessionManager = new SessionManager(this);
+
+        // User must be logged in
+        if (!sessionManager.isLoggedIn()) {
+            openLoginScreen();
+            return;
+        }
+
         apiService = ApiClient.getApiService(this);
 
         fusedLocationClient =
@@ -99,7 +106,7 @@ public class CameraActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    getString(R.string.invalid_attendance_action),
+                    R.string.invalid_attendance_action,
                     Toast.LENGTH_LONG
             ).show();
 
@@ -108,9 +115,6 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         setupScreenText();
-
-        cameraExecutor =
-                Executors.newSingleThreadExecutor();
 
         if (hasCameraPermission()) {
             startCamera();
@@ -121,6 +125,7 @@ public class CameraActivity extends AppCompatActivity {
         btnBack.setOnClickListener(v -> {
 
             if (!isProcessing) {
+                deletePendingPhoto();
                 finish();
             }
         });
@@ -139,14 +144,11 @@ public class CameraActivity extends AppCompatActivity {
 
     private void initializeViews() {
 
-        previewView =
-                findViewById(R.id.previewView);
+        previewView = findViewById(R.id.previewView);
 
-        btnCapture =
-                findViewById(R.id.btnCapture);
+        btnCapture = findViewById(R.id.btnCapture);
 
-        btnBack =
-                findViewById(R.id.btnBack);
+        btnBack = findViewById(R.id.btnBack);
 
         tvCameraTitle =
                 findViewById(R.id.tvCameraTitle);
@@ -163,16 +165,11 @@ public class CameraActivity extends AppCompatActivity {
 
         if (ACTION_CHECK_IN.equals(attendanceAction)) {
 
-            tvCameraTitle.setText(
-                    R.string.check_in
-            );
+            tvCameraTitle.setText(R.string.check_in);
 
         } else {
 
-            tvCameraTitle.setText(
-                    R.string.check_out
-            );
-
+            tvCameraTitle.setText(R.string.check_out);
         }
 
         tvCameraSubtitle.setText(
@@ -252,16 +249,15 @@ public class CameraActivity extends AppCompatActivity {
 
                         bindCamera(cameraProvider);
 
-                    } catch (ExecutionException
-                             | InterruptedException e) {
+                    } catch (ExecutionException e) {
 
-                        Toast.makeText(
-                                CameraActivity.this,
-                                getString(
-                                        R.string.camera_start_failed
-                                ),
-                                Toast.LENGTH_LONG
-                        ).show();
+                        showCameraStartError();
+
+                    } catch (InterruptedException e) {
+
+                        Thread.currentThread().interrupt();
+
+                        showCameraStartError();
                     }
 
                 },
@@ -309,12 +305,19 @@ public class CameraActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    getString(
-                            R.string.front_camera_failed
-                    ),
+                    R.string.front_camera_failed,
                     Toast.LENGTH_LONG
             ).show();
         }
+    }
+
+    private void showCameraStartError() {
+
+        Toast.makeText(
+                this,
+                R.string.camera_start_failed,
+                Toast.LENGTH_LONG
+        ).show();
     }
 
     // =========================================================
@@ -327,12 +330,14 @@ public class CameraActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    getString(
-                            R.string.camera_not_ready
-                    ),
+                    R.string.camera_not_ready,
                     Toast.LENGTH_SHORT
             ).show();
 
+            return;
+        }
+
+        if (isProcessing) {
             return;
         }
 
@@ -386,9 +391,7 @@ public class CameraActivity extends AppCompatActivity {
 
                         Toast.makeText(
                                 CameraActivity.this,
-                                getString(
-                                        R.string.image_capture_failed
-                                ),
+                                R.string.image_capture_failed,
                                 Toast.LENGTH_LONG
                         ).show();
                     }
@@ -409,9 +412,7 @@ public class CameraActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    getString(
-                            R.string.image_not_found
-                    ),
+                    R.string.image_not_found,
                     Toast.LENGTH_LONG
             ).show();
 
@@ -433,9 +434,7 @@ public class CameraActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    getString(
-                            R.string.enable_location
-                    ),
+                    R.string.enable_location,
                     Toast.LENGTH_LONG
             ).show();
 
@@ -534,11 +533,11 @@ public class CameraActivity extends AppCompatActivity {
 
                             Toast.makeText(
                                     CameraActivity.this,
-                                    getString(
-                                            R.string.location_unavailable_message
-                                    ),
+                                    R.string.location_unavailable_message,
                                     Toast.LENGTH_LONG
                             ).show();
+
+                            deletePendingPhoto();
 
                             return;
                         }
@@ -565,11 +564,11 @@ public class CameraActivity extends AppCompatActivity {
 
                         Toast.makeText(
                                 CameraActivity.this,
-                                getString(
-                                        R.string.location_failed
-                                ),
+                                R.string.location_failed,
                                 Toast.LENGTH_LONG
                         ).show();
+
+                        deletePendingPhoto();
                     });
 
         } catch (SecurityException e) {
@@ -596,11 +595,17 @@ public class CameraActivity extends AppCompatActivity {
 
             Toast.makeText(
                     this,
-                    getString(
-                            R.string.image_not_found
-                    ),
+                    R.string.image_not_found,
                     Toast.LENGTH_LONG
             ).show();
+
+            return;
+        }
+
+        // Make sure session still exists
+        if (!sessionManager.isLoggedIn()) {
+
+            handleSessionExpired();
 
             return;
         }
@@ -666,11 +671,15 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(
-                            Call<AttendanceMarkResponse> call,
-                            Response<AttendanceMarkResponse>
+                            @NonNull Call<AttendanceMarkResponse> call,
+                            @NonNull Response<AttendanceMarkResponse>
                                     response) {
 
                         setProcessing(false);
+
+                        // =========================================
+                        // SUCCESS
+                        // =========================================
 
                         if (response.isSuccessful()
                                 && response.body() != null) {
@@ -712,7 +721,25 @@ public class CameraActivity extends AppCompatActivity {
 
                             finish();
 
-                        } else {
+                            return;
+                        }
+
+                        // =========================================
+                        // SESSION EXPIRED
+                        // =========================================
+
+                        if (response.code() == 401) {
+
+                            handleSessionExpired();
+
+                            return;
+                        }
+
+                        // =========================================
+                        // FORBIDDEN
+                        // =========================================
+
+                        if (response.code() == 403) {
 
                             tvCameraSubtitle.setText(
                                     R.string.verification_failed
@@ -720,18 +747,36 @@ public class CameraActivity extends AppCompatActivity {
 
                             Toast.makeText(
                                     CameraActivity.this,
-                                    getApiErrorMessage(response),
+                                    R.string.attendance_not_allowed,
                                     Toast.LENGTH_LONG
                             ).show();
 
                             deletePendingPhoto();
+
+                            return;
                         }
+
+                        // =========================================
+                        // OTHER API ERROR
+                        // =========================================
+
+                        tvCameraSubtitle.setText(
+                                R.string.verification_failed
+                        );
+
+                        Toast.makeText(
+                                CameraActivity.this,
+                                getApiErrorMessage(response),
+                                Toast.LENGTH_LONG
+                        ).show();
+
+                        deletePendingPhoto();
                     }
 
                     @Override
                     public void onFailure(
-                            Call<AttendanceMarkResponse> call,
-                            Throwable t) {
+                            @NonNull Call<AttendanceMarkResponse> call,
+                            @NonNull Throwable t) {
 
                         setProcessing(false);
 
@@ -741,9 +786,7 @@ public class CameraActivity extends AppCompatActivity {
 
                         Toast.makeText(
                                 CameraActivity.this,
-                                getString(
-                                        R.string.server_connection_failed
-                                ),
+                                R.string.server_connection_failed,
                                 Toast.LENGTH_LONG
                         ).show();
 
@@ -774,18 +817,21 @@ public class CameraActivity extends AppCompatActivity {
             );
         }
 
-        if (response.errorBody() != null) {
+        ResponseBody errorBody =
+                response.errorBody();
 
-            try (
-                    okhttp3.ResponseBody errorBody =
-                            response.errorBody()
-            ) {
+        if (errorBody != null) {
+
+            try {
 
                 String errorMessage =
                         errorBody.string();
 
                 if (!errorMessage.trim().isEmpty()) {
-                    return errorMessage;
+
+                    return extractBackendMessage(
+                            errorMessage
+                    );
                 }
 
             } catch (Exception ignored) {
@@ -799,23 +845,131 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     // =========================================================
+    // EXTRACT BACKEND ERROR MESSAGE
+    // =========================================================
+
+    private String extractBackendMessage(
+            String errorResponse) {
+
+        String messageKey =
+                "\"message\"";
+
+        int messageIndex =
+                errorResponse.indexOf(messageKey);
+
+        if (messageIndex >= 0) {
+
+            int colonIndex =
+                    errorResponse.indexOf(
+                            ":",
+                            messageIndex
+                    );
+
+            if (colonIndex >= 0) {
+
+                int firstQuote =
+                        errorResponse.indexOf(
+                                "\"",
+                                colonIndex + 1
+                        );
+
+                int secondQuote =
+                        errorResponse.indexOf(
+                                "\"",
+                                firstQuote + 1
+                        );
+
+                if (firstQuote >= 0
+                        && secondQuote > firstQuote) {
+
+                    String message =
+                            errorResponse.substring(
+                                    firstQuote + 1,
+                                    secondQuote
+                            );
+
+                    if (!message.trim().isEmpty()) {
+                        return message;
+                    }
+                }
+            }
+        }
+
+        // If backend returned plain text
+        if (!errorResponse.trim().startsWith("{")) {
+            return errorResponse.trim();
+        }
+
+        return getString(
+                R.string.attendance_failed
+        );
+    }
+
+    // =========================================================
+    // SESSION EXPIRED
+    // =========================================================
+
+    private void handleSessionExpired() {
+
+        setProcessing(false);
+
+        deletePendingPhoto();
+
+        sessionManager.logout();
+
+        Toast.makeText(
+                this,
+                R.string.session_expired,
+                Toast.LENGTH_LONG
+        ).show();
+
+        openLoginScreen();
+    }
+
+    private void openLoginScreen() {
+
+        Intent intent =
+                new Intent(
+                        CameraActivity.this,
+                        LoginActivity.class
+                );
+
+        intent.addFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+        );
+
+        startActivity(intent);
+
+        finish();
+    }
+
+    // =========================================================
     // PROCESSING STATE
     // =========================================================
 
-    private void setProcessing(boolean processing) {
+    private void setProcessing(
+            boolean processing) {
 
         isProcessing = processing;
 
-        btnCapture.setEnabled(!processing);
-        btnBack.setEnabled(!processing);
+        if (btnCapture != null) {
 
-        btnCapture.setAlpha(
-                processing ? 0.5f : 1.0f
-        );
+            btnCapture.setEnabled(!processing);
 
-        btnBack.setAlpha(
-                processing ? 0.5f : 1.0f
-        );
+            btnCapture.setAlpha(
+                    processing ? 0.5f : 1.0f
+            );
+        }
+
+        if (btnBack != null) {
+
+            btnBack.setEnabled(!processing);
+
+            btnBack.setAlpha(
+                    processing ? 0.5f : 1.0f
+            );
+        }
     }
 
     // =========================================================
@@ -859,9 +1013,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 Toast.makeText(
                         this,
-                        getString(
-                                R.string.camera_permission_required
-                        ),
+                        R.string.camera_permission_required,
                         Toast.LENGTH_LONG
                 ).show();
 
@@ -895,9 +1047,7 @@ public class CameraActivity extends AppCompatActivity {
 
                 Toast.makeText(
                         this,
-                        getString(
-                                R.string.location_permission_required
-                        ),
+                        R.string.location_permission_required,
                         Toast.LENGTH_LONG
                 ).show();
             }
@@ -911,12 +1061,8 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 
-        super.onDestroy();
-
-        if (cameraExecutor != null) {
-            cameraExecutor.shutdown();
-        }
-
         deletePendingPhoto();
+
+        super.onDestroy();
     }
 }

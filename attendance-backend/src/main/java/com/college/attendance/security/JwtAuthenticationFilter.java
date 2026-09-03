@@ -19,9 +19,11 @@ import java.util.List;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAuthenticationFilter extends OncePerRequestFilter {
+public class JwtAuthenticationFilter
+        extends OncePerRequestFilter {
 
     private final JwtService jwtService;
+
 
     @Override
     protected void doFilterInternal(
@@ -30,9 +32,16 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             FilterChain filterChain)
             throws ServletException, IOException {
 
-        String authHeader = request.getHeader("Authorization");
+        String authHeader =
+                request.getHeader("Authorization");
 
-        // No Authorization header
+
+        /*
+         * ============================================================
+         * NO TOKEN
+         * ============================================================
+         */
+
         if (authHeader == null ||
                 !authHeader.startsWith("Bearer ")) {
 
@@ -40,49 +49,81 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        String token = authHeader.substring(7);
+
+        String token =
+                authHeader.substring(7);
+
 
         try {
 
-            // Invalid / expired token
+            /*
+             * ========================================================
+             * VALIDATE TOKEN
+             * ========================================================
+             */
+
             if (!jwtService.isTokenValid(token)) {
 
                 filterChain.doFilter(request, response);
                 return;
             }
 
+
+            /*
+             * ========================================================
+             * EXTRACT USERNAME
+             * ========================================================
+             */
+
             String username =
                     jwtService.extractUsername(token);
+
+
+            /*
+             * ========================================================
+             * EXTRACT CLAIMS
+             * ========================================================
+             */
 
             Claims claims =
                     jwtService.getClaimsFromToken(token);
 
+
+            /*
+             * ========================================================
+             * EXTRACT ROLE
+             * ========================================================
+             */
+
             String role =
                     claims.get("role", String.class);
+
+
+            /*
+             * ========================================================
+             * CREATE AUTHENTICATION
+             * ========================================================
+             */
 
             if (username != null &&
                     SecurityContextHolder
                             .getContext()
                             .getAuthentication() == null) {
 
-                /*
-                 * Explicitly declare the type as
-                 * List<GrantedAuthority>
-                 */
-                List<GrantedAuthority> authorities;
+                List<GrantedAuthority> authorities =
+                        Collections.emptyList();
 
-                if (role != null && !role.isBlank()) {
+
+                if (role != null &&
+                        !role.isBlank()) {
 
                     authorities = Collections.singletonList(
                             new SimpleGrantedAuthority(
                                     "ROLE_" + role
                             )
                     );
-
-                } else {
-
-                    authorities = Collections.emptyList();
                 }
+
 
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
@@ -91,17 +132,22 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                                 authorities
                         );
 
+
                 SecurityContextHolder
                         .getContext()
-                        .setAuthentication(authentication);
+                        .setAuthentication(
+                                authentication
+                        );
             }
 
         } catch (Exception e) {
 
-            // Do not authenticate request
+            /*
+             * Invalid JWT
+             */
             SecurityContextHolder.clearContext();
-
         }
+
 
         filterChain.doFilter(request, response);
     }

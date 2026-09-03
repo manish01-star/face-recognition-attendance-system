@@ -31,7 +31,7 @@ public interface ApiService {
 
 
     // ============================================================
-    // MOBILE - CHECK IN
+    // CHECK IN
     // ============================================================
 
     @Multipart
@@ -49,7 +49,7 @@ public interface ApiService {
 
 
     // ============================================================
-    // MOBILE - CHECK OUT
+    // CHECK OUT
     // ============================================================
 
     @Multipart
@@ -80,8 +80,6 @@ public interface ApiService {
 
     @GET("api/attendance/my/date/{date}")
     Call<AttendanceResponse> getMyAttendanceByDate(
-
-            @Path("date")
-            String date
+            @Path("date") String date
     );
 }

@@ -43,6 +43,7 @@
     <string name="check_in_success">Check-in successful</string>
     <string name="check_out_success">Check-out successful</string>
 
+    <string name="attendance_failed">Attendance verification failed. Please try again.</string>
     <string name="attendance_failed_with_code">Attendance verification failed. Error: %1$d</string>
 
 </resources>

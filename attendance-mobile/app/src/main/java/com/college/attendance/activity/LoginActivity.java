@@ -29,127 +29,305 @@ public class LoginActivity extends AppCompatActivity {
     private SessionManager sessionManager;
     private ApiService apiService;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_login);
 
-        sessionManager = new SessionManager(this);
 
-        apiService = ApiClient.getApiService(this);
+        // =========================================================
+        // INITIALIZE
+        // =========================================================
 
-        // Already logged in
+        sessionManager =
+                new SessionManager(this);
+
+        apiService =
+                ApiClient.getApiService(this);
+
+
+        // =========================================================
+        // CHECK EXISTING LOGIN
+        // =========================================================
+
         if (sessionManager.isLoggedIn()) {
+
             openMainActivity();
+
             return;
         }
 
-        etUsername = findViewById(R.id.etUsername);
-        etPassword = findViewById(R.id.etPassword);
-        btnLogin = findViewById(R.id.btnLogin);
 
-        btnLogin.setOnClickListener(v -> login());
+        // =========================================================
+        // INITIALIZE VIEWS
+        // =========================================================
+
+        etUsername =
+                findViewById(R.id.etUsername);
+
+        etPassword =
+                findViewById(R.id.etPassword);
+
+        btnLogin =
+                findViewById(R.id.btnLogin);
+
+
+        // =========================================================
+        // LOGIN BUTTON
+        // =========================================================
+
+        btnLogin.setOnClickListener(
+                v -> login()
+        );
     }
+
+
+    // =============================================================
+    // LOGIN
+    // =============================================================
 
     private void login() {
 
         String username =
-                etUsername.getText().toString().trim();
+                etUsername
+                        .getText()
+                        .toString()
+                        .trim();
 
         String password =
-                etPassword.getText().toString().trim();
+                etPassword
+                        .getText()
+                        .toString();
 
-        // Username validation
+
+        // =========================================================
+        // USERNAME VALIDATION
+        // =========================================================
+
         if (TextUtils.isEmpty(username)) {
-            etUsername.setError("Username is required");
+
+            etUsername.setError(
+                    "Username is required"
+            );
+
             etUsername.requestFocus();
+
             return;
         }
 
-        // Password validation
+
+        // =========================================================
+        // PASSWORD VALIDATION
+        // =========================================================
+
         if (TextUtils.isEmpty(password)) {
-            etPassword.setError("Password is required");
+
+            etPassword.setError(
+                    "Password is required"
+            );
+
             etPassword.requestFocus();
+
             return;
         }
+
+
+        // =========================================================
+        // DISABLE BUTTON
+        // =========================================================
 
         btnLogin.setEnabled(false);
 
+
+        // =========================================================
+        // LOGIN REQUEST
+        // =========================================================
+
         LoginRequest loginRequest =
-                new LoginRequest(username, password);
+                new LoginRequest(
+                        username,
+                        password
+                );
 
-        apiService.login(loginRequest)
-                .enqueue(new Callback<LoginResponse>() {
 
-                    @Override
-                    public void onResponse(
-                            Call<LoginResponse> call,
-                            Response<LoginResponse> response) {
+        // =========================================================
+        // CALL API
+        // =========================================================
 
-                        btnLogin.setEnabled(true);
+        apiService
+                .login(loginRequest)
+                .enqueue(
+                        new Callback<LoginResponse>() {
 
-                        if (response.isSuccessful()
-                                && response.body() != null) {
+                            @Override
+                            public void onResponse(
+                                    Call<LoginResponse> call,
+                                    Response<LoginResponse> response) {
 
-                            LoginResponse loginResponse =
-                                    response.body();
+                                btnLogin.setEnabled(true);
 
-                            String accessToken =
-                                    loginResponse.getAccessToken();
 
-                            if (accessToken == null
-                                    || accessToken.trim().isEmpty()) {
+                                // =================================================
+                                // SUCCESS
+                                // =================================================
+
+                                if (
+                                        response.isSuccessful()
+                                                && response.body() != null
+                                ) {
+
+                                    LoginResponse loginResponse =
+                                            response.body();
+
+
+                                    // =================================================
+                                    // ACCESS TOKEN
+                                    // =================================================
+
+                                    String accessToken =
+                                            loginResponse.getAccessToken();
+
+
+                                    if (
+                                            accessToken == null
+                                                    || accessToken.trim().isEmpty()
+                                    ) {
+
+                                        Toast.makeText(
+                                                LoginActivity.this,
+                                                "Login failed: Access token not received",
+                                                Toast.LENGTH_LONG
+                                        ).show();
+
+                                        return;
+                                    }
+
+
+                                    // =================================================
+                                    // ROLE
+                                    // =================================================
+
+                                    String role =
+                                            loginResponse.getRole();
+
+
+                                    if (
+                                            role == null
+                                                    || role.trim().isEmpty()
+                                    ) {
+
+                                        Toast.makeText(
+                                                LoginActivity.this,
+                                                "Login failed: User role not received",
+                                                Toast.LENGTH_LONG
+                                        ).show();
+
+                                        return;
+                                    }
+
+
+                                    // =================================================
+                                    // SAVE SESSION
+                                    // =================================================
+
+                                    /*
+                                     * Existing SessionManager
+                                     * accepts 3 arguments.
+                                     *
+                                     * accessToken
+                                     * username
+                                     * role
+                                     */
+
+                                    sessionManager.saveSession(
+                                            loginResponse.getAccessToken(),
+                                            loginResponse.getUsername(),
+                                            loginResponse.getRole()
+                                    );
+
+
+                                    // =================================================
+                                    // LOGIN SUCCESS
+                                    // =================================================
+
+                                    Toast.makeText(
+                                            LoginActivity.this,
+                                            "Login successful",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+
+
+                                    // =================================================
+                                    // OPEN MAIN ACTIVITY
+                                    // =================================================
+
+                                    openMainActivity();
+
+                                }
+
+
+                                // =================================================
+                                // LOGIN ERROR
+                                // =================================================
+
+                                else {
+
+                                    if (response.code() == 401) {
+
+                                        Toast.makeText(
+                                                LoginActivity.this,
+                                                "Invalid username or password",
+                                                Toast.LENGTH_LONG
+                                        ).show();
+
+                                    } else if (response.code() == 403) {
+
+                                        Toast.makeText(
+                                                LoginActivity.this,
+                                                "Access denied",
+                                                Toast.LENGTH_LONG
+                                        ).show();
+
+                                    } else {
+
+                                        Toast.makeText(
+                                                LoginActivity.this,
+                                                "Login failed. HTTP "
+                                                        + response.code(),
+                                                Toast.LENGTH_LONG
+                                        ).show();
+                                    }
+                                }
+                            }
+
+
+                            // =========================================================
+                            // NETWORK FAILURE
+                            // =========================================================
+
+                            @Override
+                            public void onFailure(
+                                    Call<LoginResponse> call,
+                                    Throwable t) {
+
+                                btnLogin.setEnabled(true);
 
                                 Toast.makeText(
                                         LoginActivity.this,
-                                        "Login failed: Access token not received",
+                                        "Unable to connect to server",
                                         Toast.LENGTH_LONG
                                 ).show();
-
-                                return;
                             }
-
-                            // Save session
-                            sessionManager.saveSession(
-                                    loginResponse.getAccessToken(),
-                                    loginResponse.getUsername(),
-                                    loginResponse.getRole()
-                            );
-
-                            Toast.makeText(
-                                    LoginActivity.this,
-                                    "Login successful",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-
-                            openMainActivity();
-
-                        } else {
-
-                            Toast.makeText(
-                                    LoginActivity.this,
-                                    "Invalid username or password",
-                                    Toast.LENGTH_LONG
-                            ).show();
                         }
-                    }
-
-                    @Override
-                    public void onFailure(
-                            Call<LoginResponse> call,
-                            Throwable t) {
-
-                        btnLogin.setEnabled(true);
-
-                        Toast.makeText(
-                                LoginActivity.this,
-                                "Unable to connect to server",
-                                Toast.LENGTH_LONG
-                        ).show();
-                    }
-                });
+                );
     }
+
+
+    // =============================================================
+    // OPEN MAIN ACTIVITY
+    // =============================================================
 
     private void openMainActivity() {
 
@@ -159,9 +337,15 @@ public class LoginActivity extends AppCompatActivity {
                         MainActivity.class
                 );
 
+
         startActivity(intent);
 
-        // User cannot go back to Login
+
+        /*
+         * LoginActivity ko back stack se remove
+         * kar diya jayega.
+         */
+
         finish();
     }
 }

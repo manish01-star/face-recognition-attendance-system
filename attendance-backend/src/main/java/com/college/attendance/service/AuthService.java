@@ -3,7 +3,6 @@ package com.college.attendance.service;
 import com.college.attendance.dto.auth.LoginRequest;
 import com.college.attendance.dto.auth.LoginResponse;
 import com.college.attendance.entity.User;
-import com.college.attendance.entity.enums.Role;
 import com.college.attendance.entity.enums.UserStatus;
 import com.college.attendance.repository.UserRepository;
 import com.college.attendance.security.JwtService;
@@ -23,14 +22,24 @@ public class AuthService {
 
 
     /**
-     * Admin Login
+     * ============================================================
+     * USER LOGIN
+     * ============================================================
      *
-     * Login is allowed only when:
+     * Login is allowed for:
+     *
+     * ADMIN
+     * TEACHER
+     * STUDENT
+     *
+     * Conditions:
      *
      * 1. Username exists
      * 2. User status is ACTIVE
      * 3. Password is correct
-     * 4. User role is ADMIN
+     *
+     * Role-based access is handled by Spring Security
+     * using the role stored inside JWT.
      */
     public LoginResponse login(LoginRequest request) {
 
@@ -81,22 +90,14 @@ public class AuthService {
 
         /*
          * ============================================================
-         * CHECK ADMIN ROLE
-         * ============================================================
-         */
-
-        if (user.getRole() != Role.ADMIN) {
-
-            throw new RuntimeException(
-                    "Access denied. Admin login required."
-            );
-        }
-
-
-        /*
-         * ============================================================
          * GENERATE JWT
          * ============================================================
+         *
+         * JWT will contain:
+         *
+         * userId
+         * username
+         * role
          */
 
         String token =
@@ -107,14 +108,6 @@ public class AuthService {
          * ============================================================
          * LOGIN RESPONSE
          * ============================================================
-         *
-         * LoginResponse currently contains:
-         *
-         * accessToken
-         * tokenType
-         * username
-         * role
-         *
          */
 
         return LoginResponse.builder()

@@ -4,7 +4,6 @@ import com.college.attendance.security.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -27,6 +26,7 @@ public class SecurityConfig {
 
         @Bean
         public PasswordEncoder passwordEncoder() {
+
                 return new BCryptPasswordEncoder();
         }
 
@@ -36,18 +36,35 @@ public class SecurityConfig {
 
                 http
 
+                                /*
+                                 * ====================================================
+                                 * CSRF
+                                 * ====================================================
+                                 */
                                 .csrf(csrf -> csrf.disable())
 
-                                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                                /*
+                                 * ====================================================
+                                 * CORS
+                                 * ====================================================
+                                 */
+                                .cors(cors -> cors.configurationSource(
+                                                corsConfigurationSource()))
 
+                                /*
+                                 * ====================================================
+                                 * STATELESS
+                                 * ====================================================
+                                 */
                                 .sessionManagement(session -> session.sessionCreationPolicy(
                                                 SessionCreationPolicy.STATELESS))
 
+                                /*
+                                 * ====================================================
+                                 * AUTHORIZATION
+                                 * ====================================================
+                                 */
                                 .authorizeHttpRequests(auth -> auth
-
-                                                // =========================
-                                                // PUBLIC STATIC PAGES
-                                                // =========================
 
                                                 .requestMatchers(
                                                                 "/",
@@ -63,10 +80,6 @@ public class SecurityConfig {
                                                                 "/machine-attendance.html")
                                                 .permitAll()
 
-                                                // =========================
-                                                // STATIC RESOURCES
-                                                // =========================
-
                                                 .requestMatchers(
                                                                 "/css/**",
                                                                 "/auth.js",
@@ -75,53 +88,45 @@ public class SecurityConfig {
                                                                 "/favicon.ico")
                                                 .permitAll()
 
-                                                // =========================
-                                                // SWAGGER
-                                                // =========================
-
                                                 .requestMatchers(
                                                                 "/swagger-ui/**",
                                                                 "/swagger-ui.html",
                                                                 "/v3/api-docs/**")
                                                 .permitAll()
 
-                                                // =========================
-                                                // LOGIN
-                                                // =========================
-
                                                 .requestMatchers(
                                                                 "/api/auth/login")
                                                 .permitAll()
-
-                                                // =========================
-                                                // MACHINE ATTENDANCE
-                                                // =========================
 
                                                 .requestMatchers(
                                                                 "/api/attendance/machine/**")
                                                 .permitAll()
 
-                                                // =========================
-                                                // ADMIN APIs
-                                                // =========================
-
                                                 .requestMatchers(
                                                                 "/api/admin/**")
                                                 .hasRole("ADMIN")
 
-                                                // =========================
-                                                // EVERYTHING ELSE
-                                                // =========================
+                                                .requestMatchers(
+                                                                "/api/attendance/**")
+                                                .hasAnyRole(
+                                                                "ADMIN",
+                                                                "TEACHER",
+                                                                "STUDENT")
 
                                                 .anyRequest()
                                                 .authenticated())
-
                                 .addFilterBefore(
                                                 jwtAuthenticationFilter,
                                                 UsernamePasswordAuthenticationFilter.class);
 
                 return http.build();
         }
+
+        /*
+         * ================================================================
+         * CORS CONFIGURATION
+         * ================================================================
+         */
 
         @Bean
         public CorsConfigurationSource corsConfigurationSource() {
@@ -144,12 +149,10 @@ public class SecurityConfig {
                                                 "OPTIONS"));
 
                 configuration.setAllowedHeaders(
-                                List.of(
-                                                "*"));
+                                List.of("*"));
 
                 configuration.setExposedHeaders(
-                                List.of(
-                                                "Authorization"));
+                                List.of("Authorization"));
 
                 configuration.setAllowCredentials(false);
 

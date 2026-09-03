@@ -17,11 +17,12 @@ public class JwtService {
     private final SecretKey secretKey;
 
     /*
-     * Token expiration
+     * Token expiration:
      * 24 Hours
      */
     private final long expiration =
             24 * 60 * 60 * 1000L;
+
 
     public JwtService(
             @Value("${jwt.secret}") String secret) {
@@ -31,7 +32,8 @@ public class JwtService {
         );
     }
 
-    /*
+
+    /**
      * ============================================================
      * GENERATE JWT TOKEN
      * ============================================================
@@ -46,15 +48,28 @@ public class JwtService {
 
         return Jwts.builder()
 
+                /*
+                 * Username
+                 */
                 .subject(
                         user.getUsername()
                 )
 
+                /*
+                 * User ID
+                 */
                 .claim(
                         "userId",
                         user.getId()
                 )
 
+                /*
+                 * User Role
+                 *
+                 * ADMIN
+                 * TEACHER
+                 * STUDENT
+                 */
                 .claim(
                         "role",
                         user.getRole().name()
@@ -69,7 +84,8 @@ public class JwtService {
                 .compact();
     }
 
-    /*
+
+    /**
      * ============================================================
      * EXTRACT USERNAME
      * ============================================================
@@ -80,7 +96,8 @@ public class JwtService {
                 .getSubject();
     }
 
-    /*
+
+    /**
      * ============================================================
      * EXTRACT CLAIMS
      * ============================================================
@@ -98,7 +115,8 @@ public class JwtService {
                 .getPayload();
     }
 
-    /*
+
+    /**
      * ============================================================
      * VALIDATE TOKEN
      * ============================================================
