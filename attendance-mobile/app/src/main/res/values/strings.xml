@@ -1,50 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">College Attendance</string>
+    <!-- App -->
+    <string name="app_name">FaceAttend</string>
+    <string name="app_tagline">Smart Face Recognition Attendance</string>
 
+    <!-- Common -->
     <string name="back">Back</string>
-    <string name="capture_face">Capture face</string>
 
-    <string name="face_verification">Face Verification</string>
+    <!-- Attendance -->
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
 
+    <!-- Camera -->
+    <string name="capture_face">Capture face</string>
+    <string name="face_verification">Face Verification</string>
     <string name="camera_instruction">Keep only your face visible and look at the camera</string>
     <string name="keep_face_visible">Keep your face clearly visible</string>
 
+    <!-- Camera Errors -->
     <string name="invalid_attendance_action">Invalid attendance action</string>
-
     <string name="camera_start_failed">Unable to start camera</string>
     <string name="front_camera_failed">Unable to access front camera</string>
     <string name="camera_not_ready">Camera is not ready</string>
     <string name="camera_permission_required">Camera permission is required for attendance</string>
+    <string name="spoof_detected">Spoof Detected</string>
+    <string name="unregistered">Unregistered</string>
+    <string name="attendance_registered">%1$s Successfully Registered</string>
 
+    <!-- Image -->
     <string name="capturing_image">Capturing image...</string>
     <string name="image_capture_failed">Unable to capture image</string>
     <string name="image_not_found">Captured image not found</string>
 
+    <!-- Location -->
     <string name="getting_location">Getting your location...</string>
     <string name="getting_current_location">Getting current location...</string>
-
     <string name="enable_location">Please enable location/GPS</string>
     <string name="location_unavailable">Location unavailable</string>
     <string name="location_unavailable_message">Location not available. Please move to an open area and try again.</string>
     <string name="location_failed">Unable to get location</string>
     <string name="location_permission_required">Location permission is required to mark attendance</string>
 
+    <!-- Verification -->
     <string name="verifying_attendance">Verifying face and marking attendance...</string>
     <string name="verification_failed">Verification failed. Please try again.</string>
 
+    <!-- Network -->
     <string name="server_connection_failed">Unable to connect to server</string>
 
+    <!-- Session -->
     <string name="session_expired">Session expired. Please login again.</string>
     <string name="attendance_not_allowed">You are not allowed to mark attendance.</string>
 
+    <!-- Success -->
     <string name="check_in_success">Check-in successful</string>
     <string name="check_out_success">Check-out successful</string>
 
+    <!-- Attendance Errors -->
     <string name="attendance_failed">Attendance verification failed. Please try again.</string>
     <string name="attendance_failed_with_code">Attendance verification failed. Error: %1$d</string>
 
 </resources>
-

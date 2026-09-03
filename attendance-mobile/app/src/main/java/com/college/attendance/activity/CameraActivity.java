@@ -3,9 +3,11 @@ package com.college.attendance.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Size;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -14,9 +16,14 @@ import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
+import androidx.camera.core.ExperimentalGetImage;
+import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageCapture;
 import androidx.camera.core.ImageCaptureException;
+import androidx.camera.core.ImageProxy;
 import androidx.camera.core.Preview;
+import androidx.camera.core.resolutionselector.ResolutionSelector;
+import androidx.camera.core.resolutionselector.ResolutionStrategy;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
 import androidx.core.app.ActivityCompat;
@@ -32,9 +39,17 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.common.util.concurrent.ListenableFuture;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.face.Face;
+import com.google.mlkit.vision.face.FaceDetection;
+import com.google.mlkit.vision.face.FaceDetector;
+import com.google.mlkit.vision.face.FaceDetectorOptions;
 
 import java.io.File;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -45,62 +60,188 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+
+/*
+ * CameraX getImage() is an experimental API.
+ */
+@ExperimentalGetImage
 public class CameraActivity extends AppCompatActivity {
 
+    // =========================================================
+    // PERMISSION CODES
+    // =========================================================
+
     private static final int CAMERA_PERMISSION_REQUEST = 1001;
+
     private static final int LOCATION_PERMISSION_REQUEST = 1002;
+
+
+    // =========================================================
+    // ATTENDANCE ACTION
+    // =========================================================
 
     public static final String EXTRA_ACTION = "attendance_action";
 
     public static final String ACTION_CHECK_IN = "CHECK_IN";
+
     public static final String ACTION_CHECK_OUT = "CHECK_OUT";
 
+
+    // =========================================================
+    // PERFORMANCE SETTINGS
+    // =========================================================
+
+    /*
+     * Analyze at most approximately 8 frames per second.
+     *
+     * Camera preview remains smooth because analysis runs
+     * on a background executor.
+     */
+    private static final long ANALYSIS_INTERVAL_MS = 120L;
+
+
+    /*
+     * Require 3 consecutive suitable frames before
+     * automatically capturing the attendance photo.
+     */
+    private static final int REQUIRED_STABLE_FRAMES = 3;
+
+
+    /*
+     * Face must occupy at least 18% of analysis image height.
+     */
+    private static final float MIN_FACE_HEIGHT_RATIO = 0.18f;
+
+
+    /*
+     * Face should remain reasonably close to the center.
+     */
+    private static final float CENTER_TOLERANCE = 0.30f;
+
+
+    // =========================================================
+    // VIEWS
+    // =========================================================
+
     private PreviewView previewView;
-    private ImageButton btnCapture;
+
     private ImageButton btnBack;
 
     private TextView tvCameraTitle;
-    private TextView tvCameraSubtitle;
+
+
+    // =========================================================
+    // CAMERA
+    // =========================================================
 
     private ImageCapture imageCapture;
 
+    private ImageAnalysis imageAnalysis;
+
+    private ProcessCameraProvider cameraProvider;
+
+
+    // =========================================================
+    // FACE DETECTION
+    // =========================================================
+
+    private FaceDetector faceDetector;
+
+    private ExecutorService analysisExecutor;
+
+
+    // =========================================================
+    // LOCATION
+    // =========================================================
+
     private FusedLocationProviderClient fusedLocationClient;
 
+
+    // =========================================================
+    // API / SESSION
+    // =========================================================
+
     private ApiService apiService;
+
     private SessionManager sessionManager;
+
+
+    // =========================================================
+    // ATTENDANCE
+    // =========================================================
 
     private String attendanceAction;
 
     private File pendingPhotoFile;
 
-    private boolean isProcessing = false;
+
+    /*
+     * Prevent multiple captures / API calls.
+     */
+    private volatile boolean isProcessing = false;
+
+
+    /*
+     * Number of consecutive suitable face frames.
+     */
+    private int stableFaceFrames = 0;
+
+
+    /*
+     * Last frame analysis timestamp.
+     */
+    private long lastAnalysisTime = 0L;
+
+
+    // =========================================================
+    // ON CREATE
+    // =========================================================
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         EdgeToEdge.enable(this);
 
         setContentView(R.layout.activity_camera);
 
+
         initializeViews();
 
-        sessionManager = new SessionManager(this);
 
-        // User must be logged in
+        sessionManager =
+                new SessionManager(this);
+
+
+        /*
+         * User must be logged in.
+         */
         if (!sessionManager.isLoggedIn()) {
+
             openLoginScreen();
+
             return;
         }
 
-        apiService = ApiClient.getApiService(this);
+
+        apiService =
+                ApiClient.getApiService(this);
+
 
         fusedLocationClient =
-                LocationServices.getFusedLocationProviderClient(this);
+                LocationServices
+                        .getFusedLocationProviderClient(this);
+
 
         attendanceAction =
-                getIntent().getStringExtra(EXTRA_ACTION);
+                getIntent()
+                        .getStringExtra(EXTRA_ACTION);
 
+
+        /*
+         * Validate attendance action.
+         */
         if (!ACTION_CHECK_IN.equals(attendanceAction)
                 && !ACTION_CHECK_OUT.equals(attendanceAction)) {
 
@@ -111,32 +252,78 @@ public class CameraActivity extends AppCompatActivity {
             ).show();
 
             finish();
+
             return;
         }
 
+
         setupScreenText();
 
+
+        // =====================================================
+        // ML KIT FACE DETECTOR
+        // =====================================================
+
+        /*
+         * FAST mode is enough because Android is only responsible
+         * for detecting when a suitable face is available.
+         *
+         * Final face verification and anti-spoofing are performed
+         * by the backend / Python face service.
+         */
+        FaceDetectorOptions detectorOptions =
+                new FaceDetectorOptions.Builder()
+                        .setPerformanceMode(
+                                FaceDetectorOptions
+                                        .PERFORMANCE_MODE_FAST
+                        )
+                        .setMinFaceSize(0.15f)
+                        .build();
+
+
+        faceDetector =
+                FaceDetection
+                        .getClient(detectorOptions);
+
+
+        /*
+         * Dedicated background executor.
+         *
+         * Face detection never runs on the UI thread.
+         */
+        analysisExecutor =
+                Executors.newSingleThreadExecutor();
+
+
+        // =====================================================
+        // START CAMERA
+        // =====================================================
+
         if (hasCameraPermission()) {
+
             startCamera();
+
         } else {
+
             requestCameraPermission();
         }
+
+
+        // =====================================================
+        // BACK BUTTON
+        // =====================================================
 
         btnBack.setOnClickListener(v -> {
 
             if (!isProcessing) {
+
                 deletePendingPhoto();
+
                 finish();
             }
         });
-
-        btnCapture.setOnClickListener(v -> {
-
-            if (!isProcessing) {
-                captureImage();
-            }
-        });
     }
+
 
     // =========================================================
     // INITIALIZE VIEWS
@@ -144,18 +331,16 @@ public class CameraActivity extends AppCompatActivity {
 
     private void initializeViews() {
 
-        previewView = findViewById(R.id.previewView);
+        previewView =
+                findViewById(R.id.previewView);
 
-        btnCapture = findViewById(R.id.btnCapture);
-
-        btnBack = findViewById(R.id.btnBack);
+        btnBack =
+                findViewById(R.id.btnBack);
 
         tvCameraTitle =
                 findViewById(R.id.tvCameraTitle);
-
-        tvCameraSubtitle =
-                findViewById(R.id.tvCameraSubtitle);
     }
+
 
     // =========================================================
     // SCREEN TEXT
@@ -165,17 +350,18 @@ public class CameraActivity extends AppCompatActivity {
 
         if (ACTION_CHECK_IN.equals(attendanceAction)) {
 
-            tvCameraTitle.setText(R.string.check_in);
+            tvCameraTitle.setText(
+                    R.string.check_in
+            );
 
         } else {
 
-            tvCameraTitle.setText(R.string.check_out);
+            tvCameraTitle.setText(
+                    R.string.check_out
+            );
         }
-
-        tvCameraSubtitle.setText(
-                R.string.camera_instruction
-        );
     }
+
 
     // =========================================================
     // CAMERA PERMISSION
@@ -189,6 +375,7 @@ public class CameraActivity extends AppCompatActivity {
         ) == PackageManager.PERMISSION_GRANTED;
     }
 
+
     private void requestCameraPermission() {
 
         ActivityCompat.requestPermissions(
@@ -199,6 +386,7 @@ public class CameraActivity extends AppCompatActivity {
                 CAMERA_PERMISSION_REQUEST
         );
     }
+
 
     // =========================================================
     // LOCATION PERMISSION
@@ -217,6 +405,7 @@ public class CameraActivity extends AppCompatActivity {
                 ) == PackageManager.PERMISSION_GRANTED;
     }
 
+
     private void requestLocationPermission() {
 
         ActivityCompat.requestPermissions(
@@ -229,6 +418,7 @@ public class CameraActivity extends AppCompatActivity {
         );
     }
 
+
     // =========================================================
     // START CAMERA
     // =========================================================
@@ -237,14 +427,16 @@ public class CameraActivity extends AppCompatActivity {
 
         ListenableFuture<ProcessCameraProvider>
                 cameraProviderFuture =
-                ProcessCameraProvider.getInstance(this);
+                ProcessCameraProvider
+                        .getInstance(this);
+
 
         cameraProviderFuture.addListener(
                 () -> {
 
                     try {
 
-                        ProcessCameraProvider cameraProvider =
+                        cameraProvider =
                                 cameraProviderFuture.get();
 
                         bindCamera(cameraProvider);
@@ -265,40 +457,107 @@ public class CameraActivity extends AppCompatActivity {
         );
     }
 
+
     // =========================================================
     // BIND CAMERA
     // =========================================================
 
     private void bindCamera(
-            ProcessCameraProvider cameraProvider) {
+            ProcessCameraProvider provider) {
+
+        // =====================================================
+        // PREVIEW
+        // =====================================================
 
         Preview preview =
                 new Preview.Builder()
                         .build();
 
+
         preview.setSurfaceProvider(
                 previewView.getSurfaceProvider()
         );
 
+
+        // =====================================================
+        // IMAGE CAPTURE
+        // =====================================================
+
+        /*
+         * This camera use case captures the actual attendance
+         * photograph which is uploaded to the backend.
+         */
         imageCapture =
                 new ImageCapture.Builder()
                         .setCaptureMode(
-                                ImageCapture.CAPTURE_MODE_MINIMIZE_LATENCY
+                                ImageCapture
+                                        .CAPTURE_MODE_MINIMIZE_LATENCY
                         )
                         .build();
+
+
+        // =====================================================
+        // IMAGE ANALYSIS
+        // =====================================================
+
+        /*
+         * Use a low analysis resolution.
+         *
+         * The analysis stream is only used to determine whether
+         * a suitable face is present.
+         */
+        ResolutionSelector resolutionSelector =
+                new ResolutionSelector.Builder()
+                        .setResolutionStrategy(
+                                new ResolutionStrategy(
+                                        new Size(640, 480),
+                                        ResolutionStrategy
+                                                .FALLBACK_RULE_CLOSEST_HIGHER_THEN_LOWER
+                                )
+                        )
+                        .build();
+
+
+        imageAnalysis =
+                new ImageAnalysis.Builder()
+                        .setResolutionSelector(
+                                resolutionSelector
+                        )
+                        .setBackpressureStrategy(
+                                ImageAnalysis
+                                        .STRATEGY_KEEP_ONLY_LATEST
+                        )
+                        .build();
+
+
+        /*
+         * Run ML Kit analysis on background executor.
+         */
+        imageAnalysis.setAnalyzer(
+                analysisExecutor,
+                this::analyzeFrame
+        );
+
+
+        // =====================================================
+        // FRONT CAMERA
+        // =====================================================
 
         CameraSelector cameraSelector =
                 CameraSelector.DEFAULT_FRONT_CAMERA;
 
+
         try {
 
-            cameraProvider.unbindAll();
+            provider.unbindAll();
 
-            cameraProvider.bindToLifecycle(
+
+            provider.bindToLifecycle(
                     this,
                     cameraSelector,
                     preview,
-                    imageCapture
+                    imageCapture,
+                    imageAnalysis
             );
 
         } catch (Exception e) {
@@ -311,6 +570,11 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+
+    // =========================================================
+    // CAMERA START ERROR
+    // =========================================================
+
     private void showCameraStartError() {
 
         Toast.makeText(
@@ -320,13 +584,284 @@ public class CameraActivity extends AppCompatActivity {
         ).show();
     }
 
+
     // =========================================================
-    // CAPTURE IMAGE
+    // ANALYZE CAMERA FRAME
+    // =========================================================
+
+    private void analyzeFrame(
+            @NonNull ImageProxy imageProxy) {
+
+        /*
+         * Attendance processing has already started.
+         *
+         * Do not analyze additional frames.
+         */
+        if (isProcessing) {
+
+            imageProxy.close();
+
+            return;
+        }
+
+
+        // =====================================================
+        // THROTTLING
+        // =====================================================
+
+        long currentTime =
+                System.currentTimeMillis();
+
+
+        if (currentTime - lastAnalysisTime
+                < ANALYSIS_INTERVAL_MS) {
+
+            imageProxy.close();
+
+            return;
+        }
+
+
+        lastAnalysisTime =
+                currentTime;
+
+
+        // =====================================================
+        // GET ANDROID IMAGE
+        // =====================================================
+
+        if (imageProxy.getImage() == null) {
+
+            imageProxy.close();
+
+            return;
+        }
+
+
+        InputImage inputImage =
+                InputImage.fromMediaImage(
+                        imageProxy.getImage(),
+                        imageProxy
+                                .getImageInfo()
+                                .getRotationDegrees()
+                );
+
+
+        /*
+         * IMPORTANT:
+         *
+         * ImageProxy must remain open until ML Kit has finished
+         * processing the underlying image.
+         */
+        faceDetector
+                .process(inputImage)
+                .addOnSuccessListener(
+                        faces -> {
+
+                            try {
+
+                                if (!isProcessing) {
+
+                                    handleDetectedFaces(
+                                            faces,
+                                            imageProxy
+                                    );
+                                }
+
+                            } finally {
+
+                                /*
+                                 * Close only after ML Kit has
+                                 * completed processing.
+                                 */
+                                imageProxy.close();
+                            }
+                        }
+                )
+                .addOnFailureListener(
+                        e -> {
+
+                            stableFaceFrames = 0;
+
+                            imageProxy.close();
+                        }
+                );
+    }
+
+
+    // =========================================================
+    // HANDLE DETECTED FACES
+    // =========================================================
+
+    private void handleDetectedFaces(
+            List<Face> faces,
+            ImageProxy imageProxy) {
+
+        /*
+         * Exactly one face is required.
+         *
+         * 0 faces:
+         * reset stability.
+         *
+         * 2+ faces:
+         * reset stability.
+         */
+        if (faces == null
+                || faces.size() != 1) {
+
+            stableFaceFrames = 0;
+
+            return;
+        }
+
+
+        Face face =
+                faces.get(0);
+
+
+        // =====================================================
+        // FACE QUALITY / POSITION
+        // =====================================================
+
+        if (!isFaceSuitable(
+                face,
+                imageProxy
+        )) {
+
+            stableFaceFrames = 0;
+
+            return;
+        }
+
+
+        // =====================================================
+        // STABLE FACE
+        // =====================================================
+
+        stableFaceFrames++;
+
+
+        /*
+         * Automatically capture after the face has remained
+         * suitable for the required number of frames.
+         */
+        if (stableFaceFrames
+                >= REQUIRED_STABLE_FRAMES
+                && !isProcessing) {
+
+            /*
+             * Set this BEFORE switching to the UI thread.
+             *
+             * This prevents another analyzer callback from
+             * starting a second capture.
+             */
+            isProcessing = true;
+
+            stableFaceFrames = 0;
+
+
+            runOnUiThread(
+                    this::captureImage
+            );
+        }
+    }
+
+
+    // =========================================================
+    // FACE QUALITY CHECK
+    // =========================================================
+
+    private boolean isFaceSuitable(
+            Face face,
+            ImageProxy imageProxy) {
+
+        Rect bounds =
+                face.getBoundingBox();
+
+
+        int imageWidth =
+                imageProxy.getWidth();
+
+        int imageHeight =
+                imageProxy.getHeight();
+
+
+        if (imageWidth <= 0
+                || imageHeight <= 0) {
+
+            return false;
+        }
+
+
+        // =====================================================
+        // FACE SIZE
+        // =====================================================
+
+        /*
+         * Face should be sufficiently large in the frame.
+         */
+        float faceHeightRatio =
+                (float) bounds.height()
+                        / (float) imageHeight;
+
+
+        if (faceHeightRatio
+                < MIN_FACE_HEIGHT_RATIO) {
+
+            return false;
+        }
+
+
+        // =====================================================
+        // FACE POSITION
+        // =====================================================
+
+        float faceCenterX =
+                bounds.centerX();
+
+        float faceCenterY =
+                bounds.centerY();
+
+
+        float imageCenterX =
+                imageWidth / 2f;
+
+        float imageCenterY =
+                imageHeight / 2f;
+
+
+        float normalizedX =
+                Math.abs(
+                        faceCenterX
+                                - imageCenterX
+                ) / imageWidth;
+
+
+        float normalizedY =
+                Math.abs(
+                        faceCenterY
+                                - imageCenterY
+                ) / imageHeight;
+
+
+        return normalizedX <= CENTER_TOLERANCE
+                && normalizedY <= CENTER_TOLERANCE;
+    }
+
+
+    // =========================================================
+    // AUTOMATIC IMAGE CAPTURE
     // =========================================================
 
     private void captureImage() {
 
+        /*
+         * isProcessing has already been set to true by the
+         * analyzer.
+         */
         if (imageCapture == null) {
+
+            isProcessing = false;
 
             Toast.makeText(
                     this,
@@ -337,15 +872,10 @@ public class CameraActivity extends AppCompatActivity {
             return;
         }
 
-        if (isProcessing) {
-            return;
-        }
 
-        setProcessing(true);
-
-        tvCameraSubtitle.setText(
-                R.string.capturing_image
-        );
+        // =====================================================
+        // CREATE TEMP IMAGE
+        // =====================================================
 
         File photoFile =
                 new File(
@@ -355,10 +885,18 @@ public class CameraActivity extends AppCompatActivity {
                                 + ".jpg"
                 );
 
-        ImageCapture.OutputFileOptions outputOptions =
-                new ImageCapture.OutputFileOptions
+
+        ImageCapture.OutputFileOptions
+                outputOptions =
+                new ImageCapture
+                        .OutputFileOptions
                         .Builder(photoFile)
                         .build();
+
+
+        // =====================================================
+        // CAPTURE ONE PHOTO
+        // =====================================================
 
         imageCapture.takePicture(
                 outputOptions,
@@ -367,27 +905,26 @@ public class CameraActivity extends AppCompatActivity {
 
                     @Override
                     public void onImageSaved(
-                            @NonNull ImageCapture.OutputFileResults
-                                    outputFileResults) {
+                            @NonNull ImageCapture
+                                    .OutputFileResults outputFileResults) {
 
-                        pendingPhotoFile = photoFile;
+                        pendingPhotoFile =
+                                photoFile;
 
-                        tvCameraSubtitle.setText(
-                                R.string.getting_location
-                        );
 
+                        /*
+                         * Continue to location and then upload.
+                         */
                         getLocationAndSubmit();
                     }
+
 
                     @Override
                     public void onError(
                             @NonNull ImageCaptureException exception) {
 
-                        setProcessing(false);
+                        isProcessing = false;
 
-                        tvCameraSubtitle.setText(
-                                R.string.camera_instruction
-                        );
 
                         Toast.makeText(
                                 CameraActivity.this,
@@ -399,6 +936,7 @@ public class CameraActivity extends AppCompatActivity {
         );
     }
 
+
     // =========================================================
     // LOCATION + SUBMIT
     // =========================================================
@@ -408,7 +946,7 @@ public class CameraActivity extends AppCompatActivity {
         if (pendingPhotoFile == null
                 || !pendingPhotoFile.exists()) {
 
-            setProcessing(false);
+            isProcessing = false;
 
             Toast.makeText(
                     this,
@@ -419,77 +957,113 @@ public class CameraActivity extends AppCompatActivity {
             return;
         }
 
+
+        // =====================================================
+        // LOCATION PERMISSION
+        // =====================================================
+
         if (!hasLocationPermission()) {
 
-            setProcessing(false);
-
+            /*
+             * Keep the captured image.
+             *
+             * Once permission is granted, the upload can
+             * continue from onRequestPermissionsResult().
+             */
             requestLocationPermission();
 
             return;
         }
 
+
+        // =====================================================
+        // LOCATION / GPS CHECK
+        // =====================================================
+
         if (!isLocationEnabled()) {
 
-            setProcessing(false);
-
+            /*
+             * Keep processing state true because we still have
+             * a captured photo waiting for location.
+             */
             Toast.makeText(
                     this,
                     R.string.enable_location,
                     Toast.LENGTH_LONG
             ).show();
 
+
             Intent intent =
                     new Intent(
-                            Settings.ACTION_LOCATION_SOURCE_SETTINGS
+                            Settings
+                                    .ACTION_LOCATION_SOURCE_SETTINGS
                     );
+
 
             startActivity(intent);
 
             return;
         }
 
+
         fetchCurrentLocation();
     }
 
+
     // =========================================================
-    // CHECK GPS
+    // CHECK GPS / NETWORK LOCATION
     // =========================================================
 
     private boolean isLocationEnabled() {
 
         LocationManager locationManager =
                 (LocationManager)
-                        getSystemService(LOCATION_SERVICE);
+                        getSystemService(
+                                LOCATION_SERVICE
+                        );
+
 
         if (locationManager == null) {
+
             return false;
         }
 
+
         boolean gpsEnabled = false;
+
         boolean networkEnabled = false;
+
 
         try {
 
             gpsEnabled =
-                    locationManager.isProviderEnabled(
-                            LocationManager.GPS_PROVIDER
-                    );
+                    locationManager
+                            .isProviderEnabled(
+                                    LocationManager
+                                            .GPS_PROVIDER
+                            );
 
         } catch (Exception ignored) {
         }
+
 
         try {
 
             networkEnabled =
-                    locationManager.isProviderEnabled(
-                            LocationManager.NETWORK_PROVIDER
-                    );
+                    locationManager
+                            .isProviderEnabled(
+                                    LocationManager
+                                            .NETWORK_PROVIDER
+                            );
 
         } catch (Exception ignored) {
         }
 
-        return gpsEnabled || networkEnabled;
+
+        return gpsEnabled
+                || networkEnabled;
     }
+
 
     // =========================================================
     // GET CURRENT LOCATION
@@ -499,85 +1073,80 @@ public class CameraActivity extends AppCompatActivity {
 
         if (!hasLocationPermission()) {
 
-            setProcessing(false);
-
             requestLocationPermission();
 
             return;
         }
 
-        tvCameraSubtitle.setText(
-                R.string.getting_current_location
-        );
 
         CancellationTokenSource
                 cancellationTokenSource =
                 new CancellationTokenSource();
+
 
         try {
 
             fusedLocationClient
                     .getCurrentLocation(
                             Priority.PRIORITY_HIGH_ACCURACY,
-                            cancellationTokenSource.getToken()
+                            cancellationTokenSource
+                                    .getToken()
                     )
-                    .addOnSuccessListener(location -> {
+                    .addOnSuccessListener(
+                            location -> {
 
-                        if (location == null) {
+                                if (location == null) {
 
-                            setProcessing(false);
+                                    isProcessing = false;
 
-                            tvCameraSubtitle.setText(
-                                    R.string.location_unavailable
-                            );
+                                    Toast.makeText(
+                                            CameraActivity.this,
+                                            R.string.location_unavailable_message,
+                                            Toast.LENGTH_LONG
+                                    ).show();
 
-                            Toast.makeText(
-                                    CameraActivity.this,
-                                    R.string.location_unavailable_message,
-                                    Toast.LENGTH_LONG
-                            ).show();
+                                    deletePendingPhoto();
 
-                            deletePendingPhoto();
+                                    return;
+                                }
 
-                            return;
-                        }
 
-                        double latitude =
-                                location.getLatitude();
+                                double latitude =
+                                        location.getLatitude();
 
-                        double longitude =
-                                location.getLongitude();
 
-                        uploadAttendance(
-                                pendingPhotoFile,
-                                latitude,
-                                longitude
-                        );
-                    })
-                    .addOnFailureListener(e -> {
+                                double longitude =
+                                        location.getLongitude();
 
-                        setProcessing(false);
 
-                        tvCameraSubtitle.setText(
-                                R.string.location_unavailable
-                        );
+                                uploadAttendance(
+                                        pendingPhotoFile,
+                                        latitude,
+                                        longitude
+                                );
+                            }
+                    )
+                    .addOnFailureListener(
+                            e -> {
 
-                        Toast.makeText(
-                                CameraActivity.this,
-                                R.string.location_failed,
-                                Toast.LENGTH_LONG
-                        ).show();
+                                isProcessing = false;
 
-                        deletePendingPhoto();
-                    });
+                                Toast.makeText(
+                                        CameraActivity.this,
+                                        R.string.location_failed,
+                                        Toast.LENGTH_LONG
+                                ).show();
+
+                                deletePendingPhoto();
+                            }
+                    );
 
         } catch (SecurityException e) {
-
-            setProcessing(false);
 
             requestLocationPermission();
         }
     }
+
 
     // =========================================================
     // UPLOAD ATTENDANCE
@@ -591,7 +1160,7 @@ public class CameraActivity extends AppCompatActivity {
         if (imageFile == null
                 || !imageFile.exists()) {
 
-            setProcessing(false);
+            isProcessing = false;
 
             Toast.makeText(
                     this,
@@ -602,7 +1171,11 @@ public class CameraActivity extends AppCompatActivity {
             return;
         }
 
-        // Make sure session still exists
+
+        // =====================================================
+        // SESSION CHECK
+        // =====================================================
+
         if (!sessionManager.isLoggedIn()) {
 
             handleSessionExpired();
@@ -610,15 +1183,22 @@ public class CameraActivity extends AppCompatActivity {
             return;
         }
 
-        tvCameraSubtitle.setText(
-                R.string.verifying_attendance
-        );
+
+        // =====================================================
+        // MULTIPART IMAGE
+        // =====================================================
 
         MediaType imageMediaType =
-                MediaType.parse("image/jpeg");
+                MediaType.parse(
+                        "image/jpeg"
+                );
+
 
         MediaType textMediaType =
-                MediaType.parse("text/plain");
+                MediaType.parse(
+                        "text/plain"
+                );
+
 
         RequestBody imageRequestBody =
                 RequestBody.create(
@@ -626,12 +1206,20 @@ public class CameraActivity extends AppCompatActivity {
                         imageMediaType
                 );
 
+
         MultipartBody.Part filePart =
-                MultipartBody.Part.createFormData(
-                        "file",
-                        imageFile.getName(),
-                        imageRequestBody
-                );
+                MultipartBody
+                        .Part
+                        .createFormData(
+                                "file",
+                                imageFile.getName(),
+                                imageRequestBody
+                        );
+
+
+        // =====================================================
+        // LATITUDE
+        // =====================================================
 
         RequestBody latitudeBody =
                 RequestBody.create(
@@ -639,15 +1227,27 @@ public class CameraActivity extends AppCompatActivity {
                         textMediaType
                 );
 
+
+        // =====================================================
+        // LONGITUDE
+        // =====================================================
+
         RequestBody longitudeBody =
                 RequestBody.create(
                         String.valueOf(longitude),
                         textMediaType
                 );
 
+
+        // =====================================================
+        // SELECT API
+        // =====================================================
+
         Call<AttendanceMarkResponse> call;
 
-        if (ACTION_CHECK_IN.equals(attendanceAction)) {
+
+        if (ACTION_CHECK_IN.equals(
+                attendanceAction)) {
 
             call =
                     apiService.checkIn(
@@ -666,8 +1266,13 @@ public class CameraActivity extends AppCompatActivity {
                     );
         }
 
+
+        // =====================================================
+        // API CALL
+        // =====================================================
+
         call.enqueue(
-                new Callback<AttendanceMarkResponse>() {
+                new Callback<>() {
 
                     @Override
                     public void onResponse(
@@ -675,47 +1280,70 @@ public class CameraActivity extends AppCompatActivity {
                             @NonNull Response<AttendanceMarkResponse>
                                     response) {
 
-                        setProcessing(false);
+                        isProcessing = false;
 
-                        // =========================================
+
+                        // =====================================
                         // SUCCESS
-                        // =========================================
+                        // =====================================
 
                         if (response.isSuccessful()
                                 && response.body() != null) {
 
-                            AttendanceMarkResponse
-                                    attendanceResponse =
+                            AttendanceMarkResponse result =
                                     response.body();
 
-                            String message =
-                                    attendanceResponse.getMessage();
 
+                            /*
+                             * Backend should return exactly:
+                             *
+                             * Spoof Detected
+                             * Unregistered
+                             * USERNAME Successfully Registered
+                             */
+                            String message =
+                                    result.getMessage();
+
+
+                            /*
+                             * Fallback if backend does not return
+                             * a message.
+                             */
                             if (message == null
                                     || message.trim().isEmpty()) {
 
-                                if (ACTION_CHECK_IN.equals(
-                                        attendanceAction)) {
+                                String username =
+                                        result.getUsername();
 
-                                    message =
-                                            getString(
-                                                    R.string.check_in_success
-                                            );
 
-                                } else {
+                                if (username == null
+                                        || username.trim().isEmpty()) {
 
-                                    message =
-                                            getString(
-                                                    R.string.check_out_success
-                                            );
+                                    username =
+                                            sessionManager
+                                                    .getUsername();
                                 }
+
+
+                                if (username == null
+                                        || username.trim().isEmpty()) {
+
+                                    username = "User";
+                                }
+
+
+                                message =
+                                        username
+                                                + " Successfully Registered";
                             }
+
 
                             Toast.makeText(
                                     CameraActivity.this,
                                     message,
                                     Toast.LENGTH_LONG
                             ).show();
+
 
                             deletePendingPhoto();
 
@@ -724,9 +1352,10 @@ public class CameraActivity extends AppCompatActivity {
                             return;
                         }
 
-                        // =========================================
+
+                        // =====================================
                         // SESSION EXPIRED
-                        // =========================================
+                        // =====================================
 
                         if (response.code() == 401) {
 
@@ -735,15 +1364,12 @@ public class CameraActivity extends AppCompatActivity {
                             return;
                         }
 
-                        // =========================================
+
+                        // =====================================
                         // FORBIDDEN
-                        // =========================================
+                        // =====================================
 
                         if (response.code() == 403) {
-
-                            tvCameraSubtitle.setText(
-                                    R.string.verification_failed
-                            );
 
                             Toast.makeText(
                                     CameraActivity.this,
@@ -756,13 +1382,10 @@ public class CameraActivity extends AppCompatActivity {
                             return;
                         }
 
-                        // =========================================
-                        // OTHER API ERROR
-                        // =========================================
 
-                        tvCameraSubtitle.setText(
-                                R.string.verification_failed
-                        );
+                        // =====================================
+                        // OTHER ERROR
+                        // =====================================
 
                         Toast.makeText(
                                 CameraActivity.this,
@@ -770,19 +1393,18 @@ public class CameraActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG
                         ).show();
 
+
                         deletePendingPhoto();
                     }
+
 
                     @Override
                     public void onFailure(
                             @NonNull Call<AttendanceMarkResponse> call,
                             @NonNull Throwable t) {
 
-                        setProcessing(false);
+                        isProcessing = false;
 
-                        tvCameraSubtitle.setText(
-                                R.string.server_connection_failed
-                        );
 
                         Toast.makeText(
                                 CameraActivity.this,
@@ -790,14 +1412,16 @@ public class CameraActivity extends AppCompatActivity {
                                 Toast.LENGTH_LONG
                         ).show();
 
+
                         deletePendingPhoto();
                     }
                 }
         );
     }
 
+
     // =========================================================
-    // API ERROR
+    // API ERROR MESSAGE
     // =========================================================
 
     private String getApiErrorMessage(
@@ -810,6 +1434,7 @@ public class CameraActivity extends AppCompatActivity {
             );
         }
 
+
         if (response.code() == 403) {
 
             return getString(
@@ -817,17 +1442,22 @@ public class CameraActivity extends AppCompatActivity {
             );
         }
 
+
         ResponseBody errorBody =
                 response.errorBody();
 
+
         if (errorBody != null) {
 
-            try {
+            try (ResponseBody body = errorBody) {
 
                 String errorMessage =
-                        errorBody.string();
+                        body.string();
 
-                if (!errorMessage.trim().isEmpty()) {
+
+                if (!errorMessage
+                        .trim()
+                        .isEmpty()) {
 
                     return extractBackendMessage(
                             errorMessage
@@ -838,14 +1468,16 @@ public class CameraActivity extends AppCompatActivity {
             }
         }
 
+
         return getString(
                 R.string.attendance_failed_with_code,
                 response.code()
         );
     }
 
+
     // =========================================================
-    // EXTRACT BACKEND ERROR MESSAGE
+    // EXTRACT BACKEND MESSAGE
     // =========================================================
 
     private String extractBackendMessage(
@@ -854,8 +1486,12 @@ public class CameraActivity extends AppCompatActivity {
         String messageKey =
                 "\"message\"";
 
+
         int messageIndex =
-                errorResponse.indexOf(messageKey);
+                errorResponse.indexOf(
+                        messageKey
+                );
+
 
         if (messageIndex >= 0) {
 
@@ -865,6 +1501,7 @@ public class CameraActivity extends AppCompatActivity {
                             messageIndex
                     );
 
+
             if (colonIndex >= 0) {
 
                 int firstQuote =
@@ -873,11 +1510,13 @@ public class CameraActivity extends AppCompatActivity {
                                 colonIndex + 1
                         );
 
+
                 int secondQuote =
                         errorResponse.indexOf(
                                 "\"",
                                 firstQuote + 1
                         );
+
 
                 if (firstQuote >= 0
                         && secondQuote > firstQuote) {
@@ -888,22 +1527,34 @@ public class CameraActivity extends AppCompatActivity {
                                     secondQuote
                             );
 
-                    if (!message.trim().isEmpty()) {
+
+                    if (!message
+                            .trim()
+                            .isEmpty()) {
+
                         return message;
                     }
                 }
             }
         }
 
-        // If backend returned plain text
-        if (!errorResponse.trim().startsWith("{")) {
+
+        /*
+         * Backend returned plain text.
+         */
+        if (!errorResponse
+                .trim()
+                .startsWith("{")) {
+
             return errorResponse.trim();
         }
+
 
         return getString(
                 R.string.attendance_failed
         );
     }
+
 
     // =========================================================
     // SESSION EXPIRED
@@ -911,11 +1562,14 @@ public class CameraActivity extends AppCompatActivity {
 
     private void handleSessionExpired() {
 
-        setProcessing(false);
+        isProcessing = false;
+
 
         deletePendingPhoto();
 
+
         sessionManager.logout();
+
 
         Toast.makeText(
                 this,
@@ -923,8 +1577,10 @@ public class CameraActivity extends AppCompatActivity {
                 Toast.LENGTH_LONG
         ).show();
 
+
         openLoginScreen();
     }
+
 
     private void openLoginScreen() {
 
@@ -934,58 +1590,18 @@ public class CameraActivity extends AppCompatActivity {
                         LoginActivity.class
                 );
 
+
         intent.addFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK
         );
+
 
         startActivity(intent);
 
         finish();
     }
 
-    // =========================================================
-    // PROCESSING STATE
-    // =========================================================
-
-    private void setProcessing(
-            boolean processing) {
-
-        isProcessing = processing;
-
-        if (btnCapture != null) {
-
-            btnCapture.setEnabled(!processing);
-
-            btnCapture.setAlpha(
-                    processing ? 0.5f : 1.0f
-            );
-        }
-
-        if (btnBack != null) {
-
-            btnBack.setEnabled(!processing);
-
-            btnBack.setAlpha(
-                    processing ? 0.5f : 1.0f
-            );
-        }
-    }
-
-    // =========================================================
-    // DELETE TEMP IMAGE
-    // =========================================================
-
-    private void deletePendingPhoto() {
-
-        if (pendingPhotoFile != null
-                && pendingPhotoFile.exists()) {
-
-            pendingPhotoFile.delete();
-        }
-
-        pendingPhotoFile = null;
-    }
 
     // =========================================================
     // PERMISSION RESULT
@@ -1003,7 +1619,13 @@ public class CameraActivity extends AppCompatActivity {
                 grantResults
         );
 
-        if (requestCode == CAMERA_PERMISSION_REQUEST) {
+
+        // =====================================================
+        // CAMERA
+        // =====================================================
+
+        if (requestCode ==
+                CAMERA_PERMISSION_REQUEST) {
 
             if (hasCameraPermission()) {
 
@@ -1023,27 +1645,30 @@ public class CameraActivity extends AppCompatActivity {
             return;
         }
 
-        if (requestCode == LOCATION_PERMISSION_REQUEST) {
+
+        // =====================================================
+        // LOCATION
+        // =====================================================
+
+        if (requestCode ==
+                LOCATION_PERMISSION_REQUEST) {
 
             if (hasLocationPermission()) {
 
                 if (pendingPhotoFile != null
                         && pendingPhotoFile.exists()) {
 
-                    setProcessing(true);
+                    isProcessing = true;
 
                     getLocationAndSubmit();
                 }
 
             } else {
 
-                setProcessing(false);
+                isProcessing = false;
 
                 deletePendingPhoto();
 
-                tvCameraSubtitle.setText(
-                        R.string.location_permission_required
-                );
 
                 Toast.makeText(
                         this,
@@ -1054,6 +1679,24 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+
+    // =========================================================
+    // DELETE TEMP IMAGE
+    // =========================================================
+
+    private void deletePendingPhoto() {
+
+        if (pendingPhotoFile != null
+                && pendingPhotoFile.exists()) {
+
+            pendingPhotoFile.delete();
+        }
+
+
+        pendingPhotoFile = null;
+    }
+
+
     // =========================================================
     // DESTROY
     // =========================================================
@@ -1061,8 +1704,56 @@ public class CameraActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
 
+        /*
+         * Prevent any new capture or processing.
+         */
+        isProcessing = true;
+
+
         deletePendingPhoto();
+
+
+        // =====================================================
+        // STOP IMAGE ANALYZER
+        // =====================================================
+
+        if (imageAnalysis != null) {
+
+            imageAnalysis.clearAnalyzer();
+        }
+
+
+        // =====================================================
+        // STOP CAMERA
+        // =====================================================
+
+        if (cameraProvider != null) {
+
+            cameraProvider.unbindAll();
+        }
+
+
+        // =====================================================
+        // CLOSE ML KIT
+        // =====================================================
+
+        if (faceDetector != null) {
+
+            faceDetector.close();
+        }
+
+
+        // =====================================================
+        // STOP ANALYSIS THREAD
+        // =====================================================
+
+        if (analysisExecutor != null) {
+
+            analysisExecutor.shutdown();
+        }
+
 
         super.onDestroy();
     }
 }
+

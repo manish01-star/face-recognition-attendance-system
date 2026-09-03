@@ -45,6 +45,7 @@
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
 
+        <!-- Camera / Face Verification Screen -->
         <activity
             android:name=".activity.CameraActivity"
             android:exported="false" />

@@ -6,7 +6,7 @@ android {
     namespace = "com.college.attendance"
 
     compileSdk {
-        version = release(36) {
+        version = release(37) {
             minorApiLevel = 1
         }
     }
@@ -43,6 +43,9 @@ dependencies {
     implementation(libs.constraintlayout)
     implementation(libs.material)
 
+    // CardView
+    implementation("androidx.cardview:cardview:1.0.0")
+
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:3.0.0")
     implementation("com.squareup.retrofit2:converter-gson:3.0.0")
@@ -55,6 +58,7 @@ dependencies {
     implementation("androidx.camera:camera-camera2:1.6.2")
     implementation("androidx.camera:camera-lifecycle:1.6.2")
     implementation("androidx.camera:camera-view:1.6.2")
+    implementation("com.google.mlkit:face-detection:16.1.7")
 
     // Location
     implementation("com.google.android.gms:play-services-location:21.4.0")

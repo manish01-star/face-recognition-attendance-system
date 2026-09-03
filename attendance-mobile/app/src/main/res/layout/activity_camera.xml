@@ -7,6 +7,7 @@
     android:layout_height="match_parent"
     android:background="#000000">
 
+    <!-- CAMERA PREVIEW -->
     <androidx.camera.view.PreviewView
         android:id="@+id/previewView"
         android:layout_width="0dp"
@@ -17,13 +18,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <!-- TOP BAR -->
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingStart="20dp"
-        android:paddingTop="24dp"
-        android:paddingEnd="20dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingStart="16dp"
+        android:paddingTop="20dp"
+        android:paddingEnd="16dp"
         android:paddingBottom="20dp"
         android:background="#66000000"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,24 +46,17 @@
             android:id="@+id/tvCameraTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginStart="12dp"
             android:text="@string/face_verification"
             android:textColor="#FFFFFF"
-            android:textSize="24sp"
+            android:textSize="22sp"
             android:textStyle="bold" />
-
-        <TextView
-            android:id="@+id/tvCameraSubtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:text="@string/camera_instruction"
-            android:textColor="#E5E7EB"
-            android:textSize="14sp" />
 
     </LinearLayout>
 
+    <!-- FACE GUIDE -->
     <View
+        android:id="@+id/faceGuide"
         android:layout_width="260dp"
         android:layout_height="330dp"
         android:background="@drawable/face_guide"
@@ -68,35 +64,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-
-    <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:paddingTop="20dp"
-        android:paddingBottom="36dp"
-        android:background="#66000000"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/keep_face_visible"
-            android:textColor="#FFFFFF"
-            android:textSize="13sp"
-            android:layout_marginBottom="16dp" />
-
-        <ImageButton
-            android:id="@+id/btnCapture"
-            android:layout_width="72dp"
-            android:layout_height="72dp"
-            android:background="@drawable/capture_button"
-            android:contentDescription="@string/capture_face" />
-
-    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
