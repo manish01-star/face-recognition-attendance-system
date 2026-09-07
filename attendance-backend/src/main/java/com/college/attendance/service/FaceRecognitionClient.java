@@ -28,7 +28,6 @@ public class FaceRecognitionClient {
     @Value("${face.service.url}")
     private String faceServiceUrl;
 
-
     // =========================================================
     // ANTI SPOOF
     // =========================================================
@@ -54,14 +53,12 @@ public class FaceRecognitionClient {
                     }
                 };
 
-
         MultiValueMap<String, Object> body =
                 new LinkedMultiValueMap<>();
 
         body.add(
                 "file",
                 resource);
-
 
         HttpHeaders headers =
                 new HttpHeaders();
@@ -72,17 +69,14 @@ public class FaceRecognitionClient {
         headers.setAccept(
                 List.of(MediaType.APPLICATION_JSON));
 
-
         HttpEntity<MultiValueMap<String, Object>> request =
                 new HttpEntity<>(
                         body,
                         headers);
 
-
         String url =
                 faceServiceUrl
                         + "/api/v1/face/anti-spoof";
-
 
         try {
 
@@ -92,7 +86,6 @@ public class FaceRecognitionClient {
                             request,
                             String.class);
 
-
             if (!response.getStatusCode()
                     .is2xxSuccessful()) {
 
@@ -101,7 +94,6 @@ public class FaceRecognitionClient {
                                 + response.getStatusCode());
             }
 
-
             if (response.getBody() == null
                     || response.getBody().isBlank()) {
 
@@ -109,36 +101,28 @@ public class FaceRecognitionClient {
                         "Empty response from face anti-spoof service");
             }
 
-
             return objectMapper.readValue(
                     response.getBody(),
                     new TypeReference<Map<String, Object>>() {
-                    }
-            );
-
+                    });
 
         } catch (RestClientException e) {
 
             throw new RuntimeException(
                     "Unable to connect to face recognition service",
-                    e
-            );
+                    e);
         }
     }
-
 
     // =========================================================
     // VERIFY EMBEDDING
     // =========================================================
 
     /**
-     * Verify current image against registered embedding.
+     * Existing face embedding verification API.
      *
-     * Python receives:
-     *
-     * registeredEmbedding = [512 values]
-     *
-     * current_file = current face image
+     * This method is kept because other existing functionality
+     * may still use it.
      */
     public Map<String, Object> verifyEmbedding(
 
@@ -148,7 +132,6 @@ public class FaceRecognitionClient {
 
     ) throws Exception {
 
-
         if (registeredEmbedding == null
                 || registeredEmbedding.isEmpty()) {
 
@@ -156,16 +139,13 @@ public class FaceRecognitionClient {
                     "Registered face embedding is required");
         }
 
-
         if (registeredEmbedding.size() != 512) {
 
             throw new IllegalArgumentException(
                     "Invalid registered face embedding. Expected 512 values");
         }
 
-
         validateFile(file);
-
 
         ByteArrayResource resource =
                 new ByteArrayResource(
@@ -184,30 +164,17 @@ public class FaceRecognitionClient {
                     }
                 };
 
-
         MultiValueMap<String, Object> body =
                 new LinkedMultiValueMap<>();
 
-
-        /*
-         * Registered face embedding
-         */
         body.add(
                 "registeredEmbedding",
                 objectMapper.writeValueAsString(
-                        registeredEmbedding
-                )
-        );
+                        registeredEmbedding));
 
-
-        /*
-         * Current face image
-         */
         body.add(
                 "current_file",
-                resource
-        );
-
+                resource);
 
         HttpHeaders headers =
                 new HttpHeaders();
@@ -218,17 +185,14 @@ public class FaceRecognitionClient {
         headers.setAccept(
                 List.of(MediaType.APPLICATION_JSON));
 
-
         HttpEntity<MultiValueMap<String, Object>> request =
                 new HttpEntity<>(
                         body,
                         headers);
 
-
         String url =
                 faceServiceUrl
                         + "/api/v1/face/verify-embedding";
-
 
         try {
 
@@ -238,7 +202,6 @@ public class FaceRecognitionClient {
                             request,
                             String.class);
 
-
             if (!response.getStatusCode()
                     .is2xxSuccessful()) {
 
@@ -247,7 +210,6 @@ public class FaceRecognitionClient {
                                 + response.getStatusCode());
             }
 
-
             if (response.getBody() == null
                     || response.getBody().isBlank()) {
 
@@ -255,23 +217,190 @@ public class FaceRecognitionClient {
                         "Empty response from face verification service");
             }
 
-
             return objectMapper.readValue(
                     response.getBody(),
                     new TypeReference<Map<String, Object>>() {
-                    }
-            );
-
+                    });
 
         } catch (RestClientException e) {
 
             throw new RuntimeException(
                     "Unable to connect to face recognition service",
-                    e
-            );
+                    e);
         }
     }
 
+    // =========================================================
+    // VERIFY ATTENDANCE - OPTIMIZED
+    // =========================================================
+
+    /**
+     * Optimized attendance face verification.
+     *
+     * Python performs everything in a single request:
+     *
+     * 1. Face detection
+     * 2. Anti-spoof / liveness
+     * 3. Face embedding generation
+     * 4. Registered embedding comparison
+     *
+     * This replaces the old attendance flow:
+     *
+     * checkAntiSpoof()
+     * +
+     * verifyEmbedding()
+     *
+     * The old methods are intentionally kept because they may
+     * still be used by face registration or other functionality.
+     */
+    public Map<String, Object> verifyAttendance(
+
+            List<Double> registeredEmbedding,
+
+            MultipartFile file
+
+    ) throws Exception {
+
+        // ---------------------------------------------------------
+        // Validate registered embedding
+        // ---------------------------------------------------------
+
+        if (registeredEmbedding == null
+                || registeredEmbedding.isEmpty()) {
+
+            throw new IllegalArgumentException(
+                    "Registered face embedding is required");
+        }
+
+        if (registeredEmbedding.size() != 512) {
+
+            throw new IllegalArgumentException(
+                    "Invalid registered face embedding. Expected 512 values");
+        }
+
+        // ---------------------------------------------------------
+        // Validate image
+        // ---------------------------------------------------------
+
+        validateFile(file);
+
+        // ---------------------------------------------------------
+        // Create multipart file resource
+        // ---------------------------------------------------------
+
+        ByteArrayResource resource =
+                new ByteArrayResource(
+                        file.getBytes()) {
+
+                    @Override
+                    public String getFilename() {
+
+                        String filename =
+                                file.getOriginalFilename();
+
+                        return filename != null
+                                && !filename.isBlank()
+                                ? filename
+                                : "face.jpg";
+                    }
+                };
+
+        // ---------------------------------------------------------
+        // Multipart request
+        // ---------------------------------------------------------
+
+        MultiValueMap<String, Object> body =
+                new LinkedMultiValueMap<>();
+
+        /*
+         * Registered embedding of the logged-in user.
+         */
+        body.add(
+                "registeredEmbedding",
+                objectMapper.writeValueAsString(
+                        registeredEmbedding));
+
+        /*
+         * Current camera image.
+         */
+        body.add(
+                "current_file",
+                resource);
+
+        // ---------------------------------------------------------
+        // Headers
+        // ---------------------------------------------------------
+
+        HttpHeaders headers =
+                new HttpHeaders();
+
+        headers.setContentType(
+                MediaType.MULTIPART_FORM_DATA);
+
+        headers.setAccept(
+                List.of(MediaType.APPLICATION_JSON));
+
+        HttpEntity<MultiValueMap<String, Object>> request =
+                new HttpEntity<>(
+                        body,
+                        headers);
+
+        // ---------------------------------------------------------
+        // Python optimized endpoint
+        // ---------------------------------------------------------
+
+        String url =
+                faceServiceUrl
+                        + "/api/v1/face/verify-attendance";
+
+        try {
+
+            ResponseEntity<String> response =
+                    restTemplate.postForEntity(
+                            url,
+                            request,
+                            String.class);
+
+            // -----------------------------------------------------
+            // HTTP validation
+            // -----------------------------------------------------
+
+            if (!response.getStatusCode()
+                    .is2xxSuccessful()) {
+
+                throw new RuntimeException(
+                        "Face attendance verification service failed. "
+                                + "HTTP status: "
+                                + response.getStatusCode());
+            }
+
+            // -----------------------------------------------------
+            // Response validation
+            // -----------------------------------------------------
+
+            if (response.getBody() == null
+                    || response.getBody().isBlank()) {
+
+                throw new RuntimeException(
+                        "Empty response from face attendance verification service");
+            }
+
+            // -----------------------------------------------------
+            // JSON -> Map
+            // -----------------------------------------------------
+
+            return objectMapper.readValue(
+                    response.getBody(),
+                    new TypeReference<Map<String, Object>>() {
+                    });
+
+        } catch (RestClientException e) {
+
+            throw new RuntimeException(
+                    "Unable to connect to face recognition service",
+                    e);
+        }
+    }
 
     // =========================================================
     // FILE VALIDATION
@@ -287,9 +416,9 @@ public class FaceRecognitionClient {
                     "Face image is required");
         }
 
-
         if (file.getContentType() == null
                 || !file.getContentType()
+                .toLowerCase()
                 .startsWith("image/")) {
 
             throw new IllegalArgumentException(

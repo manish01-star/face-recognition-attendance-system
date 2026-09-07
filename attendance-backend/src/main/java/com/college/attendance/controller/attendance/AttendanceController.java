@@ -3,6 +3,8 @@ package com.college.attendance.controller.attendance;
 import com.college.attendance.dto.attendance.AttendanceMarkResponse;
 import com.college.attendance.dto.attendance.AttendanceResponse;
 import com.college.attendance.service.AttendanceService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +17,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/attendance")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class AttendanceController {
 
     private final AttendanceService attendanceService;

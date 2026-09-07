@@ -85,8 +85,14 @@ public class MainActivity extends AppCompatActivity {
                     Locale.getDefault()
             );
 
+
+    // =========================================================
+    // ON CREATE
+    // =========================================================
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_main);
@@ -100,13 +106,16 @@ public class MainActivity extends AppCompatActivity {
          * open LoginActivity.
          */
         if (!sessionManager.isLoggedIn()) {
+
             openLogin();
+
             return;
         }
 
         apiService = ApiClient.getApiService(this);
 
         setupUserInfo();
+
         setupButtons();
 
         /*
@@ -124,16 +133,24 @@ public class MainActivity extends AppCompatActivity {
 
         /*
          * Draw calendar immediately.
-         * Attendance will be marked after API response.
+         * Attendance will be loaded from API.
          */
         renderCalendar();
     }
 
+
+    // =========================================================
+    // INITIALIZE VIEWS
+    // =========================================================
+
     private void initializeViews() {
 
         tvWelcome = findViewById(R.id.tvWelcome);
+
         tvUsername = findViewById(R.id.tvUsername);
+
         tvRole = findViewById(R.id.tvRole);
+
         tvTodayDate = findViewById(R.id.tvTodayDate);
 
         tvAttendanceStatus =
@@ -176,64 +193,105 @@ public class MainActivity extends AppCompatActivity {
                 findViewById(R.id.tvSelectedCheckOut);
     }
 
+
+    // =========================================================
+    // USER INFO
+    // =========================================================
+
     private void setupUserInfo() {
 
-        String username = sessionManager.getUsername();
-        String role = sessionManager.getRole();
+        String username =
+                sessionManager.getUsername();
 
-        if (username == null || username.trim().isEmpty()) {
+        String role =
+                sessionManager.getRole();
+
+        if (username == null
+                || username.trim().isEmpty()) {
+
             username = "User";
         }
 
-        if (role == null || role.trim().isEmpty()) {
+        if (role == null
+                || role.trim().isEmpty()) {
+
             role = "USER";
         }
 
         tvWelcome.setText("Welcome");
+
         tvUsername.setText(username);
+
         tvRole.setText(role);
     }
+
+
+    // =========================================================
+    // BUTTONS
+    // =========================================================
 
     private void setupButtons() {
 
         /*
+         * =====================================================
          * CHECK IN
+         * =====================================================
+         *
+         * IMPORTANT:
+         *
+         * Do not use:
+         *
+         * "ATTENDANCE_ACTION"
+         * "CHECK_IN"
+         *
+         * directly here.
+         *
+         * Use CameraActivity constants so that the Intent
+         * key/value can never mismatch.
          */
         btnCheckIn.setOnClickListener(v -> {
 
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    CameraActivity.class
-            );
+            Intent intent =
+                    new Intent(
+                            MainActivity.this,
+                            CameraActivity.class
+                    );
 
             intent.putExtra(
-                    "ATTENDANCE_ACTION",
-                    "CHECK_IN"
+                    CameraActivity.EXTRA_ACTION,
+                    CameraActivity.ACTION_CHECK_IN
             );
 
             startActivity(intent);
         });
 
+
         /*
+         * =====================================================
          * CHECK OUT
+         * =====================================================
          */
         btnCheckOut.setOnClickListener(v -> {
 
-            Intent intent = new Intent(
-                    MainActivity.this,
-                    CameraActivity.class
-            );
+            Intent intent =
+                    new Intent(
+                            MainActivity.this,
+                            CameraActivity.class
+                    );
 
             intent.putExtra(
-                    "ATTENDANCE_ACTION",
-                    "CHECK_OUT"
+                    CameraActivity.EXTRA_ACTION,
+                    CameraActivity.ACTION_CHECK_OUT
             );
 
             startActivity(intent);
         });
 
+
         /*
+         * =====================================================
          * PREVIOUS MONTH
+         * =====================================================
          */
         btnPreviousMonth.setOnClickListener(v -> {
 
@@ -245,8 +303,11 @@ public class MainActivity extends AppCompatActivity {
             renderCalendar();
         });
 
+
         /*
+         * =====================================================
          * NEXT MONTH
+         * =====================================================
          */
         btnNextMonth.setOnClickListener(v -> {
 
@@ -259,9 +320,15 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+
+    // =========================================================
+    // TODAY DATE
+    // =========================================================
+
     private void updateTodayDate() {
 
-        Calendar today = Calendar.getInstance();
+        Calendar today =
+                Calendar.getInstance();
 
         tvTodayDate.setText(
                 "Today, " +
@@ -271,14 +338,14 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    /*
-     * ==========================================
-     * ACTIVITY RESUME
-     * ==========================================
-     */
+
+    // =========================================================
+    // ACTIVITY RESUME
+    // =========================================================
 
     @Override
     protected void onResume() {
+
         super.onResume();
 
         /*
@@ -295,15 +362,15 @@ public class MainActivity extends AppCompatActivity {
                 && apiService != null) {
 
             loadTodayAttendance();
+
             loadAllAttendance();
         }
     }
 
-    /*
-     * ==========================================
-     * TODAY ATTENDANCE
-     * ==========================================
-     */
+
+    // =========================================================
+    // TODAY ATTENDANCE
+    // =========================================================
 
     private void loadTodayAttendance() {
 
@@ -314,65 +381,74 @@ public class MainActivity extends AppCompatActivity {
 
         apiService
                 .getMyAttendanceByDate(today)
-                .enqueue(new Callback<AttendanceResponse>() {
+                .enqueue(
+                        new Callback<AttendanceResponse>() {
 
-                    @Override
-                    public void onResponse(
-                            Call<AttendanceResponse> call,
-                            Response<AttendanceResponse> response) {
+                            @Override
+                            public void onResponse(
+                                    Call<AttendanceResponse> call,
+                                    Response<AttendanceResponse> response) {
 
-                        if (response.isSuccessful()
-                                && response.body() != null) {
+                                if (response.isSuccessful()
+                                        && response.body() != null) {
 
-                            updateAttendanceUI(
-                                    response.body()
-                            );
+                                    updateAttendanceUI(
+                                            response.body()
+                                    );
 
-                            return;
+                                    return;
+                                }
+
+                                if (response.code() == 404) {
+
+                                    showNotMarked();
+
+                                    return;
+                                }
+
+                                if (response.code() == 401) {
+
+                                    handleSessionExpired();
+
+                                    return;
+                                }
+
+                                if (response.code() == 403) {
+
+                                    Toast.makeText(
+                                            MainActivity.this,
+                                            "You are not authorized.",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
+
+                                    return;
+                                }
+
+                                showNotMarked();
+                            }
+
+
+                            @Override
+                            public void onFailure(
+                                    Call<AttendanceResponse> call,
+                                    Throwable t) {
+
+                                showNotMarked();
+                            }
                         }
-
-                        if (response.code() == 404) {
-
-                            showNotMarked();
-
-                            return;
-                        }
-
-                        if (response.code() == 401) {
-
-                            handleSessionExpired();
-
-                            return;
-                        }
-
-                        if (response.code() == 403) {
-
-                            Toast.makeText(
-                                    MainActivity.this,
-                                    "You are not authorized.",
-                                    Toast.LENGTH_SHORT
-                            ).show();
-
-                            return;
-                        }
-
-                        showNotMarked();
-                    }
-
-                    @Override
-                    public void onFailure(
-                            Call<AttendanceResponse> call,
-                            Throwable t) {
-
-                        showNotMarked();
-                    }
-                });
+                );
     }
+
+
+    // =========================================================
+    // UPDATE TODAY ATTENDANCE UI
+    // =========================================================
 
     private void updateAttendanceUI(
             AttendanceResponse attendance) {
 
-        String status = attendance.getStatus();
+        String status =
+                attendance.getStatus();
 
         if (status == null
                 || status.trim().isEmpty()) {
@@ -384,11 +460,13 @@ public class MainActivity extends AppCompatActivity {
                 "Status: " + status
         );
 
+
         String checkIn =
                 attendance.getCheckInTime();
 
         String checkOut =
                 attendance.getCheckOutTime();
+
 
         if (checkIn == null
                 || checkIn.trim().isEmpty()) {
@@ -403,6 +481,7 @@ public class MainActivity extends AppCompatActivity {
                     "Check-in: " + checkIn
             );
         }
+
 
         if (checkOut == null
                 || checkOut.trim().isEmpty()) {
@@ -419,6 +498,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
+    // =========================================================
+    // NOT MARKED
+    // =========================================================
+
     private void showNotMarked() {
 
         tvAttendanceStatus.setText(
@@ -434,117 +518,134 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    /*
-     * ==========================================
-     * COMPLETE ATTENDANCE
-     * ==========================================
-     */
+
+    // =========================================================
+    // COMPLETE ATTENDANCE
+    // =========================================================
 
     private void loadAllAttendance() {
 
         apiService
                 .getMyAttendance()
-                .enqueue(new Callback<List<AttendanceResponse>>() {
+                .enqueue(
+                        new Callback<List<AttendanceResponse>>() {
 
-                    @Override
-                    public void onResponse(
-                            Call<List<AttendanceResponse>> call,
-                            Response<List<AttendanceResponse>> response) {
+                            @Override
+                            public void onResponse(
+                                    Call<List<AttendanceResponse>> call,
+                                    Response<List<AttendanceResponse>> response) {
 
-                        if (response.code() == 401) {
+                                if (response.code() == 401) {
 
-                            handleSessionExpired();
+                                    handleSessionExpired();
 
-                            return;
-                        }
+                                    return;
+                                }
 
-                        if (response.code() == 403) {
+                                if (response.code() == 403) {
 
-                            Toast.makeText(
-                                    MainActivity.this,
-                                    "You are not authorized.",
-                                    Toast.LENGTH_SHORT
-                            ).show();
+                                    Toast.makeText(
+                                            MainActivity.this,
+                                            "You are not authorized.",
+                                            Toast.LENGTH_SHORT
+                                    ).show();
 
-                            return;
-                        }
+                                    return;
+                                }
 
-                        if (!response.isSuccessful()
-                                || response.body() == null) {
+                                if (!response.isSuccessful()
+                                        || response.body() == null) {
 
-                            return;
-                        }
+                                    return;
+                                }
 
-                        attendanceMap.clear();
 
-                        List<AttendanceResponse> list =
-                                response.body();
+                                attendanceMap.clear();
 
-                        for (AttendanceResponse attendance : list) {
 
-                            if (attendance == null) {
-                                continue;
+                                List<AttendanceResponse> list =
+                                        response.body();
+
+
+                                for (AttendanceResponse attendance : list) {
+
+                                    if (attendance == null) {
+                                        continue;
+                                    }
+
+
+                                    String date =
+                                            attendance.getAttendanceDate();
+
+
+                                    if (date == null
+                                            || date.trim().isEmpty()) {
+
+                                        continue;
+                                    }
+
+
+                                    /*
+                                     * Expected:
+                                     *
+                                     * 2026-09-03
+                                     *
+                                     * If backend returns:
+                                     *
+                                     * 2026-09-03T00:00:00
+                                     *
+                                     * only date portion is used.
+                                     */
+                                    date = date.trim();
+
+
+                                    if (date.length() >= 10) {
+
+                                        date =
+                                                date.substring(
+                                                        0,
+                                                        10
+                                                );
+                                    }
+
+
+                                    attendanceMap.put(
+                                            date,
+                                            attendance
+                                    );
+                                }
+
+
+                                /*
+                                 * Refresh calendar with attendance marks.
+                                 */
+                                renderCalendar();
                             }
 
-                            String date =
-                                    attendance.getAttendanceDate();
 
-                            if (date == null
-                                    || date.trim().isEmpty()) {
-                                continue;
+                            @Override
+                            public void onFailure(
+                                    Call<List<AttendanceResponse>> call,
+                                    Throwable t) {
+
+                                /*
+                                 * Calendar remains visible even
+                                 * if attendance API fails.
+                                 */
                             }
-
-                            /*
-                             * Expected:
-                             *
-                             * 2026-09-03
-                             *
-                             * If backend returns:
-                             *
-                             * 2026-09-03T00:00:00
-                             *
-                             * only date portion is used.
-                             */
-                            date = date.trim();
-
-                            if (date.length() >= 10) {
-                                date = date.substring(0, 10);
-                            }
-
-                            attendanceMap.put(
-                                    date,
-                                    attendance
-                            );
                         }
-
-                        /*
-                         * Refresh calendar with attendance marks.
-                         */
-                        renderCalendar();
-                    }
-
-                    @Override
-                    public void onFailure(
-                            Call<List<AttendanceResponse>> call,
-                            Throwable t) {
-
-                        /*
-                         * Calendar remains visible even
-                         * if attendance API fails.
-                         */
-                    }
-                });
+                );
     }
 
-    /*
-     * ==========================================
-     * CALENDAR
-     * ==========================================
-     */
+
+    // =========================================================
+    // CALENDAR
+    // =========================================================
 
     private void renderCalendar() {
 
         calendarGrid.removeAllViews();
+
 
         tvCalendarMonth.setText(
                 monthFormat.format(
@@ -552,13 +653,16 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
 
+
         Calendar firstDay =
                 (Calendar) currentCalendar.clone();
+
 
         firstDay.set(
                 Calendar.DAY_OF_MONTH,
                 1
         );
+
 
         /*
          * Sunday = 1
@@ -569,20 +673,27 @@ public class MainActivity extends AppCompatActivity {
          * Convert to zero-based index.
          */
         int firstDayPosition =
-                firstDay.get(Calendar.DAY_OF_WEEK) - 1;
+                firstDay.get(
+                        Calendar.DAY_OF_WEEK
+                ) - 1;
+
 
         int daysInMonth =
                 currentCalendar.getActualMaximum(
                         Calendar.DAY_OF_MONTH
                 );
 
+
         /*
          * Empty cells before first day.
          */
-        for (int i = 0; i < firstDayPosition; i++) {
+        for (int i = 0;
+             i < firstDayPosition;
+             i++) {
 
             addEmptyCalendarCell();
         }
+
 
         /*
          * Month dates.
@@ -594,18 +705,22 @@ public class MainActivity extends AppCompatActivity {
             Calendar dateCalendar =
                     (Calendar) currentCalendar.clone();
 
+
             dateCalendar.set(
                     Calendar.DAY_OF_MONTH,
                     day
             );
+
 
             String dateKey =
                     dateFormat.format(
                             dateCalendar.getTime()
                     );
 
+
             AttendanceResponse attendance =
                     attendanceMap.get(dateKey);
+
 
             addCalendarDay(
                     day,
@@ -614,31 +729,47 @@ public class MainActivity extends AppCompatActivity {
             );
         }
 
+
         /*
          * Complete 6 rows x 7 columns.
          */
         int totalCells =
-                firstDayPosition + daysInMonth;
+                firstDayPosition
+                        + daysInMonth;
+
 
         int remainingCells =
                 42 - totalCells;
 
-        for (int i = 0; i < remainingCells; i++) {
+
+        for (int i = 0;
+             i < remainingCells;
+             i++) {
 
             addEmptyCalendarCell();
         }
     }
+
+
+    // =========================================================
+    // EMPTY CALENDAR CELL
+    // =========================================================
 
     private void addEmptyCalendarCell() {
 
         TextView emptyView =
                 new TextView(this);
 
+
         GridLayout.LayoutParams params =
                 new GridLayout.LayoutParams();
 
+
         params.width = 0;
-        params.height = dpToPx(48);
+
+        params.height =
+                dpToPx(48);
+
 
         params.columnSpec =
                 GridLayout.spec(
@@ -646,10 +777,17 @@ public class MainActivity extends AppCompatActivity {
                         1f
                 );
 
+
         emptyView.setLayoutParams(params);
+
 
         calendarGrid.addView(emptyView);
     }
+
+
+    // =========================================================
+    // CALENDAR DAY
+    // =========================================================
 
     private void addCalendarDay(
             int day,
@@ -659,17 +797,23 @@ public class MainActivity extends AppCompatActivity {
         TextView dayView =
                 new TextView(this);
 
+
         GridLayout.LayoutParams params =
                 new GridLayout.LayoutParams();
 
+
         params.width = 0;
-        params.height = dpToPx(48);
+
+        params.height =
+                dpToPx(48);
+
 
         params.columnSpec =
                 GridLayout.spec(
                         GridLayout.UNDEFINED,
                         1f
                 );
+
 
         params.setMargins(
                 dpToPx(2),
@@ -678,21 +822,31 @@ public class MainActivity extends AppCompatActivity {
                 dpToPx(2)
         );
 
+
         dayView.setLayoutParams(params);
+
 
         dayView.setGravity(
                 Gravity.CENTER
         );
 
+
         dayView.setText(
                 String.valueOf(day)
         );
 
+
         dayView.setTextSize(14);
 
+
         dayView.setTextColor(
-                Color.rgb(31, 41, 55)
+                Color.rgb(
+                        31,
+                        41,
+                        55
+                )
         );
+
 
         /*
          * Attendance exists.
@@ -703,15 +857,22 @@ public class MainActivity extends AppCompatActivity {
                     R.drawable.calendar_present
             );
 
+
             dayView.setTextColor(
-                    Color.rgb(21, 128, 61)
+                    Color.rgb(
+                            21,
+                            128,
+                            61
+                    )
             );
+
 
             dayView.setTypeface(
                     null,
                     android.graphics.Typeface.BOLD
             );
         }
+
 
         /*
          * Today without attendance.
@@ -721,18 +882,25 @@ public class MainActivity extends AppCompatActivity {
                         Calendar.getInstance().getTime()
                 );
 
+
         if (today.equals(dateKey)
                 && attendance == null) {
 
             dayView.setTextColor(
-                    Color.rgb(37, 99, 235)
+                    Color.rgb(
+                            37,
+                            99,
+                            235
+                    )
             );
+
 
             dayView.setTypeface(
                     null,
                     android.graphics.Typeface.BOLD
             );
         }
+
 
         /*
          * Click date.
@@ -744,14 +912,14 @@ public class MainActivity extends AppCompatActivity {
                 )
         );
 
+
         calendarGrid.addView(dayView);
     }
 
-    /*
-     * ==========================================
-     * SELECTED DATE DETAILS
-     * ==========================================
-     */
+
+    // =========================================================
+    // SELECTED DATE DETAILS
+    // =========================================================
 
     private void showSelectedDate(
             String dateKey,
@@ -762,9 +930,11 @@ public class MainActivity extends AppCompatActivity {
             Calendar selectedCalendar =
                     Calendar.getInstance();
 
+
             selectedCalendar.setTime(
                     dateFormat.parse(dateKey)
             );
+
 
             tvSelectedDate.setText(
                     displayDateFormat.format(
@@ -779,6 +949,7 @@ public class MainActivity extends AppCompatActivity {
             );
         }
 
+
         /*
          * No attendance record.
          */
@@ -788,19 +959,24 @@ public class MainActivity extends AppCompatActivity {
                     "Status: Not marked"
             );
 
+
             tvSelectedCheckIn.setText(
                     "Check-in: --"
             );
+
 
             tvSelectedCheckOut.setText(
                     "Check-out: --"
             );
 
+
             return;
         }
 
+
         String status =
                 attendance.getStatus();
+
 
         if (status == null
                 || status.trim().isEmpty()) {
@@ -808,15 +984,19 @@ public class MainActivity extends AppCompatActivity {
             status = "PRESENT";
         }
 
+
         tvSelectedStatus.setText(
                 "Status: " + status
         );
 
+
         String checkIn =
                 attendance.getCheckInTime();
 
+
         String checkOut =
                 attendance.getCheckOutTime();
+
 
         tvSelectedCheckIn.setText(
                 "Check-in: " +
@@ -827,6 +1007,7 @@ public class MainActivity extends AppCompatActivity {
                                         : checkIn
                         )
         );
+
 
         tvSelectedCheckOut.setText(
                 "Check-out: " +
@@ -839,15 +1020,15 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    /*
-     * ==========================================
-     * SESSION
-     * ==========================================
-     */
+
+    // =========================================================
+    // SESSION EXPIRED
+    // =========================================================
 
     private void handleSessionExpired() {
 
         sessionManager.logout();
+
 
         Toast.makeText(
                 MainActivity.this,
@@ -855,8 +1036,14 @@ public class MainActivity extends AppCompatActivity {
                 Toast.LENGTH_SHORT
         ).show();
 
+
         openLogin();
     }
+
+
+    // =========================================================
+    // OPEN LOGIN
+    // =========================================================
 
     private void openLogin() {
 
@@ -866,21 +1053,23 @@ public class MainActivity extends AppCompatActivity {
                         LoginActivity.class
                 );
 
+
         intent.setFlags(
                 Intent.FLAG_ACTIVITY_NEW_TASK
                         | Intent.FLAG_ACTIVITY_CLEAR_TASK
         );
 
+
         startActivity(intent);
+
 
         finish();
     }
 
-    /*
-     * ==========================================
-     * DP -> PX
-     * ==========================================
-     */
+
+    // =========================================================
+    // DP -> PX
+    // =========================================================
 
     private int dpToPx(int dp) {
 

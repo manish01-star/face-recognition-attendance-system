@@ -1,3 +1,5 @@
+import json
+
 from fastapi import (
     APIRouter,
     UploadFile,
@@ -6,13 +8,19 @@ from fastapi import (
     HTTPException
 )
 
-from app.services.face_service import FaceService
+from starlette.concurrency import (
+    run_in_threadpool
+)
+
+from app.services.face_service import (
+    FaceService
+)
 
 from app.schemas.face_schema import (
     FaceDetectionResponse,
     FaceEmbeddingResponse,
     FaceVerificationResponse,
-    FaceEmbeddingVerificationRequest
+    AttendanceVerificationResponse
 )
 
 from app.schemas.anti_spoof_schema import (
@@ -27,7 +35,39 @@ router = APIRouter(
 
 
 # =========================================================
-# FACE DETECTION
+# COMMON IMAGE VALIDATION
+# =========================================================
+
+async def read_image_file(
+        file: UploadFile
+) -> bytes:
+
+    if (
+        not file.content_type
+        or not file.content_type.startswith(
+            "image/"
+        )
+    ):
+
+        raise HTTPException(
+            status_code=400,
+            detail="Only image files are allowed"
+        )
+
+    image_bytes = await file.read()
+
+    if not image_bytes:
+
+        raise HTTPException(
+            status_code=400,
+            detail="Image file is empty"
+        )
+
+    return image_bytes
+
+
+# =========================================================
+# DETECT FACE
 # =========================================================
 
 @router.post(
@@ -35,37 +75,33 @@ router = APIRouter(
     response_model=FaceDetectionResponse
 )
 async def detect_face(
-    file: UploadFile = File(...)
+        file: UploadFile = File(...)
 ):
 
     try:
 
-        if (
-            not file.content_type
-            or not file.content_type.startswith("image/")
-        ):
-            raise HTTPException(
-                status_code=400,
-                detail="Only image files are allowed"
-            )
+        image_bytes = await read_image_file(
+            file
+        )
 
-        image_bytes = await file.read()
-
-        if not image_bytes:
-            raise HTTPException(
-                status_code=400,
-                detail="Image file is empty"
-            )
-
-        faces = FaceService.detect_faces(
+        faces = await run_in_threadpool(
+            FaceService.detect_faces,
             image_bytes
         )
 
         return FaceDetectionResponse(
+
             success=True,
-            faceDetected=len(faces) > 0,
-            faceCount=len(faces),
-            faces=faces,
+
+            faceDetected=
+                len(faces) > 0,
+
+            faceCount=
+                len(faces),
+
+            faces=
+                faces,
+
             message=(
                 "Face detected successfully"
                 if faces
@@ -76,6 +112,13 @@ async def detect_face(
     except HTTPException:
         raise
 
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
     except Exception as e:
 
         raise HTTPException(
@@ -85,7 +128,9 @@ async def detect_face(
 
 
 # =========================================================
-# ANTI SPOOFING
+# ANTI SPOOF
+#
+# Existing API.
 # =========================================================
 
 @router.post(
@@ -93,36 +138,33 @@ async def detect_face(
     response_model=AntiSpoofResponse
 )
 async def anti_spoof(
-    file: UploadFile = File(...)
+        file: UploadFile = File(...)
 ):
 
     try:
 
-        if (
-            not file.content_type
-            or not file.content_type.startswith("image/")
-        ):
-            raise HTTPException(
-                status_code=400,
-                detail="Only image files are allowed"
-            )
+        image_bytes = await read_image_file(
+            file
+        )
 
-        image_bytes = await file.read()
-
-        if not image_bytes:
-            raise HTTPException(
-                status_code=400,
-                detail="Image file is empty"
-            )
-
-        result = FaceService.check_anti_spoofing(
+        result = await run_in_threadpool(
+            FaceService.check_anti_spoofing,
             image_bytes
         )
 
-        return AntiSpoofResponse(**result)
+        return AntiSpoofResponse(
+            **result
+        )
 
     except HTTPException:
         raise
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
 
     except Exception as e:
 
@@ -133,7 +175,9 @@ async def anti_spoof(
 
 
 # =========================================================
-# FACE EMBEDDING
+# GENERATE FACE EMBEDDING
+#
+# Registration API.
 # =========================================================
 
 @router.post(
@@ -141,40 +185,39 @@ async def anti_spoof(
     response_model=FaceEmbeddingResponse
 )
 async def generate_face_embedding(
-    file: UploadFile = File(...)
+        file: UploadFile = File(...)
 ):
 
     try:
 
-        if (
-            not file.content_type
-            or not file.content_type.startswith("image/")
-        ):
-            raise HTTPException(
-                status_code=400,
-                detail="Only image files are allowed"
-            )
+        image_bytes = await read_image_file(
+            file
+        )
 
-        image_bytes = await file.read()
-
-        if not image_bytes:
-            raise HTTPException(
-                status_code=400,
-                detail="Image file is empty"
-            )
-
-        result = FaceService.generate_embedding(
+        result = await run_in_threadpool(
+            FaceService.generate_embedding,
             image_bytes
         )
 
         return FaceEmbeddingResponse(
+
             success=True,
+
             faceDetected=True,
+
             faceCount=1,
-            embedding=result["embedding"],
-            embeddingSize=result["embeddingSize"],
-            model=result["model"],
-            message="Face embedding generated successfully"
+
+            embedding=
+                result["embedding"],
+
+            embeddingSize=
+                result["embeddingSize"],
+
+            model=
+                result["model"],
+
+            message=
+                "Face embedding generated successfully"
         )
 
     except HTTPException:
@@ -195,65 +238,60 @@ async def generate_face_embedding(
         )
 
 
+# =========================================================
+# VERIFY TWO IMAGES
+#
+# Existing/testing API.
+# =========================================================
+
 @router.post(
     "/verify",
     response_model=FaceVerificationResponse
 )
 async def verify_faces(
-    registered_file: UploadFile = File(...),
-    current_file: UploadFile = File(...)
+        registered_file:
+            UploadFile = File(...),
+
+        current_file:
+            UploadFile = File(...)
 ):
 
     try:
 
-        # Validate first image
-        if (
-            not registered_file.content_type
-            or not registered_file.content_type.startswith("image/")
-        ):
-            raise HTTPException(
-                status_code=400,
-                detail="Registered file must be an image"
+        registered_bytes = (
+            await read_image_file(
+                registered_file
             )
+        )
 
-        # Validate second image
-        if (
-            not current_file.content_type
-            or not current_file.content_type.startswith("image/")
-        ):
-            raise HTTPException(
-                status_code=400,
-                detail="Current file must be an image"
+        current_bytes = (
+            await read_image_file(
+                current_file
             )
+        )
 
-        # Read files
-        registered_bytes = await registered_file.read()
-        current_bytes = await current_file.read()
-
-        if not registered_bytes:
-            raise HTTPException(
-                status_code=400,
-                detail="Registered image is empty"
-            )
-
-        if not current_bytes:
-            raise HTTPException(
-                status_code=400,
-                detail="Current image is empty"
-            )
-
-        # Verify
-        result = FaceService.verify_faces(
+        result = await run_in_threadpool(
+            FaceService.verify_faces,
             registered_bytes,
             current_bytes
         )
 
         return FaceVerificationResponse(
+
             success=True,
-            verified=result["verified"],
-            distance=result["distance"],
-            threshold=result["threshold"],
-            model=result["model"],
+
+            verified=
+                result["verified"],
+
+            distance=
+                result["distance"],
+
+            threshold=
+                result["threshold"],
+
+            model=
+                result["model"],
+
             message=(
                 "Same person"
                 if result["verified"]
@@ -278,8 +316,11 @@ async def verify_faces(
             detail=str(e)
         )
 
+
 # =========================================================
-# VERIFY CURRENT IMAGE AGAINST REGISTERED EMBEDDING
+# OLD VERIFY EMBEDDING
+#
+# Backward compatibility.
 # =========================================================
 
 @router.post(
@@ -287,61 +328,87 @@ async def verify_faces(
     response_model=FaceVerificationResponse
 )
 async def verify_embedding(
-    registeredEmbedding: str = Form(...),
-    current_file: UploadFile = File(...)
+        registeredEmbedding:
+            str = Form(...),
+
+        current_file:
+            UploadFile = File(...)
 ):
 
     try:
 
-        if (
-            not current_file.content_type
-            or not current_file.content_type.startswith("image/")
-        ):
-            raise HTTPException(
-                status_code=400,
-                detail="Current file must be an image"
+        current_bytes = (
+            await read_image_file(
+                current_file
             )
-
-        current_bytes = await current_file.read()
-
-        if not current_bytes:
-            raise HTTPException(
-                status_code=400,
-                detail="Current image is empty"
-            )
-
-        # JSON string → List
-        import json
-
-        registered_embedding = json.loads(
-            registeredEmbedding
         )
 
-        if not registered_embedding:
+        # -----------------------------------------------------
+        # Parse registered embedding JSON
+        # -----------------------------------------------------
+
+        try:
+
+            registered_embedding = (
+                json.loads(
+                    registeredEmbedding
+                )
+            )
+
+        except (
+            json.JSONDecodeError,
+            TypeError
+        ):
 
             raise HTTPException(
                 status_code=400,
-                detail="Registered embedding is required"
+                detail="Invalid registered embedding"
             )
 
-        if len(registered_embedding) != 512:
+        if not isinstance(
+            registered_embedding,
+            list
+        ):
 
             raise HTTPException(
                 status_code=400,
-                detail="Invalid registered embedding size"
+                detail=
+                    "Registered embedding must be a list"
             )
 
-        result = FaceService.verify_embedding(
+        if (
+            len(registered_embedding)
+            != FaceService.EXPECTED_EMBEDDING_SIZE
+        ):
+
+            raise HTTPException(
+                status_code=400,
+                detail=
+                    "Invalid registered embedding size"
+            )
+
+        result = await run_in_threadpool(
+            FaceService.verify_embedding,
             registered_embedding,
             current_bytes
         )
 
         return FaceVerificationResponse(
+
             success=True,
-            verified=result["verified"],
-            distance=result["distance"],
-            threshold=result["threshold"],
-            model=result["model"],
+
+            verified=
+                result["verified"],
+
+            distance=
+                result["distance"],
+
+            threshold=
+                result["threshold"],
+
+            model=
+                result["model"],
+
             message=(
                 "Same person"
                 if result["verified"]
@@ -365,3 +432,165 @@ async def verify_embedding(
             status_code=500,
             detail=str(e)
         )
+
+
+# =========================================================
+# OPTIMIZED ATTENDANCE VERIFICATION
+#
+# Spring Boot calls this endpoint.
+#
+# ONE request:
+#
+# Current Image
+#      ↓
+# Face Detection
+#      ↓
+# Anti-Spoof
+#      ↓
+# Facenet512
+#      ↓
+# Compare with logged-in user's embedding
+#      ↓
+# Result
+# =========================================================
+
+@router.post(
+    "/verify-attendance",
+    response_model=AttendanceVerificationResponse
+)
+async def verify_attendance(
+        registeredEmbedding:
+            str = Form(...),
+
+        current_file:
+            UploadFile = File(...)
+):
+
+    try:
+
+        # =====================================================
+        # IMAGE
+        # =====================================================
+
+        current_bytes = (
+            await read_image_file(
+                current_file
+            )
+        )
+
+        # =====================================================
+        # REGISTERED EMBEDDING
+        # =====================================================
+
+        try:
+
+            registered_embedding = (
+                json.loads(
+                    registeredEmbedding
+                )
+            )
+
+        except (
+            json.JSONDecodeError,
+            TypeError
+        ):
+
+            raise HTTPException(
+                status_code=400,
+                detail=
+                    "Invalid registered embedding"
+            )
+
+        if not isinstance(
+            registered_embedding,
+            list
+        ):
+
+            raise HTTPException(
+                status_code=400,
+                detail=
+                    "Registered embedding must be a list"
+            )
+
+        if (
+            len(registered_embedding)
+            != FaceService.EXPECTED_EMBEDDING_SIZE
+        ):
+
+            raise HTTPException(
+                status_code=400,
+                detail=
+                    "Invalid registered embedding size"
+            )
+
+        # =====================================================
+        # DEEPFACE
+        #
+        # DeepFace is CPU/GPU heavy.
+        #
+        # Run it outside FastAPI event loop.
+        # =====================================================
+
+        result = await run_in_threadpool(
+
+            FaceService.verify_attendance,
+
+            current_bytes,
+
+            registered_embedding
+        )
+
+        # =====================================================
+        # RESPONSE
+        # =====================================================
+
+        return AttendanceVerificationResponse(
+
+            success=
+                result["success"],
+
+            verified=
+                result["verified"],
+
+            spoof=
+                result["spoof"],
+
+            faceDetected=
+                result["faceDetected"],
+
+            faceCount=
+                result["faceCount"],
+
+            distance=
+                result["distance"],
+
+            threshold=
+                result["threshold"],
+
+            antiSpoofScore=
+                result["antiSpoofScore"],
+
+            model=
+                result["model"],
+
+            message=
+                result["message"]
+        )
+
+    except HTTPException:
+        raise
+
+    except ValueError as e:
+
+        raise HTTPException(
+            status_code=400,
+            detail=str(e)
+        )
+
+    except Exception as e:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(e)
+        )
+

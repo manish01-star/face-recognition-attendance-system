@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.college.attendance.utils.SessionManager;
 
+import java.util.concurrent.TimeUnit;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -14,9 +16,9 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-//    private static final String BASE_URL = "http://10.0.2.2:8080/"; //local
-    private static final String BASE_URL = "http://172.16.36.94:8080/"; //noida
-
+    private static final String BASE_URL = "http://192.168.164.252:8080/"; // samsung
+//    private static final String BASE_URL = "http://172.16.36.94:8080/"; // noida
+//    private static final String BASE_URL = "http://10.183.83.252:8080/"; // realme
 
     private static Retrofit retrofit;
 
@@ -29,15 +31,19 @@ public class ApiClient {
                             context.getApplicationContext()
                     );
 
-            // Logging
+            // =========================
+            // LOGGING
+            // =========================
             HttpLoggingInterceptor loggingInterceptor =
                     new HttpLoggingInterceptor();
 
             loggingInterceptor.setLevel(
-                    HttpLoggingInterceptor.Level.BODY
+                    HttpLoggingInterceptor.Level.BASIC
             );
 
-            // JWT Authentication Interceptor
+            // =========================
+            // JWT AUTHENTICATION
+            // =========================
             Interceptor authInterceptor = chain -> {
 
                 Request originalRequest = chain.request();
@@ -63,21 +69,46 @@ public class ApiClient {
                 );
             };
 
-            // OkHttp Client
+            // =========================
+            // OKHTTP CLIENT
+            // =========================
             OkHttpClient client =
                     new OkHttpClient.Builder()
+
+                            // Server se connection establish
+                            // hone ka maximum time
+                            .connectTimeout(
+                                    30,
+                                    TimeUnit.SECONDS
+                            )
+
+                            // Server response wait time
+                            .readTimeout(
+                                    60,
+                                    TimeUnit.SECONDS
+                            )
+
+                            // Image upload ka maximum time
+                            .writeTimeout(
+                                    60,
+                                    TimeUnit.SECONDS
+                            )
+
                             .addInterceptor(authInterceptor)
                             .addInterceptor(loggingInterceptor)
                             .build();
 
-            // Retrofit
-            retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(client)
-                    .addConverterFactory(
-                            GsonConverterFactory.create()
-                    )
-                    .build();
+            // =========================
+            // RETROFIT
+            // =========================
+            retrofit =
+                    new Retrofit.Builder()
+                            .baseUrl(BASE_URL)
+                            .client(client)
+                            .addConverterFactory(
+                                    GsonConverterFactory.create()
+                            )
+                            .build();
         }
 
         return retrofit;

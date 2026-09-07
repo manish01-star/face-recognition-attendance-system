@@ -1,10 +1,8 @@
 from typing import List
-
 from pydantic import BaseModel
 
 
 class FaceArea(BaseModel):
-
     x: int
     y: int
     width: int
@@ -12,14 +10,12 @@ class FaceArea(BaseModel):
 
 
 class AntiSpoofFace(BaseModel):
-
     isReal: bool
     antiSpoofScore: float
     face: FaceArea
 
 
 class AntiSpoofResponse(BaseModel):
-
     success: bool
     faceDetected: bool
     faceCount: int

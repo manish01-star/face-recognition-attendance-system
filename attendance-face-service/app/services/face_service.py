@@ -1,47 +1,326 @@
 import cv2
 import numpy as np
-
 from deepface import DeepFace
 
 
 class FaceService:
 
+    MODEL_NAME = "Facenet512"
+    DETECTOR_BACKEND = "retinaface"
+    NORMALIZATION = "Facenet"
+
+    # Current threshold.
+    # Keep this unchanged until proper genuine/impostor
+    # threshold calibration is performed.
+    DISTANCE_THRESHOLD = 0.30
+
+    EXPECTED_EMBEDDING_SIZE = 512
+
+    # =========================================================
+    # COMMON IMAGE DECODER
+    # =========================================================
+
     @staticmethod
-    def detect_faces(image_bytes: bytes):
+    def _decode_image(image_bytes: bytes):
 
-        image_array = np.frombuffer(image_bytes, np.uint8)
+        if not image_bytes:
+            raise ValueError("Image file is empty")
 
-        image = cv2.imdecode(image_array, cv2.IMREAD_COLOR)
+        image_array = np.frombuffer(
+            image_bytes,
+            dtype=np.uint8
+        )
+
+        image = cv2.imdecode(
+            image_array,
+            cv2.IMREAD_COLOR
+        )
 
         if image is None:
             raise ValueError("Invalid image file")
 
+        return image
+
+    # =========================================================
+    # REGISTERED EMBEDDING VALIDATION
+    # =========================================================
+
+    @staticmethod
+    def _validate_registered_embedding(
+            registered_embedding: list
+    ):
+
+        if not isinstance(
+            registered_embedding,
+            list
+        ):
+            raise ValueError(
+                "Registered face embedding must be a list"
+            )
+
+        if not registered_embedding:
+            raise ValueError(
+                "Registered face embedding is empty"
+            )
+
+        if len(registered_embedding) != (
+                FaceService.EXPECTED_EMBEDDING_SIZE
+        ):
+            raise ValueError(
+                "Invalid registered embedding size"
+            )
+
+        try:
+
+            registered_vector = np.asarray(
+                registered_embedding,
+                dtype=np.float32
+            )
+
+        except Exception as e:
+
+            raise ValueError(
+                "Invalid registered face embedding"
+            ) from e
+
+        if not np.all(
+            np.isfinite(registered_vector)
+        ):
+
+            raise ValueError(
+                "Registered face embedding contains invalid values"
+            )
+
+        norm = np.linalg.norm(
+            registered_vector
+        )
+
+        if (
+            not np.isfinite(norm)
+            or norm == 0
+        ):
+
+            raise ValueError(
+                "Invalid registered face embedding"
+            )
+
+        return registered_vector
+
+    # =========================================================
+    # EMBEDDING COMPARISON
+    # =========================================================
+
+    @staticmethod
+    def _compare_embeddings(
+            registered_embedding: list,
+            current_embedding: list
+    ):
+
+        registered_vector = (
+            FaceService._validate_registered_embedding(
+                registered_embedding
+            )
+        )
+
+        if not isinstance(
+            current_embedding,
+            list
+        ):
+
+            raise ValueError(
+                "Current face embedding must be a list"
+            )
+
+        if not current_embedding:
+
+            raise ValueError(
+                "Current face embedding is empty"
+            )
+
+        if len(current_embedding) != (
+                FaceService.EXPECTED_EMBEDDING_SIZE
+        ):
+
+            raise ValueError(
+                "Invalid current embedding size"
+            )
+
+        try:
+
+            current_vector = np.asarray(
+                current_embedding,
+                dtype=np.float32
+            )
+
+        except Exception as e:
+
+            raise ValueError(
+                "Invalid current face embedding"
+            ) from e
+
+        if not np.all(
+            np.isfinite(current_vector)
+        ):
+
+            raise ValueError(
+                "Current face embedding contains invalid values"
+            )
+
+        registered_norm = np.linalg.norm(
+            registered_vector
+        )
+
+        current_norm = np.linalg.norm(
+            current_vector
+        )
+
+        if (
+            registered_norm == 0
+            or current_norm == 0
+            or not np.isfinite(registered_norm)
+            or not np.isfinite(current_norm)
+        ):
+
+            raise ValueError(
+                "Invalid face embedding"
+            )
+
+        cosine_similarity = (
+            np.dot(
+                registered_vector,
+                current_vector
+            )
+            /
+            (
+                registered_norm
+                * current_norm
+            )
+        )
+
+        # Numerical safety.
+        cosine_similarity = float(
+            np.clip(
+                cosine_similarity,
+                -1.0,
+                1.0
+            )
+        )
+
+        distance = (
+            1.0
+            - cosine_similarity
+        )
+
+        verified = (
+            distance
+            <= FaceService.DISTANCE_THRESHOLD
+        )
+
+        print(
+            f"[FACE MATCH] "
+            f"cosine_similarity={cosine_similarity:.6f}, "
+            f"distance={distance:.6f}, "
+            f"threshold={FaceService.DISTANCE_THRESHOLD:.6f}, "
+            f"verified={verified}"
+        )
+
+        return {
+
+            "verified":
+                bool(verified),
+
+            "distance":
+                round(
+                    float(distance),
+                    4
+                ),
+
+            "threshold":
+                FaceService.DISTANCE_THRESHOLD,
+
+            "model":
+                FaceService.MODEL_NAME
+        }
+
+    # =========================================================
+    # FACE DETECTION
+    # =========================================================
+
+    @staticmethod
+    def detect_faces(
+            image_bytes: bytes
+    ):
+
+        image = FaceService._decode_image(
+            image_bytes
+        )
+
         try:
 
             faces = DeepFace.extract_faces(
+
                 img_path=image,
-                detector_backend="retinaface",
+
+                detector_backend=
+                    FaceService.DETECTOR_BACKEND,
+
                 enforce_detection=False,
-                align=True
+
+                align=True,
+
+                anti_spoofing=False
             )
 
             detected_faces = []
 
             for face in faces:
 
-                facial_area = face.get("facial_area", {})
+                facial_area = face.get(
+                    "facial_area",
+                    {}
+                )
 
-                x = int(facial_area.get("x", 0))
-                y = int(facial_area.get("y", 0))
-                width = int(facial_area.get("w", 0))
-                height = int(facial_area.get("h", 0))
+                x = int(
+                    facial_area.get(
+                        "x",
+                        0
+                    )
+                )
 
-                if width > 0 and height > 0:
+                y = int(
+                    facial_area.get(
+                        "y",
+                        0
+                    )
+                )
+
+                width = int(
+                    facial_area.get(
+                        "w",
+                        0
+                    )
+                )
+
+                height = int(
+                    facial_area.get(
+                        "h",
+                        0
+                    )
+                )
+
+                if (
+                    width > 0
+                    and height > 0
+                ):
 
                     detected_faces.append({
+
                         "x": x,
+
                         "y": y,
+
                         "width": width,
+
                         "height": height
                     })
 
@@ -51,28 +330,36 @@ class FaceService:
 
             raise RuntimeError(
                 f"Face detection failed: {str(e)}"
-            )
+            ) from e
+
+    # =========================================================
+    # ANTI-SPOOFING
+    #
+    # Existing API.
+    # =========================================================
 
     @staticmethod
-    def check_anti_spoofing(image_bytes: bytes):
+    def check_anti_spoofing(
+            image_bytes: bytes
+    ):
 
-        image_array = np.frombuffer(image_bytes, np.uint8)
-
-        image = cv2.imdecode(
-            image_array,
-            cv2.IMREAD_COLOR
+        image = FaceService._decode_image(
+            image_bytes
         )
-
-        if image is None:
-            raise ValueError("Invalid image file")
 
         try:
 
             faces = DeepFace.extract_faces(
+
                 img_path=image,
-                detector_backend="retinaface",
+
+                detector_backend=
+                    FaceService.DETECTOR_BACKEND,
+
                 enforce_detection=True,
+
                 align=True,
+
                 anti_spoofing=True
             )
 
@@ -80,58 +367,111 @@ class FaceService:
 
             for face in faces:
 
-                is_real = face.get(
-                    "is_real",
-                    False
-                )
-
-                antispoof_score = face.get(
-                    "antispoof_score",
-                    0.0
-                )
-
                 facial_area = face.get(
                     "facial_area",
                     {}
                 )
 
+                is_real = bool(
+                    face.get(
+                        "is_real",
+                        False
+                    )
+                )
+
+                anti_spoof_score = float(
+                    face.get(
+                        "antispoof_score",
+                        0.0
+                    )
+                )
+
                 results.append({
-                    "isReal": bool(is_real),
-                    "antiSpoofScore": round(
-                        float(antispoof_score),
-                        2
-                    ),
+
+                    "isReal":
+                        is_real,
+
+                    "antiSpoofScore":
+                        round(
+                            anti_spoof_score,
+                            4
+                        ),
+
                     "face": {
+
                         "x": int(
-                            facial_area.get("x", 0)
+                            facial_area.get(
+                                "x",
+                                0
+                            )
                         ),
+
                         "y": int(
-                            facial_area.get("y", 0)
+                            facial_area.get(
+                                "y",
+                                0
+                            )
                         ),
+
                         "width": int(
-                            facial_area.get("w", 0)
+                            facial_area.get(
+                                "w",
+                                0
+                            )
                         ),
+
                         "height": int(
-                            facial_area.get("h", 0)
+                            facial_area.get(
+                                "h",
+                                0
+                            )
                         )
                     }
                 })
 
-            real_faces = [
-                face
-                for face in results
-                if face["isReal"]
+            # Exactly one face required.
+            if len(results) != 1:
+
+                return {
+
+                    "success": True,
+
+                    "faceDetected":
+                        len(results) > 0,
+
+                    "faceCount":
+                        len(results),
+
+                    "live": False,
+
+                    "faces":
+                        results,
+
+                    "message":
+                        "Exactly one face is required"
+                }
+
+            live = results[0][
+                "isReal"
             ]
 
             return {
+
                 "success": True,
-                "faceDetected": len(results) > 0,
-                "faceCount": len(results),
-                "live": len(real_faces) > 0,
-                "faces": results,
+
+                "faceDetected": True,
+
+                "faceCount": 1,
+
+                "live":
+                    live,
+
+                "faces":
+                    results,
+
                 "message": (
                     "Live face detected"
-                    if len(real_faces) > 0
+                    if live
                     else "Spoof detected"
                 )
             }
@@ -140,35 +480,43 @@ class FaceService:
 
             raise RuntimeError(
                 f"Anti-spoofing failed: {str(e)}"
-            )
+            ) from e
+
+    # =========================================================
+    # GENERATE EMBEDDING
+    #
+    # Used during face registration.
+    # =========================================================
 
     @staticmethod
-    def generate_embedding(image_bytes: bytes):
+    def generate_embedding(
+            image_bytes: bytes
+    ):
 
-        image_array = np.frombuffer(
-            image_bytes,
-            np.uint8
+        image = FaceService._decode_image(
+            image_bytes
         )
-
-        image = cv2.imdecode(
-            image_array,
-            cv2.IMREAD_COLOR
-        )
-
-        if image is None:
-            raise ValueError(
-                "Invalid image file"
-            )
 
         try:
 
-            representations = DeepFace.represent(
-                img_path=image,
-                model_name="Facenet512",
-                detector_backend="retinaface",
-                enforce_detection=True,
-                align=True,
-                normalization="Facenet"
+            representations = (
+                DeepFace.represent(
+
+                    img_path=image,
+
+                    model_name=
+                        FaceService.MODEL_NAME,
+
+                    detector_backend=
+                        FaceService.DETECTOR_BACKEND,
+
+                    enforce_detection=True,
+
+                    align=True,
+
+                    normalization=
+                        FaceService.NORMALIZATION
+                )
             )
 
             if not representations:
@@ -177,17 +525,15 @@ class FaceService:
                     "No face detected"
                 )
 
-            # We expect one face during registration
-            if len(representations) > 1:
+            if len(representations) != 1:
 
                 raise ValueError(
-                    "Multiple faces detected. "
-                    "Please upload an image containing "
-                    "only one face."
+                    "Exactly one face must be visible"
                 )
 
-            embedding = representations[0].get(
-                "embedding"
+            embedding = (
+                representations[0]
+                .get("embedding")
             )
 
             if not embedding:
@@ -196,13 +542,26 @@ class FaceService:
                     "Unable to generate face embedding"
                 )
 
+            if len(embedding) != (
+                    FaceService.EXPECTED_EMBEDDING_SIZE
+            ):
+
+                raise ValueError(
+                    "Invalid generated embedding size"
+                )
+
             return {
+
                 "embedding": [
                     float(value)
                     for value in embedding
                 ],
-                "embeddingSize": len(embedding),
-                "model": "Facenet512"
+
+                "embeddingSize":
+                    len(embedding),
+
+                "model":
+                    FaceService.MODEL_NAME
             }
 
         except ValueError:
@@ -212,114 +571,132 @@ class FaceService:
 
             raise RuntimeError(
                 f"Face embedding failed: {str(e)}"
-            )
+            ) from e
 
+    # =========================================================
+    # VERIFY TWO IMAGES
+    #
+    # Existing/testing API.
+    # =========================================================
 
     @staticmethod
     def verify_faces(
-        image1_bytes: bytes,
-        image2_bytes: bytes
+            image1_bytes: bytes,
+            image2_bytes: bytes
     ):
 
-        image1_array = np.frombuffer(
-            image1_bytes,
-            np.uint8
+        image1 = FaceService._decode_image(
+            image1_bytes
         )
 
-        image2_array = np.frombuffer(
-            image2_bytes,
-            np.uint8
+        image2 = FaceService._decode_image(
+            image2_bytes
         )
-
-        image1 = cv2.imdecode(
-            image1_array,
-            cv2.IMREAD_COLOR
-        )
-
-        image2 = cv2.imdecode(
-            image2_array,
-            cv2.IMREAD_COLOR
-        )
-
-        if image1 is None:
-            raise ValueError("Invalid first image")
-
-        if image2 is None:
-            raise ValueError("Invalid second image")
 
         try:
 
             result = DeepFace.verify(
+
                 img1_path=image1,
+
                 img2_path=image2,
-                model_name="Facenet512",
-                detector_backend="retinaface",
+
+                model_name=
+                    FaceService.MODEL_NAME,
+
+                detector_backend=
+                    FaceService.DETECTOR_BACKEND,
+
                 enforce_detection=True,
-                align=True
-            )
 
-            distance = float(
-                result.get("distance", 0.0)
-            )
+                align=True,
 
-            threshold = float(
-                result.get("threshold", 0.30)
-            )
-
-            verified = bool(
-                result.get("verified", False)
+                normalization=
+                    FaceService.NORMALIZATION
             )
 
             return {
-                "verified": verified,
-                "distance": round(distance, 4),
-                "threshold": round(threshold, 4),
-                "model": "Facenet512"
+
+                "verified":
+                    bool(
+                        result.get(
+                            "verified",
+                            False
+                        )
+                    ),
+
+                "distance":
+                    round(
+                        float(
+                            result.get(
+                                "distance",
+                                1.0
+                            )
+                        ),
+                        4
+                    ),
+
+                "threshold":
+                    round(
+                        float(
+                            result.get(
+                                "threshold",
+                                FaceService.DISTANCE_THRESHOLD
+                            )
+                        ),
+                        4
+                    ),
+
+                "model":
+                    FaceService.MODEL_NAME
             }
 
         except Exception as e:
 
             raise RuntimeError(
                 f"Face verification failed: {str(e)}"
-            )
+            ) from e
+
+    # =========================================================
+    # OLD VERIFY EMBEDDING API
+    #
+    # Kept for backward compatibility.
+    # =========================================================
 
     @staticmethod
     def verify_embedding(
-        registered_embedding: list,
-        current_image_bytes: bytes
+            registered_embedding: list,
+            current_image_bytes: bytes
     ):
 
-        image_array = np.frombuffer(
-            current_image_bytes,
-            np.uint8
+        FaceService._validate_registered_embedding(
+            registered_embedding
         )
 
-        image = cv2.imdecode(
-            image_array,
-            cv2.IMREAD_COLOR
+        image = FaceService._decode_image(
+            current_image_bytes
         )
-
-        if image is None:
-            raise ValueError(
-                "Invalid current image"
-            )
-
-        if not registered_embedding:
-
-            raise ValueError(
-                "Registered face embedding is empty"
-            )
 
         try:
 
-            # Generate embedding from current camera image
-            representations = DeepFace.represent(
-                img_path=image,
-                model_name="Facenet512",
-                detector_backend="retinaface",
-                enforce_detection=True,
-                align=True,
-                normalization="Facenet"
+            representations = (
+                DeepFace.represent(
+
+                    img_path=image,
+
+                    model_name=
+                        FaceService.MODEL_NAME,
+
+                    detector_backend=
+                        FaceService.DETECTOR_BACKEND,
+
+                    enforce_detection=True,
+
+                    align=True,
+
+                    normalization=
+                        FaceService.NORMALIZATION
+                )
             )
 
             if not representations:
@@ -328,16 +705,15 @@ class FaceService:
                     "No face detected in current image"
                 )
 
-            # Attendance should contain only one face
-            if len(representations) > 1:
+            if len(representations) != 1:
 
                 raise ValueError(
-                    "Multiple faces detected. "
-                    "Please ensure only one face is visible."
+                    "Exactly one face must be visible"
                 )
 
-            current_embedding = representations[0].get(
-                "embedding"
+            current_embedding = (
+                representations[0]
+                .get("embedding")
             )
 
             if not current_embedding:
@@ -346,78 +722,431 @@ class FaceService:
                     "Unable to generate current face embedding"
                 )
 
-            if len(current_embedding) != len(registered_embedding):
+            return (
+                FaceService._compare_embeddings(
 
-                raise ValueError(
-                    "Embedding size mismatch"
-                )
+                    registered_embedding,
 
-            # Calculate cosine distance
-            registered_vector = np.array(
-                registered_embedding,
-                dtype=np.float32
-            )
-
-            current_vector = np.array(
-                current_embedding,
-                dtype=np.float32
-            )
-
-            registered_norm = np.linalg.norm(
-                registered_vector
-            )
-
-            current_norm = np.linalg.norm(
-                current_vector
-            )
-
-            if registered_norm == 0 or current_norm == 0:
-
-                raise ValueError(
-                    "Invalid face embedding"
-                )
-
-            cosine_similarity = (
-                np.dot(
-                    registered_vector,
-                    current_vector
-                )
-                /
-                (
-                    registered_norm
-                    *
-                    current_norm
+                    current_embedding
                 )
             )
-
-            distance = 1.0 - cosine_similarity
-
-            # Facenet512 cosine threshold
-            threshold = 0.30
-
-            verified = distance <= threshold
-
-            return {
-
-                "verified": bool(verified),
-
-                "distance": round(
-                    float(distance),
-                    4
-                ),
-
-                "threshold": threshold,
-
-                "model": "Facenet512"
-
-            }
 
         except ValueError:
-
             raise
 
         except Exception as e:
 
             raise RuntimeError(
                 f"Face embedding verification failed: {str(e)}"
-            )            
+            ) from e
+
+    # =========================================================
+    # OPTIMIZED ATTENDANCE VERIFICATION
+    #
+    # Attendance security flow:
+    #
+    # 1. Decode image
+    # 2. Detect exactly one face
+    # 3. Anti-spoof
+    # 4. Reuse detected face
+    # 5. Generate Facenet512 embedding
+    # 6. Compare ONLY against supplied registered embedding
+    # 7. Return verified only when all checks pass
+    #
+    # RetinaFace runs only ONCE.
+    # =========================================================
+
+    @staticmethod
+    def verify_attendance(
+            image_bytes: bytes,
+            registered_embedding: list
+    ):
+
+        # ---------------------------------------------------------
+        # Validate registered embedding first.
+        # This is the trusted embedding fetched by Spring Boot
+        # for the logged-in user.
+        # ---------------------------------------------------------
+
+        FaceService._validate_registered_embedding(
+            registered_embedding
+        )
+
+        image = FaceService._decode_image(
+            image_bytes
+        )
+
+        try:
+
+            # =====================================================
+            # STEP 1
+            # FACE DETECTION + ANTI-SPOOF
+            #
+            # enforce_detection=False is intentional.
+            #
+            # This allows us to handle "no face" ourselves and
+            # return "Unregistered" instead of DeepFace throwing
+            # an exception.
+            # =====================================================
+
+            faces = DeepFace.extract_faces(
+
+                img_path=image,
+
+                detector_backend=
+                    FaceService.DETECTOR_BACKEND,
+
+                enforce_detection=False,
+
+                align=True,
+
+                anti_spoofing=True
+            )
+
+            # =====================================================
+            # STEP 2
+            # VALIDATE ACTUAL DETECTED FACES
+            #
+            # When enforce_detection=False, DeepFace can return
+            # a fallback/dummy result when no face exists.
+            #
+            # Therefore we must inspect facial_area ourselves.
+            # =====================================================
+
+            valid_faces = []
+
+            for face in faces or []:
+
+                facial_area = face.get(
+                    "facial_area",
+                    {}
+                )
+
+                width = int(
+                    facial_area.get(
+                        "w",
+                        0
+                    )
+                )
+
+                height = int(
+                    facial_area.get(
+                        "h",
+                        0
+                    )
+                )
+
+                if (
+                    width > 0
+                    and height > 0
+                ):
+
+                    valid_faces.append(face)
+
+            # =====================================================
+            # NO FACE
+            # =====================================================
+
+            if len(valid_faces) == 0:
+
+                return {
+
+                    "success": True,
+
+                    "verified": False,
+
+                    "spoof": False,
+
+                    "faceDetected": False,
+
+                    "faceCount": 0,
+
+                    "distance": 1.0,
+
+                    "threshold":
+                        FaceService.DISTANCE_THRESHOLD,
+
+                    "antiSpoofScore": 0.0,
+
+                    "model":
+                        FaceService.MODEL_NAME,
+
+                    "message":
+                        "Unregistered"
+                }
+
+            # =====================================================
+            # EXACTLY ONE FACE REQUIRED
+            # =====================================================
+
+            if len(valid_faces) != 1:
+
+                return {
+
+                    "success": True,
+
+                    "verified": False,
+
+                    "spoof": False,
+
+                    "faceDetected": True,
+
+                    "faceCount":
+                        len(valid_faces),
+
+                    "distance": 1.0,
+
+                    "threshold":
+                        FaceService.DISTANCE_THRESHOLD,
+
+                    "antiSpoofScore": 0.0,
+
+                    "model":
+                        FaceService.MODEL_NAME,
+
+                    "message":
+                        "Unregistered"
+                }
+
+            detected_face = valid_faces[0]
+
+            # =====================================================
+            # STEP 3
+            # ANTI-SPOOF
+            # =====================================================
+
+            is_real = bool(
+                detected_face.get(
+                    "is_real",
+                    False
+                )
+            )
+
+            anti_spoof_score = float(
+                detected_face.get(
+                    "antispoof_score",
+                    0.0
+                )
+            )
+
+            # -----------------------------------------------------
+            # Fake photo / screen / spoof
+            # -----------------------------------------------------
+
+            if not is_real:
+
+                return {
+
+                    "success": True,
+
+                    "verified": False,
+
+                    "spoof": True,
+
+                    "faceDetected": True,
+
+                    "faceCount": 1,
+
+                    "distance": 1.0,
+
+                    "threshold":
+                        FaceService.DISTANCE_THRESHOLD,
+
+                    "antiSpoofScore":
+                        round(
+                            anti_spoof_score,
+                            4
+                        ),
+
+                    "model":
+                        FaceService.MODEL_NAME,
+
+                    "message":
+                        "Spoof Detected"
+                }
+
+            # =====================================================
+            # STEP 4
+            # GET FACE IMAGE FROM SAME DETECTION
+            # =====================================================
+
+            face_image = detected_face.get(
+                "face"
+            )
+
+            if face_image is None:
+
+                raise ValueError(
+                    "Unable to extract detected face"
+                )
+
+            if not isinstance(
+                face_image,
+                np.ndarray
+            ):
+
+                raise ValueError(
+                    "Invalid detected face"
+                )
+
+            if face_image.size == 0:
+
+                raise ValueError(
+                    "Detected face is empty"
+                )
+
+            # =====================================================
+            # STEP 5
+            # GENERATE EMBEDDING
+            #
+            # detector_backend="skip"
+            #
+            # RetinaFace does NOT run a second time.
+            # =====================================================
+
+            representations = (
+                DeepFace.represent(
+
+                    img_path=face_image,
+
+                    model_name=
+                        FaceService.MODEL_NAME,
+
+                    detector_backend="skip",
+
+                    enforce_detection=False,
+
+                    align=False,
+
+                    normalization=
+                        FaceService.NORMALIZATION
+                )
+            )
+
+            if not representations:
+
+                raise ValueError(
+                    "Unable to generate current face embedding"
+                )
+
+            if len(representations) != 1:
+
+                raise ValueError(
+                    "Invalid face representation"
+                )
+
+            current_embedding = (
+                representations[0]
+                .get("embedding")
+            )
+
+            if not current_embedding:
+
+                raise ValueError(
+                    "Unable to generate current face embedding"
+                )
+
+            # =====================================================
+            # STEP 6
+            # COMPARE ONLY WITH LOGGED-IN USER
+            # =====================================================
+
+            verification = (
+                FaceService._compare_embeddings(
+
+                    registered_embedding,
+
+                    current_embedding
+                )
+            )
+
+            # =====================================================
+            # STEP 7
+            # FACE MISMATCH
+            # =====================================================
+
+            if not verification["verified"]:
+
+                return {
+
+                    "success": True,
+
+                    "verified": False,
+
+                    "spoof": False,
+
+                    "faceDetected": True,
+
+                    "faceCount": 1,
+
+                    "distance":
+                        verification[
+                            "distance"
+                        ],
+
+                    "threshold":
+                        verification[
+                            "threshold"
+                        ],
+
+                    "antiSpoofScore":
+                        round(
+                            anti_spoof_score,
+                            4
+                        ),
+
+                    "model":
+                        FaceService.MODEL_NAME,
+
+                    "message":
+                        "Unregistered"
+                }
+
+            # =====================================================
+            # STEP 8
+            # FINAL SUCCESS
+            # =====================================================
+
+            return {
+
+                "success": True,
+
+                "verified": True,
+
+                "spoof": False,
+
+                "faceDetected": True,
+
+                "faceCount": 1,
+
+                "distance":
+                    verification[
+                        "distance"
+                    ],
+
+                "threshold":
+                    verification[
+                        "threshold"
+                    ],
+
+                "antiSpoofScore":
+                    round(
+                        anti_spoof_score,
+                        4
+                    ),
+
+                "model":
+                    FaceService.MODEL_NAME,
+
+                "message":
+                    "Verified"
+            }
+
+        except ValueError:
+            raise
+
+        except Exception as e:
+
+            raise RuntimeError(
+                f"Attendance verification failed: {str(e)}"
+            ) from e
