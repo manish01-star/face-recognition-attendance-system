@@ -315,6 +315,11 @@
             color: #1d4ed8;
         }
 
+        .btn-view {
+            background: #f1f5f9;
+            color: #334155;
+        }
+
         /* =========================
            FILTERS
         ========================= */
@@ -362,7 +367,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 850px;
+            min-width: 1000px;
         }
 
         th {
@@ -385,6 +390,40 @@
             background: #f8fafc;
         }
 
+        /* =========================
+           TEACHER PHOTO
+        ========================= */
+
+        .teacher-cell {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .teacher-photo {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 1px solid #e2e8f0;
+            background: #f1f5f9;
+            flex-shrink: 0;
+        }
+
+        .teacher-photo-placeholder {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
         .teacher-name {
             font-weight: 600;
         }
@@ -394,6 +433,10 @@
             font-size: 11px;
             margin-top: 3px;
         }
+
+        /* =========================
+           BADGES
+        ========================= */
 
         .badge {
             display: inline-block;
@@ -413,9 +456,14 @@
             color: #b91c1c;
         }
 
+        /* =========================
+           ACTIONS
+        ========================= */
+
         .actions {
             display: flex;
             gap: 7px;
+            flex-wrap: wrap;
         }
 
         .action-btn {
@@ -425,6 +473,60 @@
             cursor: pointer;
             font-size: 11px;
             font-weight: 600;
+        }
+
+        /* =========================
+           PROFILE PHOTO FORM
+        ========================= */
+
+        .photo-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .photo-input {
+            padding: 9px;
+            cursor: pointer;
+        }
+
+        .photo-hint {
+            font-size: 11px;
+            color: #64748b;
+            line-height: 1.5;
+        }
+
+        .photo-preview-wrapper {
+            display: none;
+            align-items: center;
+            gap: 14px;
+            padding: 10px;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            background: #f8fafc;
+        }
+
+        .photo-preview-wrapper.show {
+            display: flex;
+        }
+
+        .photo-preview {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid #dbeafe;
+        }
+
+        .photo-preview-info {
+            font-size: 12px;
+            color: #475569;
+        }
+
+        .photo-preview-info strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #1e293b;
         }
 
         /* =========================
@@ -512,6 +614,83 @@
             display: flex;
             justify-content: flex-end;
             gap: 10px;
+        }
+
+        /* =========================
+           VIEW PROFILE MODAL
+        ========================= */
+
+        .view-modal {
+            max-width: 600px;
+        }
+
+        .view-profile {
+            text-align: center;
+            padding: 10px 0 25px;
+        }
+
+        .view-profile-photo {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #dbeafe;
+            background: #f1f5f9;
+            margin-bottom: 14px;
+        }
+
+        .view-profile-placeholder {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            background: #dbeafe;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 38px;
+            font-weight: 700;
+            margin: 0 auto 14px;
+            border: 4px solid #dbeafe;
+        }
+
+        .view-profile-name {
+            font-size: 21px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .view-profile-code {
+            margin-top: 5px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+        .profile-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-top: 10px;
+        }
+
+        .profile-detail {
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 13px;
+            background: #f8fafc;
+        }
+
+        .profile-detail-label {
+            color: #64748b;
+            font-size: 11px;
+            margin-bottom: 5px;
+        }
+
+        .profile-detail-value {
+            color: #1e293b;
+            font-size: 13px;
+            font-weight: 600;
+            word-break: break-word;
         }
 
         /* =========================
@@ -641,459 +820,636 @@
             .modal {
                 max-height: 95vh;
             }
+
+            .profile-details {
+                grid-template-columns: 1fr;
+            }
         }
     </style>
+
 </head>
 
 <body>
 
-<div class="app">
+    <div class="app">
 
-    <!-- =========================
+        <!-- =========================
          SIDEBAR
     ========================== -->
 
-    <aside class="sidebar" id="sidebar">
+        <aside class="sidebar" id="sidebar">
 
-        <div class="brand">
-            <span>◆</span>
-            College Attendance
-        </div>
-
-        <div class="menu">
-
-            <div class="menu-title">
-                Main
+            <div class="brand">
+                <span>◆</span>
+                College Attendance
             </div>
 
-            <a href="dashboard.html">
-                <span class="menu-icon">▦</span>
-                Dashboard
-            </a>
+            <div class="menu">
 
-            <div class="menu-title">
-                Management
+                <div class="menu-title">
+                    Main
+                </div>
+
+                <a href="dashboard.html">
+                    <span class="menu-icon">▦</span>
+                    Dashboard
+                </a>
+
+                <div class="menu-title">
+                    Management
+                </div>
+
+                <a href="students.html">
+                    <span class="menu-icon">👨‍🎓</span>
+                    Students
+                </a>
+
+                <a href="teachers.html" class="active">
+                    <span class="menu-icon">👨‍🏫</span>
+                    Teachers
+                </a>
+
+                <a href="departments.html">
+                    <span class="menu-icon">🏢</span>
+                    Departments
+                </a>
+
+                <a href="courses.html">
+                    <span class="menu-icon">📚</span>
+                    Courses
+                </a>
+
+                <a href="semesters.html">
+                    <span class="menu-icon">📖</span>
+                    Semesters
+                </a>
+
+                <a href="sections.html">
+                    <span class="menu-icon">§</span>
+                    Sections
+                </a>
+
+                <div class="menu-title">
+                    Attendance
+                </div>
+
+                <a href="attendance.html">
+                    <span class="menu-icon">✓</span>
+                    Attendance
+                </a>
+
             </div>
 
-            <a href="students.html">
-                <span class="menu-icon">👨‍🎓</span>
-                Students
-            </a>
-
-            <a href="teachers.html" class="active">
-                <span class="menu-icon">👨‍🏫</span>
-                Teachers
-            </a>
-
-            <a href="departments.html">
-                <span class="menu-icon">🏢</span>
-                Departments
-            </a>
-
-            <a href="courses.html">
-                <span class="menu-icon">📚</span>
-                Courses
-            </a>
-
-            <a href="semesters.html">
-                <span class="menu-icon">📖</span>
-                Semesters
-            </a>
-
-            <a href="sections.html">
-                <span class="menu-icon">§</span>
-                Sections
-            </a>
-
-            <div class="menu-title">
-                Attendance
-            </div>
-
-            <a href="attendance.html">
-                <span class="menu-icon">✓</span>
-                Attendance
-            </a>
-
-        </div>
-
-    </aside>
+        </aside>
 
 
-    <!-- =========================
+        <!-- =========================
          MAIN
     ========================== -->
 
-    <main class="main">
+        <main class="main">
 
-        <!-- NAVBAR -->
+            <nav class="navbar">
 
-        <nav class="navbar">
+                <div style="display:flex;align-items:center;gap:15px;">
 
-            <div style="display:flex;align-items:center;gap:15px;">
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+                        ☰
+                    </button>
 
-                <button
-                        class="menu-toggle"
-                        onclick="toggleSidebar()">
-                    ☰
-                </button>
-
-                <div class="page-title">
-                    Teachers
-                </div>
-
-            </div>
-
-            <div class="nav-right">
-
-                <div class="admin-info">
-
-                    <div class="admin-name">
-                        Administrator
-                    </div>
-
-                    <div class="admin-role">
-                        System Admin
+                    <div class="page-title">
+                        Teachers
                     </div>
 
                 </div>
 
-                <div class="avatar">
-                    A
+                <div class="nav-right">
+
+                    <div class="admin-info">
+
+                        <div class="admin-name">
+                            Administrator
+                        </div>
+
+                        <div class="admin-role">
+                            System Admin
+                        </div>
+
+                    </div>
+
+                    <div class="avatar">
+                        A
+                    </div>
+
                 </div>
 
-            </div>
-
-        </nav>
-
-
-        <!-- CONTENT -->
-
-        <section class="content">
-
-            <div class="breadcrumb">
-                Admin / <span>Teachers</span>
-            </div>
+            </nav>
 
 
             <!-- =========================
+             CONTENT
+        ========================== -->
+
+            <section class="content">
+
+                <div class="breadcrumb">
+                    Admin / <span>Teachers</span>
+                </div>
+
+
+                <!-- =========================
                  STATS
             ========================== -->
 
-            <div class="stats">
+                <div class="stats">
 
-                <div class="stat-card">
+                    <div class="stat-card">
 
-                    <div>
+                        <div>
 
-                        <div class="stat-label">
-                            Total Teachers
+                            <div class="stat-label">
+                                Total Teachers
+                            </div>
+
+                            <div class="stat-value" id="totalTeachers">
+                                0
+                            </div>
+
                         </div>
 
-                        <div
-                                class="stat-value"
-                                id="totalTeachers">
-                            0
+                        <div class="stat-icon blue">
+                            👨‍🏫
                         </div>
 
                     </div>
 
-                    <div class="stat-icon blue">
-                        👨‍🏫
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Active Teachers
+                            </div>
+
+                            <div class="stat-value" id="activeTeachers">
+                                0
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon green">
+                            ✓
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Inactive Teachers
+                            </div>
+
+                            <div class="stat-value" id="inactiveTeachers">
+                                0
+                            </div>
+
+                        </div>
+
+                        <div class="stat-icon gray">
+                            —
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <!-- =========================
+                 TEACHER TABLE
+            ========================== -->
+
+                <div class="card">
+
+                    <div class="card-header">
+
+                        <div>
+
+                            <div class="card-title">
+                                Teacher Management
+                            </div>
+
+                            <div class="card-subtitle">
+                                Create, update and manage college teachers
+                            </div>
+
+                        </div>
+
+                        <button class="btn btn-primary" onclick="openAddModal()">
+                            + Add Teacher
+                        </button>
+
+                    </div>
+
+
+                    <!-- FILTERS -->
+
+                    <div class="filters">
+
+                        <div class="search">
+
+                            <input type="text" id="searchInput" class="input"
+                                placeholder="Search by name, employee code, phone or email..."
+                                oninput="filterTeachers()">
+
+                        </div>
+
+                        <div class="filter-select">
+
+                            <select id="statusFilter" class="select" onchange="filterTeachers()">
+
+                                <option value="ALL">
+                                    All Status
+                                </option>
+
+                                <option value="ACTIVE">
+                                    Active
+                                </option>
+
+                                <option value="INACTIVE">
+                                    Inactive
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TABLE -->
+
+                    <div class="table-wrapper">
+
+                        <table>
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>#</th>
+
+                                    <th>Teacher</th>
+
+                                    <th>Employee Code</th>
+
+                                    <th>Phone</th>
+
+                                    <th>Email</th>
+
+                                    <th>Department</th>
+
+                                    <th>Status</th>
+
+                                    <th>Actions</th>
+
+                                </tr>
+
+                            </thead>
+
+                            <tbody id="teacherTableBody"></tbody>
+
+                        </table>
+
                     </div>
 
                 </div>
 
+            </section>
 
-                <div class="stat-card">
 
-                    <div>
+            <footer>
+                © 2026 College Attendance System. All rights reserved.
+            </footer>
 
-                        <div class="stat-label">
-                            Active Teachers
-                        </div>
+        </main>
 
-                        <div
-                                class="stat-value"
-                                id="activeTeachers">
-                            0
-                        </div>
+    </div>
 
-                    </div>
 
-                    <div class="stat-icon green">
-                        ✓
-                    </div>
+    <!-- =====================================================
+     ADD / EDIT TEACHER MODAL
+===================================================== -->
 
+    <div class="modal-overlay" id="teacherModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div class="modal-title" id="modalTitle">
+                    Add Teacher
                 </div>
 
-
-                <div class="stat-card">
-
-                    <div>
-
-                        <div class="stat-label">
-                            Inactive Teachers
-                        </div>
-
-                        <div
-                                class="stat-value"
-                                id="inactiveTeachers">
-                            0
-                        </div>
-
-                    </div>
-
-                    <div class="stat-icon gray">
-                        —
-                    </div>
-
-                </div>
+                <button class="close" type="button" onclick="closeModal()">
+                    ×
+                </button>
 
             </div>
 
 
-            <!-- =========================
-                 TEACHER TABLE
-            ========================== -->
+            <form id="teacherForm" onsubmit="saveTeacher(event)">
 
-            <div class="card">
+                <div class="modal-body">
 
-                <div class="card-header">
+                    <div class="form-grid">
 
-                    <div>
+                        <!-- NAME -->
 
-                        <div class="card-title">
-                            Teacher Management
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                Teacher Name
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <input type="text" id="name" class="input" placeholder="Enter teacher name" required>
+
                         </div>
 
-                        <div class="card-subtitle">
-                            Create, update and manage college teachers
+
+                        <!-- EMPLOYEE CODE -->
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                Employee Code
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <input type="text" id="employeeCode" class="input" placeholder="e.g. EMP001" required>
+
+                        </div>
+
+
+                        <!-- PHONE -->
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+
+                                Phone Number
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <input type="text" id="phone" class="input" maxlength="10" minlength="10"
+                                pattern="[0-9]{10}" placeholder="10 digit mobile number" required>
+
+                        </div>
+
+
+                        <!-- EMAIL -->
+
+                        <div class="form-group">
+
+                            <label class="form-label">
+                                Email
+                            </label>
+
+                            <input type="email" id="email" class="input" placeholder="teacher@example.com">
+
+                        </div>
+
+
+                        <!-- DEPARTMENT -->
+
+                        <div class="form-group full">
+
+                            <label class="form-label">
+
+                                Department
+
+                                <span class="required">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <select id="departmentId" class="select" required>
+
+                                <option value="">
+                                    Select Department
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- PROFILE PHOTO -->
+
+                        <div class="form-group full photo-section">
+
+                            <label class="form-label">
+
+                                Profile Photo
+
+                                <span class="required" id="photoRequired">
+                                    *
+                                </span>
+
+                            </label>
+
+                            <input type="file" id="profilePhoto" class="input photo-input" accept="image/*"
+                                capture="user">
+
+                            <div class="photo-hint">
+
+                                Take or select a clear teacher profile photo.
+                                Maximum file size: 5 MB.
+
+                            </div>
+
+
+                            <div class="photo-preview-wrapper" id="photoPreviewWrapper">
+
+                                <img id="photoPreview" class="photo-preview" src="" alt="Profile Preview">
+
+                                <div class="photo-preview-info">
+
+                                    <strong id="photoPreviewTitle">
+                                        Profile Photo
+                                    </strong>
+
+                                    <span id="photoPreviewText">
+                                        Photo selected
+                                    </span>
+
+                                </div>
+
+                            </div>
+
                         </div>
 
                     </div>
 
-                    <button
-                            class="btn btn-primary"
-                            onclick="openAddModal()">
-                        + Add Teacher
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-primary" id="saveBtn">
+                        Save Teacher
                     </button>
 
                 </div>
 
-
-                <!-- FILTERS -->
-
-                <div class="filters">
-
-                    <div class="search">
-
-                        <input
-                                type="text"
-                                id="searchInput"
-                                class="input"
-                                placeholder="Search by name, employee code, phone or email..."
-                                oninput="filterTeachers()">
-
-                    </div>
-
-                    <div class="filter-select">
-
-                        <select
-                                id="statusFilter"
-                                class="select"
-                                onchange="filterTeachers()">
-
-                            <option value="ALL">
-                                All Status
-                            </option>
-
-                            <option value="ACTIVE">
-                                Active
-                            </option>
-
-                            <option value="INACTIVE">
-                                Inactive
-                            </option>
-
-                        </select>
-
-                    </div>
-
-                </div>
-
-
-                <!-- TABLE -->
-
-                <div class="table-wrapper">
-
-                    <table>
-
-                        <thead>
-
-                        <tr>
-
-                            <th>#</th>
-
-                            <th>Teacher</th>
-
-                            <th>Employee Code</th>
-
-                            <th>Phone</th>
-
-                            <th>Email</th>
-
-                            <th>Department</th>
-
-                            <th>Status</th>
-
-                            <th>Actions</th>
-
-                        </tr>
-
-                        </thead>
-
-                        <tbody id="teacherTableBody"></tbody>
-
-                    </table>
-
-                </div>
-
-            </div>
-
-        </section>
-
-
-        <footer>
-            © 2026 College Attendance System. All rights reserved.
-        </footer>
-
-    </main>
-
-</div>
-
-
-<!-- =========================
-     ADD / EDIT MODAL
-========================= -->
-
-<div
-        class="modal-overlay"
-        id="teacherModal">
-
-    <div class="modal">
-
-        <div class="modal-header">
-
-            <div
-                    class="modal-title"
-                    id="modalTitle">
-                Add Teacher
-            </div>
-
-            <button
-                    class="close"
-                    type="button"
-                    onclick="closeModal()">
-                ×
-            </button>
+            </form>
 
         </div>
 
+    </div>
 
-        <form
-                id="teacherForm"
-                onsubmit="saveTeacher(event)">
+
+    <!-- =====================================================
+     VIEW TEACHER MODAL
+===================================================== -->
+
+    <div class="modal-overlay" id="viewTeacherModal">
+
+        <div class="modal view-modal">
+
+            <div class="modal-header">
+
+                <div class="modal-title">
+                    Teacher Profile
+                </div>
+
+                <button class="close" type="button" onclick="closeViewModal()">
+                    ×
+                </button>
+
+            </div>
+
 
             <div class="modal-body">
 
-                <div class="form-grid">
+                <div class="view-profile">
 
-                    <div class="form-group">
+                    <div id="viewPhotoContainer">
 
-                        <label class="form-label">
-                            Teacher Name
-                            <span class="required">*</span>
-                        </label>
-
-                        <input
-                                type="text"
-                                id="name"
-                                class="input"
-                                placeholder="Enter teacher name"
-                                required>
+                        <!-- Dynamic photo / initials -->
 
                     </div>
 
+                    <div class="view-profile-name" id="viewTeacherName">
+                        -
+                    </div>
 
-                    <div class="form-group">
+                    <div class="view-profile-code" id="viewTeacherCode">
+                        -
+                    </div>
 
-                        <label class="form-label">
+                </div>
+
+
+                <div class="profile-details">
+
+                    <div class="profile-detail">
+
+                        <div class="profile-detail-label">
                             Employee Code
-                            <span class="required">*</span>
-                        </label>
+                        </div>
 
-                        <input
-                                type="text"
-                                id="employeeCode"
-                                class="input"
-                                placeholder="e.g. EMP001"
-                                required>
+                        <div class="profile-detail-value" id="viewEmployeeCode">
+                            -
+                        </div>
 
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="profile-detail">
 
-                        <label class="form-label">
-                            Phone Number
-                            <span class="required">*</span>
-                        </label>
+                        <div class="profile-detail-label">
+                            Username
+                        </div>
 
-                        <input
-                                type="text"
-                                id="phone"
-                                class="input"
-                                maxlength="10"
-                                minlength="10"
-                                pattern="[0-9]{10}"
-                                placeholder="10 digit mobile number"
-                                required>
+                        <div class="profile-detail-value" id="viewUsername">
+                            -
+                        </div>
 
                     </div>
 
 
-                    <div class="form-group">
+                    <div class="profile-detail">
 
-                        <label class="form-label">
+                        <div class="profile-detail-label">
+                            Phone
+                        </div>
+
+                        <div class="profile-detail-value" id="viewPhone">
+                            -
+                        </div>
+
+                    </div>
+
+
+                    <div class="profile-detail">
+
+                        <div class="profile-detail-label">
                             Email
-                        </label>
+                        </div>
 
-                        <input
-                                type="email"
-                                id="email"
-                                class="input"
-                                placeholder="teacher@example.com">
+                        <div class="profile-detail-value" id="viewEmail">
+                            -
+                        </div>
 
                     </div>
 
 
-                    <div class="form-group full">
+                    <div class="profile-detail">
 
-                        <label class="form-label">
+                        <div class="profile-detail-label">
                             Department
-                            <span class="required">*</span>
-                        </label>
+                        </div>
 
-                        <select
-                                id="departmentId"
-                                class="select"
-                                required>
+                        <div class="profile-detail-value" id="viewDepartment">
+                            -
+                        </div>
 
-                            <option value="">
-                                Select Department
-                            </option>
+                    </div>
 
-                        </select>
+
+                    <div class="profile-detail">
+
+                        <div class="profile-detail-label">
+                            Status
+                        </div>
+
+                        <div class="profile-detail-value" id="viewStatus">
+                            -
+                        </div>
 
                     </div>
 
@@ -1104,189 +1460,203 @@
 
             <div class="modal-footer">
 
-                <button
-                        type="button"
-                        class="btn btn-secondary"
-                        onclick="closeModal()">
-                    Cancel
-                </button>
-
-                <button
-                        type="submit"
-                        class="btn btn-primary"
-                        id="saveBtn">
-                    Save Teacher
+                <button type="button" class="btn btn-secondary" onclick="closeViewModal()">
+                    Close
                 </button>
 
             </div>
 
-        </form>
+        </div>
 
     </div>
 
-</div>
 
-
-<!-- =========================
+    <!-- =========================
      TOAST
 ========================= -->
 
-<div
-        class="toast"
-        id="toast">
-</div>
+    <div class="toast" id="toast">
+    </div>
 
 
-<script>
+    <script>
 
-    // =====================================================
-    // CONFIG
-    // =====================================================
+        // =====================================================
+        // CONFIG
+        // =====================================================
 
-    const API_BASE_URL = "http://localhost:8080";
+        const API_BASE_URL = "http://localhost:8080";
 
-    let teachers = [];
-    let editingTeacherId = null;
+        let teachers = [];
 
-
-    // =====================================================
-    // AUTHENTICATION
-    // =====================================================
-
-    function getToken() {
-
-        /*
-         * Login page me jis key ke andar JWT save hai,
-         * usko yahan se read kiya jayega.
-         *
-         * Primary key:
-         * token
-         *
-         * Fallback keys bhi rakhi hain.
-         */
-
-        return (
-            localStorage.getItem("token") ||
-            localStorage.getItem("accessToken") ||
-            localStorage.getItem("jwt") ||
-            localStorage.getItem("access_token")
-        );
-    }
+        let editingTeacherId = null;
 
 
-    function getAuthHeaders() {
+        // =====================================================
+        // AUTHENTICATION
+        // =====================================================
 
-        const token = getToken();
+        function getToken() {
 
-        if (!token) {
-
-            console.warn(
-                "JWT token not found in localStorage."
+            return (
+                localStorage.getItem("token") ||
+                localStorage.getItem("accessToken") ||
+                localStorage.getItem("jwt") ||
+                localStorage.getItem("access_token")
             );
-
-            return {
-                "Content-Type": "application/json"
-            };
-        }
-
-        return {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`
-        };
-    }
-
-
-    // =====================================================
-    // AUTH ERROR HANDLER
-    // =====================================================
-
-    function handleAuthError(response) {
-
-        if (response.status === 401) {
-
-            showToast(
-                "Session expired. Please login again.",
-                "error"
-            );
-
-            setTimeout(() => {
-
-                localStorage.removeItem("token");
-                localStorage.removeItem("accessToken");
-                localStorage.removeItem("jwt");
-                localStorage.removeItem("access_token");
-
-                window.location.href = "login.html";
-
-            }, 1200);
-
-            return true;
         }
 
 
-        if (response.status === 403) {
+        // =====================================================
+        // JSON API HEADERS
+        // =====================================================
 
-            showToast(
-                "Access denied. Admin permission required.",
-                "error"
-            );
-
-            return true;
-        }
-
-
-        return false;
-    }
-
-
-    // =====================================================
-    // INITIAL LOAD
-    // =====================================================
-
-    document.addEventListener(
-        "DOMContentLoaded",
-        async function () {
+        function getAuthHeaders() {
 
             const token = getToken();
 
             if (!token) {
 
+                console.warn(
+                    "JWT token not found in localStorage."
+                );
+
+                return {
+                    "Content-Type": "application/json"
+                };
+            }
+
+            return {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            };
+        }
+
+
+        // =====================================================
+        // MULTIPART HEADERS
+        // =====================================================
+
+        function getMultipartHeaders() {
+
+            const token = getToken();
+
+            if (!token) {
+
+                console.warn(
+                    "JWT token not found in localStorage."
+                );
+
+                return {};
+            }
+
+            return {
+                "Authorization": `Bearer ${token}`
+            };
+        }
+
+
+        // =====================================================
+        // AUTH ERROR
+        // =====================================================
+
+        function handleAuthError(response) {
+
+            if (response.status === 401) {
+
                 showToast(
-                    "Please login first.",
+                    "Session expired. Please login again.",
                     "error"
                 );
 
                 setTimeout(() => {
 
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("accessToken");
+                    localStorage.removeItem("jwt");
+                    localStorage.removeItem("access_token");
+
                     window.location.href =
                         "login.html";
 
-                }, 1000);
+                }, 1200);
 
-                return;
+                return true;
             }
 
 
-            await loadDepartments();
-            await loadTeachers();
+            if (response.status === 403) {
 
+                showToast(
+                    "Access denied. Admin permission required.",
+                    "error"
+                );
+
+                return true;
+            }
+
+
+            return false;
         }
-    );
 
 
-    // =====================================================
-    // LOAD TEACHERS
-    // =====================================================
+        // =====================================================
+        // INITIAL LOAD
+        // =====================================================
 
-    async function loadTeachers() {
+        document.addEventListener(
+            "DOMContentLoaded",
+            async function () {
 
-        const tbody =
-            document.getElementById(
-                "teacherTableBody"
-            );
+                const token = getToken();
+
+                if (!token) {
+
+                    showToast(
+                        "Please login first.",
+                        "error"
+                    );
+
+                    setTimeout(() => {
+
+                        window.location.href =
+                            "login.html";
+
+                    }, 1000);
+
+                    return;
+                }
 
 
-        tbody.innerHTML = `
+                await loadDepartments();
+
+                await loadTeachers();
+
+
+                document
+                    .getElementById("profilePhoto")
+                    .addEventListener(
+                        "change",
+                        handlePhotoChange
+                    );
+
+            }
+        );
+
+
+        // =====================================================
+        // LOAD TEACHERS
+        // =====================================================
+
+        async function loadTeachers() {
+
+            const tbody =
+                document.getElementById(
+                    "teacherTableBody"
+                );
+
+
+            tbody.innerHTML = `
             <tr>
                 <td colspan="8">
                     <div class="loader">
@@ -1297,92 +1667,73 @@
         `;
 
 
-        try {
+            try {
 
-            const response =
-                await fetch(
-                    `${API_BASE_URL}/api/admin/teachers`,
-                    {
-                        method: "GET",
-                        headers: getAuthHeaders()
-                    }
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/admin/teachers`,
+                        {
+                            method: "GET",
+                            headers: getAuthHeaders()
+                        }
+                    );
+
+
+                if (handleAuthError(response)) {
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        `Failed to load teachers (${response.status})`
+                    );
+                }
+
+
+                const data =
+                    await response.json();
+
+
+                if (Array.isArray(data)) {
+
+                    teachers = data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.data)
+                ) {
+
+                    teachers = data.data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    teachers = data.content;
+
+                } else {
+
+                    teachers = [];
+                }
+
+
+                updateStats();
+
+                filterTeachers();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Load teachers error:",
+                    error
                 );
 
 
-            if (handleAuthError(response)) {
-                return;
-            }
-
-
-            if (!response.ok) {
-
-                throw new Error(
-                    `Failed to load teachers (${response.status})`
-                );
-            }
-
-
-            const data =
-                await response.json();
-
-
-            /*
-             * Backend agar directly List return karta hai:
-             *
-             * [
-             *   {...},
-             *   {...}
-             * ]
-             *
-             * to directly use hoga.
-             *
-             * Agar response wrapper hai:
-             *
-             * {
-             *   data: [...]
-             * }
-             *
-             * to data.data use hoga.
-             */
-
-            if (Array.isArray(data)) {
-
-                teachers = data;
-
-            } else if (
-                data &&
-                Array.isArray(data.data)
-            ) {
-
-                teachers = data.data;
-
-            } else if (
-                data &&
-                Array.isArray(data.content)
-            ) {
-
-                teachers = data.content;
-
-            } else {
-
-                teachers = [];
-            }
-
-
-            updateStats();
-
-            filterTeachers();
-
-
-        } catch (error) {
-
-            console.error(
-                "Load teachers error:",
-                error
-            );
-
-
-            tbody.innerHTML = `
+                tbody.innerHTML = `
                 <tr>
                     <td colspan="8">
                         <div class="empty">
@@ -1393,143 +1744,205 @@
             `;
 
 
-            showToast(
-                error.message ||
-                "Unable to load teachers",
-                "error"
-            );
+                showToast(
+                    error.message ||
+                    "Unable to load teachers",
+                    "error"
+                );
+            }
         }
-    }
 
 
-    // =====================================================
-    // LOAD DEPARTMENTS
-    // =====================================================
+        // =====================================================
+        // LOAD DEPARTMENTS
+        // =====================================================
 
-    async function loadDepartments() {
+        async function loadDepartments() {
 
-        try {
+            try {
 
-            const response =
-                await fetch(
-                    `${API_BASE_URL}/api/admin/departments`,
-                    {
-                        method: "GET",
-                        headers: getAuthHeaders()
-                    }
-                );
-
-
-            if (handleAuthError(response)) {
-                return;
-            }
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/admin/departments`,
+                        {
+                            method: "GET",
+                            headers: getAuthHeaders()
+                        }
+                    );
 
 
-            if (!response.ok) {
-
-                throw new Error(
-                    `Failed to load departments (${response.status})`
-                );
-            }
+                if (handleAuthError(response)) {
+                    return;
+                }
 
 
-            const data =
-                await response.json();
+                if (!response.ok) {
+
+                    throw new Error(
+                        `Failed to load departments (${response.status})`
+                    );
+                }
 
 
-            let departments = [];
+                const data =
+                    await response.json();
 
 
-            if (Array.isArray(data)) {
-
-                departments = data;
-
-            } else if (
-                data &&
-                Array.isArray(data.data)
-            ) {
-
-                departments = data.data;
-
-            } else if (
-                data &&
-                Array.isArray(data.content)
-            ) {
-
-                departments = data.content;
-
-            }
+                let departments = [];
 
 
-            const select =
-                document.getElementById(
-                    "departmentId"
-                );
+                if (Array.isArray(data)) {
+
+                    departments = data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.data)
+                ) {
+
+                    departments = data.data;
+
+                } else if (
+                    data &&
+                    Array.isArray(data.content)
+                ) {
+
+                    departments = data.content;
+
+                }
 
 
-            select.innerHTML = `
+                const select =
+                    document.getElementById(
+                        "departmentId"
+                    );
+
+
+                select.innerHTML = `
                 <option value="">
                     Select Department
                 </option>
             `;
 
 
-            departments.forEach(
-                department => {
+                departments.forEach(
+                    department => {
 
-                    const option =
-                        document.createElement(
-                            "option"
-                        );
-
-
-                    option.value =
-                        department.id;
+                        const option =
+                            document.createElement(
+                                "option"
+                            );
 
 
-                    option.textContent =
-                        department.name ||
-                        department.departmentName ||
-                        "-";
+                        option.value =
+                            department.id;
 
 
-                    select.appendChild(option);
-
-                }
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Load departments error:",
-                error
-            );
+                        option.textContent =
+                            department.name ||
+                            department.departmentName ||
+                            "-";
 
 
-            showToast(
-                "Unable to load departments",
-                "error"
-            );
+                        select.appendChild(option);
+
+                    }
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Load departments error:",
+                    error
+                );
+
+
+                showToast(
+                    "Unable to load departments",
+                    "error"
+                );
+            }
         }
-    }
 
 
-    // =====================================================
-    // RENDER TEACHERS
-    // =====================================================
+        // =====================================================
+        // IMAGE URL
+        // =====================================================
 
-    function renderTeachers(data) {
+        function getImageUrl(url) {
 
-        const tbody =
-            document.getElementById(
-                "teacherTableBody"
-            );
+            if (!url) {
+                return "";
+            }
 
 
-        if (!data || !data.length) {
+            if (
+                url.startsWith("http://") ||
+                url.startsWith("https://")
+            ) {
 
-            tbody.innerHTML = `
+                return url;
+            }
+
+
+            if (url.startsWith("/")) {
+
+                return `${API_BASE_URL}${url}`;
+            }
+
+
+            return `${API_BASE_URL}/${url}`;
+        }
+
+
+        // =====================================================
+        // INITIALS
+        // =====================================================
+
+        function getInitials(name) {
+
+            if (!name) {
+                return "T";
+            }
+
+
+            const words =
+                String(name)
+                    .trim()
+                    .split(/\s+/);
+
+
+            if (words.length === 1) {
+
+                return words[0]
+                    .substring(0, 2)
+                    .toUpperCase();
+            }
+
+
+            return (
+                words[0].charAt(0) +
+                words[words.length - 1].charAt(0)
+            ).toUpperCase();
+        }
+
+
+        // =====================================================
+        // RENDER TEACHERS
+        // =====================================================
+
+        function renderTeachers(data) {
+
+            const tbody =
+                document.getElementById(
+                    "teacherTableBody"
+                );
+
+
+            if (!data || !data.length) {
+
+                tbody.innerHTML = `
                 <tr>
                     <td colspan="8">
                         <div class="empty">
@@ -1539,37 +1952,82 @@
                 </tr>
             `;
 
-            return;
-        }
+                return;
+            }
 
 
-        tbody.innerHTML =
-            data.map(
-                (teacher, index) => {
+            tbody.innerHTML =
+                data.map(
+                    (teacher, index) => {
 
-                    const status =
-                        (
-                            teacher.status ||
-                            "INACTIVE"
-                        ).toUpperCase();
-
-
-                    const statusClass =
-                        status === "ACTIVE"
-                            ? "badge-active"
-                            : "badge-inactive";
+                        const status =
+                            (
+                                teacher.status ||
+                                "INACTIVE"
+                            ).toUpperCase();
 
 
-                    const department =
-                        teacher.departmentName ||
-                        (
-                            teacher.department &&
-                            teacher.department.name
-                        ) ||
-                        "-";
+                        const statusClass =
+                            status === "ACTIVE"
+                                ? "badge-active"
+                                : "badge-inactive";
 
 
-                    return `
+                        const department =
+                            teacher.departmentName ||
+                            (
+                                teacher.department &&
+                                teacher.department.name
+                            ) ||
+                            "-";
+
+
+                        const profileImage =
+                            getImageUrl(
+                                teacher.profileImageUrl
+                            );
+
+
+                        const teacherName =
+                            teacher.name || "-";
+
+
+                        const photoHtml =
+                            profileImage
+                                ?
+                                `
+                            <img
+                                class="teacher-photo"
+                                src="${escapeHtml(profileImage)}"
+                                alt="${escapeHtml(teacherName)}"
+                                onerror="
+                                    this.style.display='none';
+                                    this.nextElementSibling.style.display='flex';
+                                ">
+
+                            <div
+                                class="teacher-photo-placeholder"
+                                style="display:none;">
+                                ${escapeHtml(
+                                    getInitials(
+                                        teacherName
+                                    )
+                                )}
+                            </div>
+                            `
+                                :
+                                `
+                            <div class="teacher-photo-placeholder">
+                                ${escapeHtml(
+                                    getInitials(
+                                        teacherName
+                                    )
+                                )}
+                            </div>
+                            `;
+
+
+                        return `
                         <tr>
 
                             <td>
@@ -1579,20 +2037,28 @@
 
                             <td>
 
-                                <div class="teacher-name">
-                                    ${escapeHtml(
-                                        teacher.name ||
-                                        "-"
-                                    )}
-                                </div>
+                                <div class="teacher-cell">
 
+                                    ${photoHtml}
 
-                                <div class="teacher-code">
-                                    Username:
-                                    ${escapeHtml(
-                                        teacher.username ||
-                                        "-"
-                                    )}
+                                    <div>
+
+                                        <div class="teacher-name">
+                                            ${escapeHtml(
+                            teacherName
+                        )}
+                                        </div>
+
+                                        <div class="teacher-code">
+                                            Username:
+                                            ${escapeHtml(
+                            teacher.username ||
+                            "-"
+                        )}
+                                        </div>
+
+                                    </div>
+
                                 </div>
 
                             </td>
@@ -1602,9 +2068,9 @@
 
                                 <strong>
                                     ${escapeHtml(
-                                        teacher.employeeCode ||
-                                        "-"
-                                    )}
+                            teacher.employeeCode ||
+                            "-"
+                        )}
                                 </strong>
 
                             </td>
@@ -1612,24 +2078,24 @@
 
                             <td>
                                 ${escapeHtml(
-                                    teacher.phone ||
-                                    "-"
-                                )}
+                            teacher.phone ||
+                            "-"
+                        )}
                             </td>
 
 
                             <td>
                                 ${escapeHtml(
-                                    teacher.email ||
-                                    "-"
-                                )}
+                            teacher.email ||
+                            "-"
+                        )}
                             </td>
 
 
                             <td>
                                 ${escapeHtml(
-                                    department
-                                )}
+                            department
+                        )}
                             </td>
 
 
@@ -1638,8 +2104,8 @@
                                 <span
                                     class="badge ${statusClass}">
                                     ${escapeHtml(
-                                        status
-                                    )}
+                            status
+                        )}
                                 </span>
 
                             </td>
@@ -1650,25 +2116,31 @@
                                 <div class="actions">
 
                                     <button
+                                        class="action-btn btn-view"
+                                        onclick="viewTeacher(${teacher.id})">
+                                        View
+                                    </button>
+
+
+                                    <button
                                         class="action-btn btn-edit"
                                         onclick="editTeacher(${teacher.id})">
                                         Edit
                                     </button>
 
 
-                                    ${
-                                        status === "ACTIVE"
-                                        ?
-                                        `
+                                    ${status === "ACTIVE"
+                                ?
+                                `
                                         <button
                                             class="action-btn btn-danger"
                                             onclick="deactivateTeacher(${teacher.id})">
                                             Deactivate
                                         </button>
                                         `
-                                        :
-                                        ""
-                                    }
+                                :
+                                ""
+                            }
 
                                 </div>
 
@@ -1677,41 +2149,41 @@
                         </tr>
                     `;
 
-                }
-            ).join("");
-    }
+                    }
+                ).join("");
+        }
 
 
-    // =====================================================
-    // FILTER
-    // =====================================================
+        // =====================================================
+        // FILTER
+        // =====================================================
 
-    function filterTeachers() {
+        function filterTeachers() {
 
-        const search =
-            document
-                .getElementById(
-                    "searchInput"
-                )
-                .value
-                .toLowerCase()
-                .trim();
-
-
-        const status =
-            document
-                .getElementById(
-                    "statusFilter"
-                )
-                .value;
+            const search =
+                document
+                    .getElementById(
+                        "searchInput"
+                    )
+                    .value
+                    .toLowerCase()
+                    .trim();
 
 
-        const filtered =
-            teachers.filter(
-                teacher => {
+            const status =
+                document
+                    .getElementById(
+                        "statusFilter"
+                    )
+                    .value;
 
-                    const searchable =
-                        `
+
+            const filtered =
+                teachers.filter(
+                    teacher => {
+
+                        const searchable =
+                            `
                         ${teacher.name || ""}
                         ${teacher.employeeCode || ""}
                         ${teacher.phone || ""}
@@ -1721,663 +2193,1162 @@
                         `.toLowerCase();
 
 
-                    const matchesSearch =
-                        searchable.includes(
-                            search
+                        const matchesSearch =
+                            searchable.includes(
+                                search
+                            );
+
+
+                        const teacherStatus =
+                            (
+                                teacher.status ||
+                                ""
+                            ).toUpperCase();
+
+
+                        const matchesStatus =
+                            status === "ALL" ||
+                            teacherStatus === status;
+
+
+                        return (
+                            matchesSearch &&
+                            matchesStatus
                         );
+                    }
+                );
 
 
-                    const teacherStatus =
+            renderTeachers(filtered);
+        }
+
+
+        // =====================================================
+        // STATS
+        // =====================================================
+
+        function updateStats() {
+
+            const total =
+                teachers.length;
+
+
+            const active =
+                teachers.filter(
+                    teacher =>
                         (
                             teacher.status ||
                             ""
-                        ).toUpperCase();
+                        ).toUpperCase() ===
+                        "ACTIVE"
+                ).length;
 
 
-                    const matchesStatus =
-                        status === "ALL" ||
-                        teacherStatus === status;
+            const inactive =
+                teachers.filter(
+                    teacher =>
+                        (
+                            teacher.status ||
+                            ""
+                        ).toUpperCase() ===
+                        "INACTIVE"
+                ).length;
 
 
-                    return (
-                        matchesSearch &&
-                        matchesStatus
-                    );
-                }
-            );
+            document.getElementById(
+                "totalTeachers"
+            ).textContent = total;
 
 
-        renderTeachers(filtered);
-    }
+            document.getElementById(
+                "activeTeachers"
+            ).textContent = active;
 
 
-    // =====================================================
-    // STATS
-    // =====================================================
-
-    function updateStats() {
-
-        const total =
-            teachers.length;
-
-
-        const active =
-            teachers.filter(
-                teacher =>
-                    (
-                        teacher.status ||
-                        ""
-                    ).toUpperCase() ===
-                    "ACTIVE"
-            ).length;
-
-
-        const inactive =
-            teachers.filter(
-                teacher =>
-                    (
-                        teacher.status ||
-                        ""
-                    ).toUpperCase() ===
-                    "INACTIVE"
-            ).length;
-
-
-        document.getElementById(
-            "totalTeachers"
-        ).textContent = total;
-
-
-        document.getElementById(
-            "activeTeachers"
-        ).textContent = active;
-
-
-        document.getElementById(
-            "inactiveTeachers"
-        ).textContent = inactive;
-    }
-
-
-    // =====================================================
-    // OPEN ADD MODAL
-    // =====================================================
-
-    function openAddModal() {
-
-        editingTeacherId = null;
-
-
-        document.getElementById(
-            "modalTitle"
-        ).textContent =
-            "Add Teacher";
-
-
-        document.getElementById(
-            "saveBtn"
-        ).textContent =
-            "Save Teacher";
-
-
-        document
-            .getElementById(
-                "teacherForm"
-            )
-            .reset();
-
-
-        document
-            .getElementById(
-                "teacherModal"
-            )
-            .classList.add(
-                "show"
-            );
-    }
-
-
-    // =====================================================
-    // EDIT TEACHER
-    // =====================================================
-
-    function editTeacher(id) {
-
-        const teacher =
-            teachers.find(
-                item =>
-                    Number(item.id) ===
-                    Number(id)
-            );
-
-
-        if (!teacher) {
-
-            showToast(
-                "Teacher not found",
-                "error"
-            );
-
-            return;
+            document.getElementById(
+                "inactiveTeachers"
+            ).textContent = inactive;
         }
 
 
-        editingTeacherId =
-            teacher.id;
+        // =====================================================
+        // VIEW TEACHER
+        // =====================================================
+
+        function viewTeacher(id) {
+
+            const teacher =
+                teachers.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
 
 
-        document.getElementById(
-            "modalTitle"
-        ).textContent =
-            "Edit Teacher";
+            if (!teacher) {
+
+                showToast(
+                    "Teacher not found",
+                    "error"
+                );
+
+                return;
+            }
 
 
-        document.getElementById(
-            "saveBtn"
-        ).textContent =
-            "Update Teacher";
+            const teacherName =
+                teacher.name || "-";
 
 
-        document.getElementById(
-            "name"
-        ).value =
-            teacher.name || "";
+            const employeeCode =
+                teacher.employeeCode || "-";
 
 
-        document.getElementById(
-            "employeeCode"
-        ).value =
-            teacher.employeeCode || "";
+            const department =
+                teacher.departmentName ||
+                (
+                    teacher.department &&
+                    teacher.department.name
+                ) ||
+                "-";
 
 
-        document.getElementById(
-            "phone"
-        ).value =
-            teacher.phone || "";
+            const status =
+                (
+                    teacher.status ||
+                    "INACTIVE"
+                ).toUpperCase();
 
 
-        document.getElementById(
-            "email"
-        ).value =
-            teacher.email || "";
+            const profileImage =
+                getImageUrl(
+                    teacher.profileImageUrl
+                );
 
 
-        document.getElementById(
-            "departmentId"
-        ).value =
-            teacher.departmentId ||
-            (
-                teacher.department &&
-                teacher.department.id
-            ) ||
-            "";
+            document.getElementById(
+                "viewTeacherName"
+            ).textContent =
+                teacherName;
 
 
-        document
-            .getElementById(
-                "teacherModal"
-            )
-            .classList.add(
-                "show"
-            );
-    }
+            document.getElementById(
+                "viewTeacherCode"
+            ).textContent =
+                `Employee Code: ${employeeCode}`;
 
 
-    // =====================================================
-    // SAVE / UPDATE TEACHER
-    // =====================================================
-
-    async function saveTeacher(event) {
-
-        event.preventDefault();
+            document.getElementById(
+                "viewEmployeeCode"
+            ).textContent =
+                employeeCode;
 
 
-        const saveBtn =
+            document.getElementById(
+                "viewUsername"
+            ).textContent =
+                teacher.username || "-";
+
+
+            document.getElementById(
+                "viewPhone"
+            ).textContent =
+                teacher.phone || "-";
+
+
+            document.getElementById(
+                "viewEmail"
+            ).textContent =
+                teacher.email || "-";
+
+
+            document.getElementById(
+                "viewDepartment"
+            ).textContent =
+                department;
+
+
+            document.getElementById(
+                "viewStatus"
+            ).textContent =
+                status;
+
+
+            const photoContainer =
+                document.getElementById(
+                    "viewPhotoContainer"
+                );
+
+
+            if (profileImage) {
+
+                photoContainer.innerHTML = `
+                <img
+                    src="${escapeHtml(profileImage)}"
+                    class="view-profile-photo"
+                    alt="${escapeHtml(teacherName)}"
+                    onerror="showViewPhotoPlaceholder(
+                        '${escapeHtml(
+                    getInitials(teacherName)
+                )}'
+                    )">
+            `;
+
+            } else {
+
+                showViewPhotoPlaceholder(
+                    getInitials(
+                        teacherName
+                    )
+                );
+            }
+
+
+            document
+                .getElementById(
+                    "viewTeacherModal"
+                )
+                .classList.add(
+                    "show"
+                );
+        }
+
+
+        // =====================================================
+        // VIEW PHOTO PLACEHOLDER
+        // =====================================================
+
+        function showViewPhotoPlaceholder(initials) {
+
+            document.getElementById(
+                "viewPhotoContainer"
+            ).innerHTML = `
+            <div class="view-profile-placeholder">
+                ${escapeHtml(initials)}
+            </div>
+        `;
+        }
+
+
+        // =====================================================
+        // CLOSE VIEW MODAL
+        // =====================================================
+
+        function closeViewModal() {
+
+            document
+                .getElementById(
+                    "viewTeacherModal"
+                )
+                .classList.remove(
+                    "show"
+                );
+        }
+
+
+        // =====================================================
+        // OPEN ADD MODAL
+        // =====================================================
+
+        function openAddModal() {
+
+            editingTeacherId = null;
+
+
+            document.getElementById(
+                "modalTitle"
+            ).textContent =
+                "Add Teacher";
+
+
             document.getElementById(
                 "saveBtn"
-            );
+            ).textContent =
+                "Save Teacher";
 
 
-        const departmentValue =
+            const form =
+                document.getElementById(
+                    "teacherForm"
+                );
+
+
+            form.reset();
+
+
+            const photoInput =
+                document.getElementById(
+                    "profilePhoto"
+                );
+
+
+            photoInput.required = true;
+
+
+            document.getElementById(
+                "photoRequired"
+            ).style.display =
+                "inline";
+
+
+            clearPhotoPreview();
+
+
+            document
+                .getElementById(
+                    "teacherModal"
+                )
+                .classList.add(
+                    "show"
+                );
+        }
+
+
+        // =====================================================
+        // EDIT TEACHER
+        // =====================================================
+
+        function editTeacher(id) {
+
+            const teacher =
+                teachers.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
+
+
+            if (!teacher) {
+
+                showToast(
+                    "Teacher not found",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            editingTeacherId =
+                teacher.id;
+
+
+            document.getElementById(
+                "modalTitle"
+            ).textContent =
+                "Edit Teacher";
+
+
+            document.getElementById(
+                "saveBtn"
+            ).textContent =
+                "Update Teacher";
+
+
+            document.getElementById(
+                "name"
+            ).value =
+                teacher.name || "";
+
+
+            document.getElementById(
+                "employeeCode"
+            ).value =
+                teacher.employeeCode || "";
+
+
+            document.getElementById(
+                "phone"
+            ).value =
+                teacher.phone || "";
+
+
+            document.getElementById(
+                "email"
+            ).value =
+                teacher.email || "";
+
+
             document.getElementById(
                 "departmentId"
-            ).value;
+            ).value =
+                teacher.departmentId ||
+                (
+                    teacher.department &&
+                    teacher.department.id
+                ) ||
+                "";
 
 
-        const request = {
-
-            name:
+            const photoInput =
                 document.getElementById(
-                    "name"
-                ).value.trim(),
+                    "profilePhoto"
+                );
 
 
-            employeeCode:
-                document.getElementById(
-                    "employeeCode"
-                ).value.trim(),
+            photoInput.required = false;
 
 
-            phone:
-                document.getElementById(
-                    "phone"
-                ).value.trim(),
+            document.getElementById(
+                "photoRequired"
+            ).style.display =
+                "none";
 
 
-            email:
-                document.getElementById(
-                    "email"
-                ).value.trim(),
+            photoInput.value = "";
 
 
-            departmentId:
-                Number(
-                    departmentValue
+            if (teacher.profileImageUrl) {
+
+                showPhotoPreview(
+                    getImageUrl(
+                        teacher.profileImageUrl
+                    ),
+                    "Current Profile Photo",
+                    "Current teacher profile photo"
+                );
+
+            } else {
+
+                clearPhotoPreview();
+            }
+
+
+            document
+                .getElementById(
+                    "teacherModal"
                 )
+                .classList.add(
+                    "show"
+                );
+        }
 
-        };
+
+        // =====================================================
+        // PHOTO CHANGE
+        // =====================================================
+
+        function handlePhotoChange(event) {
+
+            const file =
+                event.target.files &&
+                event.target.files[0];
 
 
-        if (
-            !request.name ||
-            !request.employeeCode ||
-            !request.phone
+            if (!file) {
+                return;
+            }
+
+
+            if (
+                !file.type ||
+                !file.type.startsWith("image/")
+            ) {
+
+                showToast(
+                    "Please select a valid image file.",
+                    "error"
+                );
+
+
+                event.target.value = "";
+
+                clearPhotoPreview();
+
+                return;
+            }
+
+
+            const maxSize =
+                5 * 1024 * 1024;
+
+
+            if (file.size > maxSize) {
+
+                showToast(
+                    "Profile photo must be less than 5 MB.",
+                    "error"
+                );
+
+
+                event.target.value = "";
+
+                clearPhotoPreview();
+
+                return;
+            }
+
+
+            const reader =
+                new FileReader();
+
+
+            reader.onload =
+                function (e) {
+
+                    showPhotoPreview(
+                        e.target.result,
+                        "Selected Profile Photo",
+                        file.name
+                    );
+
+                };
+
+
+            reader.readAsDataURL(file);
+        }
+
+
+        // =====================================================
+        // SHOW PHOTO PREVIEW
+        // =====================================================
+
+        function showPhotoPreview(
+            src,
+            title,
+            text
         ) {
 
-            showToast(
-                "Please fill all required fields",
-                "error"
-            );
+            const wrapper =
+                document.getElementById(
+                    "photoPreviewWrapper"
+                );
 
-            return;
+
+            const preview =
+                document.getElementById(
+                    "photoPreview"
+                );
+
+
+            const titleElement =
+                document.getElementById(
+                    "photoPreviewTitle"
+                );
+
+
+            const textElement =
+                document.getElementById(
+                    "photoPreviewText"
+                );
+
+
+            preview.src =
+                src;
+
+
+            titleElement.textContent =
+                title;
+
+
+            textElement.textContent =
+                text;
+
+
+            wrapper.classList.add(
+                "show"
+            );
         }
 
 
-        if (!request.departmentId) {
+        // =====================================================
+        // CLEAR PHOTO PREVIEW
+        // =====================================================
 
-            showToast(
-                "Please select a department",
-                "error"
+        function clearPhotoPreview() {
+
+            const wrapper =
+                document.getElementById(
+                    "photoPreviewWrapper"
+                );
+
+
+            const preview =
+                document.getElementById(
+                    "photoPreview"
+                );
+
+
+            preview.src = "";
+
+
+            wrapper.classList.remove(
+                "show"
             );
-
-            return;
         }
 
 
-        try {
+        // =====================================================
+        // SAVE / UPDATE TEACHER
+        // =====================================================
 
-            saveBtn.disabled = true;
+        async function saveTeacher(event) {
+
+            event.preventDefault();
+
+
+            const saveBtn =
+                document.getElementById(
+                    "saveBtn"
+                );
+
+
+            const departmentValue =
+                document.getElementById(
+                    "departmentId"
+                ).value;
+
+
+            const photoInput =
+                document.getElementById(
+                    "profilePhoto"
+                );
+
+
+            const selectedPhoto =
+                photoInput.files &&
+                photoInput.files[0];
+
+
+            const request = {
+
+                name:
+                    document.getElementById(
+                        "name"
+                    ).value.trim(),
+
+
+                employeeCode:
+                    document.getElementById(
+                        "employeeCode"
+                    ).value.trim(),
+
+
+                phone:
+                    document.getElementById(
+                        "phone"
+                    ).value.trim(),
+
+
+                email:
+                    document.getElementById(
+                        "email"
+                    ).value.trim(),
+
+
+                departmentId:
+                    Number(
+                        departmentValue
+                    )
+
+            };
+
+
+            if (
+                !request.name ||
+                !request.employeeCode ||
+                !request.phone
+            ) {
+
+                showToast(
+                    "Please fill all required fields",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!request.departmentId) {
+
+                showToast(
+                    "Please select a department",
+                    "error"
+                );
+
+                return;
+            }
 
 
             const isEdit =
                 editingTeacherId !== null;
 
 
-            saveBtn.textContent =
-                isEdit
-                    ? "Updating..."
-                    : "Saving...";
+            // ADD = PHOTO REQUIRED
 
+            if (
+                !isEdit &&
+                !selectedPhoto
+            ) {
 
-            let url =
-                `${API_BASE_URL}/api/admin/teachers`;
+                showToast(
+                    "Profile photo is required while adding a teacher.",
+                    "error"
+                );
 
-
-            let method = "POST";
-
-
-            if (isEdit) {
-
-                url =
-                    `${API_BASE_URL}/api/admin/teachers/${editingTeacherId}`;
-
-                method = "PUT";
+                return;
             }
 
 
-            const response =
-                await fetch(
-                    url,
-                    {
-                        method: method,
+            // PHOTO VALIDATION
 
-                        headers:
-                            getAuthHeaders(),
+            if (selectedPhoto) {
 
-                        body:
+                if (
+                    !selectedPhoto.type ||
+                    !selectedPhoto.type.startsWith("image/")
+                ) {
+
+                    showToast(
+                        "Please select a valid image file.",
+                        "error"
+                    );
+
+                    return;
+                }
+
+
+                const maxSize =
+                    5 * 1024 * 1024;
+
+
+                if (selectedPhoto.size > maxSize) {
+
+                    showToast(
+                        "Profile photo must be less than 5 MB.",
+                        "error"
+                    );
+
+                    return;
+                }
+            }
+
+
+            try {
+
+                saveBtn.disabled = true;
+
+
+                saveBtn.textContent =
+                    isEdit
+                        ? "Updating..."
+                        : "Saving...";
+
+
+                let url =
+                    `${API_BASE_URL}/api/admin/teachers`;
+
+
+                let method =
+                    "POST";
+
+
+                if (isEdit) {
+
+                    url =
+                        `${API_BASE_URL}/api/admin/teachers/${editingTeacherId}`;
+
+                    method =
+                        "PUT";
+                }
+
+
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "data",
+                    new Blob(
+                        [
                             JSON.stringify(
                                 request
                             )
-                    }
+                        ],
+                        {
+                            type:
+                                "application/json"
+                        }
+                    )
                 );
 
 
-            if (handleAuthError(response)) {
+                if (selectedPhoto) {
+
+                    formData.append(
+                        "file",
+                        selectedPhoto
+                    );
+                }
+
+
+                const response =
+                    await fetch(
+                        url,
+                        {
+                            method:
+                                method,
+
+                            headers:
+                                getMultipartHeaders(),
+
+                            body:
+                                formData
+                        }
+                    );
+
+
+                if (handleAuthError(response)) {
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    let message =
+                        "Unable to save teacher";
+
+
+                    try {
+
+                        const error =
+                            await response.json();
+
+
+                        message =
+                            error.message ||
+                            error.error ||
+                            error.detail ||
+                            message;
+
+                    } catch (e) {
+
+                        try {
+
+                            const text =
+                                await response.text();
+
+                            if (text) {
+                                message = text;
+                            }
+
+                        } catch (ignored) {
+                        }
+                    }
+
+
+                    throw new Error(
+                        message
+                    );
+                }
+
+
+                closeModal();
+
+
+                await loadTeachers();
+
+
+                showToast(
+                    isEdit
+                        ? "Teacher updated successfully"
+                        : "Teacher created successfully",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Save teacher error:",
+                    error
+                );
+
+
+                showToast(
+                    error.message ||
+                    "Unable to save teacher",
+                    "error"
+                );
+
+
+            } finally {
+
+                saveBtn.disabled =
+                    false;
+
+
+                saveBtn.textContent =
+                    editingTeacherId !== null
+                        ? "Update Teacher"
+                        : "Save Teacher";
+            }
+        }
+
+
+        // =====================================================
+        // DEACTIVATE TEACHER
+        // =====================================================
+
+        async function deactivateTeacher(id) {
+
+            const teacher =
+                teachers.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
+
+
+            if (!teacher) {
                 return;
             }
 
 
-            if (!response.ok) {
-
-                let message =
-                    "Unable to save teacher";
-
-
-                try {
-
-                    const error =
-                        await response.json();
-
-
-                    message =
-                        error.message ||
-                        error.error ||
-                        error.detail ||
-                        message;
-
-                } catch (e) {
-
-                    // Response JSON nahi hai
-                }
-
-
-                throw new Error(
-                    message
-                );
-            }
-
-
-            /*
-             * Kuch DELETE/PUT APIs empty
-             * response return kar sakti hain.
-             * Isliye response.json()
-             * blindly call nahi kar rahe.
-             */
-
-            closeModal();
-
-
-            await loadTeachers();
-
-
-            showToast(
-                isEdit
-                    ? "Teacher updated successfully"
-                    : "Teacher created successfully",
-                "success"
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Save teacher error:",
-                error
-            );
-
-
-            showToast(
-                error.message ||
-                "Unable to save teacher",
-                "error"
-            );
-
-
-        } finally {
-
-            saveBtn.disabled = false;
-
-
-            saveBtn.textContent =
-                editingTeacherId !== null
-                    ? "Update Teacher"
-                    : "Save Teacher";
-        }
-    }
-
-
-    // =====================================================
-    // DEACTIVATE TEACHER
-    // =====================================================
-
-    async function deactivateTeacher(id) {
-
-        const teacher =
-            teachers.find(
-                item =>
-                    Number(item.id) ===
-                    Number(id)
-            );
-
-
-        if (!teacher) {
-            return;
-        }
-
-
-        const confirmed =
-            confirm(
-                `Are you sure you want to deactivate ${teacher.name}?`
-            );
-
-
-        if (!confirmed) {
-            return;
-        }
-
-
-        try {
-
-            const response =
-                await fetch(
-                    `${API_BASE_URL}/api/admin/teachers/${id}`,
-                    {
-                        method: "DELETE",
-                        headers: getAuthHeaders()
-                    }
+            const confirmed =
+                confirm(
+                    `Are you sure you want to deactivate ${teacher.name}?`
                 );
 
 
-            if (handleAuthError(response)) {
+            if (!confirmed) {
                 return;
             }
 
 
-            if (!response.ok) {
+            try {
 
-                let message =
-                    "Failed to deactivate teacher";
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/admin/teachers/${id}`,
+                        {
+                            method: "DELETE",
+                            headers: getAuthHeaders()
+                        }
+                    );
 
 
-                try {
-
-                    const error =
-                        await response.json();
-
-
-                    message =
-                        error.message ||
-                        error.error ||
-                        message;
-
-                } catch (e) {
-
-                    // Ignore empty response
+                if (handleAuthError(response)) {
+                    return;
                 }
 
 
-                throw new Error(
-                    message
+                if (!response.ok) {
+
+                    let message =
+                        "Failed to deactivate teacher";
+
+
+                    try {
+
+                        const error =
+                            await response.json();
+
+
+                        message =
+                            error.message ||
+                            error.error ||
+                            message;
+
+                    } catch (e) {
+                        // Ignore
+                    }
+
+
+                    throw new Error(
+                        message
+                    );
+                }
+
+
+                await loadTeachers();
+
+
+                showToast(
+                    "Teacher deactivated successfully",
+                    "success"
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Deactivate teacher error:",
+                    error
+                );
+
+
+                showToast(
+                    error.message ||
+                    "Failed to deactivate teacher",
+                    "error"
                 );
             }
+        }
 
 
-            await loadTeachers();
+        // =====================================================
+        // CLOSE EDIT/ADD MODAL
+        // =====================================================
+
+        function closeModal() {
+
+            document
+                .getElementById(
+                    "teacherModal"
+                )
+                .classList.remove(
+                    "show"
+                );
+        }
 
 
-            showToast(
-                "Teacher deactivated successfully",
-                "success"
-            );
+        // =====================================================
+        // SIDEBAR MOBILE
+        // =====================================================
+
+        function toggleSidebar() {
+
+            document
+                .getElementById(
+                    "sidebar"
+                )
+                .classList.toggle(
+                    "open"
+                );
+        }
 
 
-        } catch (error) {
+        // =====================================================
+        // TOAST
+        // =====================================================
 
-            console.error(
-                "Deactivate teacher error:",
-                error
-            );
+        function showToast(
+            message,
+            type = "success"
+        ) {
+
+            const toast =
+                document.getElementById(
+                    "toast"
+                );
 
 
-            showToast(
-                error.message ||
-                "Failed to deactivate teacher",
-                "error"
+            toast.textContent =
+                message;
+
+
+            toast.className =
+                `toast show ${type}`;
+
+
+            setTimeout(
+                () => {
+
+                    toast.classList.remove(
+                        "show"
+                    );
+
+                },
+                3000
             );
         }
-    }
 
 
-    // =====================================================
-    // CLOSE MODAL
-    // =====================================================
+        // =====================================================
+        // HTML ESCAPE
+        // =====================================================
 
-    function closeModal() {
+        function escapeHtml(value) {
+
+            return String(value)
+                .replaceAll(
+                    "&",
+                    "&amp;"
+                )
+                .replaceAll(
+                    "<",
+                    "&lt;"
+                )
+                .replaceAll(
+                    ">",
+                    "&gt;"
+                )
+                .replaceAll(
+                    '"',
+                    "&quot;"
+                )
+                .replaceAll(
+                    "'",
+                    "&#039;"
+                );
+        }
+
+
+        // =====================================================
+        // CLOSE MODALS ON OUTSIDE CLICK
+        // =====================================================
 
         document
             .getElementById(
                 "teacherModal"
             )
-            .classList.remove(
-                "show"
+            .addEventListener(
+                "click",
+                function (event) {
+
+                    if (
+                        event.target === this
+                    ) {
+
+                        closeModal();
+                    }
+
+                }
             );
-    }
 
-
-    // =====================================================
-    // SIDEBAR MOBILE
-    // =====================================================
-
-    function toggleSidebar() {
 
         document
             .getElementById(
-                "sidebar"
+                "viewTeacherModal"
             )
-            .classList.toggle(
-                "open"
-            );
-    }
+            .addEventListener(
+                "click",
+                function (event) {
 
+                    if (
+                        event.target === this
+                    ) {
 
-    // =====================================================
-    // TOAST
-    // =====================================================
+                        closeViewModal();
+                    }
 
-    function showToast(
-        message,
-        type = "success"
-    ) {
-
-        const toast =
-            document.getElementById(
-                "toast"
+                }
             );
 
 
-        toast.textContent =
-            message;
+        // =====================================================
+        // ESC KEY
+        // =====================================================
 
-
-        toast.className =
-            `toast show ${type}`;
-
-
-        setTimeout(
-            () => {
-
-                toast.classList.remove(
-                    "show"
-                );
-
-            },
-            3000
-        );
-    }
-
-
-    // =====================================================
-    // HTML ESCAPE
-    // =====================================================
-
-    function escapeHtml(value) {
-
-        return String(value)
-            .replaceAll(
-                "&",
-                "&amp;"
-            )
-            .replaceAll(
-                "<",
-                "&lt;"
-            )
-            .replaceAll(
-                ">",
-                "&gt;"
-            )
-            .replaceAll(
-                '"',
-                "&quot;"
-            )
-            .replaceAll(
-                "'",
-                "&#039;"
-            );
-    }
-
-
-    // =====================================================
-    // CLOSE MODAL WHEN CLICK OUTSIDE
-    // =====================================================
-
-    document
-        .getElementById(
-            "teacherModal"
-        )
-        .addEventListener(
-            "click",
+        document.addEventListener(
+            "keydown",
             function (event) {
 
                 if (
-                    event.target === this
+                    event.key === "Escape"
                 ) {
 
                     closeModal();
+
+                    closeViewModal();
                 }
 
             }
         );
 
-
-    // =====================================================
-    // ESC KEY CLOSE MODAL
-    // =====================================================
-
-    document.addEventListener(
-        "keydown",
-        function (event) {
-
-            if (
-                event.key === "Escape"
-            ) {
-
-                closeModal();
-            }
-
-        }
-    );
-
-</script>
+    </script>
 
 </body>
+
 </html>

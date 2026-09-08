@@ -28,4 +28,6 @@ public class StudentResponse {
     private Long sectionId;
 
     private String status;
+
+    private String profileImageUrl;
 }

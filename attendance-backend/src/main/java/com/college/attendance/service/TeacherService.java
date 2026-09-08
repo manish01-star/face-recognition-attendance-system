@@ -10,204 +10,510 @@ import com.college.attendance.entity.enums.UserStatus;
 import com.college.attendance.repository.DepartmentRepository;
 import com.college.attendance.repository.TeacherRepository;
 import com.college.attendance.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class TeacherService {
 
-        private final TeacherRepository teacherRepository;
-        private final UserRepository userRepository;
-        private final DepartmentRepository departmentRepository;
-        private final PasswordEncoder passwordEncoder;
+    private final TeacherRepository teacherRepository;
 
-        /**
-         * Create or Update Teacher
-         *
-         * id == null -> Create
-         * id != null -> Update
-         */
-        @Transactional
-        public TeacherResponse createOrUpdate(
-                        Long id,
-                        TeacherRequest request) {
+    private final UserRepository userRepository;
 
-                Teacher teacher;
+    private final DepartmentRepository departmentRepository;
 
-                // ==========================================
-                // CREATE
-                // ==========================================
+    private final PasswordEncoder passwordEncoder;
 
-                if (id == null) {
 
-                        if (teacherRepository.existsByEmployeeCode(
-                                        request.getEmployeeCode())) {
+    // =====================================================
+    // CREATE / UPDATE TEACHER
+    // =====================================================
 
-                                throw new RuntimeException(
-                                                "Teacher with this employee code already exists");
-                        }
+    /**
+     * Create or Update Teacher
+     *
+     * id == null -> Create
+     * id != null -> Update
+     *
+     * Profile image is optional for update.
+     */
+    @Transactional
+    public TeacherResponse createOrUpdate(
+            Long id,
+            TeacherRequest request,
+            MultipartFile file
+    ) throws IOException {
 
-                        if (userRepository.existsByUsername(
-                                        request.getEmployeeCode())) {
+        Teacher teacher;
 
-                                throw new RuntimeException(
-                                                "Username already exists");
-                        }
 
-                        // --------------------------------------
-                        // Department
-                        // --------------------------------------
+        // =================================================
+        // CREATE
+        // =================================================
 
-                        Department department = departmentRepository.findById(
-                                        request.getDepartmentId()).orElseThrow(
-                                                        () -> new RuntimeException(
-                                                                        "Department not found"));
+        if (id == null) {
 
-                        // --------------------------------------
-                        // User
-                        // --------------------------------------
+            // ---------------------------------------------
+            // Check Employee Code
+            // ---------------------------------------------
 
-                        User user = User.builder()
-                                        .username(request.getEmployeeCode())
-                                        .password(
-                                                        passwordEncoder.encode(
-                                                                        request.getPhone()))
-                                        .role(Role.TEACHER)
-                                        .status(UserStatus.ACTIVE)
-                                        .build();
+            if (teacherRepository.existsByEmployeeCode(
+                    request.getEmployeeCode())) {
 
-                        userRepository.save(user);
+                throw new RuntimeException(
+                        "Teacher with this employee code already exists"
+                );
+            }
 
-                        // --------------------------------------
-                        // Teacher
-                        // --------------------------------------
 
-                        teacher = new Teacher();
+            // ---------------------------------------------
+            // Check Username
+            //
+            // Username = Employee Code
+            // ---------------------------------------------
 
-                        teacher.setUser(user);
+            if (userRepository.existsByUsername(
+                    request.getEmployeeCode())) {
 
-                        BeanUtils.copyProperties(
-                                        request,
-                                        teacher);
+                throw new RuntimeException(
+                        "Username already exists"
+                );
+            }
 
-                        teacher.setDepartment(department);
-                }
 
-                // ==========================================
-                // UPDATE
-                // ==========================================
+            // ---------------------------------------------
+            // Department
+            // ---------------------------------------------
 
-                else {
+            Department department =
+                    departmentRepository.findById(
+                            request.getDepartmentId()
+                    ).orElseThrow(
+                            () -> new RuntimeException(
+                                    "Department not found"
+                            )
+                    );
 
-                        teacher = teacherRepository.findById(id)
-                                        .orElseThrow(() -> new RuntimeException(
-                                                        "Teacher not found"));
 
-                        User user = teacher.getUser();
+            // ---------------------------------------------
+            // Create User
+            // ---------------------------------------------
 
-                        Department department = departmentRepository.findById(
-                                        request.getDepartmentId()).orElseThrow(
-                                                        () -> new RuntimeException(
-                                                                        "Department not found"));
+            User user = User.builder()
+                    .username(
+                            request.getEmployeeCode()
+                    )
+                    .password(
+                            passwordEncoder.encode(
+                                    request.getPhone()
+                            )
+                    )
+                    .role(Role.TEACHER)
+                    .status(UserStatus.ACTIVE)
+                    .build();
 
-                        BeanUtils.copyProperties(
-                                        request,
-                                        teacher);
+            userRepository.save(user);
 
-                        teacher.setDepartment(department);
 
-                        /*
-                         * Phone number is password.
-                         * Update password if phone changed.
-                         */
-                        if (!passwordEncoder.matches(
-                                        request.getPhone(),
-                                        user.getPassword())) {
+            // ---------------------------------------------
+            // Create Teacher
+            // ---------------------------------------------
 
-                                user.setPassword(
-                                                passwordEncoder.encode(
-                                                                request.getPhone()));
+            teacher = new Teacher();
 
-                                userRepository.save(user);
-                        }
-                }
+            teacher.setUser(user);
 
-                teacher = teacherRepository.save(teacher);
+            BeanUtils.copyProperties(
+                    request,
+                    teacher
+            );
 
-                return toResponse(teacher);
+            teacher.setDepartment(department);
         }
 
-        /**
-         * Get all teachers
-         */
-        @Transactional(readOnly = true)
-        public List<TeacherResponse> getAll() {
 
-                return teacherRepository.findAll()
-                                .stream()
-                                .map(this::toResponse)
-                                .toList();
-        }
+        // =================================================
+        // UPDATE
+        // =================================================
 
-        /**
-         * Get teacher by ID
-         */
-        @Transactional(readOnly = true)
-        public TeacherResponse getById(Long id) {
+        else {
 
-                Teacher teacher = teacherRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException(
-                                                "Teacher not found"));
+            teacher = teacherRepository.findById(id)
+                    .orElseThrow(
+                            () -> new RuntimeException(
+                                    "Teacher not found"
+                            )
+                    );
 
-                return toResponse(teacher);
-        }
 
-        /**
-         * Soft delete / deactivate teacher
-         */
-        @Transactional
-        public void delete(Long id) {
+            User user = teacher.getUser();
 
-                Teacher teacher = teacherRepository.findById(id)
-                                .orElseThrow(() -> new RuntimeException(
-                                                "Teacher not found"));
 
-                User user = teacher.getUser();
+            if (user == null) {
 
-                user.setStatus(UserStatus.INACTIVE);
+                throw new RuntimeException(
+                        "User not found for teacher"
+                );
+            }
+
+
+            // ---------------------------------------------
+            // Department
+            // ---------------------------------------------
+
+            Department department =
+                    departmentRepository.findById(
+                            request.getDepartmentId()
+                    ).orElseThrow(
+                            () -> new RuntimeException(
+                                    "Department not found"
+                            )
+                    );
+
+
+            // ---------------------------------------------
+            // Copy Teacher Fields
+            // ---------------------------------------------
+
+            BeanUtils.copyProperties(
+                    request,
+                    teacher
+            );
+
+
+            teacher.setDepartment(department);
+
+
+            // ---------------------------------------------
+            // Phone Number = Password
+            //
+            // Update password if phone changed
+            // ---------------------------------------------
+
+            if (!passwordEncoder.matches(
+                    request.getPhone(),
+                    user.getPassword()
+            )) {
+
+                user.setPassword(
+                        passwordEncoder.encode(
+                                request.getPhone()
+                        )
+                );
 
                 userRepository.save(user);
+            }
         }
 
-        /**
-         * Entity -> Response
-         */
-        private TeacherResponse toResponse(
-                        Teacher teacher) {
 
-                User user = teacher.getUser();
+        // =================================================
+        // SAVE TEACHER
+        // =================================================
 
-                return TeacherResponse.builder()
-                                .id(teacher.getId())
-                                .userId(user.getId())
-                                .username(user.getUsername())
-                                .name(teacher.getName())
-                                .employeeCode(teacher.getEmployeeCode())
-                                .phone(teacher.getPhone())
-                                .email(teacher.getEmail())
-                                .departmentId(teacher.getDepartment() != null
-                                                ? teacher.getDepartment().getId()
-                                                : null)
-                                .departmentName(teacher.getDepartment() != null
-                                                ? teacher.getDepartment().getName()
-                                                : null)
-                                .status(user.getStatus().name())
-                                .build();
+        teacher =
+                teacherRepository.save(teacher);
+
+
+        // =================================================
+        // SAVE PROFILE IMAGE
+        // =================================================
+
+        if (file != null && !file.isEmpty()) {
+
+            User user = teacher.getUser();
+
+            String imageUrl =
+                    saveProfileImage(
+                            user.getId(),
+                            file
+                    );
+
+            user.setProfileImageUrl(
+                    imageUrl
+            );
+
+            userRepository.save(user);
         }
+
+
+        // =================================================
+        // RESPONSE
+        // =================================================
+
+        return toResponse(teacher);
+    }
+
+
+    // =====================================================
+    // SAVE PROFILE IMAGE
+    // =====================================================
+
+    /**
+     * Save teacher profile image.
+     *
+     * Actual file:
+     *
+     * uploads/profiles/{userId}.jpg
+     *
+     * Database:
+     *
+     * users.profile_image_url
+     */
+    private String saveProfileImage(
+            Long userId,
+            MultipartFile file
+    ) throws IOException {
+
+
+        // ---------------------------------------------
+        // Validate file
+        // ---------------------------------------------
+
+        if (file == null || file.isEmpty()) {
+
+            throw new RuntimeException(
+                    "Profile image is empty"
+            );
+        }
+
+
+        // ---------------------------------------------
+        // Validate content type
+        // ---------------------------------------------
+
+        String contentType =
+                file.getContentType();
+
+        if (contentType == null ||
+                !contentType.startsWith("image/")) {
+
+            throw new RuntimeException(
+                    "Only image files are allowed"
+            );
+        }
+
+
+        // ---------------------------------------------
+        // Optional file size validation
+        // 5 MB
+        // ---------------------------------------------
+
+        long maxSize =
+                5 * 1024 * 1024;
+
+        if (file.getSize() > maxSize) {
+
+            throw new RuntimeException(
+                    "Profile image size must be less than 5 MB"
+            );
+        }
+
+
+        // ---------------------------------------------
+        // Create directory
+        // ---------------------------------------------
+
+        Path uploadDir =
+                Paths.get(
+                        "uploads/profiles"
+                );
+
+        Files.createDirectories(
+                uploadDir
+        );
+
+
+        // ---------------------------------------------
+        // File name
+        //
+        // User ID prevents unsafe filenames
+        // ---------------------------------------------
+
+        String fileName =
+                userId + ".jpg";
+
+
+        Path filePath =
+                uploadDir.resolve(
+                        fileName
+                );
+
+
+        // ---------------------------------------------
+        // Save / Replace
+        // ---------------------------------------------
+
+        Files.write(
+                filePath,
+                file.getBytes()
+        );
+
+
+        // ---------------------------------------------
+        // URL
+        // ---------------------------------------------
+
+        return "/uploads/profiles/"
+                + fileName;
+    }
+
+
+    // =====================================================
+    // GET ALL TEACHERS
+    // =====================================================
+
+    @Transactional(readOnly = true)
+    public List<TeacherResponse> getAll() {
+
+        return teacherRepository.findAll()
+                .stream()
+                .map(this::toResponse)
+                .toList();
+    }
+
+
+    // =====================================================
+    // GET TEACHER BY ID
+    // =====================================================
+
+    @Transactional(readOnly = true)
+    public TeacherResponse getById(
+            Long id
+    ) {
+
+        Teacher teacher =
+                teacherRepository.findById(id)
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "Teacher not found"
+                                )
+                        );
+
+        return toResponse(teacher);
+    }
+
+
+    // =====================================================
+    // SOFT DELETE
+    // =====================================================
+
+    @Transactional
+    public void delete(
+            Long id
+    ) {
+
+        Teacher teacher =
+                teacherRepository.findById(id)
+                        .orElseThrow(
+                                () -> new RuntimeException(
+                                        "Teacher not found"
+                                )
+                        );
+
+
+        User user =
+                teacher.getUser();
+
+
+        if (user == null) {
+
+            throw new RuntimeException(
+                    "User not found for teacher"
+            );
+        }
+
+
+        user.setStatus(
+                UserStatus.INACTIVE
+        );
+
+        userRepository.save(user);
+    }
+
+
+    // =====================================================
+    // ENTITY -> RESPONSE
+    // =====================================================
+
+    private TeacherResponse toResponse(
+            Teacher teacher
+    ) {
+
+        User user =
+                teacher.getUser();
+
+
+        if (user == null) {
+
+            throw new RuntimeException(
+                    "User not found for teacher"
+            );
+        }
+
+
+        return TeacherResponse.builder()
+
+                .id(
+                        teacher.getId()
+                )
+
+                .userId(
+                        user.getId()
+                )
+
+                .username(
+                        user.getUsername()
+                )
+
+                .name(
+                        teacher.getName()
+                )
+
+                .employeeCode(
+                        teacher.getEmployeeCode()
+                )
+
+                .phone(
+                        teacher.getPhone()
+                )
+
+                .email(
+                        teacher.getEmail()
+                )
+
+                .departmentId(
+                        teacher.getDepartment() != null
+                                ? teacher.getDepartment().getId()
+                                : null
+                )
+
+                .departmentName(
+                        teacher.getDepartment() != null
+                                ? teacher.getDepartment().getName()
+                                : null
+                )
+
+                .status(
+                        user.getStatus().name()
+                )
+
+                .profileImageUrl(
+                        user.getProfileImageUrl()
+                )
+
+                .build();
+    }
 }

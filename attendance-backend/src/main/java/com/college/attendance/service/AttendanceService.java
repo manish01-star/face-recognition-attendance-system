@@ -6,15 +6,18 @@ import com.college.attendance.dto.attendance.AttendanceResponse;
 import com.college.attendance.dto.attendance.AttendanceUserResponse;
 import com.college.attendance.dto.face.FaceVerificationResult;
 import com.college.attendance.entity.Attendance;
+import com.college.attendance.entity.AttendancePolicy;
 import com.college.attendance.entity.FaceEmbedding;
 import com.college.attendance.entity.Student;
 import com.college.attendance.entity.Teacher;
 import com.college.attendance.entity.User;
 import com.college.attendance.entity.enums.AttendanceSource;
 import com.college.attendance.entity.enums.AttendanceStatus;
+import com.college.attendance.entity.enums.Status;
 import com.college.attendance.exception.AttendanceException;
 import com.college.attendance.exception.FaceVerificationException;
 import com.college.attendance.exception.ResourceNotFoundException;
+import com.college.attendance.repository.AttendancePolicyRepository;
 import com.college.attendance.repository.AttendanceRepository;
 import com.college.attendance.repository.FaceEmbeddingRepository;
 import com.college.attendance.repository.StudentRepository;
@@ -24,7 +27,6 @@ import com.college.attendance.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -60,18 +62,13 @@ public class AttendanceService {
 
         private final ObjectMapper objectMapper;
 
-        // ============================================================
-        // ATTENDANCE LOCATION CONFIGURATION
-        // ============================================================
-
-        @Value("${attendance.location.latitude}")
-        private double collegeLatitude;
-
-        @Value("${attendance.location.longitude}")
-        private double collegeLongitude;
-
-        @Value("${attendance.location.radius-meters:100}")
-        private double attendanceRadiusMeters;
+        /*
+         * Dynamic attendance policy.
+         *
+         * Mobile attendance location will be taken from
+         * college_attendance_policy table.
+         */
+        private final AttendancePolicyRepository attendancePolicyRepository;
 
         // ============================================================
         // ADMIN - CREATE ATTENDANCE
@@ -394,7 +391,7 @@ public class AttendanceService {
                                                                                 teacher.getDepartment() != null
                                                                                                 ? teacher.getDepartment()
                                                                                                                 .getName()
-                                                                                                : null)
+                                                                                                                : null)
 
                                                                 .build());
                         }
@@ -428,7 +425,10 @@ public class AttendanceService {
 
         ) throws Exception {
 
-                // Validate GPS + college geofence
+                /*
+                 * Mobile attendance uses dynamic location configuration
+                 * from Attendance Policy table.
+                 */
                 validateLocation(
                                 latitude,
                                 longitude);
@@ -492,11 +492,6 @@ public class AttendanceService {
                 attendance = attendanceRepository.save(
                                 attendance);
 
-                /*
-                 * Required successful attendance message:
-                 *
-                 * USERNAME Successfully Registered
-                 */
                 String successMessage = user.getUsername()
                                 + " Successfully Registered";
 
@@ -524,7 +519,6 @@ public class AttendanceService {
 
         ) throws Exception {
 
-                // Validate GPS + college geofence
                 log.info("========== MOBILE CHECK-OUT START ==========");
 
                 log.info(
@@ -534,7 +528,13 @@ public class AttendanceService {
                                 file != null ? file.getOriginalFilename() : null,
                                 file != null ? file.getSize() : null);
 
-                validateLocation(latitude, longitude);
+                /*
+                 * Mobile attendance uses dynamic location configuration
+                 * from Attendance Policy table.
+                 */
+                validateLocation(
+                                latitude,
+                                longitude);
 
                 User user = getLoggedInUser();
 
@@ -543,7 +543,9 @@ public class AttendanceService {
                                 user.getId(),
                                 user.getUsername());
 
-                FaceVerificationResult faceResult = verifyFace(user.getId(), file);
+                FaceVerificationResult faceResult = verifyFace(
+                                user.getId(),
+                                file);
 
                 log.info(
                                 "Mobile Check-Out Face Verified: userId={}, distance={}, threshold={}",
@@ -592,11 +594,6 @@ public class AttendanceService {
                 attendance = attendanceRepository.save(
                                 attendance);
 
-                /*
-                 * Required successful attendance message:
-                 *
-                 * USERNAME Successfully Registered
-                 */
                 String successMessage = user.getUsername()
                                 + " Successfully Registered";
 
@@ -669,7 +666,11 @@ public class AttendanceService {
                 attendance.setCheckInTime(
                                 LocalTime.now());
 
-                // Machine has no GPS
+                /*
+                 * MACHINE ATTENDANCE:
+                 *
+                 * No GPS validation.
+                 */
                 attendance.setCheckInLatitude(null);
                 attendance.setCheckInLongitude(null);
 
@@ -754,7 +755,11 @@ public class AttendanceService {
                 attendance.setCheckOutTime(
                                 LocalTime.now());
 
-                // Machine has no GPS
+                /*
+                 * MACHINE ATTENDANCE:
+                 *
+                 * No GPS validation.
+                 */
                 attendance.setCheckOutLatitude(null);
                 attendance.setCheckOutLongitude(null);
 
@@ -787,10 +792,6 @@ public class AttendanceService {
                         Long userId,
                         MultipartFile file) {
 
-                // =========================================================
-                // BASIC VALIDATION
-                // =========================================================
-
                 if (userId == null) {
 
                         throw new FaceVerificationException(
@@ -799,28 +800,12 @@ public class AttendanceService {
 
                 validateFaceFile(file);
 
-                // =========================================================
-                // GET REGISTERED FACE EMBEDDING
-                // =========================================================
-                //
-                // FaceEmbedding.status is String, NOT enum.
-                //
-                // Therefore:
-                //
-                // findByUserIdAndStatus(userId, "ACTIVE")
-                //
-                // =========================================================
-
                 FaceEmbedding faceEmbedding = faceEmbeddingRepository
                                 .findByUserIdAndStatus(
                                                 userId,
                                                 "ACTIVE")
                                 .orElseThrow(() -> new FaceVerificationException(
                                                 "Unregistered"));
-
-                // =========================================================
-                // PARSE REGISTERED EMBEDDING
-                // =========================================================
 
                 List<Double> registeredEmbedding;
 
@@ -842,10 +827,6 @@ public class AttendanceService {
                                         "Invalid registered face embedding");
                 }
 
-                // =========================================================
-                // EMBEDDING VALIDATION
-                // =========================================================
-
                 if (registeredEmbedding == null
                                 || registeredEmbedding.size() != 512) {
 
@@ -859,24 +840,6 @@ public class AttendanceService {
                         throw new FaceVerificationException(
                                         "Invalid registered face embedding");
                 }
-
-                // =========================================================
-                // SINGLE PYTHON REQUEST
-                // =========================================================
-                //
-                // Python handles:
-                //
-                // Current Image
-                // ↓
-                // Face Detection
-                // ↓
-                // Anti Spoof
-                // ↓
-                // Face Embedding
-                // ↓
-                // Compare With Registered Embedding
-                //
-                // =========================================================
 
                 Map<String, Object> result;
 
@@ -902,10 +865,6 @@ public class AttendanceService {
                         throw new FaceVerificationException(
                                         "Face verification failed");
                 }
-
-                // =========================================================
-                // READ PYTHON RESPONSE
-                // =========================================================
 
                 boolean success = getBoolean(
                                 result,
@@ -947,10 +906,6 @@ public class AttendanceService {
                                 result,
                                 "message");
 
-                // =========================================================
-                // LOG
-                // =========================================================
-
                 log.info(
                                 "Face attendance verification: " +
                                                 "userId={}, success={}, verified={}, spoof={}, " +
@@ -968,19 +923,11 @@ public class AttendanceService {
                                 model,
                                 message);
 
-                // =========================================================
-                // SPOOF DETECTED
-                // =========================================================
-
                 if (spoof) {
 
                         throw new FaceVerificationException(
                                         "Spoof Detected");
                 }
-
-                // =========================================================
-                // NO FACE
-                // =========================================================
 
                 if (!faceDetected) {
 
@@ -988,19 +935,11 @@ public class AttendanceService {
                                         "Unregistered");
                 }
 
-                // =========================================================
-                // MULTIPLE FACES
-                // =========================================================
-
                 if (faceCount != 1) {
 
                         throw new FaceVerificationException(
                                         "Unregistered");
                 }
-
-                // =========================================================
-                // FACE DOES NOT MATCH
-                // =========================================================
 
                 if (!verified) {
 
@@ -1008,19 +947,11 @@ public class AttendanceService {
                                         "Unregistered");
                 }
 
-                // =========================================================
-                // PYTHON VERIFICATION FAILED
-                // =========================================================
-
                 if (!success) {
 
                         throw new FaceVerificationException(
                                         "Unregistered");
                 }
-
-                // =========================================================
-                // SUCCESS
-                // =========================================================
 
                 return FaceVerificationResult.builder()
 
@@ -1077,7 +1008,8 @@ public class AttendanceService {
         // CONFIDENCE
         // ============================================================
 
-        private Double calculateConfidence(FaceVerificationResult result) {
+        private Double calculateConfidence(
+                        FaceVerificationResult result) {
 
                 if (result == null || !result.isVerified()) {
                         return 0.0;
@@ -1272,7 +1204,7 @@ public class AttendanceService {
         }
 
         // ============================================================
-        // LOCATION VALIDATION / COLLEGE GEOFENCE
+        // LOCATION VALIDATION / DYNAMIC COLLEGE GEOFENCE
         // ============================================================
 
         private void validateLocation(
@@ -1311,32 +1243,79 @@ public class AttendanceService {
                 }
 
                 // --------------------------------------------------------
-                // 2. Calculate distance from college
+                // 2. GET ACTIVE ATTENDANCE POLICY FROM DATABASE
+                // --------------------------------------------------------
+
+                AttendancePolicy policy = attendancePolicyRepository
+                                .findFirstByStatusOrderByIdDesc(
+                                                Status.ACTIVE)
+                                .orElseThrow(() -> new AttendanceException(
+                                                "Active attendance policy is not configured"));
+
+                // --------------------------------------------------------
+                // 3. VALIDATE POLICY LOCATION
+                // --------------------------------------------------------
+
+                if (policy.getLatitude() == null
+                                || policy.getLongitude() == null) {
+
+                        throw new AttendanceException(
+                                        "Attendance policy location is not configured");
+                }
+
+                if (policy.getAllowedRadiusMeters() == null
+                                || policy.getAllowedRadiusMeters().doubleValue() <= 0) {
+
+                        throw new AttendanceException(
+                                        "Attendance policy radius is not configured");
+                }
+
+                double policyLatitude = policy
+                                .getLatitude()
+                                .doubleValue();
+
+                double policyLongitude = policy
+                                .getLongitude()
+                                .doubleValue();
+
+                double policyRadiusMeters = policy
+                                .getAllowedRadiusMeters()
+                                .doubleValue();
+
+                // --------------------------------------------------------
+                // 4. CALCULATE DISTANCE FROM POLICY LOCATION
                 // --------------------------------------------------------
 
                 double distanceMeters = calculateDistanceInMeters(
                                 latitude,
                                 longitude,
-                                collegeLatitude,
-                                collegeLongitude);
+                                policyLatitude,
+                                policyLongitude);
+
+                // --------------------------------------------------------
+                // 5. LOG DYNAMIC LOCATION VALUES
+                // --------------------------------------------------------
 
                 log.info(
                                 "Attendance location validation: " +
                                                 "userLatitude={}, userLongitude={}, " +
-                                                "collegeLatitude={}, collegeLongitude={}, " +
+                                                "policyId={}, locationName={}, " +
+                                                "policyLatitude={}, policyLongitude={}, " +
                                                 "distanceMeters={}, allowedRadiusMeters={}",
                                 latitude,
                                 longitude,
-                                collegeLatitude,
-                                collegeLongitude,
+                                policy.getId(),
+                                policy.getLocationName(),
+                                policyLatitude,
+                                policyLongitude,
                                 distanceMeters,
-                                attendanceRadiusMeters);
+                                policyRadiusMeters);
 
                 // --------------------------------------------------------
-                // 3. College geofence validation
+                // 6. GEOFENCE VALIDATION
                 // --------------------------------------------------------
 
-                if (distanceMeters > attendanceRadiusMeters) {
+                if (distanceMeters > policyRadiusMeters) {
 
                         throw new AttendanceException(
                                         String.format(
@@ -1344,7 +1323,7 @@ public class AttendanceService {
                                                                         "You are approximately %.0f meters away. " +
                                                                         "Allowed radius is %.0f meters.",
                                                         distanceMeters,
-                                                        attendanceRadiusMeters));
+                                                        policyRadiusMeters));
                 }
         }
 

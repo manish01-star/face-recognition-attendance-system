@@ -16,8 +16,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
 
-    private static final String BASE_URL = "http://192.168.164.252:8080/"; // samsung
-//    private static final String BASE_URL = "http://172.16.36.94:8080/"; // noida
+//    private static final String BASE_URL = "http://192.168.164.252:8080/"; // samsung
+    private static final String BASE_URL = "http://192.168.137.1:8080/"; // noida
 //    private static final String BASE_URL = "http://10.183.83.252:8080/"; // realme
 
     private static Retrofit retrofit;

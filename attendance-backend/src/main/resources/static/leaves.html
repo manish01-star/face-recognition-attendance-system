@@ -1,0 +1,3208 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Leave Requests | Admin Panel</title>
+
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Inter, Arial, sans-serif;
+        }
+
+
+        body {
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+
+        /* =========================
+           LAYOUT
+        ========================== */
+
+        .app {
+            display: flex;
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           SIDEBAR
+        ========================== */
+
+        .sidebar {
+            width: 250px;
+            background: #111827;
+            color: white;
+            position: fixed;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            z-index: 1000;
+            transition: 0.3s;
+        }
+
+
+        .brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            font-size: 20px;
+            font-weight: 700;
+            border-bottom: 1px solid #273244;
+        }
+
+
+        .brand span {
+            color: #60a5fa;
+            margin-right: 8px;
+        }
+
+
+        .menu {
+            padding: 20px 12px;
+        }
+
+
+        .menu-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            color: #94a3b8;
+            padding: 0 12px;
+            margin-bottom: 10px;
+            letter-spacing: 1px;
+        }
+
+
+        .menu a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: #cbd5e1;
+            text-decoration: none;
+            padding: 12px 14px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: 0.2s;
+        }
+
+
+        .menu a:hover,
+        .menu a.active {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        .menu-icon {
+            width: 20px;
+            text-align: center;
+        }
+
+
+        /* =========================
+           MAIN
+        ========================== */
+
+        .main {
+            margin-left: 250px;
+            width: calc(100% - 250px);
+            min-height: 100vh;
+        }
+
+
+        /* =========================
+           NAVBAR
+        ========================== */
+
+        .navbar {
+            height: 70px;
+            background: white;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 500;
+        }
+
+
+        .page-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+
+        .admin-info {
+            text-align: right;
+        }
+
+
+        .admin-name {
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+
+        .admin-role {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+
+        .avatar {
+            width: 38px;
+            height: 38px;
+            background: #2563eb;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+
+        /* =========================
+           CONTENT
+        ========================== */
+
+        .content {
+            padding: 30px;
+        }
+
+
+        .breadcrumb {
+            color: #64748b;
+            font-size: 13px;
+            margin-bottom: 25px;
+        }
+
+
+        .breadcrumb span {
+            color: #2563eb;
+        }
+
+
+        /* =========================
+           STATS
+        ========================== */
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 25px;
+        }
+
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+
+        .stat-label {
+            font-size: 13px;
+            color: #64748b;
+            margin-bottom: 5px;
+        }
+
+
+        .stat-value {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+        }
+
+
+        .blue {
+            background: #dbeafe;
+        }
+
+
+        .orange {
+            background: #ffedd5;
+        }
+
+
+        .green {
+            background: #dcfce7;
+        }
+
+
+        .red {
+            background: #fee2e2;
+        }
+
+
+        /* =========================
+           CARD
+        ========================== */
+
+        .card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+
+        .card-header {
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        .card-title {
+            font-size: 17px;
+            font-weight: 700;
+        }
+
+
+        .card-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin-top: 4px;
+        }
+
+
+        /* =========================
+           BUTTON
+        ========================== */
+
+        .btn {
+            border: none;
+            border-radius: 7px;
+            padding: 10px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+
+        .btn-success {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+
+        .btn-success:hover {
+            background: #bbf7d0;
+        }
+
+
+        .btn-danger {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+
+        .btn-danger:hover {
+            background: #fecaca;
+        }
+
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+
+        /* =========================
+           FILTERS
+        ========================== */
+
+        .filters {
+            padding: 18px 20px;
+            display: flex;
+            gap: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+
+        .search {
+            flex: 1;
+        }
+
+
+        .input,
+        .select,
+        .textarea {
+            width: 100%;
+            border: 1px solid #cbd5e1;
+            border-radius: 7px;
+            padding: 10px 12px;
+            outline: none;
+            background: white;
+            font-size: 13px;
+        }
+
+
+        .textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+
+        .input:focus,
+        .select:focus,
+        .textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 2px #dbeafe;
+        }
+
+
+        .filter-select {
+            width: 180px;
+        }
+
+
+        /* =========================
+           TABLE
+        ========================== */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 950px;
+        }
+
+
+        th {
+            background: #f8fafc;
+            text-align: left;
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            padding: 13px 18px;
+            letter-spacing: 0.4px;
+        }
+
+
+        td {
+            padding: 15px 18px;
+            border-top: 1px solid #eef2f7;
+            font-size: 13px;
+        }
+
+
+        tr:hover {
+            background: #f8fafc;
+        }
+
+
+        .user-name {
+            font-weight: 600;
+        }
+
+
+        .user-id {
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+
+        .date-info {
+            font-weight: 600;
+        }
+
+
+        .date-days {
+            color: #64748b;
+            font-size: 11px;
+            margin-top: 3px;
+        }
+
+
+        .leave-type {
+            font-weight: 600;
+        }
+
+
+        .description-preview {
+            color: #64748b;
+            max-width: 230px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+
+        /* =========================
+           BADGES
+        ========================== */
+
+        .badge {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+
+        .badge-pending {
+            background: #ffedd5;
+            color: #c2410c;
+        }
+
+
+        .badge-approved {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+
+        .badge-rejected {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+
+        .badge-casual {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+
+        .badge-sick {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+
+        .badge-personal {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+
+        .badge-other {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+
+        /* =========================
+           ACTIONS
+        ========================== */
+
+        .actions {
+            display: flex;
+            gap: 7px;
+            flex-wrap: wrap;
+        }
+
+
+        .action-btn {
+            border: none;
+            padding: 7px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+
+        .action-view {
+            background: #dbeafe;
+            color: #1d4ed8;
+        }
+
+
+        .action-approve {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+
+        .action-reject {
+            background: #fee2e2;
+            color: #dc2626;
+        }
+
+
+        /* =========================
+           MODAL
+        ========================== */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+
+        .modal {
+            width: 100%;
+            max-width: 600px;
+            background: white;
+            border-radius: 12px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+
+        .modal-header {
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+
+        .close {
+            border: none;
+            background: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #64748b;
+        }
+
+
+        .modal-body {
+            padding: 22px;
+        }
+
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 18px;
+        }
+
+
+        .detail-item {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+
+        .detail-item.full {
+            grid-column: 1 / -1;
+        }
+
+
+        .detail-label {
+            font-size: 11px;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            font-weight: 600;
+        }
+
+
+        .detail-value {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e293b;
+        }
+
+
+        .detail-description {
+            background: #f8fafc;
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            border-radius: 7px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #475569;
+            white-space: pre-wrap;
+        }
+
+
+        .review-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+
+        .review-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 7px;
+            display: block;
+        }
+
+
+        .modal-footer {
+            padding: 18px 22px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+
+        /* =========================
+           TOAST
+        ========================== */
+
+        .toast {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            min-width: 280px;
+            max-width: 400px;
+            background: #111827;
+            color: white;
+            padding: 14px 18px;
+            border-radius: 8px;
+            display: none;
+            z-index: 3000;
+            font-size: 13px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+
+        .toast.show {
+            display: block;
+        }
+
+
+        .toast.success {
+            background: #15803d;
+        }
+
+
+        .toast.error {
+            background: #dc2626;
+        }
+
+
+        /* =========================
+           LOADER / EMPTY
+        ========================== */
+
+        .loader {
+            text-align: center;
+            padding: 35px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+
+        .empty {
+            text-align: center;
+            padding: 45px;
+            color: #64748b;
+            font-size: 13px;
+        }
+
+
+        /* =========================
+           FOOTER
+        ========================== */
+
+        footer {
+            padding: 20px 30px;
+            text-align: center;
+            color: #94a3b8;
+            font-size: 12px;
+        }
+
+
+        /* =========================
+           RESPONSIVE
+        ========================== */
+
+        @media (max-width: 1100px) {
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media (max-width: 900px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+
+            .main {
+                margin-left: 0;
+                width: 100%;
+            }
+
+
+            .menu-toggle {
+                display: block;
+            }
+
+
+            .stats {
+                grid-template-columns: 1fr 1fr;
+            }
+
+
+            .card-header {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+
+            .filters {
+                flex-direction: column;
+            }
+
+
+            .filter-select {
+                width: 100%;
+            }
+
+        }
+
+
+        @media (max-width: 600px) {
+
+            .content {
+                padding: 18px;
+            }
+
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+
+            .admin-info {
+                display: none;
+            }
+
+
+            .stats {
+                grid-template-columns: 1fr;
+            }
+
+
+            .detail-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .detail-item.full {
+                grid-column: auto;
+            }
+
+
+            .modal {
+                max-height: 95vh;
+            }
+
+        }
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <div class="app">
+
+
+        <!-- =====================================================
+         SIDEBAR
+    ===================================================== -->
+
+        <aside class="sidebar" id="sidebar">
+
+
+            <div class="brand">
+
+                <span>◆</span>
+
+                College Attendance
+
+            </div>
+
+
+            <div class="menu">
+
+
+                <!-- MAIN -->
+
+                <div class="menu-title">
+                    Main
+                </div>
+
+
+                <a href="dashboard.html">
+
+                    <span class="menu-icon">
+                        ▦
+                    </span>
+
+                    Dashboard
+
+                </a>
+
+
+                <!-- MANAGEMENT -->
+
+                <div class="menu-title">
+                    Management
+                </div>
+
+
+                <a href="students.html">
+
+                    <span class="menu-icon">
+                        👨‍🎓
+                    </span>
+
+                    Students
+
+                </a>
+
+
+                <a href="teachers.html">
+
+                    <span class="menu-icon">
+                        👨‍🏫
+                    </span>
+
+                    Teachers
+
+                </a>
+
+
+                <a href="departments.html">
+
+                    <span class="menu-icon">
+                        🏢
+                    </span>
+
+                    Departments
+
+                </a>
+
+
+                <a href="courses.html">
+
+                    <span class="menu-icon">
+                        📚
+                    </span>
+
+                    Courses
+
+                </a>
+
+
+                <a href="semesters.html">
+
+                    <span class="menu-icon">
+                        📖
+                    </span>
+
+                    Semesters
+
+                </a>
+
+
+                <a href="sections.html">
+
+                    <span class="menu-icon">
+                        §
+                    </span>
+
+                    Sections
+
+                </a>
+
+
+                <!-- LEAVE REQUESTS -->
+
+                <a href="leaves.html" class="active">
+
+                    <span class="menu-icon">
+                        🗓
+                    </span>
+
+                    Leave Requests
+
+                </a>
+
+
+                <!-- ATTENDANCE -->
+
+                <div class="menu-title">
+                    Attendance
+                </div>
+
+
+                <a href="attendance.html">
+
+                    <span class="menu-icon">
+                        ✓
+                    </span>
+
+                    Attendance
+
+                </a>
+
+
+                <a href="machine-attendance.html">
+
+                    <span class="menu-icon">
+                        📷
+                    </span>
+
+                    Machine Attendance
+
+                </a>
+
+
+            </div>
+
+
+        </aside>
+
+
+        <!-- =====================================================
+         MAIN
+    ===================================================== -->
+
+        <main class="main">
+
+
+            <!-- NAVBAR -->
+
+            <nav class="navbar">
+
+
+                <div style="display:flex;align-items:center;gap:15px;">
+
+                    <button class="menu-toggle" onclick="toggleSidebar()">
+
+                        ☰
+
+                    </button>
+
+
+                    <div class="page-title">
+
+                        Leave Requests
+
+                    </div>
+
+                </div>
+
+
+                <div class="nav-right">
+
+
+                    <div class="admin-info">
+
+                        <div class="admin-name">
+
+                            Administrator
+
+                        </div>
+
+
+                        <div class="admin-role">
+
+                            System Admin
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="avatar">
+
+                        A
+
+                    </div>
+
+                </div>
+
+
+            </nav>
+
+
+            <!-- =====================================================
+             CONTENT
+        ===================================================== -->
+
+            <section class="content">
+
+
+                <div class="breadcrumb">
+
+                    Admin /
+
+                    <span>
+                        Leave Requests
+                    </span>
+
+                </div>
+
+
+                <!-- =================================================
+                 STATS
+            ================================================= -->
+
+                <div class="stats">
+
+
+                    <!-- TOTAL -->
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Total Requests
+                            </div>
+
+                            <div class="stat-value" id="totalLeaves">
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon blue">
+
+                            ≡
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- PENDING -->
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Pending Requests
+                            </div>
+
+                            <div class="stat-value" id="pendingLeaves">
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon orange">
+
+                            ⏳
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- APPROVED -->
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Approved
+                            </div>
+
+                            <div class="stat-value" id="approvedLeaves">
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon green">
+
+                            ✓
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- REJECTED -->
+
+                    <div class="stat-card">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Rejected
+                            </div>
+
+                            <div class="stat-value" id="rejectedLeaves">
+
+                                0
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon red">
+
+                            ×
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- =================================================
+                 LEAVE TABLE
+            ================================================= -->
+
+                <div class="card">
+
+
+                    <div class="card-header">
+
+
+                        <div>
+
+                            <div class="card-title">
+
+                                Leave Request Management
+
+                            </div>
+
+
+                            <div class="card-subtitle">
+
+                                Review and manage student and teacher leave requests
+
+                            </div>
+
+                        </div>
+
+
+                        <button class="btn btn-primary" onclick="loadLeaves()">
+
+                            ↻ Refresh
+
+                        </button>
+
+
+                    </div>
+
+
+                    <!-- FILTERS -->
+
+                    <div class="filters">
+
+
+                        <div class="search">
+
+                            <input type="text" id="searchInput" class="input"
+                                placeholder="Search by username, leave type or description..." oninput="filterLeaves()">
+
+                        </div>
+
+
+                        <div class="filter-select">
+
+                            <select id="statusFilter" class="select" onchange="filterLeaves()">
+
+                                <option value="ALL">
+                                    All Status
+                                </option>
+
+                                <option value="PENDING">
+                                    Pending
+                                </option>
+
+                                <option value="APPROVED">
+                                    Approved
+                                </option>
+
+                                <option value="REJECTED">
+                                    Rejected
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                    </div>
+
+
+                    <!-- TABLE -->
+
+                    <div class="table-wrapper">
+
+
+                        <table>
+
+
+                            <thead>
+
+                                <tr>
+
+                                    <th>
+                                        #
+                                    </th>
+
+                                    <th>
+                                        User
+                                    </th>
+
+                                    <th>
+                                        Leave
+                                    </th>
+
+                                    <th>
+                                        Date
+                                    </th>
+
+                                    <th>
+                                        Description
+                                    </th>
+
+                                    <th>
+                                        Status
+                                    </th>
+
+                                    <th>
+                                        Actions
+                                    </th>
+
+                                </tr>
+
+                            </thead>
+
+
+                            <tbody id="leaveTableBody">
+
+                            </tbody>
+
+
+                        </table>
+
+
+                    </div>
+
+
+                </div>
+
+
+            </section>
+
+
+            <footer>
+
+                © 2026 College Attendance System.
+                All rights reserved.
+
+            </footer>
+
+
+        </main>
+
+
+    </div>
+
+
+    <!-- =========================================================
+     LEAVE DETAILS / REVIEW MODAL
+========================================================= -->
+
+    <div class="modal-overlay" id="leaveModal">
+
+
+        <div class="modal">
+
+
+            <div class="modal-header">
+
+
+                <div class="modal-title" id="modalTitle">
+
+                    Leave Request
+
+                </div>
+
+
+                <button class="close" onclick="closeModal()">
+
+                    ×
+
+                </button>
+
+
+            </div>
+
+
+            <div class="modal-body">
+
+
+                <div class="detail-grid">
+
+
+                    <!-- USER -->
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            User
+                        </div>
+
+                        <div class="detail-value" id="detailUsername">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- USER ID -->
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            User ID
+                        </div>
+
+                        <div class="detail-value" id="detailUserId">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- LEAVE TYPE -->
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            Leave Type
+                        </div>
+
+                        <div class="detail-value" id="detailLeaveType">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- STATUS -->
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            Status
+                        </div>
+
+                        <div class="detail-value" id="detailStatus">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- FROM DATE -->
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            From Date
+                        </div>
+
+                        <div class="detail-value" id="detailFromDate">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- TO DATE -->
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            To Date
+                        </div>
+
+                        <div class="detail-value" id="detailToDate">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- APPLIED AT -->
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            Applied At
+                        </div>
+
+                        <div class="detail-value" id="detailAppliedAt">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- REVIEWED AT -->
+
+                    <div class="detail-item">
+
+                        <div class="detail-label">
+                            Reviewed At
+                        </div>
+
+                        <div class="detail-value" id="detailReviewedAt">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- DESCRIPTION -->
+
+                    <div class="detail-item full">
+
+                        <div class="detail-label">
+                            Description
+                        </div>
+
+
+                        <div class="detail-description" id="detailDescription">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- ADMIN REMARK -->
+
+                    <div class="detail-item full">
+
+                        <div class="detail-label">
+                            Admin Remark
+                        </div>
+
+
+                        <div class="detail-description" id="detailAdminRemark">
+
+                            -
+
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+
+                <!-- REVIEW -->
+
+                <div class="review-section" id="reviewSection">
+
+
+                    <label class="review-label" for="adminRemark">
+
+                        Admin Remark
+                        <span style="color:#64748b;font-weight:400;">
+                            (Optional)
+                        </span>
+
+                    </label>
+
+
+                    <textarea id="adminRemark" class="textarea" maxlength="500"
+                        placeholder="Enter remark for this leave request..."></textarea>
+
+
+                </div>
+
+
+            </div>
+
+
+            <div class="modal-footer">
+
+
+                <button type="button" class="btn btn-secondary" onclick="closeModal()">
+
+                    Close
+
+                </button>
+
+
+                <button type="button" class="btn btn-danger" id="rejectBtn" onclick="rejectCurrentLeave()">
+
+                    Reject
+
+                </button>
+
+
+                <button type="button" class="btn btn-success" id="approveBtn" onclick="approveCurrentLeave()">
+
+                    Approve
+
+                </button>
+
+
+            </div>
+
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+     TOAST
+========================================================= -->
+
+    <div class="toast" id="toast">
+
+    </div>
+
+    <script src="js/auth.js"></script>
+
+    <script>
+        /* =========================================================
+           CONFIG
+        ========================================================= */
+
+        const API_BASE_URL = "http://localhost:8080";
+
+
+        /* =========================================================
+           STATE
+        ========================================================= */
+
+        let leaves = [];
+        let filteredLeaves = [];
+        let selectedLeaveId = null;
+
+
+        /* =========================================================
+           INITIAL LOAD
+        ========================================================= */
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            loadLeaves();
+
+            const searchInput =
+                document.getElementById("searchInput");
+
+            const statusFilter =
+                document.getElementById("statusFilter");
+
+            if (searchInput) {
+                searchInput.addEventListener(
+                    "input",
+                    filterLeaves
+                );
+            }
+
+            if (statusFilter) {
+                statusFilter.addEventListener(
+                    "change",
+                    filterLeaves
+                );
+            }
+
+            const leaveModal =
+                document.getElementById("leaveModal");
+
+            if (leaveModal) {
+                leaveModal.addEventListener(
+                    "click",
+                    function (event) {
+
+                        if (event.target === this) {
+                            closeModal();
+                        }
+
+                    }
+                );
+            }
+
+        });
+
+
+        /* =========================================================
+           LOAD ALL LEAVES
+        ========================================================= */
+
+        async function loadLeaves() {
+
+            const tbody =
+                document.getElementById("leaveTableBody");
+
+            if (tbody) {
+
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="7">
+                        <div class="loader">
+                            Loading leave requests...
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+            }
+
+            try {
+
+                const response = await apiFetch(
+                    `${API_BASE_URL}/api/leaves/admin`
+                );
+
+                if (!response.ok) {
+
+                    let message =
+                        "Failed to load leave requests";
+
+                    try {
+
+                        const error =
+                            await response.json();
+
+                        message =
+                            error.message ||
+                            error.error ||
+                            message;
+
+                    } catch (e) {
+                        // Ignore invalid JSON
+                    }
+
+                    throw new Error(message);
+
+                }
+
+                const data =
+                    await response.json();
+
+                leaves =
+                    Array.isArray(data)
+                        ? data
+                        : [];
+
+                updateStats();
+
+                filterLeaves();
+
+            } catch (error) {
+
+                console.error(
+                    "Load leaves error:",
+                    error
+                );
+
+                if (tbody) {
+
+                    tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty">
+                                Failed to load leave requests.
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                }
+
+                showToast(
+                    error.message ||
+                    "Unable to load leave requests",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           UPDATE STATS
+        ========================================================= */
+
+        function updateStats() {
+
+            const total =
+                leaves.length;
+
+            const pending =
+                leaves.filter(
+                    leave =>
+                        leave.status === "PENDING"
+                ).length;
+
+            const approved =
+                leaves.filter(
+                    leave =>
+                        leave.status === "APPROVED"
+                ).length;
+
+            const rejected =
+                leaves.filter(
+                    leave =>
+                        leave.status === "REJECTED"
+                ).length;
+
+
+            setText(
+                "totalLeaves",
+                total
+            );
+
+            setText(
+                "pendingLeaves",
+                pending
+            );
+
+            setText(
+                "approvedLeaves",
+                approved
+            );
+
+            setText(
+                "rejectedLeaves",
+                rejected
+            );
+
+        }
+
+
+        /* =========================================================
+           FILTER LEAVES
+        ========================================================= */
+
+        function filterLeaves() {
+
+            const searchInput =
+                document.getElementById(
+                    "searchInput"
+                );
+
+            const statusFilter =
+                document.getElementById(
+                    "statusFilter"
+                );
+
+
+            const search =
+                searchInput
+                    ? searchInput.value
+                        .toLowerCase()
+                        .trim()
+                    : "";
+
+
+            const status =
+                statusFilter
+                    ? statusFilter.value
+                    : "ALL";
+
+
+            filteredLeaves =
+                leaves.filter(leave => {
+
+                    const searchable = [
+
+                        leave.username,
+
+                        leave.userId,
+
+                        leave.leaveType,
+
+                        leave.description,
+
+                        leave.status,
+
+                        leave.fromDate,
+
+                        leave.toDate
+
+                    ]
+                        .filter(
+                            value =>
+                                value !== null &&
+                                value !== undefined
+                        )
+                        .join(" ")
+                        .toLowerCase();
+
+
+                    const matchesSearch =
+                        searchable.includes(search);
+
+
+                    const matchesStatus =
+                        status === "ALL" ||
+                        leave.status === status;
+
+
+                    return (
+                        matchesSearch &&
+                        matchesStatus
+                    );
+
+                });
+
+
+            renderLeaves(
+                filteredLeaves
+            );
+
+        }
+
+
+        /* =========================================================
+           RENDER LEAVES
+        ========================================================= */
+
+        function renderLeaves(data) {
+
+            const tbody =
+                document.getElementById(
+                    "leaveTableBody"
+                );
+
+
+            if (!tbody) {
+                return;
+            }
+
+
+            if (!data || !data.length) {
+
+                tbody.innerHTML = `
+                <tr>
+                    <td colspan="7">
+                        <div class="empty">
+                            No leave requests found.
+                        </div>
+                    </td>
+                </tr>
+            `;
+
+                return;
+
+            }
+
+
+            tbody.innerHTML =
+                data.map(
+                    (leave, index) => {
+
+                        const statusClass =
+                            getStatusClass(
+                                leave.status
+                            );
+
+
+                        const typeClass =
+                            getLeaveTypeClass(
+                                leave.leaveType
+                            );
+
+
+                        const username =
+                            leave.username ||
+                            `User #${leave.userId ?? "-"}`;
+
+
+                        const fromDate =
+                            formatDate(
+                                leave.fromDate
+                            );
+
+
+                        const toDate =
+                            formatDate(
+                                leave.toDate
+                            );
+
+
+                        const days =
+                            calculateDays(
+                                leave.fromDate,
+                                leave.toDate
+                            );
+
+
+                        const description =
+                            leave.description ||
+                            "-";
+
+
+                        return `
+                        <tr>
+
+                            <td>
+                                ${index + 1}
+                            </td>
+
+
+                            <td>
+
+                                <div class="user-name">
+                                    ${escapeHtml(username)}
+                                </div>
+
+                                <div class="user-id">
+                                    ID:
+                                    ${escapeHtml(
+                            leave.userId ?? "-"
+                        )}
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="leave-type">
+
+                                    <span
+                                        class="badge ${typeClass}">
+
+                                        ${escapeHtml(
+                            leave.leaveType || "-"
+                        )}
+
+                                    </span>
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="date-info">
+
+                                    ${escapeHtml(fromDate)}
+
+                                    ${fromDate !== toDate
+                                ? ` → ${escapeHtml(toDate)}`
+                                : ""
+                            }
+
+                                </div>
+
+                                <div class="date-days">
+
+                                    ${days}
+                                    ${days === 1
+                                ? "day"
+                                : "days"
+                            }
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <div
+                                    class="description-preview"
+                                    title="${escapeHtml(
+                                description
+                            )}">
+
+                                    ${escapeHtml(
+                                description
+                            )}
+
+                                </div>
+
+                            </td>
+
+
+                            <td>
+
+                                <span
+                                    class="badge ${statusClass}">
+
+                                    ${escapeHtml(
+                                leave.status || "-"
+                            )}
+
+                                </span>
+
+                            </td>
+
+
+                            <td>
+
+                                <div class="actions">
+
+                                    <button
+                                        type="button"
+                                        class="action-btn action-view"
+                                        onclick="viewLeave(${Number(leave.id)})">
+
+                                        View
+
+                                    </button>
+
+
+                                    ${leave.status === "PENDING"
+
+                                ?
+
+                                `
+                                            <button
+                                                type="button"
+                                                class="action-btn action-approve"
+                                                onclick="quickApprove(${Number(leave.id)})">
+
+                                                Approve
+
+                                            </button>
+
+
+                                            <button
+                                                type="button"
+                                                class="action-btn action-reject"
+                                                onclick="quickReject(${Number(leave.id)})">
+
+                                                Reject
+
+                                            </button>
+                                        `
+
+                                :
+
+                                ""
+                            }
+
+                                </div>
+
+                            </td>
+
+                        </tr>
+                    `;
+
+                    }
+                ).join("");
+
+        }
+
+
+        /* =========================================================
+           VIEW LEAVE
+        ========================================================= */
+
+        function viewLeave(id) {
+
+            const leave =
+                leaves.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
+
+
+            if (!leave) {
+
+                showToast(
+                    "Leave request not found",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            selectedLeaveId =
+                leave.id;
+
+
+            setText(
+                "modalTitle",
+                `Leave Request #${leave.id}`
+            );
+
+
+            setText(
+                "detailUsername",
+                leave.username ||
+                `User #${leave.userId ?? "-"}`
+            );
+
+
+            setText(
+                "detailUserId",
+                leave.userId ?? "-"
+            );
+
+
+            const detailLeaveType =
+                document.getElementById(
+                    "detailLeaveType"
+                );
+
+
+            if (detailLeaveType) {
+
+                detailLeaveType.innerHTML = `
+                <span
+                    class="badge ${getLeaveTypeClass(
+                    leave.leaveType
+                )}">
+
+                    ${escapeHtml(
+                    leave.leaveType || "-"
+                )}
+
+                </span>
+            `;
+
+            }
+
+
+            const detailStatus =
+                document.getElementById(
+                    "detailStatus"
+                );
+
+
+            if (detailStatus) {
+
+                detailStatus.innerHTML = `
+                <span
+                    class="badge ${getStatusClass(
+                    leave.status
+                )}">
+
+                    ${escapeHtml(
+                    leave.status || "-"
+                )}
+
+                </span>
+            `;
+
+            }
+
+
+            setText(
+                "detailFromDate",
+                formatDate(
+                    leave.fromDate
+                )
+            );
+
+
+            setText(
+                "detailToDate",
+                formatDate(
+                    leave.toDate
+                )
+            );
+
+
+            setText(
+                "detailAppliedAt",
+                formatDateTime(
+                    leave.appliedAt
+                )
+            );
+
+
+            setText(
+                "detailReviewedAt",
+                formatDateTime(
+                    leave.reviewedAt
+                )
+            );
+
+
+            setText(
+                "detailDescription",
+                leave.description || "-"
+            );
+
+
+            setText(
+                "detailAdminRemark",
+                leave.adminRemark || "-"
+            );
+
+
+            const adminRemark =
+                document.getElementById(
+                    "adminRemark"
+                );
+
+
+            if (adminRemark) {
+
+                adminRemark.value = "";
+
+            }
+
+
+            const isPending =
+                leave.status === "PENDING";
+
+
+            const reviewSection =
+                document.getElementById(
+                    "reviewSection"
+                );
+
+
+            if (reviewSection) {
+
+                reviewSection.style.display =
+                    isPending
+                        ? "block"
+                        : "none";
+
+            }
+
+
+            const approveBtn =
+                document.getElementById(
+                    "approveBtn"
+                );
+
+
+            if (approveBtn) {
+
+                approveBtn.style.display =
+                    isPending
+                        ? "inline-block"
+                        : "none";
+
+            }
+
+
+            const rejectBtn =
+                document.getElementById(
+                    "rejectBtn"
+                );
+
+
+            if (rejectBtn) {
+
+                rejectBtn.style.display =
+                    isPending
+                        ? "inline-block"
+                        : "none";
+
+            }
+
+
+            const modal =
+                document.getElementById(
+                    "leaveModal"
+                );
+
+
+            if (modal) {
+
+                modal.classList.add("show");
+
+            }
+
+        }
+
+
+        /* =========================================================
+           QUICK APPROVE
+        ========================================================= */
+
+        async function quickApprove(id) {
+
+            const leave =
+                findLeave(id);
+
+
+            if (!leave) {
+                return;
+            }
+
+
+            if (leave.status !== "PENDING") {
+
+                showToast(
+                    "Only pending leave can be approved",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+                    `Are you sure you want to approve leave request #${leave.id}?`
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            await updateLeaveStatus(
+                id,
+                "APPROVE",
+                ""
+            );
+
+        }
+
+
+        /* =========================================================
+           QUICK REJECT
+        ========================================================= */
+
+        async function quickReject(id) {
+
+            const leave =
+                findLeave(id);
+
+
+            if (!leave) {
+                return;
+            }
+
+
+            if (leave.status !== "PENDING") {
+
+                showToast(
+                    "Only pending leave can be rejected",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const confirmed =
+                confirm(
+                    `Are you sure you want to reject leave request #${leave.id}?`
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            await updateLeaveStatus(
+                id,
+                "REJECT",
+                ""
+            );
+
+        }
+
+
+        /* =========================================================
+           APPROVE CURRENT LEAVE
+        ========================================================= */
+
+        async function approveCurrentLeave() {
+
+            if (!selectedLeaveId) {
+                return;
+            }
+
+
+            const leave =
+                findLeave(selectedLeaveId);
+
+
+            if (!leave) {
+                return;
+            }
+
+
+            if (leave.status !== "PENDING") {
+
+                showToast(
+                    "Only pending leave can be approved",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const adminRemark =
+                document.getElementById(
+                    "adminRemark"
+                );
+
+
+            const remark =
+                adminRemark
+                    ? adminRemark.value.trim()
+                    : "";
+
+
+            await updateLeaveStatus(
+                selectedLeaveId,
+                "APPROVE",
+                remark
+            );
+
+        }
+
+
+        /* =========================================================
+           REJECT CURRENT LEAVE
+        ========================================================= */
+
+        async function rejectCurrentLeave() {
+
+            if (!selectedLeaveId) {
+                return;
+            }
+
+
+            const leave =
+                findLeave(selectedLeaveId);
+
+
+            if (!leave) {
+                return;
+            }
+
+
+            if (leave.status !== "PENDING") {
+
+                showToast(
+                    "Only pending leave can be rejected",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const adminRemark =
+                document.getElementById(
+                    "adminRemark"
+                );
+
+
+            const remark =
+                adminRemark
+                    ? adminRemark.value.trim()
+                    : "";
+
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to reject this leave request?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            await updateLeaveStatus(
+                selectedLeaveId,
+                "REJECT",
+                remark
+            );
+
+        }
+
+
+        /* =========================================================
+           UPDATE LEAVE STATUS
+        ========================================================= */
+
+        async function updateLeaveStatus(
+            id,
+            action,
+            remark = ""
+        ) {
+
+            const leave =
+                findLeave(id);
+
+
+            if (!leave) {
+
+                showToast(
+                    "Leave request not found",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            if (leave.status !== "PENDING") {
+
+                showToast(
+                    "This leave request has already been reviewed",
+                    "error"
+                );
+
+                return;
+
+            }
+
+
+            const url =
+                action === "APPROVE"
+
+                    ?
+
+                    `${API_BASE_URL}/api/leaves/admin/${id}/approve`
+
+                    :
+
+                    `${API_BASE_URL}/api/leaves/admin/${id}/reject`;
+
+
+            try {
+
+                const options = {
+
+                    method: "PUT",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    }
+
+                };
+
+
+                if (remark && remark.trim()) {
+
+                    options.body =
+                        JSON.stringify({
+                            adminRemark:
+                                remark.trim()
+                        });
+
+                }
+
+
+                const response =
+                    await apiFetch(
+                        url,
+                        options
+                    );
+
+
+                if (!response.ok) {
+
+                    let message =
+                        action === "APPROVE"
+
+                            ?
+
+                            "Unable to approve leave"
+
+                            :
+
+                            "Unable to reject leave";
+
+
+                    try {
+
+                        const error =
+                            await response.json();
+
+                        message =
+                            error.message ||
+                            error.error ||
+                            message;
+
+                    } catch (e) {
+                        // Ignore invalid JSON
+                    }
+
+
+                    throw new Error(
+                        message
+                    );
+
+                }
+
+
+                /*
+                 * Backend returns updated LeaveResponse.
+                 * We don't need to use it because
+                 * loadLeaves() refreshes the complete list.
+                 */
+                await response.json();
+
+
+                closeModal();
+
+
+                await loadLeaves();
+
+
+                showToast(
+
+                    action === "APPROVE"
+
+                        ?
+
+                        "Leave approved successfully"
+
+                        :
+
+                        "Leave rejected successfully",
+
+                    "success"
+
+                );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Update leave error:",
+                    error
+                );
+
+
+                showToast(
+                    error.message ||
+                    "Unable to update leave request",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           FIND LEAVE
+        ========================================================= */
+
+        function findLeave(id) {
+
+            return leaves.find(
+                leave =>
+                    Number(leave.id) ===
+                    Number(id)
+            );
+
+        }
+
+
+        /* =========================================================
+           STATUS CLASS
+        ========================================================= */
+
+        function getStatusClass(status) {
+
+            switch (status) {
+
+                case "PENDING":
+                    return "badge-pending";
+
+                case "APPROVED":
+                    return "badge-approved";
+
+                case "REJECTED":
+                    return "badge-rejected";
+
+                default:
+                    return "badge-other";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           LEAVE TYPE CLASS
+        ========================================================= */
+
+        function getLeaveTypeClass(type) {
+
+            switch (type) {
+
+                case "CASUAL":
+                    return "badge-casual";
+
+                case "SICK":
+                    return "badge-sick";
+
+                case "PERSONAL":
+                    return "badge-personal";
+
+                case "OTHER":
+                    return "badge-other";
+
+                default:
+                    return "badge-other";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           CALCULATE DAYS
+        ========================================================= */
+
+        function calculateDays(
+            fromDate,
+            toDate
+        ) {
+
+            if (!fromDate || !toDate) {
+                return 0;
+            }
+
+
+            const start =
+                new Date(
+                    `${fromDate}T00:00:00`
+                );
+
+
+            const end =
+                new Date(
+                    `${toDate}T00:00:00`
+                );
+
+
+            if (
+                Number.isNaN(
+                    start.getTime()
+                )
+                ||
+                Number.isNaN(
+                    end.getTime()
+                )
+            ) {
+
+                return 0;
+
+            }
+
+
+            const difference =
+                end.getTime() -
+                start.getTime();
+
+
+            return Math.floor(
+                difference /
+                (1000 * 60 * 60 * 24)
+            ) + 1;
+
+        }
+
+
+        /* =========================================================
+           FORMAT DATE
+        ========================================================= */
+
+        function formatDate(dateValue) {
+
+            if (!dateValue) {
+                return "-";
+            }
+
+
+            const date =
+                new Date(
+                    `${dateValue}T00:00:00`
+                );
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return String(dateValue);
+
+            }
+
+
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           FORMAT DATE TIME
+        ========================================================= */
+
+        function formatDateTime(dateValue) {
+
+            if (!dateValue) {
+                return "-";
+            }
+
+
+            const date =
+                new Date(dateValue);
+
+
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
+                return String(dateValue);
+
+            }
+
+
+            return date.toLocaleString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric",
+                    hour: "2-digit",
+                    minute: "2-digit"
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           CLOSE MODAL
+        ========================================================= */
+
+        function closeModal() {
+
+            const modal =
+                document.getElementById(
+                    "leaveModal"
+                );
+
+
+            if (modal) {
+
+                modal.classList.remove(
+                    "show"
+                );
+
+            }
+
+
+            selectedLeaveId =
+                null;
+
+
+            const adminRemark =
+                document.getElementById(
+                    "adminRemark"
+                );
+
+
+            if (adminRemark) {
+
+                adminRemark.value = "";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           SIDEBAR MOBILE
+        ========================================================= */
+
+        function toggleSidebar() {
+
+            const sidebar =
+                document.getElementById(
+                    "sidebar"
+                );
+
+
+            if (sidebar) {
+
+                sidebar.classList.toggle(
+                    "open"
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           TOAST
+        ========================================================= */
+
+        function showToast(
+            message,
+            type = "success"
+        ) {
+
+            const toast =
+                document.getElementById(
+                    "toast"
+                );
+
+
+            if (!toast) {
+                return;
+            }
+
+
+            toast.textContent =
+                message;
+
+
+            toast.className =
+                `toast show ${type}`;
+
+
+            clearTimeout(
+                toast._timeout
+            );
+
+
+            toast._timeout =
+                setTimeout(
+                    () => {
+
+                        toast.classList.remove(
+                            "show"
+                        );
+
+                    },
+                    3000
+                );
+
+        }
+
+
+        /* =========================================================
+           SET TEXT SAFELY
+        ========================================================= */
+
+        function setText(
+            elementId,
+            value
+        ) {
+
+            const element =
+                document.getElementById(
+                    elementId
+                );
+
+
+            if (element) {
+
+                element.textContent =
+                    value ?? "-";
+
+            }
+
+        }
+
+
+        /* =========================================================
+           HTML ESCAPE
+        ========================================================= */
+
+        function escapeHtml(value) {
+
+            return String(
+                value ?? ""
+            )
+                .replaceAll(
+                    "&",
+                    "&amp;"
+                )
+                .replaceAll(
+                    "<",
+                    "&lt;"
+                )
+                .replaceAll(
+                    ">",
+                    "&gt;"
+                )
+                .replaceAll(
+                    '"',
+                    "&quot;"
+                )
+                .replaceAll(
+                    "'",
+                    "&#039;"
+                );
+
+        }
+
+    </script>
+
+</body>
+
+</html>

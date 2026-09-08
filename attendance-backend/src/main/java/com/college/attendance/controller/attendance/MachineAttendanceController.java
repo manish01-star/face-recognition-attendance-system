@@ -3,6 +3,7 @@ package com.college.attendance.controller.attendance;
 import com.college.attendance.dto.attendance.AttendanceMarkResponse;
 import com.college.attendance.service.AttendanceService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.http.ResponseEntity;
@@ -11,6 +12,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/attendance/machine")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class MachineAttendanceController {
 

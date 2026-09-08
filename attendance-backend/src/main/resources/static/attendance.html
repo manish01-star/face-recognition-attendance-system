@@ -4,6 +4,7 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Attendance Management | College Attendance</title>
@@ -14,860 +15,2010 @@
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
+
     <style>
         * {
             box-sizing: border-box;
         }
 
-        body {
-            margin: 0;
-            background: #f5f7fb;
-            color: #1f2937;
-            font-family: Inter, system-ui, -apple-system,
-                BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+        :root {
+
+            --bg: #f5f7fb;
+            --card: #ffffff;
+            --border: #e5e7eb;
+
+            --text: #111827;
+            --muted: #6b7280;
+            --light-muted: #9ca3af;
+
+            --primary: #111827;
+
+            --green-bg: #dcfce7;
+            --green-text: #15803d;
+
+            --red-bg: #fee2e2;
+            --red-text: #dc2626;
+
+            --orange-bg: #fef3c7;
+            --orange-text: #b45309;
+
+            --purple-bg: #ede9fe;
+            --purple-text: #6d28d9;
+
+            --blue-bg: #dbeafe;
+            --blue-text: #1d4ed8;
+
+            --holiday-bg: #f3e8df;
+            --holiday-text: #795548;
         }
+
+
+        body {
+
+            margin: 0;
+
+            background: var(--bg);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+        }
+
 
         /* =====================================================
            NAVBAR
         ===================================================== */
 
         .navbar {
-            min-height: 70px;
+
+            min-height: 64px;
+
             background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
+
+            border-bottom: 1px solid var(--border);
+
         }
+
 
         .brand {
+
             display: inline-flex;
+
             align-items: center;
+
             text-decoration: none;
-            color: #111827;
-            font-size: 21px;
+
+            color: var(--text);
+
+            font-size: 19px;
+
             font-weight: 700;
+
         }
 
+
         .brand-icon {
-            width: 40px;
-            height: 40px;
-            margin-right: 10px;
-            border-radius: 11px;
+
+            width: 38px;
+
+            height: 38px;
+
+            margin-right: 9px;
+
+            border-radius: 10px;
+
             display: inline-flex;
+
             align-items: center;
+
             justify-content: center;
-            background: #111827;
+
+            background: var(--primary);
+
             color: white;
+
         }
+
 
         /* =====================================================
            PAGE
         ===================================================== */
 
         .page-wrapper {
-            padding: 35px 15px 60px;
+
+            padding: 24px 15px 45px;
+
         }
+
+
+        .page-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+            margin-bottom: 18px;
+
+        }
+
 
         .page-title {
+
             margin: 0;
-            font-size: 30px;
-            font-weight: 700;
+
+            font-size: 27px;
+
+            font-weight: 750;
+
+            letter-spacing: -.3px;
+
         }
+
 
         .page-subtitle {
-            margin-top: 6px;
-            color: #6b7280;
+
+            margin: 4px 0 0;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
         }
 
+
+        .policy-chip {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            padding: 8px 12px;
+
+            background: #ffffff;
+
+            border: 1px solid var(--border);
+
+            border-radius: 10px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            white-space: nowrap;
+
+        }
+
+
+        .policy-chip i {
+
+            color: var(--primary);
+
+        }
+
+
         /* =====================================================
-           CARDS
+           COMMON CARD
         ===================================================== */
 
         .dashboard-card {
-            background: #ffffff;
-            border: 1px solid #e5e7eb;
-            border-radius: 16px;
-            box-shadow: 0 6px 25px rgba(0, 0, 0, .035);
+
+            background: var(--card);
+
+            border: 1px solid var(--border);
+
+            border-radius: 15px;
+
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, .025);
+
         }
+
 
         /* =====================================================
            SUMMARY
         ===================================================== */
 
-        .summary-card {
-            padding: 20px;
-            height: 100%;
+        .summary-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(6, minmax(0, 1fr));
+
+            gap: 10px;
+
         }
+
+
+        .summary-card {
+
+            min-height: 112px;
+
+            padding: 15px;
+
+        }
+
+
+        .summary-top {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 8px;
+
+        }
+
 
         .summary-icon {
-            width: 43px;
-            height: 43px;
-            border-radius: 11px;
+
+            width: 36px;
+
+            height: 36px;
+
+            border-radius: 9px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
-            font-size: 20px;
-            margin-bottom: 15px;
+
+            font-size: 16px;
+
         }
+
 
         .summary-label {
-            color: #6b7280;
-            font-size: 13px;
-            font-weight: 500;
+
+            margin-top: 12px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            font-weight: 600;
+
         }
+
 
         .summary-value {
-            margin-top: 3px;
-            font-size: 25px;
-            font-weight: 700;
+
+            margin-top: 2px;
+
+            font-size: 22px;
+
+            line-height: 1.15;
+
+            font-weight: 750;
+
         }
+
 
         .summary-subtext {
-            margin-top: 4px;
-            color: #9ca3af;
-            font-size: 11px;
+
+            margin-top: 3px;
+
+            color: var(--light-muted);
+
+            font-size: 10px;
+
+            white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
         }
 
-        .icon-present {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        .icon-absent {
-            background: #fee2e2;
-            color: #dc2626;
-        }
-
-        .icon-holiday {
-            background: #f3e8df;
-            color: #8b5e3c;
-        }
 
         .icon-working {
+
             background: #e0e7ff;
+
             color: #4338ca;
+
         }
 
-        .icon-hours {
-            background: #fef3c7;
-            color: #b45309;
+
+        .icon-present {
+
+            background: var(--green-bg);
+
+            color: var(--green-text);
+
         }
+
+
+        .icon-incomplete {
+
+            background: var(--orange-bg);
+
+            color: var(--orange-text);
+
+        }
+
+
+        .icon-absent {
+
+            background: var(--red-bg);
+
+            color: var(--red-text);
+
+        }
+
+
+        .icon-holiday {
+
+            background: var(--holiday-bg);
+
+            color: var(--holiday-text);
+
+        }
+
+
+        .icon-hours {
+
+            background: #fef3c7;
+
+            color: #b45309;
+
+        }
+
 
         /* =====================================================
            FILTER CARD
         ===================================================== */
 
         .filter-card {
-            padding: 22px;
-            margin-top: 25px;
+
+            margin-top: 15px;
+
+            padding: 17px;
+
         }
+
+
+        .filter-header {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 10px;
+
+            margin-bottom: 13px;
+
+        }
+
 
         .filter-title {
-            font-size: 17px;
+
+            margin: 0;
+
+            font-size: 15px;
+
             font-weight: 700;
-            margin-bottom: 3px;
+
         }
+
 
         .filter-subtitle {
-            color: #6b7280;
-            font-size: 12px;
-            margin-bottom: 20px;
+
+            margin: 3px 0 0;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
         }
 
+
         .form-label {
-            font-size: 13px;
-            font-weight: 600;
-            margin-bottom: 7px;
+
+            margin-bottom: 5px;
+
+            color: #374151;
+
+            font-size: 11px;
+
+            font-weight: 650;
+
         }
+
 
         .form-control,
         .form-select {
-            height: 46px;
-            border-radius: 10px;
+
+            height: 42px;
+
+            border-radius: 9px;
+
             border: 1px solid #d1d5db;
+
+            font-size: 12px;
+
         }
+
 
         .form-control:focus,
         .form-select:focus {
-            border-color: #6b7280;
-            box-shadow: 0 0 0 3px rgba(107, 114, 128, .12);
+
+            border-color: #9ca3af;
+
+            box-shadow:
+                0 0 0 3px rgba(107, 114, 128, .10);
+
         }
+
 
         /* =====================================================
            TYPE BUTTONS
         ===================================================== */
 
         .type-buttons {
+
             display: flex;
-            gap: 7px;
-            padding: 4px;
+
+            gap: 4px;
+
+            padding: 3px;
+
             background: #f3f4f6;
-            border-radius: 11px;
-            height: 46px;
+
+            border-radius: 9px;
+
+            height: 42px;
+
         }
+
 
         .type-btn {
+
             flex: 1;
+
             border: none;
-            border-radius: 8px;
+
+            border-radius: 7px;
+
             background: transparent;
-            color: #6b7280;
-            font-size: 13px;
-            font-weight: 600;
-            transition: .15s ease;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            font-weight: 650;
+
         }
 
-        .type-btn:hover {
-            color: #111827;
-        }
 
         .type-btn.active {
-            background: #111827;
+
+            background: var(--primary);
+
             color: white;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, .1);
+
+            box-shadow:
+                0 2px 5px rgba(0, 0, 0, .10);
+
         }
 
+
         /* =====================================================
-           PERSON SELECTOR
+           SEARCH
         ===================================================== */
 
-        .person-selector {
+        .search-wrapper {
+
             position: relative;
+
         }
 
-        .search-wrapper {
-            position: relative;
-        }
 
         .search-icon {
+
             position: absolute;
-            left: 15px;
+
+            left: 13px;
+
             top: 50%;
+
             transform: translateY(-50%);
-            color: #9ca3af;
+
+            color: var(--light-muted);
+
+            font-size: 13px;
+
             z-index: 2;
+
         }
+
 
         #personSearch {
-            padding-left: 42px;
+
+            padding-left: 37px;
+
         }
+
 
         .person-results {
-            margin-top: 8px;
-            max-height: 330px;
-            overflow-y: auto;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            background: #ffffff;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, .08);
-        }
 
-        .person-result {
-            padding: 13px 15px;
-            border-bottom: 1px solid #f1f3f5;
-            cursor: pointer;
-            transition: .12s ease;
-        }
-
-        .person-result:last-child {
-            border-bottom: none;
-        }
-
-        .person-result:hover {
-            background: #f9fafb;
-        }
-
-        .person-result-top {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .person-main {
-            display: flex;
-            align-items: center;
-            gap: 11px;
-            min-width: 0;
-        }
-
-        .person-avatar {
-            width: 38px;
-            height: 38px;
-            min-width: 38px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .avatar-student {
-            background: #e0e7ff;
-            color: #4338ca;
-        }
-
-        .avatar-staff {
-            background: #dcfce7;
-            color: #15803d;
-        }
-
-        .person-name {
-            font-size: 13px;
-            font-weight: 700;
-            color: #111827;
-        }
-
-        .person-id {
-            font-size: 11px;
-            color: #9ca3af;
-            margin-top: 2px;
-        }
-
-        .person-type {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 4px 8px;
-            border-radius: 20px;
-            white-space: nowrap;
-        }
-
-        .type-student {
-            background: #eef2ff;
-            color: #4338ca;
-        }
-
-        .type-staff {
-            background: #ecfdf5;
-            color: #15803d;
-        }
-
-        .person-meta {
-            display: flex;
-            gap: 15px;
-            margin-left: 49px;
             margin-top: 6px;
-            font-size: 10px;
-            color: #6b7280;
-            flex-wrap: wrap;
+
+            max-height: 230px;
+
+            overflow-y: auto;
+
+            border: 1px solid var(--border);
+
+            border-radius: 10px;
+
+            background: #ffffff;
+
+            box-shadow:
+                0 10px 25px rgba(0, 0, 0, .06);
+
         }
 
-        .person-meta span {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+
+        .person-results:empty {
+
+            display: none;
+
         }
+
 
         .results-header {
-            padding: 10px 15px;
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 2;
+
+            padding: 7px 12px;
+
             background: #f9fafb;
-            border-bottom: 1px solid #e5e7eb;
-            color: #6b7280;
-            font-size: 11px;
-            font-weight: 600;
+
+            border-bottom: 1px solid var(--border);
+
+            color: var(--muted);
+
+            font-size: 10px;
+
+            font-weight: 650;
+
         }
 
-        .no-results {
-            padding: 30px 15px;
-            text-align: center;
-            color: #9ca3af;
-            font-size: 13px;
+
+        .person-result {
+
+            padding: 10px 12px;
+
+            border-bottom: 1px solid #f1f3f5;
+
+            cursor: pointer;
+
+            transition: .12s ease;
+
         }
+
+
+        .person-result:last-child {
+
+            border-bottom: none;
+
+        }
+
+
+        .person-result:hover {
+
+            background: #f9fafb;
+
+        }
+
+
+        .person-result-top {
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 8px;
+
+        }
+
+
+        .person-main {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 9px;
+
+            min-width: 0;
+
+        }
+
+
+        .person-avatar {
+
+            width: 34px;
+
+            height: 34px;
+
+            min-width: 34px;
+
+            border-radius: 9px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 11px;
+
+            font-weight: 750;
+
+        }
+
+
+        .avatar-student {
+
+            background: #e0e7ff;
+
+            color: #4338ca;
+
+        }
+
+
+        .avatar-staff {
+
+            background: #dcfce7;
+
+            color: #15803d;
+
+        }
+
+
+        .person-name {
+
+            font-size: 12px;
+
+            font-weight: 700;
+
+        }
+
+
+        .person-id {
+
+            margin-top: 1px;
+
+            color: var(--light-muted);
+
+            font-size: 9px;
+
+        }
+
+
+        .person-type {
+
+            padding: 3px 7px;
+
+            border-radius: 20px;
+
+            font-size: 8px;
+
+            font-weight: 750;
+
+            white-space: nowrap;
+
+        }
+
+
+        .type-student {
+
+            background: #eef2ff;
+
+            color: #4338ca;
+
+        }
+
+
+        .type-staff {
+
+            background: #ecfdf5;
+
+            color: #15803d;
+
+        }
+
+
+        .person-meta {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 4px 11px;
+
+            margin-left: 43px;
+
+            margin-top: 4px;
+
+            color: var(--muted);
+
+            font-size: 9px;
+
+        }
+
+
+        .person-meta span {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 3px;
+
+        }
+
 
         /* =====================================================
-           SELECTED PERSON
+           SELECTED USER
         ===================================================== */
 
         .selected-person-card {
+
             display: none;
-            margin-top: 15px;
-            padding: 15px;
-            border: 1px solid #dbeafe;
+
+            margin-top: 9px;
+
+            padding: 10px 12px;
+
             background: #f8fbff;
-            border-radius: 12px;
+
+            border: 1px solid #dbeafe;
+
+            border-radius: 10px;
+
         }
+
 
         .selected-person-card.show {
+
             display: block;
+
         }
+
 
         .selected-person {
+
             display: flex;
+
             align-items: center;
-            gap: 12px;
+
+            gap: 9px;
+
         }
+
 
         .selected-avatar {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
+
+            width: 38px;
+
+            height: 38px;
+
+            border-radius: 10px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
-            font-weight: 700;
+
+            font-size: 12px;
+
+            font-weight: 750;
+
         }
+
 
         .selected-name {
-            font-size: 14px;
+
+            font-size: 12px;
+
             font-weight: 700;
+
         }
+
 
         .selected-details {
-            margin-top: 3px;
-            color: #6b7280;
-            font-size: 11px;
+
+            margin-top: 2px;
+
+            color: var(--muted);
+
+            font-size: 9px;
+
+            line-height: 1.4;
+
         }
+
 
         .remove-selected {
+
             margin-left: auto;
-            width: 32px;
-            height: 32px;
+
+            width: 29px;
+
+            height: 29px;
+
             border: none;
-            border-radius: 8px;
+
+            border-radius: 7px;
+
             background: #ffffff;
-            color: #6b7280;
+
+            color: var(--muted);
+
         }
 
+
         .remove-selected:hover {
-            background: #fee2e2;
-            color: #dc2626;
+
+            background: var(--red-bg);
+
+            color: var(--red-text);
+
         }
+
 
         /* =====================================================
            LOAD BUTTON
         ===================================================== */
 
         .btn-load {
-            height: 46px;
-            border-radius: 10px;
-            font-weight: 600;
-            background: #111827;
+
+            height: 42px;
+
+            border-radius: 9px;
+
+            font-size: 12px;
+
+            font-weight: 650;
+
+            background: var(--primary);
+
             color: white;
+
             border: none;
+
         }
+
 
         .btn-load:hover {
+
             background: #000000;
+
             color: white;
+
         }
 
+
         .btn-load:disabled {
-            opacity: .5;
+
+            opacity: .45;
+
             cursor: not-allowed;
+
         }
+
 
         /* =====================================================
            CALENDAR CARD
         ===================================================== */
 
         .calendar-card {
-            margin-top: 25px;
+
+            margin-top: 15px;
+
             overflow: hidden;
+
         }
+
 
         .calendar-header {
-            padding: 20px 22px;
+
+            padding: 14px 17px;
+
             border-bottom: 1px solid #eef0f3;
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
+
             gap: 15px;
+
         }
+
 
         .calendar-title {
+
             margin: 0;
-            font-size: 19px;
-            font-weight: 700;
+
+            font-size: 16px;
+
+            font-weight: 750;
+
         }
+
 
         .calendar-subtitle {
-            color: #6b7280;
-            font-size: 13px;
+
             margin-top: 3px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+
         }
+
+
+        .calendar-subtitle strong {
+
+            color: #374151;
+
+        }
+
 
         .month-controls {
+
             display: flex;
+
             align-items: center;
-            gap: 8px;
+
+            gap: 6px;
+
         }
+
 
         .month-controls button {
-            width: 40px;
-            height: 40px;
-            border-radius: 9px;
+
+            width: 34px;
+
+            height: 34px;
+
+            border-radius: 8px;
+
             border: 1px solid #d1d5db;
+
             background: white;
+
+            color: #374151;
+
         }
+
 
         .month-controls button:hover {
+
             background: #f9fafb;
+
         }
 
+
         .month-name {
-            min-width: 150px;
+
+            min-width: 125px;
+
             text-align: center;
-            font-size: 16px;
+
+            font-size: 13px;
+
             font-weight: 700;
+
         }
+
 
         /* =====================================================
            CALENDAR
         ===================================================== */
 
         .calendar-wrapper {
-            padding: 20px;
+
+            padding: 12px;
+
         }
+
+
+        .calendar-scroll {
+
+            overflow-x: auto;
+
+            padding-bottom: 3px;
+
+        }
+
 
         .calendar-grid {
+
             display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            border-top: 1px solid #e5e7eb;
-            border-left: 1px solid #e5e7eb;
-            border-radius: 10px;
+
+            grid-template-columns:
+                repeat(7, minmax(95px, 1fr));
+
+            min-width: 665px;
+
+            border-top: 1px solid var(--border);
+
+            border-left: 1px solid var(--border);
+
+            border-radius: 9px;
+
             overflow: hidden;
+
         }
+
 
         .weekday {
-            min-height: 45px;
-            padding: 12px 8px;
+
+            min-height: 34px;
+
+            padding: 8px 4px;
+
             background: #f9fafb;
-            border-right: 1px solid #e5e7eb;
-            border-bottom: 1px solid #e5e7eb;
+
+            border-right: 1px solid var(--border);
+
+            border-bottom: 1px solid var(--border);
+
             text-align: center;
-            color: #6b7280;
-            font-size: 12px;
-            font-weight: 700;
+
+            color: var(--muted);
+
+            font-size: 9px;
+
+            font-weight: 750;
+
             text-transform: uppercase;
+
         }
+
 
         .day {
-            min-height: 125px;
-            padding: 9px;
-            background: #ffffff;
-            border-right: 1px solid #e5e7eb;
-            border-bottom: 1px solid #e5e7eb;
+
+            min-height: 102px;
+
+            padding: 7px;
+
+            background: white;
+
+            border-right: 1px solid var(--border);
+
+            border-bottom: 1px solid var(--border);
+
             cursor: pointer;
-            transition: .15s ease;
+
             position: relative;
+
+            transition: .12s ease;
+
         }
+
 
         .day:hover {
-            transform: translateY(-1px);
-            box-shadow: inset 0 0 0 1px #d1d5db;
+
+            box-shadow:
+                inset 0 0 0 1px #cbd5e1;
+
             z-index: 2;
+
         }
+
 
         .day.empty {
+
             background: #fafafa;
+
             cursor: default;
+
         }
+
 
         .day-number {
-            width: 29px;
-            height: 29px;
+
+            width: 25px;
+
+            height: 25px;
+
             display: flex;
+
             align-items: center;
+
             justify-content: center;
+
             border-radius: 50%;
-            font-size: 13px;
-            font-weight: 600;
+
+            font-size: 11px;
+
+            font-weight: 700;
+
         }
+
 
         .day.today .day-number {
-            background: #111827;
+
+            background: var(--primary);
+
             color: white;
+
         }
+
 
         .day-status {
-            margin-top: 11px;
-            border-radius: 8px;
-            padding: 7px 6px;
-            font-size: 10px;
-            font-weight: 700;
+
+            margin-top: 7px;
+
+            border-radius: 6px;
+
+            padding: 5px 3px;
+
+            font-size: 8px;
+
+            font-weight: 750;
+
             text-align: center;
+
             white-space: nowrap;
+
+            overflow: hidden;
+
+            text-overflow: ellipsis;
+
         }
+
+
+        /* PRESENT */
 
         .day.present {
+
             background: #f0fdf4;
+
         }
+
 
         .day.present .day-status {
-            background: #dcfce7;
-            color: #15803d;
+
+            background: var(--green-bg);
+
+            color: var(--green-text);
+
         }
+
+
+        /* ABSENT */
 
         .day.absent {
+
             background: #fff7f7;
+
         }
+
 
         .day.absent .day-status {
-            background: #fee2e2;
-            color: #dc2626;
+
+            background: var(--red-bg);
+
+            color: var(--red-text);
+
         }
+
+
+        /* INCOMPLETE */
 
         .day.incomplete {
+
             background: #fffbeb;
+
         }
+
 
         .day.incomplete .day-status {
-            background: #fef3c7;
-            color: #b45309;
+
+            background: var(--orange-bg);
+
+            color: var(--orange-text);
+
         }
+
+
+        /* HOLIDAY */
 
         .day.holiday {
+
             background: #fbf7f3;
+
         }
+
 
         .day.holiday .day-status {
-            background: #eadbcf;
-            color: #795548;
+
+            background: var(--holiday-bg);
+
+            color: var(--holiday-text);
+
         }
+
+
+        /* LEAVE */
+
+        .day.leave {
+
+            background: #f5f8ff;
+
+        }
+
+
+        .day.leave .day-status {
+
+            background: var(--blue-bg);
+
+            color: var(--blue-text);
+
+        }
+
+
+        /* FUTURE */
 
         .day.future {
+
             background: #fafafa;
-            color: #9ca3af;
+
+            color: var(--light-muted);
+
         }
+
 
         .day.future .day-status {
+
             background: #f3f4f6;
-            color: #9ca3af;
+
+            color: var(--light-muted);
+
         }
+
 
         .day-time {
-            margin-top: 4px;
-            font-size: 9px;
-            color: #6b7280;
+
+            margin-top: 3px;
+
+            font-size: 8px;
+
+            color: var(--muted);
+
             text-align: center;
+
             white-space: nowrap;
+
         }
+
 
         .day-hours {
-            margin-top: 5px;
+
+            margin-top: 4px;
+
             display: flex;
+
             justify-content: center;
+
             align-items: center;
+
             gap: 3px;
-            font-size: 10px;
+
+            font-size: 8px;
+
             font-weight: 700;
+
             color: #374151;
+
         }
+
 
         .day-hours i {
-            font-size: 9px;
+
+            font-size: 8px;
+
         }
 
+
         .required-hours {
-            font-size: 9px;
-            color: #9ca3af;
+
+            margin-top: 1px;
+
+            color: var(--light-muted);
+
+            font-size: 7px;
+
             text-align: center;
-            margin-top: 2px;
+
         }
+
 
         /* =====================================================
            LEGEND
         ===================================================== */
 
         .legend {
+
             display: flex;
+
             flex-wrap: wrap;
-            gap: 18px;
-            padding: 18px 20px;
+
+            gap: 8px 15px;
+
+            padding: 11px 15px;
+
             border-top: 1px solid #eef0f3;
+
         }
+
 
         .legend-item {
+
             display: flex;
+
             align-items: center;
-            gap: 7px;
-            color: #6b7280;
-            font-size: 12px;
+
+            gap: 5px;
+
+            color: var(--muted);
+
+            font-size: 9px;
+
         }
 
+
         .legend-dot {
-            width: 11px;
-            height: 11px;
+
+            width: 8px;
+
+            height: 8px;
+
             border-radius: 50%;
+
         }
+
 
         .legend-present {
             background: #22c55e;
         }
 
+
         .legend-absent {
             background: #ef4444;
         }
+
 
         .legend-incomplete {
             background: #f59e0b;
         }
 
+
         .legend-holiday {
             background: #8b5e3c;
         }
+
+
+        .legend-leave {
+            background: #3b82f6;
+        }
+
 
         .legend-future {
             background: #d1d5db;
         }
 
+
         /* =====================================================
-           EMPTY STATE
+           EMPTY / LOADING
         ===================================================== */
 
         .empty-state {
-            padding: 55px 20px;
+
+            padding: 42px 20px;
+
             text-align: center;
-            color: #6b7280;
+
+            color: var(--muted);
+
         }
+
 
         .empty-state i {
+
             display: block;
-            font-size: 45px;
-            margin-bottom: 12px;
+
+            margin-bottom: 10px;
+
             color: #9ca3af;
+
+            font-size: 38px;
+
         }
 
+
         .empty-state-title {
+
+            margin-bottom: 3px;
+
             color: #374151;
+
+            font-size: 13px;
+
             font-weight: 700;
-            margin-bottom: 4px;
+
         }
+
+
+        .empty-state-text {
+
+            font-size: 11px;
+
+        }
+
+
+        .loading {
+
+            padding: 40px 20px;
+
+            text-align: center;
+
+        }
+
+
+        .loading-text {
+
+            margin-top: 9px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+        }
+
 
         /* =====================================================
            MODAL
         ===================================================== */
 
-        .detail-label {
-            color: #6b7280;
-            font-size: 13px;
+        .modal-content {
+
+            border-radius: 15px !important;
+
         }
 
-        .detail-value {
-            font-weight: 600;
-            font-size: 14px;
+
+        .modal-header {
+
+            padding: 14px 16px;
+
+            border-bottom: 1px solid var(--border);
+
         }
+
+
+        .modal-title {
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+        }
+
+
+        .modal-body {
+
+            padding: 16px;
+
+        }
+
 
         .detail-row {
-            padding: 12px 0;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: flex-start;
+
+            gap: 15px;
+
+            padding: 9px 0;
+
             border-bottom: 1px solid #f0f0f0;
+
         }
+
+
+        .detail-label {
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+        }
+
+
+        .detail-value {
+
+            color: #111827;
+
+            font-size: 11px;
+
+            font-weight: 650;
+
+            text-align: right;
+
+        }
+
 
         .status-badge {
+
             display: inline-flex;
+
             align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
+
+            gap: 4px;
+
+            padding: 4px 8px;
+
             border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
+
+            font-size: 9px;
+
+            font-weight: 750;
+
         }
+
 
         .badge-present {
-            background: #dcfce7;
-            color: #15803d;
+
+            background: var(--green-bg);
+
+            color: var(--green-text);
+
         }
+
 
         .badge-absent {
-            background: #fee2e2;
-            color: #dc2626;
+
+            background: var(--red-bg);
+
+            color: var(--red-text);
+
         }
+
 
         .badge-incomplete {
-            background: #fef3c7;
-            color: #b45309;
+
+            background: var(--orange-bg);
+
+            color: var(--orange-text);
+
         }
+
 
         .badge-holiday {
-            background: #eadbcf;
-            color: #795548;
+
+            background: var(--holiday-bg);
+
+            color: var(--holiday-text);
+
         }
+
+
+        .badge-leave {
+
+            background: var(--blue-bg);
+
+            color: var(--blue-text);
+
+        }
+
 
         .hours-highlight {
-            margin-top: 15px;
-            padding: 15px;
-            border-radius: 12px;
+
+            margin-top: 12px;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
             background: #f9fafb;
-            border: 1px solid #e5e7eb;
+
+            border: 1px solid var(--border);
+
         }
+
 
         .hours-main {
-            font-size: 24px;
-            font-weight: 700;
+
+            font-size: 21px;
+
+            font-weight: 750;
+
         }
+
 
         .hours-required {
-            color: #6b7280;
-            font-size: 12px;
+
             margin-top: 2px;
+
+            color: var(--muted);
+
+            font-size: 10px;
+
         }
+
 
         .hours-progress {
-            height: 7px;
-            margin-top: 10px;
+
+            height: 6px;
+
+            margin-top: 8px;
+
             border-radius: 10px;
+
             background: #e5e7eb;
+
             overflow: hidden;
+
         }
+
 
         .hours-progress-bar {
+
             height: 100%;
+
             border-radius: 10px;
+
             background: #22c55e;
+
         }
+
 
         .hours-progress-bar.warning {
+
             background: #f59e0b;
+
         }
 
-        .loading {
-            padding: 60px 20px;
-            text-align: center;
-        }
 
         /* =====================================================
            MOBILE
         ===================================================== */
 
+        @media (max-width: 991px) {
+
+            .summary-grid {
+
+                grid-template-columns:
+                    repeat(3, minmax(0, 1fr));
+
+            }
+
+        }
+
+
         @media (max-width: 767px) {
 
             .page-wrapper {
-                padding: 25px 12px 40px;
+
+                padding: 16px 10px 30px;
+
             }
+
+
+            .page-header {
+
+                align-items: flex-start;
+
+                margin-bottom: 12px;
+
+            }
+
 
             .page-title {
-                font-size: 24px;
+
+                font-size: 21px;
+
             }
+
+
+            .page-subtitle {
+
+                font-size: 10px;
+
+                line-height: 1.4;
+
+            }
+
+
+            .policy-chip {
+
+                display: none;
+
+            }
+
+
+            .summary-grid {
+
+                grid-template-columns:
+                    repeat(2, minmax(0, 1fr));
+
+                gap: 7px;
+
+            }
+
+
+            .summary-card {
+
+                min-height: 91px;
+
+                padding: 11px;
+
+            }
+
+
+            .summary-icon {
+
+                width: 31px;
+
+                height: 31px;
+
+                font-size: 14px;
+
+            }
+
+
+            .summary-label {
+
+                margin-top: 8px;
+
+                font-size: 9px;
+
+            }
+
+
+            .summary-value {
+
+                font-size: 18px;
+
+            }
+
+
+            .summary-subtext {
+
+                font-size: 8px;
+
+            }
+
+
+            .filter-card {
+
+                margin-top: 10px;
+
+                padding: 12px;
+
+            }
+
+
+            .filter-header {
+
+                margin-bottom: 10px;
+
+            }
+
+
+            .filter-title {
+
+                font-size: 13px;
+
+            }
+
+
+            .filter-subtitle {
+
+                font-size: 9px;
+
+            }
+
+
+            .calendar-card {
+
+                margin-top: 10px;
+
+            }
+
 
             .calendar-header {
-                flex-direction: column;
-                align-items: flex-start;
+
+                padding: 11px;
+
             }
+
+
+            .calendar-title {
+
+                font-size: 13px;
+
+            }
+
+
+            .calendar-subtitle {
+
+                font-size: 9px;
+
+                max-width: 220px;
+
+                line-height: 1.4;
+
+            }
+
 
             .month-controls {
-                width: 100%;
-                justify-content: space-between;
+
+                width: auto;
+
             }
+
 
             .month-name {
-                flex: 1;
+
+                min-width: 105px;
+
+                font-size: 11px;
+
             }
+
+
+            .month-controls button {
+
+                width: 30px;
+
+                height: 30px;
+
+            }
+
 
             .calendar-wrapper {
-                padding: 10px;
-                overflow-x: auto;
+
+                padding: 7px;
+
             }
+
 
             .calendar-grid {
-                min-width: 720px;
+
+                min-width: 630px;
+
+                grid-template-columns:
+                    repeat(7, minmax(90px, 1fr));
+
             }
+
+
+            .day {
+
+                min-height: 92px;
+
+                padding: 6px;
+
+            }
+
 
             .legend {
-                gap: 10px;
+
+                padding: 9px 10px;
+
+                gap: 7px 11px;
+
             }
 
-            .person-meta {
-                flex-wrap: wrap;
-                gap: 5px 12px;
+
+            .legend-item {
+
+                font-size: 8px;
+
+            }
+
+
+            .person-results {
+
+                max-height: 190px;
+
+            }
+
+        }
+
+
+        @media (max-width: 430px) {
+
+            .summary-grid {
+
+                gap: 6px;
+
+            }
+
+
+            .type-buttons {
+
+                height: 39px;
+
+            }
+
+
+            .form-control,
+            .form-select {
+
+                height: 39px;
+
+            }
+
+
+            .btn-load {
+
+                height: 39px;
+
+            }
+
+
+            .calendar-header {
+
+                flex-direction: column;
+
+                align-items: flex-start;
+
+            }
+
+
+            .month-controls {
+
+                width: 100%;
+
+                justify-content: space-between;
+
+            }
+
+
+            .month-name {
+
+                flex: 1;
+
             }
 
         }
@@ -890,7 +2041,9 @@
             <a href="#" class="brand">
 
                 <span class="brand-icon">
+
                     <i class="bi bi-calendar-check"></i>
+
                 </span>
 
                 College Attendance
@@ -911,15 +2064,34 @@
 
         <!-- HEADER -->
 
-        <div>
+        <div class="page-header">
 
-            <h1 class="page-title">
-                Attendance Management
-            </h1>
+            <div>
 
-            <p class="page-subtitle">
-                Monitor student and staff attendance, working hours and daily status.
-            </p>
+                <h1 class="page-title">
+
+                    Attendance Management
+
+                </h1>
+
+                <p class="page-subtitle">
+
+                    View attendance, working hours, holidays and approved leaves.
+
+                </p>
+
+            </div>
+
+
+            <div id="policyChip" class="policy-chip">
+
+                <i class="bi bi-shield-check"></i>
+
+                <span>
+                    Loading policy...
+                </span>
+
+            </div>
 
         </div>
 
@@ -928,125 +2100,178 @@
          SUMMARY
     ====================================================== -->
 
-        <div class="row g-3 mt-2">
+        <div class="summary-grid">
 
 
-            <div class="col-6 col-lg-3">
+            <!-- WORKING DAYS -->
 
-                <div class="dashboard-card summary-card">
+            <div class="dashboard-card summary-card">
+
+                <div class="summary-top">
 
                     <div class="summary-icon icon-working">
+
                         <i class="bi bi-calendar-week"></i>
+
                     </div>
 
-                    <div class="summary-label">
-                        Working Days
-                    </div>
+                </div>
 
-                    <div id="workingDays" class="summary-value">
-                        0
-                    </div>
+                <div class="summary-label">
+                    Working Days
+                </div>
 
+                <div id="workingDays" class="summary-value">
+                    0
+                </div>
+
+                <div id="workingDaysSubtext" class="summary-subtext">
+                    Current month
                 </div>
 
             </div>
 
 
-            <div class="col-6 col-lg-3">
+            <!-- PRESENT -->
 
-                <div class="dashboard-card summary-card">
+            <div class="dashboard-card summary-card">
+
+                <div class="summary-top">
 
                     <div class="summary-icon icon-present">
+
                         <i class="bi bi-check-circle"></i>
+
                     </div>
 
-                    <div class="summary-label">
-                        Present
-                    </div>
+                </div>
 
-                    <div id="presentDays" class="summary-value">
-                        0
-                    </div>
+                <div class="summary-label">
+                    Present
+                </div>
 
-                    <div class="summary-subtext">
-                        6+ hours completed
-                    </div>
+                <div id="presentDays" class="summary-value">
+                    0
+                </div>
 
+                <div id="presentSubtext" class="summary-subtext">
+                    Required hours completed
                 </div>
 
             </div>
 
 
-            <div class="col-6 col-lg-3">
+            <!-- INCOMPLETE -->
 
-                <div class="dashboard-card summary-card">
+            <div class="dashboard-card summary-card">
+
+                <div class="summary-top">
+
+                    <div class="summary-icon icon-incomplete">
+
+                        <i class="bi bi-clock"></i>
+
+                    </div>
+
+                </div>
+
+                <div class="summary-label">
+                    Incomplete
+                </div>
+
+                <div id="incompleteDays" class="summary-value">
+                    0
+                </div>
+
+                <div class="summary-subtext">
+                    Missing checkout / short hours
+                </div>
+
+            </div>
+
+
+            <!-- ABSENT -->
+
+            <div class="dashboard-card summary-card">
+
+                <div class="summary-top">
 
                     <div class="summary-icon icon-absent">
+
                         <i class="bi bi-x-circle"></i>
+
                     </div>
 
-                    <div class="summary-label">
-                        Absent
-                    </div>
+                </div>
 
-                    <div id="absentDays" class="summary-value">
-                        0
-                    </div>
+                <div class="summary-label">
+                    Absent
+                </div>
 
-                    <div class="summary-subtext">
-                        Includes incomplete days
-                    </div>
+                <div id="absentDays" class="summary-value">
+                    0
+                </div>
 
+                <div class="summary-subtext">
+                    No attendance record
                 </div>
 
             </div>
 
 
-            <div class="col-6 col-lg-3">
+            <!-- HOLIDAYS / LEAVE -->
 
-                <div class="dashboard-card summary-card">
+            <div class="dashboard-card summary-card">
+
+                <div class="summary-top">
 
                     <div class="summary-icon icon-holiday">
-                        <i class="bi bi-cup-hot"></i>
+
+                        <i class="bi bi-calendar2-heart"></i>
+
                     </div>
 
-                    <div class="summary-label">
-                        Holidays
-                    </div>
+                </div>
 
-                    <div id="holidayDays" class="summary-value">
-                        0
-                    </div>
+                <div class="summary-label">
+                    Holidays / Leave
+                </div>
 
-                    <div class="summary-subtext">
-                        Saturday & Sunday
-                    </div>
+                <div id="holidayDays" class="summary-value">
+                    0
+                </div>
 
+                <div id="holidaySubtext" class="summary-subtext">
+                    Policy holidays
                 </div>
 
             </div>
 
 
-            <div class="col-6 col-lg-3">
+            <!-- HOURS -->
 
-                <div class="dashboard-card summary-card">
+            <div class="dashboard-card summary-card">
+
+                <div class="summary-top">
 
                     <div class="summary-icon icon-hours">
+
                         <i class="bi bi-clock-history"></i>
+
                     </div>
 
-                    <div class="summary-label">
-                        Total Working Hours
-                    </div>
+                </div>
 
-                    <div id="totalWorkingHours" class="summary-value">
-                        0h 0m
-                    </div>
+                <div class="summary-label">
+                    Total Hours
+                </div>
 
-                    <div class="summary-subtext">
-                        Current month
-                    </div>
+                <div id="totalWorkingHours" class="summary-value">
+                    0h 0m
+                </div>
 
+                <div class="summary-subtext">
+                    Completed checkout hours
                 </div>
 
             </div>
@@ -1055,26 +2280,35 @@
 
 
         <!-- =====================================================
-         DYNAMIC PERSON FILTER
+         FILTER
     ====================================================== -->
 
         <div class="dashboard-card filter-card">
 
-            <div class="filter-title">
-                Select Student / Staff
+
+            <div class="filter-header">
+
+                <div>
+
+                    <div class="filter-title">
+                        Find User Attendance
+                    </div>
+
+                    <div class="filter-subtitle">
+                        Select a student or staff member.
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="filter-subtitle">
-                Search and select the person whose attendance you want to view.
-            </div>
+
+            <div class="row g-2 align-items-end">
 
 
-            <div class="row g-3 align-items-end">
+                <!-- TYPE -->
 
-
-                <!-- STUDENT / STAFF -->
-
-                <div class="col-lg-3">
+                <div class="col-12 col-md-3">
 
                     <label class="form-label">
                         User Type
@@ -1107,7 +2341,7 @@
 
                 <!-- COURSE -->
 
-                <div class="col-lg-2">
+                <div class="col-6 col-md-2">
 
                     <label for="courseFilter" class="form-label">
 
@@ -1128,7 +2362,7 @@
 
                 <!-- SEMESTER -->
 
-                <div class="col-lg-2">
+                <div class="col-6 col-md-2">
 
                     <label for="semesterFilter" class="form-label">
 
@@ -1149,7 +2383,7 @@
 
                 <!-- MONTH -->
 
-                <div class="col-lg-2">
+                <div class="col-6 col-md-2">
 
                     <label for="monthPicker" class="form-label">
 
@@ -1164,13 +2398,13 @@
 
                 <!-- LOAD -->
 
-                <div class="col-lg-3">
+                <div class="col-6 col-md-3">
 
                     <button id="loadBtn" class="btn btn-load w-100" disabled>
 
-                        <i class="bi bi-search me-1"></i>
+                        <i class="bi bi-arrow-repeat me-1"></i>
 
-                        Load Attendance
+                        Refresh Attendance
 
                     </button>
 
@@ -1179,11 +2413,9 @@
             </div>
 
 
-            <!-- =================================================
-             SEARCH
-        ================================================== -->
+            <!-- SEARCH -->
 
-            <div class="mt-3">
+            <div class="mt-2">
 
                 <label for="personSearch" class="form-label">
 
@@ -1197,12 +2429,10 @@
                     <i class="bi bi-search search-icon"></i>
 
                     <input type="text" id="personSearch" class="form-control"
-                        placeholder="Search by name, User ID, roll number or employee code...">
+                        placeholder="Name, User ID, roll no. or employee code...">
 
                 </div>
 
-
-                <!-- RESULTS -->
 
                 <div id="personResults" class="person-results">
 
@@ -1211,9 +2441,7 @@
             </div>
 
 
-            <!-- =================================================
-             SELECTED PERSON
-        ================================================== -->
+            <!-- SELECTED -->
 
             <div id="selectedPersonCard" class="selected-person-card">
 
@@ -1240,11 +2468,10 @@
 
                     </h5>
 
-                    <div class="calendar-subtitle">
 
-                        Required working hours:
-                        <strong>6 hours/day</strong>.
-                        Less than 6 hours or missing checkout is incomplete.
+                    <div id="calendarPolicyText" class="calendar-subtitle">
+
+                        Loading attendance policy...
 
                     </div>
 
@@ -1286,11 +2513,15 @@
                     <i class="bi bi-person-check"></i>
 
                     <div class="empty-state-title">
+
                         Select a student or staff member
+
                     </div>
 
-                    <div>
-                        Search and select a person above to view attendance.
+                    <div class="empty-state-text">
+
+                        Search above to view monthly attendance.
+
                     </div>
 
                 </div>
@@ -1302,29 +2533,58 @@
 
             <div class="legend">
 
+
                 <div class="legend-item">
+
                     <span class="legend-dot legend-present"></span>
+
                     Present
+
                 </div>
 
-                <div class="legend-item">
-                    <span class="legend-dot legend-absent"></span>
-                    Absent
-                </div>
 
                 <div class="legend-item">
+
                     <span class="legend-dot legend-incomplete"></span>
-                    Incomplete / Short Hours
+
+                    Incomplete
+
                 </div>
 
+
                 <div class="legend-item">
+
+                    <span class="legend-dot legend-absent"></span>
+
+                    Absent
+
+                </div>
+
+
+                <div class="legend-item">
+
+                    <span class="legend-dot legend-leave"></span>
+
+                    Approved Leave
+
+                </div>
+
+
+                <div class="legend-item">
+
                     <span class="legend-dot legend-holiday"></span>
+
                     Holiday
+
                 </div>
 
+
                 <div class="legend-item">
+
                     <span class="legend-dot legend-future"></span>
+
                     Future
+
                 </div>
 
             </div>
@@ -1335,14 +2595,17 @@
 
 
     <!-- =========================================================
-     ATTENDANCE DETAIL MODAL
+     MODAL
 ========================================================= -->
 
     <div class="modal fade" id="attendanceModal" tabindex="-1">
 
-        <div class="modal-dialog modal-dialog-centered">
 
-            <div class="modal-content border-0 rounded-4">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+
+
+            <div class="modal-content border-0">
+
 
                 <div class="modal-header">
 
@@ -1354,10 +2617,12 @@
 
                     </h5>
 
+
                     <button type="button" class="btn-close" data-bs-dismiss="modal">
                     </button>
 
                 </div>
+
 
                 <div id="modalBody" class="modal-body">
 
@@ -1370,20 +2635,36 @@
     </div>
 
 
+    <!-- Bootstrap -->
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
 
+
+    <!-- Existing Auth -->
+
     <script src="js/auth.js"></script>
 
+
     <script>
+
 
         /* =========================================================
            CONFIG
         ========================================================= */
 
-        const REQUIRED_WORKING_HOURS = 6;
-
         const API_BASE_URL = "http://localhost:8080";
+
+
+        /*
+         * Default only.
+         *
+         * Actual value Attendance Policy API se aayegi.
+         */
+
+        let requiredWorkingHours = 6;
+
+        let requiredWorkingMinutes = 360;
 
 
         /* =========================================================
@@ -1400,6 +2681,12 @@
 
         let attendanceMap = new Map();
 
+        let holidayMap = new Map();
+
+        let approvedLeaveMap = new Map();
+
+        let attendancePolicy = null;
+
         let currentDate = new Date();
 
 
@@ -1410,36 +2697,45 @@
         const personSearch =
             document.getElementById("personSearch");
 
+
         const personResults =
             document.getElementById("personResults");
+
 
         const courseFilter =
             document.getElementById("courseFilter");
 
+
         const semesterFilter =
             document.getElementById("semesterFilter");
+
 
         const loadBtn =
             document.getElementById("loadBtn");
 
+
         const selectedPersonCard =
             document.getElementById("selectedPersonCard");
+
 
         const monthPicker =
             document.getElementById("monthPicker");
 
+
         const calendarContainer =
             document.getElementById("calendarContainer");
 
+
         const monthName =
             document.getElementById("monthName");
+
 
         const calendarStudent =
             document.getElementById("calendarStudent");
 
 
         /* =========================================================
-           INITIALIZATION
+           INITIALIZE
         ========================================================= */
 
         document.addEventListener(
@@ -1448,17 +2744,219 @@
         );
 
 
-        function initialize() {
+        async function initialize() {
 
             initializeMonth();
 
-            loadUsers();
+            await loadAttendancePolicy();
+
+            await loadUsers();
+
+            await loadHolidays(
+                currentDate.getFullYear()
+            );
 
         }
 
 
         /* =========================================================
-           LOAD USERS FROM API
+           ATTENDANCE POLICY
+        ========================================================= */
+
+        async function loadAttendancePolicy() {
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/attendance-policies/current`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Accept": "application/json"
+                            }
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load attendance policy."
+                    );
+
+                }
+
+
+                attendancePolicy =
+                    await response.json();
+
+
+                const policyHours =
+                    Number(
+                        attendancePolicy?.workingHours
+                    );
+
+
+                if (
+                    Number.isFinite(policyHours) &&
+                    policyHours > 0
+                ) {
+
+                    requiredWorkingHours =
+                        policyHours;
+
+                    requiredWorkingMinutes =
+                        Math.round(
+                            policyHours * 60
+                        );
+
+                }
+
+
+                updatePolicyUI();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Attendance Policy Error:",
+                    error
+                );
+
+
+                /*
+                 * Safe fallback.
+                 */
+
+                requiredWorkingHours = 6;
+
+                requiredWorkingMinutes = 360;
+
+                attendancePolicy = null;
+
+                updatePolicyUI();
+
+            }
+
+        }
+
+
+        /* =========================================================
+           POLICY UI
+        ========================================================= */
+
+        function updatePolicyUI() {
+
+            const policyChip =
+                document.getElementById(
+                    "policyChip"
+                );
+
+
+            const calendarPolicyText =
+                document.getElementById(
+                    "calendarPolicyText"
+                );
+
+
+            const holidaySubtext =
+                document.getElementById(
+                    "holidaySubtext"
+                );
+
+
+            const hoursText =
+                formatPolicyHours(
+                    requiredWorkingHours
+                );
+
+
+            let weeklyOff = [];
+
+
+            if (
+                attendancePolicy?.sundayOff === true
+            ) {
+
+                weeklyOff.push("Sunday");
+
+            }
+
+
+            if (
+                attendancePolicy?.saturdayOff === true
+            ) {
+
+                weeklyOff.push("Saturday");
+
+            }
+
+
+            const weeklyText =
+                weeklyOff.length
+                    ? weeklyOff.join(" & ") + " off"
+                    : "No weekly off";
+
+
+            if (policyChip) {
+
+                policyChip.innerHTML = `
+
+            <i class="bi bi-shield-check"></i>
+
+            <span>
+                ${escapeHtml(hoursText)}/day ·
+                ${escapeHtml(weeklyText)}
+            </span>
+
+        `;
+
+            }
+
+
+            if (calendarPolicyText) {
+
+                calendarPolicyText.innerHTML = `
+
+            Required:
+            <strong>${escapeHtml(hoursText)}/day</strong>.
+
+            ${escapeHtml(weeklyText)}.
+
+            Admin holidays and approved leaves are applied automatically.
+
+        `;
+
+            }
+
+
+            if (holidaySubtext) {
+
+                holidaySubtext.innerText =
+                    weeklyText;
+
+            }
+
+
+            const presentSubtext =
+                document.getElementById(
+                    "presentSubtext"
+                );
+
+
+            if (presentSubtext) {
+
+                presentSubtext.innerText =
+                    `${formatPolicyHours(requiredWorkingHours)} completed`;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           LOAD USERS
         ========================================================= */
 
         async function loadUsers() {
@@ -1472,7 +2970,7 @@
                 role="status">
             </div>
 
-            <div class="mt-2 text-muted">
+            <div class="loading-text">
                 Loading users...
             </div>
 
@@ -1489,7 +2987,7 @@
                         {
                             method: "GET",
                             headers: {
-                                "Accept": "*/*"
+                                "Accept": "application/json"
                             }
                         }
                     );
@@ -1497,24 +2995,12 @@
 
                 if (!response.ok) {
 
-                    let message =
-                        "Unable to load users.";
-
-
-                    try {
-
-                        const error =
-                            await response.json();
-
-                        message =
-                            error.message ||
-                            error.error ||
-                            message;
-
-                    } catch (e) { }
-
-
-                    throw new Error(message);
+                    throw new Error(
+                        await getApiErrorMessage(
+                            response,
+                            "Unable to load users."
+                        )
+                    );
 
                 }
 
@@ -1523,16 +3009,9 @@
                     await response.json();
 
 
-                /*
-                 * API response ko frontend structure
-                 * me normalize kar rahe hain.
-                 */
-
                 users =
                     Array.isArray(apiUsers)
-                        ? apiUsers.map(
-                            mapApiUser
-                        )
+                        ? apiUsers.map(mapApiUser)
                         : [];
 
 
@@ -1558,14 +3037,20 @@
 
                 personResults.innerHTML = `
 
-            <div class="no-results">
+            <div class="empty-state">
 
-                <i class="bi bi-exclamation-triangle d-block fs-4 mb-2 text-danger"></i>
+                <i class="bi bi-exclamation-triangle text-danger"></i>
 
-                ${escapeHtml(
+                <div class="empty-state-title">
+                    Unable to load users
+                </div>
+
+                <div class="empty-state-text">
+                    ${escapeHtml(
                     error.message ||
-                    "Unable to load users."
+                    "Something went wrong."
                 )}
+                </div>
 
             </div>
 
@@ -1577,16 +3062,12 @@
 
 
         /* =========================================================
-           MAP API USER
+           MAP USER
         ========================================================= */
 
         function mapApiUser(apiUser) {
 
             return {
-
-                /*
-                 * Main user information
-                 */
 
                 id: apiUser.userId,
 
@@ -1596,11 +3077,6 @@
                     String(
                         apiUser.type || ""
                     ).toUpperCase(),
-
-
-                /*
-                 * Student information
-                 */
 
                 rollNumber:
                     apiUser.rollNumber || null,
@@ -1612,15 +3088,11 @@
                     apiUser.courseCode || null,
 
                 semester:
-                    apiUser.semester ?? null,
+                    apiUser.semester ??
+                    null,
 
                 sectionName:
                     apiUser.sectionName || null,
-
-
-                /*
-                 * Staff / common information
-                 */
 
                 departmentName:
                     apiUser.departmentName || null,
@@ -1669,19 +3141,20 @@
                         document
                             .querySelectorAll(".type-btn")
                             .forEach(btn =>
-                                btn.classList.remove("active")
+                                btn.classList.remove(
+                                    "active"
+                                )
                             );
 
-                        button.classList.add("active");
+
+                        button.classList.add(
+                            "active"
+                        );
+
 
                         selectedType =
                             button.dataset.type;
 
-
-                        /*
-                         * Student-only filters relevant hain.
-                         * Staff select hone par unko ALL kar dete hain.
-                         */
 
                         if (
                             selectedType === "STAFF"
@@ -1708,11 +3181,27 @@
 
         personSearch.addEventListener(
             "input",
-            () => {
+            renderPersonResults
+        );
 
-                renderPersonResults();
 
-            }
+        /* =========================================================
+           COURSE
+        ========================================================= */
+
+        courseFilter.addEventListener(
+            "change",
+            renderPersonResults
+        );
+
+
+        /* =========================================================
+           SEMESTER
+        ========================================================= */
+
+        semesterFilter.addEventListener(
+            "change",
+            renderPersonResults
         );
 
 
@@ -1720,78 +3209,45 @@
            COURSE FILTER
         ========================================================= */
 
-        courseFilter.addEventListener(
-            "change",
-            () => {
-
-                renderPersonResults();
-
-            }
-        );
-
-
-        /* =========================================================
-           SEMESTER FILTER
-        ========================================================= */
-
-        semesterFilter.addEventListener(
-            "change",
-            () => {
-
-                renderPersonResults();
-
-            }
-        );
-
-
-        /* =========================================================
-           POPULATE COURSE FILTER
-        ========================================================= */
-
         function populateCourseFilter() {
 
-            const courses =
-                [
-                    ...new Set(
-                        users
-                            .filter(
-                                user =>
-                                    user.type === "STUDENT" &&
+            const courseMap =
+                new Map();
+
+
+            users
+                .filter(
+                    user =>
+                        user.type === "STUDENT" &&
+                        user.courseCode
+                )
+                .forEach(
+                    user => {
+
+                        courseMap.set(
+                            user.courseCode,
+                            {
+                                code: user.courseCode,
+                                name:
+                                    user.courseName ||
                                     user.courseCode
+                            }
+                        );
+
+                    }
+                );
+
+
+            const courses =
+                Array.from(
+                    courseMap.values()
+                ).sort(
+                    (a, b) =>
+                        String(a.name)
+                            .localeCompare(
+                                String(b.name)
                             )
-                            .map(
-                                user => ({
-                                    code:
-                                        user.courseCode,
-
-                                    name:
-                                        user.courseName ||
-                                        user.courseCode
-                                })
-                            )
-                            .reduce(
-                                (map, course) => {
-
-                                    map.set(
-                                        course.code,
-                                        course
-                                    );
-
-                                    return map;
-
-                                },
-                                new Map()
-                            )
-                            .values()
-                    )
-                ]
-                    .sort(
-                        (a, b) =>
-                            String(a.name)
-                                .localeCompare(
-                                    String(b.name)
-                                )
-                    );
+                );
 
 
             courseFilter.innerHTML = `
@@ -1803,37 +3259,34 @@
     `;
 
 
-            courses.forEach(
-                course => {
+            courses.forEach(course => {
 
-                    courseFilter.innerHTML += `
+                courseFilter.innerHTML += `
 
-                <option value="${escapeHtml(
-                        course.code
-                    )}">
+            <option value="${escapeHtml(
+                    course.code
+                )}">
 
-                    ${escapeHtml(
-                        course.name
-                    )}
+                ${escapeHtml(
+                    course.name
+                )}
 
-                    ${course.code &&
-                            course.name !== course.code
-                            ? ` (${escapeHtml(course.code)})`
-                            : ""
-                        }
+                ${course.name !== course.code
+                        ? ` (${escapeHtml(course.code)})`
+                        : ""
+                    }
 
-                </option>
+            </option>
 
-            `;
+        `;
 
-                }
-            );
+            });
 
         }
 
 
         /* =========================================================
-           POPULATE SEMESTER
+           SEMESTER FILTER
         ========================================================= */
 
         function populateSemesterFilter() {
@@ -1871,25 +3324,23 @@
     `;
 
 
-            semesters.forEach(
-                semester => {
+            semesters.forEach(semester => {
 
-                    semesterFilter.innerHTML += `
+                semesterFilter.innerHTML += `
 
-                <option value="${escapeHtml(
-                        semester
-                    )}">
+            <option value="${escapeHtml(
+                    semester
+                )}">
 
-                    Semester ${escapeHtml(
-                        semester
-                    )}
+                Semester ${escapeHtml(
+                    semester
+                )}
 
-                </option>
+            </option>
 
-            `;
+        `;
 
-                }
-            );
+            });
 
         }
 
@@ -1914,110 +3365,85 @@
                 semesterFilter.value;
 
 
-            return users.filter(
-                user => {
+            return users.filter(user => {
 
 
-                    /*
-                     * TYPE
-                     */
+                if (
+                    selectedType !== "ALL" &&
+                    user.type !== selectedType
+                ) {
 
-                    if (
-                        selectedType !== "ALL" &&
-                        user.type !== selectedType
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    /*
-                     * SEARCH
-                     *
-                     * Name
-                     * User ID
-                     * Roll Number
-                     * Employee Code
-                     * Course
-                     * Department
-                     */
-
-                    if (search) {
-
-                        const searchableValues = [
-
-                            user.name,
-
-                            user.id,
-
-                            user.rollNumber,
-
-                            user.employeeCode,
-
-                            user.courseName,
-
-                            user.courseCode,
-
-                            user.departmentName,
-
-                            user.sectionName
-
-                        ];
-
-
-                        const matches =
-                            searchableValues.some(
-                                value =>
-                                    value !== null &&
-                                    value !== undefined &&
-                                    String(value)
-                                        .toLowerCase()
-                                        .includes(search)
-                            );
-
-
-                        if (!matches) {
-
-                            return false;
-
-                        }
-
-                    }
-
-
-                    /*
-                     * COURSE
-                     */
-
-                    if (
-                        course !== "ALL" &&
-                        user.courseCode !== course
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    /*
-                     * SEMESTER
-                     */
-
-                    if (
-                        semester !== "ALL" &&
-                        String(user.semester) !== semester
-                    ) {
-
-                        return false;
-
-                    }
-
-
-                    return true;
+                    return false;
 
                 }
-            );
+
+
+                if (search) {
+
+                    const searchableValues = [
+
+                        user.name,
+
+                        user.id,
+
+                        user.rollNumber,
+
+                        user.employeeCode,
+
+                        user.courseName,
+
+                        user.courseCode,
+
+                        user.departmentName,
+
+                        user.sectionName
+
+                    ];
+
+
+                    const matches =
+                        searchableValues.some(
+                            value =>
+                                value !== null &&
+                                value !== undefined &&
+                                String(value)
+                                    .toLowerCase()
+                                    .includes(search)
+                        );
+
+
+                    if (!matches) {
+
+                        return false;
+
+                    }
+
+                }
+
+
+                if (
+                    course !== "ALL" &&
+                    user.courseCode !== course
+                ) {
+
+                    return false;
+
+                }
+
+
+                if (
+                    semester !== "ALL" &&
+                    String(user.semester) !== semester
+                ) {
+
+                    return false;
+
+                }
+
+
+                return true;
+
+            });
 
         }
 
@@ -2036,11 +3462,17 @@
 
                 personResults.innerHTML = `
 
-            <div class="no-results">
+            <div class="empty-state">
 
-                <i class="bi bi-person-x d-block fs-4 mb-2"></i>
+                <i class="bi bi-person-x"></i>
 
-                No student or staff found.
+                <div class="empty-state-title">
+                    No user found
+                </div>
+
+                <div class="empty-state-text">
+                    Try another search or filter.
+                </div>
 
             </div>
 
@@ -2051,34 +3483,47 @@
             }
 
 
+            /*
+             * Production UX:
+             * Show max 50 results to avoid giant DOM.
+             */
+
+            const visibleUsers =
+                filteredUsers.slice(
+                    0,
+                    50
+                );
+
+
             personResults.innerHTML = `
 
         <div class="results-header">
 
             ${filteredUsers.length}
 
-            person${filteredUsers.length > 1 ? "s" : ""}
+            person${filteredUsers.length !== 1 ? "s" : ""}
 
             found
+
+            ${filteredUsers.length > 50
+                    ? " · Showing first 50"
+                    : ""
+                }
 
         </div>
 
     `;
 
 
-            filteredUsers.forEach(
-                user => {
+            visibleUsers.forEach(user => {
 
-                    personResults.innerHTML +=
-                        createPersonResultHtml(user);
+                personResults.insertAdjacentHTML(
+                    "beforeend",
+                    createPersonResultHtml(user)
+                );
 
-                }
-            );
+            });
 
-
-            /*
-             * Click events
-             */
 
             document
                 .querySelectorAll(".person-result")
@@ -2156,29 +3601,8 @@
                 }
 
 
-                if (user.courseCode) {
-
-                    details += `
-
-                <span>
-
-                    <i class="bi bi-code-square"></i>
-
-                    ${escapeHtml(
-                        user.courseCode
-                    )}
-
-                </span>
-
-            `;
-
-                }
-
-
-                if (
-                    user.semester !== null &&
-                    user.semester !== undefined
-                ) {
+                if (user.semester !== null &&
+                    user.semester !== undefined) {
 
                     details += `
 
@@ -2186,7 +3610,7 @@
 
                     <i class="bi bi-layers"></i>
 
-                    Semester ${escapeHtml(
+                    Sem ${escapeHtml(
                         user.semester
                     )}
 
@@ -2214,7 +3638,6 @@
             `;
 
                 }
-
 
             } else {
 
@@ -2262,9 +3685,7 @@
 
         <div
             class="person-result"
-            data-user-id="${escapeHtml(
-                user.id
-            )}">
+            data-user-id="${escapeHtml(user.id)}">
 
 
             <div class="person-result-top">
@@ -2299,14 +3720,15 @@
 
                         <div class="person-id">
 
-                            User ID:
+                            ID:
                             ${escapeHtml(
                     user.id
                 )}
 
                             ${isStudent &&
                     user.rollNumber
-                    ? ` · Roll No: ${escapeHtml(user.rollNumber)}`
+                    ? ` · Roll:
+                                       ${escapeHtml(user.rollNumber)}`
                     : ""
                 }
 
@@ -2330,21 +3752,17 @@
 
                 </span>
 
-
             </div>
 
 
             ${details
                     ? `
                         <div class="person-meta">
-
                             ${details}
-
                         </div>
                     `
                     : ""
                 }
-
 
         </div>
 
@@ -2368,24 +3786,12 @@
             loadBtn.disabled = false;
 
 
-            /*
-             * Hide result list
-             */
-
             personResults.innerHTML = "";
 
-
-            /*
-             * Search field me selected name
-             */
 
             personSearch.value =
                 user.name;
 
-
-            /*
-             * Automatically load attendance
-             */
 
             loadAttendance();
 
@@ -2393,14 +3799,16 @@
 
 
         /* =========================================================
-           SELECTED PERSON CARD
+           SELECTED USER
         ========================================================= */
 
         function renderSelectedPerson() {
 
             if (!selectedUser) {
 
-                selectedPersonCard.classList.remove("show");
+                selectedPersonCard.classList.remove(
+                    "show"
+                );
 
                 selectedPersonCard.innerHTML = "";
 
@@ -2419,18 +3827,15 @@
                 );
 
 
-            let details = "";
+            const details = [];
 
 
             if (isStudent) {
 
-                const parts = [];
-
-
                 if (selectedUser.rollNumber) {
 
-                    parts.push(
-                        `Roll No: ${escapeHtml(
+                    details.push(
+                        `Roll: ${escapeHtml(
                             selectedUser.rollNumber
                         )}`
                     );
@@ -2440,7 +3845,7 @@
 
                 if (selectedUser.courseName) {
 
-                    parts.push(
+                    details.push(
                         escapeHtml(
                             selectedUser.courseName
                         )
@@ -2454,8 +3859,8 @@
                     selectedUser.semester !== undefined
                 ) {
 
-                    parts.push(
-                        `Semester ${escapeHtml(
+                    details.push(
+                        `Sem ${escapeHtml(
                             selectedUser.semester
                         )}`
                     );
@@ -2465,7 +3870,7 @@
 
                 if (selectedUser.sectionName) {
 
-                    parts.push(
+                    details.push(
                         `Section ${escapeHtml(
                             selectedUser.sectionName
                         )}`
@@ -2473,20 +3878,12 @@
 
                 }
 
-
-                details =
-                    parts.join(" · ");
-
-
             } else {
-
-                const parts = [];
-
 
                 if (selectedUser.employeeCode) {
 
-                    parts.push(
-                        `Employee Code: ${escapeHtml(
+                    details.push(
+                        `Employee: ${escapeHtml(
                             selectedUser.employeeCode
                         )}`
                     );
@@ -2496,17 +3893,13 @@
 
                 if (selectedUser.departmentName) {
 
-                    parts.push(
+                    details.push(
                         escapeHtml(
                             selectedUser.departmentName
                         )
                     );
 
                 }
-
-
-                details =
-                    parts.join(" · ");
 
             }
 
@@ -2555,13 +3948,13 @@
 
                 <div class="selected-details">
 
-                    User ID:
+                    ID:
                     ${escapeHtml(
                     selectedUser.id
                 )}
 
-                    ${details
-                    ? ` · ${details}`
+                    ${details.length
+                    ? ` · ${details.join(" · ")}`
                     : ""
                 }
 
@@ -2586,11 +3979,15 @@
     `;
 
 
-            selectedPersonCard.classList.add("show");
+            selectedPersonCard.classList.add(
+                "show"
+            );
 
 
             document
-                .getElementById("removeSelected")
+                .getElementById(
+                    "removeSelected"
+                )
                 .addEventListener(
                     "click",
                     clearSelectedPerson
@@ -2600,7 +3997,7 @@
 
 
         /* =========================================================
-           CLEAR SELECTED PERSON
+           CLEAR USER
         ========================================================= */
 
         function clearSelectedPerson() {
@@ -2611,9 +4008,12 @@
 
             personSearch.value = "";
 
-            selectedPersonCard.classList.remove("show");
+            selectedPersonCard.classList.remove(
+                "show"
+            );
 
             selectedPersonCard.innerHTML = "";
+
 
             calendarStudent.innerText =
                 "Attendance Calendar";
@@ -2626,16 +4026,11 @@
             <i class="bi bi-person-check"></i>
 
             <div class="empty-state-title">
-
                 Select a student or staff member
-
             </div>
 
-            <div>
-
-                Search and select a person above
-                to view attendance.
-
+            <div class="empty-state-text">
+                Search above to view attendance.
             </div>
 
         </div>
@@ -2668,10 +4063,6 @@
 
             if (!selectedUser) {
 
-                alert(
-                    "Please select a student or staff member."
-                );
-
                 return;
 
             }
@@ -2682,19 +4073,13 @@
 
             try {
 
-                /*
-                 * Existing attendance API
-                 *
-                 * GET /api/admin/attendance/user/{id}
-                 */
-
                 const response =
                     await apiFetch(
                         `${API_BASE_URL}/api/admin/attendance/user/${selectedUser.id}`,
                         {
                             method: "GET",
                             headers: {
-                                "Accept": "*/*"
+                                "Accept": "application/json"
                             }
                         }
                     );
@@ -2702,37 +4087,24 @@
 
                 if (!response.ok) {
 
-                    let message =
-                        "Unable to load attendance.";
-
-
-                    try {
-
-                        const error =
-                            await response.json();
-
-                        message =
-                            error.message ||
-                            error.error ||
-                            message;
-
-                    } catch (e) { }
-
-
-                    throw new Error(message);
+                    throw new Error(
+                        await getApiErrorMessage(
+                            response,
+                            "Unable to load attendance."
+                        )
+                    );
 
                 }
 
 
-                attendanceData =
+                const result =
                     await response.json();
 
 
-                if (!Array.isArray(attendanceData)) {
-
-                    attendanceData = [];
-
-                }
+                attendanceData =
+                    Array.isArray(result)
+                        ? result
+                        : [];
 
 
                 buildAttendanceMap();
@@ -2769,16 +4141,14 @@
                 <i class="bi bi-exclamation-triangle text-danger"></i>
 
                 <div class="empty-state-title">
-
                     Unable to load attendance
-
                 </div>
 
-                <div>
+                <div class="empty-state-text">
 
                     ${escapeHtml(
                     error.message ||
-                    "Something went wrong while loading attendance."
+                    "Something went wrong."
                 )}
 
                 </div>
@@ -2832,13 +4202,312 @@
 
 
         /* =========================================================
+           LOAD HOLIDAYS
+        ========================================================= */
+
+        async function loadHolidays(year) {
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/holidays/year/${year}`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Accept": "application/json"
+                            }
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load holidays."
+                    );
+
+                }
+
+
+                const holidays =
+                    await response.json();
+
+
+                holidayMap =
+                    new Map();
+
+
+                if (Array.isArray(holidays)) {
+
+                    holidays.forEach(
+                        holiday => {
+
+                            const date =
+                                normalizeDate(
+                                    holiday?.holidayDate
+                                );
+
+
+                            if (date) {
+
+                                holidayMap.set(
+                                    date,
+                                    holiday
+                                );
+
+                            }
+
+                        }
+                    );
+
+                }
+
+
+                updateHolidaySubtext();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Holiday Load Error:",
+                    error
+                );
+
+                /*
+                 * Do not break attendance page
+                 * if holiday API fails.
+                 */
+
+                holidayMap = new Map();
+
+            }
+
+        }
+
+
+        /* =========================================================
+           LOAD APPROVED LEAVES
+        ========================================================= */
+
+        async function loadApprovedLeaves() {
+
+            approvedLeaveMap =
+                new Map();
+
+
+            if (!selectedUser) {
+
+                return;
+
+            }
+
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/leaves/admin`,
+                        {
+                            method: "GET",
+                            headers: {
+                                "Accept": "application/json"
+                            }
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        "Unable to load leaves."
+                    );
+
+                }
+
+
+                const leaves =
+                    await response.json();
+
+
+                if (!Array.isArray(leaves)) {
+
+                    return;
+
+                }
+
+
+                leaves
+                    .filter(
+                        leave =>
+                            Number(leave.userId) ===
+                            Number(selectedUser.id)
+                    )
+                    .filter(
+                        leave =>
+                            String(
+                                leave.status || ""
+                            ).toUpperCase() ===
+                            "APPROVED"
+                    )
+                    .forEach(
+                        leave => {
+
+                            addLeaveDates(
+                                leave
+                            );
+
+                        }
+                    );
+
+
+            } catch (error) {
+
+                console.error(
+                    "Leave Load Error:",
+                    error
+                );
+
+                /*
+                 * Attendance page should continue
+                 * even if leave API fails.
+                 */
+
+            }
+
+        }
+
+
+        /* =========================================================
+           ADD LEAVE DATES
+        ========================================================= */
+
+        function addLeaveDates(leave) {
+
+            if (
+                !leave.fromDate ||
+                !leave.toDate
+            ) {
+
+                return;
+
+            }
+
+
+            let current =
+                new Date(
+                    normalizeDate(
+                        leave.fromDate
+                    ) + "T00:00:00"
+                );
+
+
+            const end =
+                new Date(
+                    normalizeDate(
+                        leave.toDate
+                    ) + "T00:00:00"
+                );
+
+
+            while (
+                current <= end
+            ) {
+
+                const dateString =
+                    formatDate(
+                        current
+                    );
+
+
+                approvedLeaveMap.set(
+                    dateString,
+                    leave
+                );
+
+
+                current.setDate(
+                    current.getDate() + 1
+                );
+
+            }
+
+        }
+
+
+        /* =========================================================
+           HOLIDAY SUBTEXT
+        ========================================================= */
+
+        function updateHolidaySubtext() {
+
+            const element =
+                document.getElementById(
+                    "holidaySubtext"
+                );
+
+
+            if (!element) {
+
+                return;
+
+            }
+
+
+            let weeklyOff = [];
+
+
+            if (
+                attendancePolicy?.sundayOff === true
+            ) {
+
+                weeklyOff.push(
+                    "Sunday"
+                );
+
+            }
+
+
+            if (
+                attendancePolicy?.saturdayOff === true
+            ) {
+
+                weeklyOff.push(
+                    "Saturday"
+                );
+
+            }
+
+
+            const weeklyText =
+                weeklyOff.length
+                    ? weeklyOff.join(" & ")
+                    : "Policy holidays";
+
+
+            element.innerText =
+                `${weeklyText} + admin holidays`;
+
+        }
+
+
+        /* =========================================================
            RENDER CALENDAR
         ========================================================= */
 
-        function renderCalendar() {
+        async function renderCalendar() {
+
+            /*
+             * Leaves are loaded before calendar
+             * so approved leave can override attendance.
+             */
+
+            await loadApprovedLeaves();
+
 
             const year =
                 currentDate.getFullYear();
+
 
             const month =
                 currentDate.getMonth();
@@ -2874,15 +4543,17 @@
 
         <div class="calendar-wrapper">
 
-            <div class="calendar-grid">
+            <div class="calendar-scroll">
 
-                <div class="weekday">Sun</div>
-                <div class="weekday">Mon</div>
-                <div class="weekday">Tue</div>
-                <div class="weekday">Wed</div>
-                <div class="weekday">Thu</div>
-                <div class="weekday">Fri</div>
-                <div class="weekday">Sat</div>
+                <div class="calendar-grid">
+
+                    <div class="weekday">Sun</div>
+                    <div class="weekday">Mon</div>
+                    <div class="weekday">Tue</div>
+                    <div class="weekday">Wed</div>
+                    <div class="weekday">Thu</div>
+                    <div class="weekday">Fri</div>
+                    <div class="weekday">Sat</div>
 
     `;
 
@@ -2904,15 +4575,20 @@
 
             let presentDays = 0;
 
+            let incompleteDays = 0;
+
             let absentDays = 0;
 
             let holidayDays = 0;
+
+            let leaveDays = 0;
 
             let totalWorkingMinutes = 0;
 
 
             const today =
                 new Date();
+
 
             today.setHours(
                 0,
@@ -2936,17 +4612,10 @@
                     );
 
 
-                const dayOfWeek =
-                    date.getDay();
-
-
                 const dateString =
-                    formatDate(date);
-
-
-                const isWeekend =
-                    dayOfWeek === 0 ||
-                    dayOfWeek === 6;
+                    formatDate(
+                        date
+                    );
 
 
                 const isFuture =
@@ -2964,21 +4633,71 @@
                     );
 
 
-                let status =
-                    "future";
+                const holiday =
+                    holidayMap.get(
+                        dateString
+                    );
 
 
-                let statusText =
-                    "Future";
+                const leave =
+                    approvedLeaveMap.get(
+                        dateString
+                    );
 
+
+                const isWeeklyHoliday =
+                    isConfiguredWeeklyHoliday(
+                        date
+                    );
+
+
+                let status = "future";
+
+                let statusText = "Future";
 
                 let workingMinutes = 0;
 
 
-                if (isWeekend) {
+                /*
+                 * PRIORITY:
+                 *
+                 * 1. Approved Leave
+                 * 2. Admin Holiday
+                 * 3. Weekly Holiday
+                 * 4. Future
+                 * 5. Attendance
+                 * 6. Absent
+                 */
 
-                    status =
-                        "holiday";
+
+                if (leave) {
+
+                    status = "leave";
+
+                    statusText =
+                        "Leave";
+
+                    leaveDays++;
+
+                }
+
+
+                else if (holiday) {
+
+                    status = "holiday";
+
+                    statusText =
+                        holiday.holidayName ||
+                        "Holiday";
+
+                    holidayDays++;
+
+                }
+
+
+                else if (isWeeklyHoliday) {
+
+                    status = "holiday";
 
                     statusText =
                         "Holiday";
@@ -2987,17 +4706,22 @@
 
                 }
 
+
                 else if (isFuture) {
 
-                    status =
-                        "future";
+                    status = "future";
 
                     statusText =
                         "Future";
 
                 }
 
+
                 else {
+
+                    /*
+                     * This is a working day.
+                     */
 
                     workingDays++;
 
@@ -3014,8 +4738,7 @@
 
                     if (!attendance) {
 
-                        status =
-                            "absent";
+                        status = "absent";
 
                         statusText =
                             "Absent";
@@ -3023,6 +4746,7 @@
                         absentDays++;
 
                     }
+
 
                     else {
 
@@ -3044,6 +4768,14 @@
                         ) {
 
                             presentDays++;
+
+                        }
+
+                        else if (
+                            status === "incomplete"
+                        ) {
+
+                            incompleteDays++;
 
                         }
 
@@ -3075,18 +4807,29 @@
                 </div>
 
 
-                <div class="day-status">
+                <div class="day-status"
+                     title="${escapeHtml(
+                        statusText
+                    )}">
 
-                    ${statusText}
+                    ${escapeHtml(
+                        statusText
+                    )}
 
                 </div>
 
         `;
 
 
+                /*
+                 * Show attendance timings only
+                 * when attendance exists.
+                 */
+
                 if (
                     attendance &&
-                    !isWeekend
+                    status !== "holiday" &&
+                    status !== "leave"
                 ) {
 
                     if (
@@ -3149,16 +4892,44 @@
 
                     </div>
 
+
                     <div class="required-hours">
 
                         Required:
-                        ${REQUIRED_WORKING_HOURS}h
+                        ${formatPolicyHours(
+                            requiredWorkingHours
+                        )}
 
                     </div>
 
                 `;
 
                     }
+
+                }
+
+
+                /*
+                 * Leave type small information.
+                 */
+
+                if (
+                    leave
+                ) {
+
+                    html += `
+
+                <div class="day-time">
+
+                    ${escapeHtml(
+                        formatLeaveType(
+                            leave.leaveType
+                        )
+                    )}
+
+                </div>
+
+            `;
 
                 }
 
@@ -3199,6 +4970,8 @@
 
             html += `
 
+                </div>
+
             </div>
 
         </div>
@@ -3213,8 +4986,10 @@
             updateSummary(
                 workingDays,
                 presentDays,
+                incompleteDays,
                 absentDays,
                 holidayDays,
+                leaveDays,
                 totalWorkingMinutes
             );
 
@@ -3244,14 +5019,55 @@
 
 
         /* =========================================================
+           WEEKLY HOLIDAY
+        ========================================================= */
+
+        function isConfiguredWeeklyHoliday(
+            date
+        ) {
+
+            const day =
+                date.getDay();
+
+
+            if (
+                day === 0
+            ) {
+
+                return (
+                    attendancePolicy?.sundayOff === true
+                );
+
+            }
+
+
+            if (
+                day === 6
+            ) {
+
+                return (
+                    attendancePolicy?.saturdayOff === true
+                );
+
+            }
+
+
+            return false;
+
+        }
+
+
+        /* =========================================================
            SUMMARY
         ========================================================= */
 
         function updateSummary(
             workingDays,
             presentDays,
+            incompleteDays,
             absentDays,
             holidayDays,
+            leaveDays,
             totalWorkingMinutes
         ) {
 
@@ -3268,6 +5084,12 @@
 
 
             document.getElementById(
+                "incompleteDays"
+            ).innerText =
+                incompleteDays;
+
+
+            document.getElementById(
                 "absentDays"
             ).innerText =
                 absentDays;
@@ -3276,7 +5098,8 @@
             document.getElementById(
                 "holidayDays"
             ).innerText =
-                holidayDays;
+                holidayDays +
+                leaveDays;
 
 
             document.getElementById(
@@ -3285,6 +5108,34 @@
                 formatMinutesLong(
                     totalWorkingMinutes
                 );
+
+
+            const workingSubtext =
+                document.getElementById(
+                    "workingDaysSubtext"
+                );
+
+
+            if (workingSubtext) {
+
+                workingSubtext.innerText =
+                    `${formatMonthName(currentDate)}`;
+
+            }
+
+
+            const holidaySubtext =
+                document.getElementById(
+                    "holidaySubtext"
+                );
+
+
+            if (holidaySubtext) {
+
+                holidaySubtext.innerText =
+                    `${holidayDays} holiday · ${leaveDays} leave`;
+
+            }
 
         }
 
@@ -3296,6 +5147,8 @@
         function resetSummary() {
 
             updateSummary(
+                0,
+                0,
                 0,
                 0,
                 0,
@@ -3314,7 +5167,13 @@
             attendance
         ) {
 
+            /*
+             * No checkout =
+             * incomplete.
+             */
+
             if (
+                !attendance ||
                 !attendance.checkInTime ||
                 !attendance.checkOutTime
             ) {
@@ -3336,13 +5195,8 @@
                 );
 
 
-            const requiredMinutes =
-                REQUIRED_WORKING_HOURS *
-                60;
-
-
             if (
-                minutes < requiredMinutes
+                minutes < requiredWorkingMinutes
             ) {
 
                 return {
@@ -3419,7 +5273,9 @@
                 checkIn;
 
 
-            if (difference < 0) {
+            if (
+                difference < 0
+            ) {
 
                 difference +=
                     24 * 60;
@@ -3465,7 +5321,9 @@
             if (!match) {
 
                 const date =
-                    new Date(value);
+                    new Date(
+                        value
+                    );
 
 
                 if (
@@ -3563,6 +5421,41 @@
 
 
         /* =========================================================
+           FORMAT POLICY HOURS
+        ========================================================= */
+
+        function formatPolicyHours(
+            hours
+        ) {
+
+            const number =
+                Number(hours);
+
+
+            if (
+                !Number.isFinite(number)
+            ) {
+
+                return "6 hours";
+
+            }
+
+
+            if (
+                Number.isInteger(number)
+            ) {
+
+                return `${number} hours`;
+
+            }
+
+
+            return `${number.toFixed(2)} hours`;
+
+        }
+
+
+        /* =========================================================
            FORMAT TIME
         ========================================================= */
 
@@ -3592,13 +5485,28 @@
 
             if (match) {
 
-                return (
-                    String(
+                let hour =
+                    Number(
                         match[1]
-                    ).padStart(2, "0") +
-                    ":" +
-                    match[2]
-                );
+                    );
+
+
+                const minute =
+                    match[2];
+
+
+                const suffix =
+                    hour >= 12
+                        ? "PM"
+                        : "AM";
+
+
+                hour =
+                    hour % 12 ||
+                    12;
+
+
+                return `${String(hour).padStart(2, "0")}:${minute} ${suffix}`;
 
             }
 
@@ -3638,28 +5546,18 @@
 
         function initializeMonth() {
 
-            const year =
-                currentDate.getFullYear();
-
-
-            const month =
-                String(
-                    currentDate.getMonth() + 1
-                ).padStart(
-                    2,
-                    "0"
-                );
-
-
-            monthPicker.value =
-                `${year}-${month}`;
+            syncMonthPicker();
 
         }
 
 
+        /* =========================================================
+           MONTH PICKER CHANGE
+        ========================================================= */
+
         monthPicker.addEventListener(
             "change",
-            () => {
+            async () => {
 
                 const value =
                     monthPicker.value;
@@ -3687,9 +5585,14 @@
                     );
 
 
+                await loadHolidays(
+                    currentDate.getFullYear()
+                );
+
+
                 if (selectedUser) {
 
-                    loadAttendance();
+                    await loadAttendance();
 
                 }
 
@@ -3702,10 +5605,12 @@
         ========================================================= */
 
         document
-            .getElementById("previousMonth")
+            .getElementById(
+                "previousMonth"
+            )
             .addEventListener(
                 "click",
-                () => {
+                async () => {
 
                     currentDate =
                         new Date(
@@ -3718,14 +5623,14 @@
                     syncMonthPicker();
 
 
+                    await loadHolidays(
+                        currentDate.getFullYear()
+                    );
+
+
                     if (selectedUser) {
 
-                        loadAttendance();
-
-                    }
-                    else {
-
-                        renderCalendar();
+                        await loadAttendance();
 
                     }
 
@@ -3738,10 +5643,12 @@
         ========================================================= */
 
         document
-            .getElementById("nextMonth")
+            .getElementById(
+                "nextMonth"
+            )
             .addEventListener(
                 "click",
-                () => {
+                async () => {
 
                     currentDate =
                         new Date(
@@ -3754,14 +5661,14 @@
                     syncMonthPicker();
 
 
+                    await loadHolidays(
+                        currentDate.getFullYear()
+                    );
+
+
                     if (selectedUser) {
 
-                        loadAttendance();
-
-                    }
-                    else {
-
-                        renderCalendar();
+                        await loadAttendance();
 
                     }
 
@@ -3770,7 +5677,7 @@
 
 
         /* =========================================================
-           SYNC MONTH PICKER
+           SYNC MONTH
         ========================================================= */
 
         function syncMonthPicker() {
@@ -3809,18 +5716,27 @@
                 );
 
 
-            const dayOfWeek =
-                date.getDay();
-
-
-            const isWeekend =
-                dayOfWeek === 0 ||
-                dayOfWeek === 6;
-
-
             const attendance =
                 attendanceMap.get(
                     dateString
+                );
+
+
+            const holiday =
+                holidayMap.get(
+                    dateString
+                );
+
+
+            const leave =
+                approvedLeaveMap.get(
+                    dateString
+                );
+
+
+            const isWeeklyHoliday =
+                isConfiguredWeeklyHoliday(
+                    date
                 );
 
 
@@ -3831,7 +5747,41 @@
             let statusIcon;
 
 
-            if (isWeekend) {
+            /*
+             * Same priority as calendar.
+             */
+
+
+            if (leave) {
+
+                status =
+                    "Approved Leave";
+
+                badgeClass =
+                    "badge-leave";
+
+                statusIcon =
+                    "bi bi-calendar2-check";
+
+            }
+
+
+            else if (holiday) {
+
+                status =
+                    holiday.holidayName ||
+                    "Holiday";
+
+                badgeClass =
+                    "badge-holiday";
+
+                statusIcon =
+                    "bi bi-calendar2-heart";
+
+            }
+
+
+            else if (isWeeklyHoliday) {
 
                 status =
                     "Holiday";
@@ -3840,9 +5790,26 @@
                     "badge-holiday";
 
                 statusIcon =
-                    "bi bi-cup-hot";
+                    "bi bi-calendar2-day";
 
             }
+
+
+            else if (
+                date > startOfToday()
+            ) {
+
+                status =
+                    "Future";
+
+                badgeClass =
+                    "badge-holiday";
+
+                statusIcon =
+                    "bi bi-calendar-event";
+
+            }
+
 
             else if (attendance) {
 
@@ -3881,6 +5848,7 @@
 
             }
 
+
             else {
 
                 status =
@@ -3902,20 +5870,21 @@
 
 
             const requiredMinutes =
-                REQUIRED_WORKING_HOURS *
-                60;
+                requiredWorkingMinutes;
 
 
             const percentage =
-                Math.min(
-                    100,
-                    Math.round(
-                        (
-                            workingMinutes /
-                            requiredMinutes
-                        ) * 100
+                requiredMinutes > 0
+                    ? Math.min(
+                        100,
+                        Math.round(
+                            (
+                                workingMinutes /
+                                requiredMinutes
+                            ) * 100
+                        )
                     )
-                );
+                    : 0;
 
 
             let html = `
@@ -3976,7 +5945,7 @@
         <div class="detail-row">
 
             <div class="detail-label">
-                User Type
+                Type
             </div>
 
             <div class="detail-value">
@@ -3999,13 +5968,15 @@
                 Status
             </div>
 
-            <div class="mt-1">
+            <div class="detail-value">
 
                 <span class="status-badge ${badgeClass}">
 
                     <i class="${statusIcon}"></i>
 
-                    ${escapeHtml(status)}
+                    ${escapeHtml(
+                    status
+                )}
 
                 </span>
 
@@ -4016,7 +5987,152 @@
     `;
 
 
-            if (attendance) {
+            /*
+             * HOLIDAY DETAILS
+             */
+
+            if (
+                holiday
+            ) {
+
+                html += `
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    Holiday
+                </div>
+
+                <div class="detail-value">
+
+                    ${escapeHtml(
+                    holiday.holidayName ||
+                    "Holiday"
+                )}
+
+                </div>
+
+            </div>
+
+        `;
+
+
+                if (
+                    holiday.description
+                ) {
+
+                    html += `
+
+                <div class="detail-row">
+
+                    <div class="detail-label">
+                        Description
+                    </div>
+
+                    <div class="detail-value">
+
+                        ${escapeHtml(
+                        holiday.description
+                    )}
+
+                    </div>
+
+                </div>
+
+            `;
+
+                }
+
+            }
+
+
+            /*
+             * LEAVE DETAILS
+             */
+
+            if (
+                leave
+            ) {
+
+                html += `
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    Leave Type
+                </div>
+
+                <div class="detail-value">
+
+                    ${escapeHtml(
+                    formatLeaveType(
+                        leave.leaveType
+                    )
+                )}
+
+                </div>
+
+            </div>
+
+
+            <div class="detail-row">
+
+                <div class="detail-label">
+                    Leave Period
+                </div>
+
+                <div class="detail-value">
+
+                    ${escapeHtml(
+                    normalizeDate(
+                        leave.fromDate
+                    )
+                )}
+
+                    -
+
+                    ${escapeHtml(
+                    normalizeDate(
+                        leave.toDate
+                    )
+                )}
+
+                </div>
+
+            </div>
+
+
+            ${leave.description
+                        ? `
+                        <div class="detail-row">
+
+                            <div class="detail-label">
+                                Description
+                            </div>
+
+                            <div class="detail-value">
+                                ${escapeHtml(
+                            leave.description
+                        )}
+                            </div>
+
+                        </div>
+                    `
+                        : ""
+                    }
+
+        `;
+
+            }
+
+
+            /*
+             * ATTENDANCE DETAILS
+             */
+
+            if (
+                attendance
+            ) {
 
                 html += `
 
@@ -4078,80 +6194,127 @@
             <div class="detail-row">
 
                 <div class="detail-label">
-                    Required Working Hours
+                    Required
                 </div>
 
                 <div class="detail-value">
 
-                    ${REQUIRED_WORKING_HOURS}h 00m
+                    ${formatMinutes(
+                    requiredMinutes
+                )}
 
                 </div>
 
             </div>
 
+
+            <div class="hours-highlight">
+
+
+                <div class="d-flex justify-content-between">
+
+                    <div>
+
+                        <div class="detail-label">
+                            Daily Hours
+                        </div>
+
+                        <div class="hours-main">
+                            ${formatMinutes(
+                    workingMinutes
+                )}
+                        </div>
+
+                    </div>
+
+
+                    <div class="text-end">
+
+                        <div class="detail-label">
+                            Completion
+                        </div>
+
+                        <div class="hours-main">
+                            ${percentage}%
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="hours-progress">
+
+                    <div
+                        class="hours-progress-bar ${percentage < 100
+                        ? "warning"
+                        : ""
+                    }"
+                        style="width:${percentage}%">
+                    </div>
+
+                </div>
+
+
+                <div class="hours-required">
+
+                    Required:
+                    ${escapeHtml(
+                        formatPolicyHours(
+                            requiredWorkingHours
+                        )
+                    )}
+
+                </div>
+
+            </div>
+
+
+            ${attendance.confidence !== null &&
+                        attendance.confidence !== undefined
+                        ? `
+
+                        <div class="detail-row">
+
+                            <div class="detail-label">
+                                Face Confidence
+                            </div>
+
+                            <div class="detail-value">
+
+                                ${formatConfidence(
+                            attendance.confidence
+                        )}
+
+                            </div>
+
+                        </div>
+
+                    `
+                        : ""
+                    }
+
         `;
 
 
+                /*
+                 * CHECKOUT MISSING
+                 */
+
                 if (
-                    attendance.checkInTime
+                    attendance.checkInTime &&
+                    !attendance.checkOutTime
                 ) {
 
                     html += `
 
-                <div class="hours-highlight">
+                <div class="alert alert-warning mt-3 mb-0 py-2">
 
-                    <div class="d-flex justify-content-between">
+                    <i class="bi bi-exclamation-triangle me-1"></i>
 
-                        <div>
-
-                            <div class="detail-label">
-                                Daily Working Hours
-                            </div>
-
-                            <div class="hours-main">
-                                ${formatMinutes(
-                        workingMinutes
-                    )}
-                            </div>
-
-                        </div>
-
-
-                        <div class="text-end">
-
-                            <div class="detail-label">
-                                Completion
-                            </div>
-
-                            <div class="hours-main">
-                                ${percentage}%
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="hours-progress">
-
-                        <div
-                            class="hours-progress-bar ${percentage < 100
-                            ? "warning"
-                            : ""
-                        }"
-                            style="width: ${percentage}%">
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="hours-required">
-
-                        Required:
-                        ${REQUIRED_WORKING_HOURS} hours
-
-                    </div>
+                    Check-out was not recorded.
+                    This day is marked as
+                    <strong>Incomplete</strong>.
 
                 </div>
 
@@ -4160,114 +6323,91 @@
                 }
 
 
-                html += `
+                /*
+                 * SHORT HOURS
+                 */
 
-            <div class="detail-row">
+                else if (
+                    attendance.checkOutTime &&
+                    workingMinutes <
+                    requiredMinutes
+                ) {
 
-                <div class="detail-label">
-                    Face Recognition Confidence
+                    html += `
+
+                <div class="alert alert-warning mt-3 mb-0 py-2">
+
+                    <i class="bi bi-clock me-1"></i>
+
+                    Required:
+                    <strong>
+                        ${formatMinutes(
+                        requiredMinutes
+                    )}
+                    </strong>.
+
+                    Completed:
+                    <strong>
+                        ${formatMinutes(
+                        workingMinutes
+                    )}
+                    </strong>.
+
                 </div>
 
-                <div class="detail-value">
+            `;
 
-                    ${formatConfidence(
-                    attendance.confidence
-                )}
-
-                </div>
-
-            </div>
-
-        `;
+                }
 
             }
 
+
+            /*
+             * NO ATTENDANCE
+             */
 
             if (
-                attendance &&
-                !attendance.checkOutTime
+                !attendance &&
+                !holiday &&
+                !leave &&
+                !isWeeklyHoliday &&
+                date <= startOfToday()
             ) {
 
                 html += `
 
-            <div class="alert alert-warning mt-3 mb-0">
-
-                <i class="bi bi-exclamation-triangle me-1"></i>
-
-                Check-out was not recorded.
-                This day is marked as
-                <strong>Incomplete</strong>
-                and is counted as absent.
-
-            </div>
-
-        `;
-
-            }
-
-            else if (
-                attendance &&
-                workingMinutes <
-                requiredMinutes
-            ) {
-
-                html += `
-
-            <div class="alert alert-warning mt-3 mb-0">
-
-                <i class="bi bi-clock me-1"></i>
-
-                Required working time is
-                <strong>
-                    ${REQUIRED_WORKING_HOURS} hours
-                </strong>.
-
-                Completed:
-                <strong>
-                    ${formatMinutes(
-                    workingMinutes
-                )}
-                </strong>.
-
-                The day is therefore counted as absent.
-
-            </div>
-
-        `;
-
-            }
-
-
-            if (isWeekend) {
-
-                html += `
-
-            <div class="alert alert-secondary mt-3 mb-0">
-
-                <i class="bi bi-cup-hot me-1"></i>
-
-                Saturday/Sunday is a weekly holiday.
-
-            </div>
-
-        `;
-
-            }
-
-
-            if (
-                !isWeekend &&
-                !attendance
-            ) {
-
-                html += `
-
-            <div class="alert alert-danger mt-3 mb-0">
+            <div class="alert alert-danger mt-3 mb-0 py-2">
 
                 <i class="bi bi-x-circle me-1"></i>
 
                 No attendance record was found
                 for this working day.
+
+            </div>
+
+        `;
+
+            }
+
+
+            /*
+             * WEEKLY HOLIDAY
+             */
+
+            if (
+                isWeeklyHoliday &&
+                !holiday &&
+                !leave
+            ) {
+
+                html += `
+
+            <div class="alert alert-secondary mt-3 mb-0 py-2">
+
+                <i class="bi bi-calendar2-day me-1"></i>
+
+                This date is configured as
+                a weekly holiday by Attendance Policy.
 
             </div>
 
@@ -4310,7 +6450,7 @@
                 role="status">
             </div>
 
-            <div class="mt-3 text-muted">
+            <div class="loading-text">
 
                 Loading attendance...
 
@@ -4324,7 +6464,7 @@
 
 
         /* =========================================================
-           DATE FORMAT
+           DATE
         ========================================================= */
 
         function formatDate(
@@ -4428,6 +6568,78 @@
 
 
         /* =========================================================
+           FORMAT MONTH
+        ========================================================= */
+
+        function formatMonthName(
+            date
+        ) {
+
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    month: "long",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+
+        /* =========================================================
+           START OF TODAY
+        ========================================================= */
+
+        function startOfToday() {
+
+            const today =
+                new Date();
+
+
+            today.setHours(
+                0,
+                0,
+                0,
+                0
+            );
+
+
+            return today;
+
+        }
+
+
+        /* =========================================================
+           LEAVE TYPE
+        ========================================================= */
+
+        function formatLeaveType(
+            value
+        ) {
+
+            if (!value) {
+
+                return "Leave";
+
+            }
+
+
+            return String(value)
+                .replace(
+                    /_/g,
+                    " "
+                )
+                .toLowerCase()
+                .replace(
+                    /\b\w/g,
+                    char =>
+                        char.toUpperCase()
+                );
+
+        }
+
+
+        /* =========================================================
            CONFIDENCE
         ========================================================= */
 
@@ -4500,7 +6712,10 @@
             ) {
 
                 return parts[0]
-                    .substring(0, 2)
+                    .substring(
+                        0,
+                        2
+                    )
                     .toUpperCase();
 
             }
@@ -4515,7 +6730,62 @@
 
 
         /* =========================================================
-           HTML ESCAPE
+           API ERROR
+        ========================================================= */
+
+        async function getApiErrorMessage(
+            response,
+            fallback
+        ) {
+
+            try {
+
+                const contentType =
+                    response.headers.get(
+                        "content-type"
+                    );
+
+
+                if (
+                    contentType &&
+                    contentType.includes(
+                        "application/json"
+                    )
+                ) {
+
+                    const error =
+                        await response.json();
+
+
+                    return (
+                        error.message ||
+                        error.error ||
+                        fallback
+                    );
+
+                }
+
+
+                const text =
+                    await response.text();
+
+
+                return (
+                    text ||
+                    fallback
+                );
+
+            } catch (error) {
+
+                return fallback;
+
+            }
+
+        }
+
+
+        /* =========================================================
+           ESCAPE HTML
         ========================================================= */
 
         function escapeHtml(
@@ -4562,6 +6832,7 @@
         }
 
     </script>
+
 
 </body>
 

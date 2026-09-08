@@ -4,22 +4,16 @@
 <head>
 
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Students | College Attendance Admin</title>
 
-    <!-- Bootstrap -->
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -65,7 +59,7 @@
             padding: 0 22px;
             display: flex;
             align-items: center;
-            border-bottom: 1px solid rgba(255,255,255,.08);
+            border-bottom: 1px solid rgba(255, 255, 255, .08);
             font-size: 18px;
             font-weight: 700;
         }
@@ -115,7 +109,7 @@
 
         .sidebar-menu a:hover,
         .sidebar-menu a.active {
-            background: rgba(255,255,255,.1);
+            background: rgba(255, 255, 255, .1);
             color: white;
         }
 
@@ -125,7 +119,7 @@
             right: 0;
             bottom: 0;
             padding: 15px;
-            border-top: 1px solid rgba(255,255,255,.08);
+            border-top: 1px solid rgba(255, 255, 255, .08);
         }
 
         .admin-profile {
@@ -165,10 +159,6 @@
             min-height: 100vh;
         }
 
-        /* =====================================================
-           TOP NAV
-        ===================================================== */
-
         .topbar {
             height: 70px;
             background: white;
@@ -196,10 +186,6 @@
             font-size: 23px;
         }
 
-        /* =====================================================
-           CONTENT
-        ===================================================== */
-
         .content {
             padding: 28px;
         }
@@ -225,7 +211,7 @@
         }
 
         /* =====================================================
-           STAT CARDS
+           STATS
         ===================================================== */
 
         .stat-card {
@@ -274,7 +260,7 @@
         }
 
         /* =====================================================
-           TABLE CARD
+           TABLE
         ===================================================== */
 
         .table-card {
@@ -335,11 +321,6 @@
             font-size: 13px;
         }
 
-        .search-box input:focus {
-            border-color: #6b7280;
-            box-shadow: 0 0 0 3px rgba(107,114,128,.1);
-        }
-
         .filter-select {
             height: 40px;
             min-width: 125px;
@@ -364,7 +345,6 @@
 
         .btn-add:hover {
             background: var(--primary-hover);
-            color: white;
         }
 
         .btn-refresh {
@@ -375,14 +355,6 @@
             border-radius: 9px;
             padding: 0 13px;
         }
-
-        .btn-refresh:hover {
-            background: #f9fafb;
-        }
-
-        /* =====================================================
-           TABLE
-        ===================================================== */
 
         .table-responsive {
             min-height: 300px;
@@ -415,6 +387,10 @@
             background: #fafafa;
         }
 
+        /* =====================================================
+           PROFILE IMAGE
+        ===================================================== */
+
         .student-info {
             display: flex;
             align-items: center;
@@ -422,9 +398,9 @@
         }
 
         .student-avatar {
-            width: 37px;
-            height: 37px;
-            border-radius: 10px;
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
             background: #eef2ff;
             color: #4338ca;
             display: flex;
@@ -432,6 +408,13 @@
             justify-content: center;
             font-weight: 700;
             flex-shrink: 0;
+            overflow: hidden;
+        }
+
+        .student-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .student-name {
@@ -444,6 +427,10 @@
             font-size: 11px;
             margin-top: 2px;
         }
+
+        /* =====================================================
+           BADGES
+        ===================================================== */
 
         .badge-status {
             padding: 5px 9px;
@@ -461,6 +448,10 @@
             background: #fef2f2;
             color: #b91c1c;
         }
+
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
 
         .action-btn {
             width: 32px;
@@ -489,30 +480,6 @@
 
         .action-btn.delete:hover {
             color: #dc2626;
-        }
-
-        /* =====================================================
-           EMPTY / LOADING
-        ===================================================== */
-
-        .table-state {
-            min-height: 300px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            color: var(--muted);
-        }
-
-        .table-state i {
-            font-size: 40px;
-            margin-bottom: 10px;
-            color: #9ca3af;
-        }
-
-        .spinner-border {
-            width: 25px;
-            height: 25px;
         }
 
         /* =====================================================
@@ -553,39 +520,39 @@
             font-size: 13px;
         }
 
-        .form-control:focus,
-        .form-select:focus {
-            border-color: #6b7280;
-            box-shadow: 0 0 0 3px rgba(107,114,128,.1);
+        /* =====================================================
+           PROFILE PHOTO INPUT
+        ===================================================== */
+
+        .profile-upload-box {
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            padding: 18px;
+            background: #f8fafc;
         }
 
-        .modal-footer {
-            border-top: 1px solid var(--border);
-            padding: 15px 22px;
+        .profile-preview {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid white;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, .12);
+            display: none;
+            margin-bottom: 10px;
         }
 
-        .btn-modal-primary {
-            background: #111827;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            padding: 9px 17px;
-            font-size: 13px;
-            font-weight: 600;
-        }
-
-        .btn-modal-primary:hover {
-            background: #000;
-            color: white;
-        }
-
-        .btn-modal-secondary {
-            background: white;
-            color: #374151;
-            border: 1px solid #d1d5db;
-            border-radius: 8px;
-            padding: 9px 17px;
-            font-size: 13px;
+        .profile-placeholder {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #eef2ff;
+            color: #4f46e5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin-bottom: 10px;
         }
 
         /* =====================================================
@@ -600,9 +567,9 @@
         }
 
         .profile-avatar {
-            width: 62px;
-            height: 62px;
-            border-radius: 15px;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
             background: #eef2ff;
             color: #4338ca;
             display: flex;
@@ -610,6 +577,14 @@
             justify-content: center;
             font-size: 22px;
             font-weight: 750;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .profile-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .profile-name {
@@ -644,7 +619,7 @@
         }
 
         /* =====================================================
-           FACE MODAL
+           FACE CAMERA
         ===================================================== */
 
         .face-camera {
@@ -659,13 +634,7 @@
             justify-content: center;
         }
 
-        #faceCamera {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
-
+        #faceCamera,
         #facePreview {
             width: 100%;
             height: 100%;
@@ -705,23 +674,22 @@
         }
 
         /* =====================================================
-           TOAST
+           TABLE STATE
         ===================================================== */
 
-        .toast-container {
-            z-index: 2000;
+        .table-state {
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
+            color: var(--muted);
         }
 
-        /* =====================================================
-           OVERLAY
-        ===================================================== */
-
-        .sidebar-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,.4);
-            z-index: 1040;
+        .table-state i {
+            font-size: 40px;
+            margin-bottom: 10px;
+            color: #9ca3af;
         }
 
         /* =====================================================
@@ -770,6 +738,14 @@
             }
         }
 
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .4);
+            z-index: 1040;
+        }
+
         @media (max-width: 767px) {
 
             .page-heading {
@@ -789,7 +765,7 @@
                 width: 100%;
             }
 
-            .filters > * {
+            .filters>* {
                 flex: 1;
             }
 
@@ -798,7 +774,7 @@
             }
 
             .student-table {
-                min-width: 950px;
+                min-width: 1000px;
             }
 
             .content {
@@ -813,416 +789,872 @@
                 display: none;
             }
         }
-
     </style>
 
 </head>
 
+
 <body>
 
-<!-- =========================================================
+    <!-- =========================================================
      SIDEBAR
 ========================================================= -->
 
-<aside class="sidebar" id="sidebar">
+    <aside class="sidebar" id="sidebar">
 
-    <div class="sidebar-brand">
+        <div class="sidebar-brand">
 
-        <span class="sidebar-brand-icon">
-            <i class="bi bi-person-bounding-box"></i>
-        </span>
-
-        College Attendance
-
-    </div>
-
-
-    <div class="sidebar-section">
-        Main
-    </div>
-
-
-    <div class="sidebar-menu">
-
-        <a href="admin-dashboard.html">
-            <i class="bi bi-grid-1x2"></i>
-            Dashboard
-        </a>
-
-    </div>
-
-
-    <div class="sidebar-section">
-        Management
-    </div>
-
-
-    <div class="sidebar-menu">
-
-        <a href="students.html" class="active">
-            <i class="bi bi-people"></i>
-            Students
-        </a>
-
-        <a href="teachers.html">
-            <i class="bi bi-person-workspace"></i>
-            Teachers
-        </a>
-
-        <a href="departments.html">
-            <i class="bi bi-building"></i>
-            Departments
-        </a>
-
-        <a href="courses.html">
-            <i class="bi bi-book"></i>
-            Courses
-        </a>
-
-        <a href="semesters.html">
-            <i class="bi bi-layers"></i>
-            Semesters
-        </a>
-
-        <a href="sections.html">
-            <i class="bi bi-diagram-3"></i>
-            Sections
-        </a>
-
-    </div>
-
-
-    <div class="sidebar-section">
-        Attendance
-    </div>
-
-
-    <div class="sidebar-menu">
-
-        <a href="attendance.html">
-            <i class="bi bi-calendar-check"></i>
-            Attendance
-        </a>
-
-    </div>
-
-
-    <div class="sidebar-bottom">
-
-        <div class="admin-profile">
-
-            <div class="admin-avatar">
-                A
-            </div>
-
-            <div>
-
-                <div class="admin-name">
-                    Administrator
-                </div>
-
-                <div class="admin-role">
-                    System Admin
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</aside>
-
-
-<div
-    class="sidebar-overlay"
-    id="sidebarOverlay">
-</div>
-
-
-<!-- =========================================================
-     MAIN
-========================================================= -->
-
-<main class="main">
-
-    <!-- TOPBAR -->
-
-    <header class="topbar">
-
-        <div class="d-flex align-items-center gap-3">
-
-            <button
-                class="mobile-menu-btn"
-                id="mobileMenuBtn">
-
-                <i class="bi bi-list"></i>
-
-            </button>
-
-            <div>
-
-                <div class="topbar-title">
-                    Student Management
-                </div>
-
-                <div class="topbar-subtitle">
-                    Manage students and face registration
-                </div>
-
-            </div>
-
-        </div>
-
-
-        <div>
-
-            <span class="badge text-bg-light">
-                <i class="bi bi-shield-check me-1"></i>
-                Admin
+            <span class="sidebar-brand-icon">
+                <i class="bi bi-person-bounding-box"></i>
             </span>
 
-        </div>
-
-    </header>
-
-
-    <!-- CONTENT -->
-
-    <section class="content">
-
-        <!-- PAGE HEADING -->
-
-        <div class="page-heading">
-
-            <div>
-
-                <h1 class="page-title">
-                    Students
-                </h1>
-
-                <p class="page-description">
-                    Create, update, deactivate and register faces for students.
-                </p>
-
-            </div>
-
-
-            <button
-                class="btn btn-add"
-                id="addStudentBtn">
-
-                <i class="bi bi-plus-lg me-1"></i>
-                Add Student
-
-            </button>
+            College Attendance
 
         </div>
 
 
-        <!-- =================================================
-             STAT CARDS
-        ================================================== -->
+        <div class="sidebar-section">
+            Main
+        </div>
 
-        <div class="row g-3">
+        <div class="sidebar-menu">
 
-            <div class="col-md-4">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon students">
-                        <i class="bi bi-people"></i>
-                    </div>
-
-                    <div
-                        class="stat-number"
-                        id="totalStudents">
-                        0
-                    </div>
-
-                    <div class="stat-label">
-                        Total Students
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="col-md-4">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon active">
-                        <i class="bi bi-person-check"></i>
-                    </div>
-
-                    <div
-                        class="stat-number"
-                        id="activeStudents">
-                        0
-                    </div>
-
-                    <div class="stat-label">
-                        Active Students
-                    </div>
-
-                </div>
-
-            </div>
-
-
-            <div class="col-md-4">
-
-                <div class="stat-card">
-
-                    <div class="stat-icon inactive">
-                        <i class="bi bi-person-x"></i>
-                    </div>
-
-                    <div
-                        class="stat-number"
-                        id="inactiveStudents">
-                        0
-                    </div>
-
-                    <div class="stat-label">
-                        Inactive Students
-                    </div>
-
-                </div>
-
-            </div>
+            <a href="dashboard.html">
+                <i class="bi bi-grid-1x2"></i>
+                Dashboard
+            </a>
 
         </div>
 
 
-        <!-- =================================================
-             TABLE
-        ================================================== -->
+        <div class="sidebar-section">
+            Management
+        </div>
 
-        <div class="table-card">
+        <div class="sidebar-menu">
 
-            <div class="table-header">
+            <a href="students.html" class="active">
+                <i class="bi bi-people"></i>
+                Students
+            </a>
+
+            <a href="teachers.html">
+                <i class="bi bi-person-workspace"></i>
+                Teachers
+            </a>
+
+            <a href="departments.html">
+                <i class="bi bi-building"></i>
+                Departments
+            </a>
+
+            <a href="courses.html">
+                <i class="bi bi-book"></i>
+                Courses
+            </a>
+
+            <a href="semesters.html">
+                <i class="bi bi-layers"></i>
+                Semesters
+            </a>
+
+            <a href="sections.html">
+                <i class="bi bi-diagram-3"></i>
+                Sections
+            </a>
+
+        </div>
+
+
+        <div class="sidebar-section">
+            Attendance
+        </div>
+
+        <div class="sidebar-menu">
+
+            <a href="attendance.html">
+                <i class="bi bi-calendar-check"></i>
+                Attendance
+            </a>
+
+        </div>
+
+
+        <div class="sidebar-bottom">
+
+            <div class="admin-profile">
+
+                <div class="admin-avatar">
+                    A
+                </div>
 
                 <div>
 
-                    <h5 class="table-title">
-                        Student Directory
-                    </h5>
+                    <div class="admin-name">
+                        Administrator
+                    </div>
 
-                    <p class="table-subtitle">
-                        All registered students
+                    <div class="admin-role">
+                        System Admin
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </aside>
+
+
+    <div class="sidebar-overlay" id="sidebarOverlay">
+    </div>
+
+
+    <!-- =========================================================
+     MAIN
+========================================================= -->
+
+    <main class="main">
+
+        <header class="topbar">
+
+            <div class="d-flex align-items-center gap-3">
+
+                <button class="mobile-menu-btn" id="mobileMenuBtn">
+
+                    <i class="bi bi-list"></i>
+
+                </button>
+
+                <div>
+
+                    <div class="topbar-title">
+                        Student Management
+                    </div>
+
+                    <div class="topbar-subtitle">
+                        Manage students and face registration
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <span class="badge text-bg-light">
+
+                <i class="bi bi-shield-check me-1"></i>
+
+                Admin
+
+            </span>
+
+        </header>
+
+
+        <!-- =====================================================
+         CONTENT
+    ===================================================== -->
+
+        <section class="content">
+
+            <div class="page-heading">
+
+                <div>
+
+                    <h1 class="page-title">
+                        Students
+                    </h1>
+
+                    <p class="page-description">
+                        Create, update, deactivate and register faces for students.
                     </p>
 
                 </div>
 
 
-                <div class="filters">
+                <button class="btn btn-add" id="addStudentBtn">
 
-                    <div class="search-box">
+                    <i class="bi bi-plus-lg me-1"></i>
 
-                        <i class="bi bi-search"></i>
+                    Add Student
 
-                        <input
-                            type="text"
-                            id="searchInput"
-                            placeholder="Search name or roll number">
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+             STATS
+        ================================================= -->
+
+            <div class="row g-3">
+
+                <div class="col-md-4">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon students">
+                            <i class="bi bi-people"></i>
+                        </div>
+
+                        <div class="stat-number" id="totalStudents">
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Total Students
+                        </div>
 
                     </div>
 
-
-                    <select
-                        id="statusFilter"
-                        class="filter-select">
-
-                        <option value="ALL">
-                            All Status
-                        </option>
-
-                        <option value="ACTIVE">
-                            Active
-                        </option>
-
-                        <option value="INACTIVE">
-                            Inactive
-                        </option>
-
-                    </select>
+                </div>
 
 
-                    <button
-                        class="btn-refresh"
-                        id="refreshBtn"
-                        title="Refresh">
+                <div class="col-md-4">
 
-                        <i class="bi bi-arrow-clockwise"></i>
+                    <div class="stat-card">
 
-                    </button>
+                        <div class="stat-icon active">
+                            <i class="bi bi-person-check"></i>
+                        </div>
+
+                        <div class="stat-number" id="activeStudents">
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Active Students
+                        </div>
+
+                    </div>
+
+                </div>
+
+
+                <div class="col-md-4">
+
+                    <div class="stat-card">
+
+                        <div class="stat-icon inactive">
+                            <i class="bi bi-person-x"></i>
+                        </div>
+
+                        <div class="stat-number" id="inactiveStudents">
+                            0
+                        </div>
+
+                        <div class="stat-label">
+                            Inactive Students
+                        </div>
+
+                    </div>
 
                 </div>
 
             </div>
 
 
-            <div class="table-responsive">
+            <!-- =================================================
+             TABLE
+        ================================================= -->
 
-                <table class="table student-table">
+            <div class="table-card">
 
-                    <thead>
-
-                    <tr>
-
-                        <th>Student</th>
-                        <th>Roll Number</th>
-                        <th>Phone</th>
-                        <th>Email</th>
-                        <th>Course</th>
-                        <th>Semester</th>
-                        <th>Section</th>
-                        <th>Status</th>
-                        <th>Actions</th>
-
-                    </tr>
-
-                    </thead>
-
-
-                    <tbody id="studentTableBody">
-                    </tbody>
-
-                </table>
-
-
-                <div
-                    id="loadingState"
-                    class="table-state">
-
-                    <div
-                        class="spinner-border text-secondary mb-3">
-                    </div>
+                <div class="table-header">
 
                     <div>
-                        Loading students...
+
+                        <h5 class="table-title">
+                            Student Directory
+                        </h5>
+
+                        <p class="table-subtitle">
+                            All registered students
+                        </p>
+
+                    </div>
+
+
+                    <div class="filters">
+
+                        <div class="search-box">
+
+                            <i class="bi bi-search"></i>
+
+                            <input type="text" id="searchInput" placeholder="Search name or roll number">
+
+                        </div>
+
+
+                        <select id="statusFilter" class="filter-select">
+
+                            <option value="ALL">
+                                All Status
+                            </option>
+
+                            <option value="ACTIVE">
+                                Active
+                            </option>
+
+                            <option value="INACTIVE">
+                                Inactive
+                            </option>
+
+                        </select>
+
+
+                        <button class="btn-refresh" id="refreshBtn" title="Refresh">
+
+                            <i class="bi bi-arrow-clockwise"></i>
+
+                        </button>
+
                     </div>
 
                 </div>
 
 
-                <div
-                    id="emptyState"
-                    class="table-state"
-                    style="display:none;">
+                <div class="table-responsive">
 
-                    <i class="bi bi-people"></i>
+                    <table class="table student-table">
 
-                    <strong>
-                        No students found
-                    </strong>
+                        <thead>
 
-                    <small>
-                        Try changing your search or filter.
-                    </small>
+                            <tr>
+
+                                <th>Student</th>
+
+                                <th>Roll Number</th>
+
+                                <th>Phone</th>
+
+                                <th>Email</th>
+
+                                <th>Course</th>
+
+                                <th>Semester</th>
+
+                                <th>Section</th>
+
+                                <th>Status</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="studentTableBody"></tbody>
+
+                    </table>
+
+
+                    <div id="loadingState" class="table-state">
+
+                        <div class="spinner-border text-secondary mb-3">
+                        </div>
+
+                        <div>
+                            Loading students...
+                        </div>
+
+                    </div>
+
+
+                    <div id="emptyState" class="table-state" style="display:none;">
+
+                        <i class="bi bi-people"></i>
+
+                        <strong>
+                            No students found
+                        </strong>
+
+                        <small>
+                            Try changing your search or filter.
+                        </small>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer class="footer">
+
+            © <span id="currentYear"></span>
+            College Attendance System.
+            All rights reserved.
+
+        </footer>
+
+    </main>
+
+
+    <!-- =========================================================
+     ADD / EDIT STUDENT MODAL
+========================================================= -->
+
+    <div class="modal fade" id="studentModal" tabindex="-1">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div>
+
+                        <h5 class="modal-title" id="studentModalTitle">
+
+                            Add Student
+
+                        </h5>
+
+                        <small class="text-muted">
+
+                            Enter student information
+
+                        </small>
+
+                    </div>
+
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <form id="studentForm">
+
+                    <div class="modal-body">
+
+                        <input type="hidden" id="studentId">
+
+
+                        <div class="row g-3">
+
+                            <!-- NAME -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label" for="studentName">
+
+                                    Student Name
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <input type="text" class="form-control" id="studentName"
+                                    placeholder="Enter student name" required>
+
+                            </div>
+
+
+                            <!-- ROLL -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label" for="rollNumber">
+
+                                    Roll Number
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <input type="text" class="form-control" id="rollNumber" placeholder="e.g. MCA2026001"
+                                    required>
+
+                            </div>
+
+
+                            <!-- PHONE -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label" for="phone">
+
+                                    Phone Number
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <input type="tel" class="form-control" id="phone" maxlength="10" minlength="10"
+                                    pattern="[6-9][0-9]{9}" placeholder="10 digit mobile number" required>
+
+                                <div class="form-text">
+                                    This will be used as the initial password.
+                                </div>
+
+                            </div>
+
+
+                            <!-- EMAIL -->
+
+                            <div class="col-md-6">
+
+                                <label class="form-label" for="email">
+
+                                    Email
+
+                                </label>
+
+                                <input type="email" class="form-control" id="email" placeholder="student@example.com">
+
+                            </div>
+
+
+                            <!-- COURSE -->
+
+                            <div class="col-md-4">
+
+                                <label class="form-label" for="courseId">
+
+                                    Course
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <select class="form-select" id="courseId" required>
+
+                                    <option value="">
+                                        Select Course
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- SEMESTER -->
+
+                            <div class="col-md-4">
+
+                                <label class="form-label" for="semesterId">
+
+                                    Semester
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <select class="form-select" id="semesterId" required>
+
+                                    <option value="">
+                                        Select Semester
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- SECTION -->
+
+                            <div class="col-md-4">
+
+                                <label class="form-label" for="sectionId">
+
+                                    Section
+
+                                    <span class="text-danger">
+                                        *
+                                    </span>
+
+                                </label>
+
+                                <select class="form-select" id="sectionId" required>
+
+                                    <option value="">
+                                        Select Section
+                                    </option>
+
+                                </select>
+
+                            </div>
+
+
+                            <!-- =================================================
+                             PROFILE PHOTO
+                        ================================================== -->
+
+                            <div class="col-12">
+
+                                <label class="form-label" for="profilePhoto">
+
+                                    Profile Photo
+
+                                    <span class="text-danger" id="profileRequired">
+                                        *
+                                    </span>
+
+                                </label>
+
+
+                                <div class="profile-upload-box">
+
+                                    <div id="profilePlaceholder" class="profile-placeholder">
+
+                                        <i class="bi bi-person"></i>
+
+                                    </div>
+
+
+                                    <img id="profilePreview" class="profile-preview" alt="Profile Preview">
+
+
+                                    <input type="file" id="profilePhoto" class="form-control" accept="image/*">
+
+
+                                    <div class="form-text">
+
+                                        Take/select a clear student profile photo.
+                                        Maximum size: 5 MB.
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn btn-light" data-bs-dismiss="modal">
+
+                            Cancel
+
+                        </button>
+
+
+                        <button type="submit" class="btn btn-dark" id="saveStudentBtn">
+
+                            <i class="bi bi-check-lg me-1"></i>
+
+                            Save Student
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- =========================================================
+     VIEW STUDENT MODAL
+========================================================= -->
+
+    <div class="modal fade" id="viewStudentModal" tabindex="-1">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+                        Student Details
+                    </h5>
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+
+                <div class="modal-body">
+
+                    <div class="profile-header">
+
+                        <div class="profile-avatar" id="viewAvatar">
+
+                            S
+
+                        </div>
+
+
+                        <div>
+
+                            <div class="profile-name" id="viewName">
+                                -
+                            </div>
+
+                            <div class="profile-roll" id="viewRoll">
+                                -
+                            </div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="row g-3">
+
+                        <div class="col-md-4">
+
+                            <div class="detail-box">
+
+                                <div class="detail-label">
+                                    User ID
+                                </div>
+
+                                <div class="detail-value" id="viewUserId">
+                                    -
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="detail-box">
+
+                                <div class="detail-label">
+                                    Username
+                                </div>
+
+                                <div class="detail-value" id="viewUsername">
+                                    -
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="detail-box">
+
+                                <div class="detail-label">
+                                    Status
+                                </div>
+
+                                <div class="detail-value" id="viewStatus">
+                                    -
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="detail-box">
+
+                                <div class="detail-label">
+                                    Phone
+                                </div>
+
+                                <div class="detail-value" id="viewPhone">
+                                    -
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-6">
+
+                            <div class="detail-box">
+
+                                <div class="detail-label">
+                                    Email
+                                </div>
+
+                                <div class="detail-value" id="viewEmail">
+                                    -
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="detail-box">
+
+                                <div class="detail-label">
+                                    Course
+                                </div>
+
+                                <div class="detail-value" id="viewCourse">
+                                    -
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="detail-box">
+
+                                <div class="detail-label">
+                                    Semester
+                                </div>
+
+                                <div class="detail-value" id="viewSemester">
+                                    -
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="col-md-4">
+
+                            <div class="detail-box">
+
+                                <div class="detail-label">
+                                    Section
+                                </div>
+
+                                <div class="detail-value" id="viewSection">
+                                    -
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
 
                 </div>
 
@@ -1230,246 +1662,107 @@
 
         </div>
 
-    </section>
+    </div>
 
 
-    <footer class="footer">
-
-        © <span id="currentYear"></span>
-        College Attendance System.
-        All rights reserved.
-
-    </footer>
-
-</main>
-
-
-<!-- =========================================================
-     ADD / EDIT STUDENT MODAL
+    <!-- =========================================================
+     FACE REGISTRATION MODAL
 ========================================================= -->
 
-<div
-    class="modal fade"
-    id="studentModal"
-    tabindex="-1">
+    <div class="modal fade" id="faceModal" tabindex="-1">
 
-    <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
 
-        <div class="modal-content">
+            <div class="modal-content">
 
-            <div class="modal-header">
+                <div class="modal-header">
 
-                <div>
+                    <div>
 
-                    <h5
-                        class="modal-title"
-                        id="studentModalTitle">
+                        <h5 class="modal-title">
+                            Register Face
+                        </h5>
 
-                        Add Student
+                        <small class="text-muted" id="faceStudentName">
 
-                    </h5>
+                            Student
 
-                    <small class="text-muted">
-                        Enter student information
-                    </small>
+                        </small>
+
+                    </div>
+
+
+                    <button type="button" class="btn-close" data-bs-dismiss="modal">
+                    </button>
 
                 </div>
 
 
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal">
-                </button>
-
-            </div>
-
-
-            <form id="studentForm">
-
                 <div class="modal-body">
 
-                    <input
-                        type="hidden"
-                        id="studentId">
+                    <div class="face-camera">
+
+                        <video id="faceCamera" autoplay playsinline>
+                        </video>
 
 
-                    <div class="row g-3">
-
-                        <!-- NAME -->
-
-                        <div class="col-md-6">
-
-                            <label
-                                class="form-label"
-                                for="studentName">
-
-                                Student Name
-                                <span class="text-danger">*</span>
-
-                            </label>
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="studentName"
-                                placeholder="Enter student name"
-                                required>
-
-                        </div>
+                        <img id="facePreview" alt="Face preview">
 
 
-                        <!-- ROLL -->
+                        <div class="face-placeholder" id="facePlaceholder">
 
-                        <div class="col-md-6">
+                            <i class="bi bi-person-bounding-box"></i>
 
-                            <label
-                                class="form-label"
-                                for="rollNumber">
-
-                                Roll Number
-                                <span class="text-danger">*</span>
-
-                            </label>
-
-                            <input
-                                type="text"
-                                class="form-control"
-                                id="rollNumber"
-                                placeholder="e.g. MCA2026001"
-                                required>
-
-                        </div>
-
-
-                        <!-- PHONE -->
-
-                        <div class="col-md-6">
-
-                            <label
-                                class="form-label"
-                                for="phone">
-
-                                Phone Number
-                                <span class="text-danger">*</span>
-
-                            </label>
-
-                            <input
-                                type="tel"
-                                class="form-control"
-                                id="phone"
-                                maxlength="10"
-                                placeholder="10 digit mobile number"
-                                required>
-
-                            <div class="form-text">
-                                This will be used as the initial password.
+                            <div>
+                                Camera is not started
                             </div>
 
-                        </div>
-
-
-                        <!-- EMAIL -->
-
-                        <div class="col-md-6">
-
-                            <label
-                                class="form-label"
-                                for="email">
-
-                                Email
-
-                            </label>
-
-                            <input
-                                type="email"
-                                class="form-control"
-                                id="email"
-                                placeholder="student@example.com">
+                            <small>
+                                Capture a clear front-facing image
+                            </small>
 
                         </div>
 
-
-                        <!-- COURSE -->
-
-                        <div class="col-md-4">
-
-                            <label
-                                class="form-label"
-                                for="courseId">
-
-                                Course
-                                <span class="text-danger">*</span>
-
-                            </label>
-
-                            <select
-                                class="form-select"
-                                id="courseId"
-                                required>
-
-                                <option value="">
-                                    Select Course
-                                </option>
-
-                            </select>
-
-                        </div>
+                    </div>
 
 
-                        <!-- SEMESTER -->
+                    <div class="face-controls">
 
-                        <div class="col-md-4">
+                        <button type="button" class="btn btn-dark" id="startFaceCameraBtn">
 
-                            <label
-                                class="form-label"
-                                for="semesterId">
+                            <i class="bi bi-camera-video me-1"></i>
 
-                                Semester
-                                <span class="text-danger">*</span>
+                            Start Camera
 
-                            </label>
-
-                            <select
-                                class="form-select"
-                                id="semesterId"
-                                required>
-
-                                <option value="">
-                                    Select Semester
-                                </option>
-
-                            </select>
-
-                        </div>
+                        </button>
 
 
-                        <!-- SECTION -->
+                        <button type="button" class="btn btn-outline-dark" id="captureFaceBtn" disabled>
 
-                        <div class="col-md-4">
+                            <i class="bi bi-camera me-1"></i>
 
-                            <label
-                                class="form-label"
-                                for="sectionId">
+                            Capture
 
-                                Section
-                                <span class="text-danger">*</span>
+                        </button>
 
-                            </label>
+                    </div>
 
-                            <select
-                                class="form-select"
-                                id="sectionId"
-                                required>
 
-                                <option value="">
-                                    Select Section
-                                </option>
+                    <input type="file" id="faceFileInput" class="form-control mt-3" accept="image/*">
 
-                            </select>
 
-                        </div>
+                    <div class="face-info">
+
+                        <i class="bi bi-info-circle me-1"></i>
+
+                        Use a fresh clear image with one face visible.
+                        Avoid sunglasses, masks and dark lighting.
+
+                        <br>
+
+                        <strong>
+                            Profile photo and face registration are separate.
+                        </strong>
 
                     </div>
 
@@ -1478,397 +1771,22 @@
 
                 <div class="modal-footer">
 
-                    <button
-                        type="button"
-                        class="btn-modal-secondary"
-                        data-bs-dismiss="modal">
+                    <button type="button" class="btn btn-light" data-bs-dismiss="modal">
 
                         Cancel
 
                     </button>
 
 
-                    <button
-                        type="submit"
-                        class="btn-modal-primary"
-                        id="saveStudentBtn">
+                    <button type="button" class="btn btn-dark" id="registerFaceBtn">
 
-                        <i class="bi bi-check-lg me-1"></i>
-                        Save Student
+                        <i class="bi bi-shield-check me-1"></i>
 
-                    </button>
-
-                </div>
-
-            </form>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     VIEW STUDENT MODAL
-========================================================= -->
-
-<div
-    class="modal fade"
-    id="viewStudentModal"
-    tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <h5 class="modal-title">
-                    Student Details
-                </h5>
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal">
-                </button>
-
-            </div>
-
-
-            <div class="modal-body">
-
-                <div class="profile-header">
-
-                    <div
-                        class="profile-avatar"
-                        id="viewAvatar">
-                        S
-                    </div>
-
-                    <div>
-
-                        <div
-                            class="profile-name"
-                            id="viewName">
-                            -
-                        </div>
-
-                        <div
-                            class="profile-roll"
-                            id="viewRoll">
-                            -
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <div class="row g-3">
-
-                    <div class="col-md-4">
-
-                        <div class="detail-box">
-
-                            <div class="detail-label">
-                                User ID
-                            </div>
-
-                            <div
-                                class="detail-value"
-                                id="viewUserId">
-                                -
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-4">
-
-                        <div class="detail-box">
-
-                            <div class="detail-label">
-                                Username
-                            </div>
-
-                            <div
-                                class="detail-value"
-                                id="viewUsername">
-                                -
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-4">
-
-                        <div class="detail-box">
-
-                            <div class="detail-label">
-                                Status
-                            </div>
-
-                            <div
-                                class="detail-value"
-                                id="viewStatus">
-                                -
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-6">
-
-                        <div class="detail-box">
-
-                            <div class="detail-label">
-                                Phone
-                            </div>
-
-                            <div
-                                class="detail-value"
-                                id="viewPhone">
-                                -
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-6">
-
-                        <div class="detail-box">
-
-                            <div class="detail-label">
-                                Email
-                            </div>
-
-                            <div
-                                class="detail-value"
-                                id="viewEmail">
-                                -
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-4">
-
-                        <div class="detail-box">
-
-                            <div class="detail-label">
-                                Course ID
-                            </div>
-
-                            <div
-                                class="detail-value"
-                                id="viewCourse">
-                                -
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-4">
-
-                        <div class="detail-box">
-
-                            <div class="detail-label">
-                                Semester ID
-                            </div>
-
-                            <div
-                                class="detail-value"
-                                id="viewSemester">
-                                -
-                            </div>
-
-                        </div>
-
-                    </div>
-
-
-                    <div class="col-md-4">
-
-                        <div class="detail-box">
-
-                            <div class="detail-label">
-                                Section ID
-                            </div>
-
-                            <div
-                                class="detail-value"
-                                id="viewSection">
-                                -
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- =========================================================
-     FACE REGISTRATION MODAL
-========================================================= -->
-
-<div
-    class="modal fade"
-    id="faceModal"
-    tabindex="-1">
-
-    <div class="modal-dialog modal-lg modal-dialog-centered">
-
-        <div class="modal-content">
-
-            <div class="modal-header">
-
-                <div>
-
-                    <h5 class="modal-title">
                         Register Face
-                    </h5>
-
-                    <small
-                        class="text-muted"
-                        id="faceStudentName">
-                        Student
-                    </small>
-
-                </div>
-
-
-                <button
-                    type="button"
-                    class="btn-close"
-                    data-bs-dismiss="modal">
-                </button>
-
-            </div>
-
-
-            <div class="modal-body">
-
-                <div class="face-camera">
-
-                    <video
-                        id="faceCamera"
-                        autoplay
-                        playsinline>
-                    </video>
-
-                    <img
-                        id="facePreview"
-                        alt="Face preview">
-
-                    <div
-                        class="face-placeholder"
-                        id="facePlaceholder">
-
-                        <i class="bi bi-person-bounding-box"></i>
-
-                        <div>
-                            Camera is not started
-                        </div>
-
-                        <small>
-                            Capture a clear front-facing image
-                        </small>
-
-                    </div>
-
-                </div>
-
-
-                <div class="face-controls">
-
-                    <button
-                        type="button"
-                        class="btn btn-dark"
-                        id="startFaceCameraBtn">
-
-                        <i class="bi bi-camera-video me-1"></i>
-                        Start Camera
-
-                    </button>
-
-
-                    <button
-                        type="button"
-                        class="btn btn-outline-dark"
-                        id="captureFaceBtn"
-                        disabled>
-
-                        <i class="bi bi-camera me-1"></i>
-                        Capture
 
                     </button>
 
                 </div>
-
-
-                <input
-                    type="file"
-                    id="faceFileInput"
-                    class="form-control mt-3"
-                    accept="image/*">
-
-
-                <div class="face-info">
-
-                    <i class="bi bi-info-circle me-1"></i>
-
-                    Use a clear image with one face visible.
-                    Avoid sunglasses, masks and extremely dark lighting.
-
-                </div>
-
-            </div>
-
-
-            <div class="modal-footer">
-
-                <button
-                    type="button"
-                    class="btn-modal-secondary"
-                    data-bs-dismiss="modal">
-
-                    Cancel
-
-                </button>
-
-
-                <button
-                    type="button"
-                    class="btn-modal-primary"
-                    id="registerFaceBtn">
-
-                    <i class="bi bi-shield-check me-1"></i>
-                    Register Face
-
-                </button>
 
             </div>
 
@@ -1876,497 +1794,516 @@
 
     </div>
 
-</div>
 
-
-<!-- =========================================================
+    <!-- =========================================================
      TOAST
 ========================================================= -->
 
-<div
-    class="toast-container position-fixed top-0 end-0 p-3">
+    <div class="toast-container position-fixed top-0 end-0 p-3">
 
-    <div
-        id="appToast"
-        class="toast"
-        role="alert">
+        <div id="appToast" class="toast" role="alert">
 
-        <div class="toast-header">
+            <div class="toast-header">
 
-            <i
-                id="toastIcon"
-                class="bi bi-check-circle me-2">
-            </i>
+                <i id="toastIcon" class="bi bi-check-circle me-2">
+                </i>
 
-            <strong
-                id="toastTitle"
-                class="me-auto">
-                Success
-            </strong>
+                <strong id="toastTitle" class="me-auto">
 
-            <button
-                type="button"
-                class="btn-close"
-                data-bs-dismiss="toast">
-            </button>
+                    Success
 
-        </div>
+                </strong>
+
+                <button type="button" class="btn-close" data-bs-dismiss="toast">
+                </button>
+
+            </div>
 
 
-        <div
-            id="toastMessage"
-            class="toast-body">
+            <div id="toastMessage" class="toast-body">
 
-            Operation completed.
+                Operation completed.
+
+            </div>
 
         </div>
 
     </div>
 
-</div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    </script>
+
+    <script src="js/auth.js"></script>
+
+    <script>
+
+        /* =========================================================
+           AUTH
+        ========================================================= */
+
+        if (!requireAuth()) {
+            throw new Error("Authentication required.");
+        }
 
 
-<!-- =========================================================
-     BOOTSTRAP JS
-========================================================= -->
+        /* =========================================================
+           CONFIG
+        ========================================================= */
 
-<script
-    src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-</script>
+        const API_BASE_URL = "http://localhost:8080";
 
+        const STUDENT_API =
+            `${API_BASE_URL}/api/admin/students`;
 
-<!-- =========================================================
-     AUTH JS
-========================================================= -->
+        const COURSE_API =
+            `${API_BASE_URL}/api/admin/courses`;
 
-<script src="js/auth.js"></script>
+        const SEMESTER_API =
+            `${API_BASE_URL}/api/admin/semesters`;
 
-
-<script>
-
-    /* =========================================================
-       AUTHENTICATION
-    ========================================================= */
-
-    /*
-     * This page is protected.
-     *
-     * If accessToken does not exist,
-     * user will be redirected to login.html.
-     */
-    if (!requireAuth()) {
-        throw new Error("Authentication required.");
-    }
+        const SECTION_API =
+            `${API_BASE_URL}/api/admin/sections`;
 
 
-    /* =========================================================
-       CONFIGURATION
-    ========================================================= */
+        /* =========================================================
+           STATE
+        ========================================================= */
 
-    const API_BASE_URL = "http://localhost:8080";
+        let students = [];
 
-    const STUDENT_API =
-        `${API_BASE_URL}/api/admin/students`;
+        let courses = [];
+        let semesters = [];
+        let sections = [];
 
-    const COURSE_API =
-        `${API_BASE_URL}/api/admin/courses`;
+        let editingStudentId = null;
 
-    const SEMESTER_API =
-        `${API_BASE_URL}/api/admin/semesters`;
+        /*
+         * New profile image selected by admin.
+         *
+         * IMPORTANT:
+         * On edit, this remains null when the admin does not
+         * select a new image. Therefore old image remains unchanged.
+         */
+        let profilePhotoFile = null;
 
-    const SECTION_API =
-        `${API_BASE_URL}/api/admin/sections`;
-
-
-    /* =========================================================
-       STATE
-    ========================================================= */
-
-    let students = [];
-
-    let courses = [];
-    let semesters = [];
-    let sections = [];
-
-    let editingStudentId = null;
-
-    let faceUserId = null;
-    let faceFile = null;
-    let faceCameraStream = null;
+        let faceUserId = null;
+        let faceFile = null;
+        let faceCameraStream = null;
 
 
-    /* =========================================================
-       BOOTSTRAP MODALS
-    ========================================================= */
+        /* =========================================================
+           MODALS
+        ========================================================= */
 
-    const studentModal =
-        new bootstrap.Modal(
-            document.getElementById("studentModal")
-        );
+        const studentModal =
+            new bootstrap.Modal(
+                document.getElementById("studentModal")
+            );
 
-    const viewStudentModal =
-        new bootstrap.Modal(
-            document.getElementById("viewStudentModal")
-        );
+        const viewStudentModal =
+            new bootstrap.Modal(
+                document.getElementById("viewStudentModal")
+            );
 
-    const faceModal =
-        new bootstrap.Modal(
-            document.getElementById("faceModal")
-        );
-
-
-    /* =========================================================
-       DOM
-    ========================================================= */
-
-    const studentTableBody =
-        document.getElementById("studentTableBody");
-
-    const loadingState =
-        document.getElementById("loadingState");
-
-    const emptyState =
-        document.getElementById("emptyState");
-
-    const searchInput =
-        document.getElementById("searchInput");
-
-    const statusFilter =
-        document.getElementById("statusFilter");
+        const faceModal =
+            new bootstrap.Modal(
+                document.getElementById("faceModal")
+            );
 
 
-    /* =========================================================
-       INITIAL LOAD
-    ========================================================= */
+        /* =========================================================
+           DOM
+        ========================================================= */
 
-    document.addEventListener("DOMContentLoaded", async () => {
+        const studentTableBody =
+            document.getElementById("studentTableBody");
 
-        document.getElementById("currentYear")
-            .innerText = new Date().getFullYear();
+        const loadingState =
+            document.getElementById("loadingState");
 
-        await Promise.all([
-            loadStudents(),
-            loadCourses(),
-            loadSemesters(),
-            loadSections()
-        ]);
+        const emptyState =
+            document.getElementById("emptyState");
 
-    });
+        const searchInput =
+            document.getElementById("searchInput");
+
+        const statusFilter =
+            document.getElementById("statusFilter");
+
+        const profilePhotoInput =
+            document.getElementById("profilePhoto");
+
+        const profilePreview =
+            document.getElementById("profilePreview");
+
+        const profilePlaceholder =
+            document.getElementById("profilePlaceholder");
+
+        const profileRequired =
+            document.getElementById("profileRequired");
 
 
-    /* =========================================================
-       LOAD STUDENTS
-    ========================================================= */
+        /* =========================================================
+           INITIAL LOAD
+        ========================================================= */
 
-    async function loadStudents() {
+        document.addEventListener(
+            "DOMContentLoaded",
+            async () => {
 
-        showLoading();
+                document.getElementById("currentYear")
+                    .innerText =
+                    new Date().getFullYear();
 
-        try {
+                await Promise.all([
+                    loadStudents(),
+                    loadCourses(),
+                    loadSemesters(),
+                    loadSections()
+                ]);
 
-            /*
-             * apiFetch automatically adds:
-             *
-             * Authorization: Bearer <token>
-             */
-            const response =
-                await apiFetch(STUDENT_API);
-
-            if (!response) {
-                return;
             }
+        );
 
-            if (!response.ok) {
 
-                throw new Error(
-                    await getErrorMessage(response)
+        /* =========================================================
+           LOAD STUDENTS
+        ========================================================= */
+
+        async function loadStudents() {
+
+            showLoading();
+
+            try {
+
+                const response =
+                    await apiFetch(STUDENT_API);
+
+                if (!response) {
+                    return;
+                }
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        await getErrorMessage(response)
+                    );
+
+                }
+
+                students =
+                    await response.json();
+
+                updateStatistics();
+
+                renderStudents();
+
+            } catch (error) {
+
+                console.error(
+                    "Student loading failed:",
+                    error
+                );
+
+                showTableError(
+                    error.message ||
+                    "Unable to load students."
                 );
 
             }
 
-            students =
-                await response.json();
-
-            updateStatistics();
-
-            renderStudents();
-
-        } catch (error) {
-
-            console.error(error);
-
-            showTableError(
-                error.message ||
-                "Unable to load students."
-            );
-
         }
 
-    }
 
+        /* =========================================================
+           LOAD COURSES
+        ========================================================= */
 
-    /* =========================================================
-       LOAD COURSES
-    ========================================================= */
+        async function loadCourses() {
 
-    async function loadCourses() {
+            try {
 
-        try {
+                const response =
+                    await apiFetch(COURSE_API);
 
-            const response =
-                await apiFetch(COURSE_API);
+                if (!response || !response.ok) {
+                    return;
+                }
 
-            if (!response) {
-                return;
-            }
+                courses =
+                    await response.json();
 
-            if (!response.ok) {
+                populateSelect(
+                    document.getElementById("courseId"),
+                    courses,
+                    "Select Course"
+                );
 
-                throw new Error(
-                    await getErrorMessage(response)
+            } catch (error) {
+
+                console.error(
+                    "Course loading failed:",
+                    error
                 );
 
             }
 
-            courses =
-                await response.json();
-
-            populateSelect(
-                document.getElementById("courseId"),
-                courses,
-                "Select Course"
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Course loading failed:",
-                error
-            );
-
         }
 
-    }
 
+        /* =========================================================
+           LOAD SEMESTERS
+        ========================================================= */
 
-    /* =========================================================
-       LOAD SEMESTERS
-    ========================================================= */
+        async function loadSemesters() {
 
-    async function loadSemesters() {
+            try {
 
-        try {
+                const response =
+                    await apiFetch(SEMESTER_API);
 
-            const response =
-                await apiFetch(SEMESTER_API);
+                if (!response || !response.ok) {
+                    return;
+                }
 
-            if (!response) {
-                return;
-            }
+                semesters =
+                    await response.json();
 
-            if (!response.ok) {
+                populateSelect(
+                    document.getElementById("semesterId"),
+                    semesters,
+                    "Select Semester"
+                );
 
-                throw new Error(
-                    await getErrorMessage(response)
+            } catch (error) {
+
+                console.error(
+                    "Semester loading failed:",
+                    error
                 );
 
             }
 
-            semesters =
-                await response.json();
-
-            populateSelect(
-                document.getElementById("semesterId"),
-                semesters,
-                "Select Semester"
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Semester loading failed:",
-                error
-            );
-
         }
 
-    }
 
+        /* =========================================================
+           LOAD SECTIONS
+        ========================================================= */
 
-    /* =========================================================
-       LOAD SECTIONS
-    ========================================================= */
+        async function loadSections() {
 
-    async function loadSections() {
+            try {
 
-        try {
+                const response =
+                    await apiFetch(SECTION_API);
 
-            const response =
-                await apiFetch(SECTION_API);
+                if (!response || !response.ok) {
+                    return;
+                }
 
-            if (!response) {
-                return;
-            }
+                sections =
+                    await response.json();
 
-            if (!response.ok) {
+                populateSelect(
+                    document.getElementById("sectionId"),
+                    sections,
+                    "Select Section"
+                );
 
-                throw new Error(
-                    await getErrorMessage(response)
+            } catch (error) {
+
+                console.error(
+                    "Section loading failed:",
+                    error
                 );
 
             }
 
-            sections =
-                await response.json();
-
-            populateSelect(
-                document.getElementById("sectionId"),
-                sections,
-                "Select Section"
-            );
-
-        } catch (error) {
-
-            console.error(
-                "Section loading failed:",
-                error
-            );
-
         }
 
-    }
 
+        /* =========================================================
+           SELECT
+        ========================================================= */
 
-    /* =========================================================
-       POPULATE SELECT
-    ========================================================= */
+        function populateSelect(
+            select,
+            data,
+            placeholder
+        ) {
 
-    function populateSelect(
-        select,
-        data,
-        placeholder
-    ) {
+            select.innerHTML =
+                `<option value="">${placeholder}</option>`;
 
-        select.innerHTML =
-            `<option value="">${placeholder}</option>`;
+            data.forEach(item => {
 
-        data.forEach(item => {
+                const option =
+                    document.createElement("option");
 
-            const option =
-                document.createElement("option");
+                option.value =
+                    item.id;
 
-            option.value =
-                item.id;
+                option.textContent =
+                    getDisplayName(item);
 
-            option.textContent =
-                getDisplayName(item);
-
-            select.appendChild(option);
-
-        });
-
-    }
-
-
-    function getDisplayName(item) {
-
-        return (
-            item.name ??
-            item.courseName ??
-            item.semesterName ??
-            item.sectionName ??
-            item.title ??
-            `ID: ${item.id}`
-        );
-
-    }
-
-
-    /* =========================================================
-       RENDER STUDENTS
-    ========================================================= */
-
-    function renderStudents() {
-
-        const search =
-            searchInput.value
-                .trim()
-                .toLowerCase();
-
-        const status =
-            statusFilter.value;
-
-        const filtered =
-            students.filter(student => {
-
-                const matchesSearch =
-                    !search ||
-                    String(student.name || "")
-                        .toLowerCase()
-                        .includes(search) ||
-                    String(student.rollNumber || "")
-                        .toLowerCase()
-                        .includes(search) ||
-                    String(student.phone || "")
-                        .toLowerCase()
-                        .includes(search);
-
-                const matchesStatus =
-                    status === "ALL" ||
-                    student.status === status;
-
-                return matchesSearch &&
-                    matchesStatus;
+                select.appendChild(option);
 
             });
 
+        }
 
-        studentTableBody.innerHTML = "";
 
+        function getDisplayName(item) {
 
-        if (filtered.length === 0) {
-
-            loadingState.style.display = "none";
-
-            emptyState.style.display = "flex";
-
-            return;
+            return (
+                item.name ??
+                item.courseName ??
+                item.semesterName ??
+                item.sectionName ??
+                item.title ??
+                `ID: ${item.id}`
+            );
 
         }
 
 
-        loadingState.style.display = "none";
+        /* =========================================================
+           RENDER STUDENTS
+        ========================================================= */
 
-        emptyState.style.display = "none";
+        function renderStudents() {
+
+            const search =
+                searchInput.value
+                    .trim()
+                    .toLowerCase();
+
+            const status =
+                statusFilter.value;
 
 
-        filtered.forEach(student => {
+            const filtered =
+                students.filter(student => {
 
-            const row =
-                document.createElement("tr");
+                    const matchesSearch =
+                        !search ||
+                        String(student.name || "")
+                            .toLowerCase()
+                            .includes(search) ||
 
-            const initials =
-                getInitials(student.name);
+                        String(student.rollNumber || "")
+                            .toLowerCase()
+                            .includes(search) ||
+
+                        String(student.phone || "")
+                            .toLowerCase()
+                            .includes(search);
 
 
-            row.innerHTML = `
+                    const matchesStatus =
+                        status === "ALL" ||
+                        String(student.status || "")
+                            .toUpperCase() === status;
+
+
+                    return (
+                        matchesSearch &&
+                        matchesStatus
+                    );
+
+                });
+
+
+            studentTableBody.innerHTML = "";
+
+
+            if (filtered.length === 0) {
+
+                loadingState.style.display =
+                    "none";
+
+                emptyState.style.display =
+                    "flex";
+
+                return;
+
+            }
+
+
+            loadingState.style.display =
+                "none";
+
+            emptyState.style.display =
+                "none";
+
+
+            filtered.forEach(student => {
+
+                const row =
+                    document.createElement("tr");
+
+
+                const initials =
+                    getInitials(student.name);
+
+
+                let profileImageHtml = "";
+
+
+                if (student.profileImageUrl) {
+
+                    profileImageHtml = `
+
+                    <img
+                        src="${escapeHtml(
+                        getImageUrl(
+                            student.profileImageUrl
+                        )
+                    )}"
+                        alt="${escapeHtml(
+                        student.name || "Student"
+                    )}"
+                        onerror="this.onerror=null;this.style.display='none';this.parentElement.innerText='${escapeJs(initials)}';"
+                    >
+
+                `;
+
+                }
+
+
+                row.innerHTML = `
 
                 <td>
 
                     <div class="student-info">
 
                         <div class="student-avatar">
-                            ${escapeHtml(initials)}
+
+                            ${profileImageHtml ||
+                    escapeHtml(initials)
+                    }
+
                         </div>
+
 
                         <div>
 
                             <div class="student-name">
-                                ${escapeHtml(student.name || "-")}
+
+                                ${escapeHtml(
+                        student.name || "-"
+                    )}
+
                             </div>
 
+
                             <div class="student-username">
-                                ${escapeHtml(student.username || "-")}
+
+                                ${escapeHtml(
+                        student.username || "-"
+                    )}
+
                             </div>
 
                         </div>
@@ -2377,60 +2314,85 @@
 
 
                 <td>
+
                     <strong>
-                        ${escapeHtml(student.rollNumber || "-")}
+
+                        ${escapeHtml(
+                        student.rollNumber || "-"
+                    )}
+
                     </strong>
+
                 </td>
 
 
                 <td>
-                    ${escapeHtml(student.phone || "-")}
+
+                    ${escapeHtml(
+                        student.phone || "-"
+                    )}
+
                 </td>
 
 
                 <td>
-                    ${escapeHtml(student.email || "-")}
+
+                    ${escapeHtml(
+                        student.email || "-"
+                    )}
+
                 </td>
 
 
                 <td>
+
                     ${escapeHtml(
                         getRelatedName(
                             courses,
                             student.courseId
                         )
                     )}
+
                 </td>
 
 
                 <td>
+
                     ${escapeHtml(
                         getRelatedName(
                             semesters,
                             student.semesterId
                         )
                     )}
+
                 </td>
 
 
                 <td>
+
                     ${escapeHtml(
                         getRelatedName(
                             sections,
                             student.sectionId
                         )
                     )}
+
                 </td>
 
 
                 <td>
-                    ${getStatusBadge(student.status)}
+
+                    ${getStatusBadge(
+                        student.status
+                    )}
+
                 </td>
 
 
                 <td>
 
                     <button
+                        type="button"
                         class="action-btn"
                         title="View"
                         onclick="viewStudent(${student.id})">
@@ -2441,6 +2403,7 @@
 
 
                     <button
+                        type="button"
                         class="action-btn edit"
                         title="Edit"
                         onclick="editStudent(${student.id})">
@@ -2451,27 +2414,37 @@
 
 
                     <button
+                        type="button"
                         class="action-btn face"
                         title="Register Face"
-                        onclick="openFaceRegistration(${student.userId}, '${escapeJs(student.name)}')">
+                        onclick="openFaceRegistration(
+                            ${student.userId},
+                            '${escapeJs(student.name)}'
+                        )">
 
                         <i class="bi bi-person-bounding-box"></i>
 
                     </button>
 
 
-                    ${
-                        student.status === "ACTIVE"
+                    ${String(student.status)
+                        .toUpperCase() === "ACTIVE"
                         ?
                         `
+
                         <button
+                            type="button"
                             class="action-btn delete"
                             title="Deactivate"
-                            onclick="deactivateStudent(${student.id}, '${escapeJs(student.name)}')">
+                            onclick="deactivateStudent(
+                                ${student.id},
+                                '${escapeJs(student.name)}'
+                            )">
 
                             <i class="bi bi-person-x"></i>
 
                         </button>
+
                         `
                         :
                         ""
@@ -2481,650 +2454,1343 @@
 
             `;
 
-            studentTableBody.appendChild(row);
 
-        });
+                studentTableBody.appendChild(row);
 
-    }
+            });
 
-
-    /* =========================================================
-       STATISTICS
-    ========================================================= */
-
-    function updateStatistics() {
-
-        const total =
-            students.length;
-
-        const active =
-            students.filter(
-                s => s.status === "ACTIVE"
-            ).length;
-
-        const inactive =
-            students.filter(
-                s => s.status === "INACTIVE"
-            ).length;
-
-
-        document.getElementById("totalStudents")
-            .innerText = total;
-
-        document.getElementById("activeStudents")
-            .innerText = active;
-
-        document.getElementById("inactiveStudents")
-            .innerText = inactive;
-
-    }
-
-
-    /* =========================================================
-       ADD STUDENT
-    ========================================================= */
-
-    document.getElementById("addStudentBtn")
-        .addEventListener("click", () => {
-
-            editingStudentId = null;
-
-            document.getElementById("studentModalTitle")
-                .innerText = "Add Student";
-
-            document.getElementById("saveStudentBtn")
-                .innerHTML =
-                '<i class="bi bi-check-lg me-1"></i> Save Student';
-
-            document.getElementById("studentForm")
-                .reset();
-
-            document.getElementById("studentId")
-                .value = "";
-
-            studentModal.show();
-
-        });
-
-
-    /* =========================================================
-       EDIT STUDENT
-    ========================================================= */
-
-    window.editStudent = function(id) {
-
-        const student =
-            students.find(
-                s => s.id === id
-            );
-
-        if (!student) {
-            return;
         }
 
-        editingStudentId = id;
 
-        document.getElementById("studentModalTitle")
-            .innerText = "Edit Student";
+        /* =========================================================
+           STATISTICS
+        ========================================================= */
 
-        document.getElementById("saveStudentBtn")
-            .innerHTML =
-            '<i class="bi bi-save me-1"></i> Update Student';
+        function updateStatistics() {
 
-
-        document.getElementById("studentId")
-            .value = student.id;
-
-        document.getElementById("studentName")
-            .value = student.name || "";
-
-        document.getElementById("rollNumber")
-            .value = student.rollNumber || "";
-
-        document.getElementById("phone")
-            .value = student.phone || "";
-
-        document.getElementById("email")
-            .value = student.email || "";
-
-        document.getElementById("courseId")
-            .value = student.courseId || "";
-
-        document.getElementById("semesterId")
-            .value = student.semesterId || "";
-
-        document.getElementById("sectionId")
-            .value = student.sectionId || "";
+            const total =
+                students.length;
 
 
-        studentModal.show();
-
-    };
-
-
-    /* =========================================================
-       SAVE / UPDATE STUDENT
-    ========================================================= */
-
-    document.getElementById("studentForm")
-        .addEventListener("submit", async event => {
-
-            event.preventDefault();
-
-            const saveButton =
-                document.getElementById("saveStudentBtn");
+            const active =
+                students.filter(
+                    s =>
+                        String(s.status)
+                            .toUpperCase() ===
+                        "ACTIVE"
+                ).length;
 
 
-            const request = {
+            const inactive =
+                students.filter(
+                    s =>
+                        String(s.status)
+                            .toUpperCase() ===
+                        "INACTIVE"
+                ).length;
 
-                name:
-                    document.getElementById("studentName")
-                        .value.trim(),
 
-                rollNumber:
-                    document.getElementById("rollNumber")
-                        .value.trim(),
+            document.getElementById(
+                "totalStudents"
+            ).innerText =
+                total;
 
-                phone:
-                    document.getElementById("phone")
-                        .value.trim(),
 
-                email:
-                    document.getElementById("email")
-                        .value.trim() || null,
+            document.getElementById(
+                "activeStudents"
+            ).innerText =
+                active;
 
-                courseId:
-                    Number(
-                        document.getElementById("courseId")
-                            .value
-                    ),
 
-                semesterId:
-                    Number(
-                        document.getElementById("semesterId")
-                            .value
-                    ),
+            document.getElementById(
+                "inactiveStudents"
+            ).innerText =
+                inactive;
 
-                sectionId:
-                    Number(
-                        document.getElementById("sectionId")
-                            .value
-                    )
+        }
+
+
+        /* =========================================================
+           ADD STUDENT
+        ========================================================= */
+
+        document.getElementById(
+            "addStudentBtn"
+        ).addEventListener(
+            "click",
+            () => {
+
+                editingStudentId = null;
+
+                profilePhotoFile = null;
+
+
+                document.getElementById(
+                    "studentModalTitle"
+                ).innerText =
+                    "Add Student";
+
+
+                document.getElementById(
+                    "saveStudentBtn"
+                ).innerHTML =
+                    '<i class="bi bi-check-lg me-1"></i> Save Student';
+
+
+                document.getElementById(
+                    "studentForm"
+                ).reset();
+
+
+                document.getElementById(
+                    "studentId"
+                ).value =
+                    "";
+
+
+                /*
+                 * New student MUST have profile photo.
+                 */
+                profilePhotoInput.required =
+                    true;
+
+
+                profileRequired.style.display =
+                    "inline";
+
+
+                resetProfilePreview();
+
+
+                studentModal.show();
+
+            }
+        );
+
+
+        /* =========================================================
+           PROFILE PHOTO CHANGE
+        ========================================================= */
+
+        profilePhotoInput.addEventListener(
+            "change",
+            event => {
+
+                const file =
+                    event.target.files[0];
+
+
+                if (!file) {
+
+                    profilePhotoFile =
+                        null;
+
+                    /*
+                     * Do not automatically remove existing image
+                     * while editing.
+                     */
+                    return;
+
+                }
+
+
+                if (!file.type.startsWith("image/")) {
+
+                    showToast(
+                        "Invalid File",
+                        "Please select an image file.",
+                        "error"
+                    );
+
+                    event.target.value =
+                        "";
+
+                    profilePhotoFile =
+                        null;
+
+                    return;
+
+                }
+
+
+                if (
+                    file.size >
+                    5 * 1024 * 1024
+                ) {
+
+                    showToast(
+                        "File Too Large",
+                        "Profile photo must be less than 5 MB.",
+                        "error"
+                    );
+
+                    event.target.value =
+                        "";
+
+                    profilePhotoFile =
+                        null;
+
+                    return;
+
+                }
+
+
+                profilePhotoFile =
+                    file;
+
+
+                /*
+                 * Show newly selected image.
+                 */
+                const objectUrl =
+                    URL.createObjectURL(file);
+
+
+                profilePreview.src =
+                    objectUrl;
+
+
+                profilePreview.style.display =
+                    "block";
+
+
+                profilePlaceholder.style.display =
+                    "none";
+
+            }
+        );
+
+
+        /* =========================================================
+           RESET PROFILE PREVIEW
+        ========================================================= */
+
+        function resetProfilePreview() {
+
+            profilePreview.src =
+                "";
+
+            profilePreview.style.display =
+                "none";
+
+
+            profilePlaceholder.style.display =
+                "flex";
+
+        }
+
+
+        /* =========================================================
+           SHOW EXISTING PROFILE IMAGE
+        ========================================================= */
+
+        function showExistingProfileImage(
+            imageUrl,
+            studentName
+        ) {
+
+            if (!imageUrl) {
+
+                resetProfilePreview();
+
+                return;
+
+            }
+
+
+            profilePreview.src =
+                getImageUrl(imageUrl);
+
+
+            profilePreview.alt =
+                `${studentName || "Student"} Profile Photo`;
+
+
+            profilePreview.style.display =
+                "block";
+
+
+            profilePlaceholder.style.display =
+                "none";
+
+
+            /*
+             * If old image cannot be loaded,
+             * fall back to placeholder.
+             */
+            profilePreview.onerror =
+                function () {
+
+                    this.onerror = null;
+
+                    resetProfilePreview();
+
+                };
+
+        }
+
+
+        /* =========================================================
+           EDIT STUDENT
+        ========================================================= */
+
+        window.editStudent =
+            function (id) {
+
+                const student =
+                    students.find(
+                        s =>
+                            Number(s.id) ===
+                            Number(id)
+                    );
+
+
+                if (!student) {
+                    return;
+                }
+
+
+                editingStudentId =
+                    student.id;
+
+
+                /*
+                 * Important:
+                 * null means no NEW image selected.
+                 *
+                 * Existing image remains untouched.
+                 */
+                profilePhotoFile =
+                    null;
+
+
+                document.getElementById(
+                    "studentModalTitle"
+                ).innerText =
+                    "Edit Student";
+
+
+                document.getElementById(
+                    "saveStudentBtn"
+                ).innerHTML =
+                    '<i class="bi bi-save me-1"></i> Update Student';
+
+
+                document.getElementById(
+                    "studentId"
+                ).value =
+                    student.id;
+
+
+                document.getElementById(
+                    "studentName"
+                ).value =
+                    student.name || "";
+
+
+                document.getElementById(
+                    "rollNumber"
+                ).value =
+                    student.rollNumber || "";
+
+
+                document.getElementById(
+                    "phone"
+                ).value =
+                    student.phone || "";
+
+
+                document.getElementById(
+                    "email"
+                ).value =
+                    student.email || "";
+
+
+                document.getElementById(
+                    "courseId"
+                ).value =
+                    student.courseId || "";
+
+
+                document.getElementById(
+                    "semesterId"
+                ).value =
+                    student.semesterId || "";
+
+
+                document.getElementById(
+                    "sectionId"
+                ).value =
+                    student.sectionId || "";
+
+
+                /*
+                 * Browser does not allow setting existing
+                 * file input value programmatically.
+                 *
+                 * Therefore input remains empty.
+                 *
+                 * Existing image is displayed separately.
+                 */
+
+
+                profilePhotoInput.value =
+                    "";
+
+
+                const hasExistingImage =
+                    !!student.profileImageUrl;
+
+
+                /*
+                 * If image already exists:
+                 *
+                 * New image is OPTIONAL.
+                 */
+                if (hasExistingImage) {
+
+                    profilePhotoInput.required =
+                        false;
+
+                    profileRequired.style.display =
+                        "none";
+
+
+                    showExistingProfileImage(
+                        student.profileImageUrl,
+                        student.name
+                    );
+
+                }
+
+                /*
+                 * If image does NOT exist:
+                 *
+                 * New image becomes mandatory.
+                 */
+                else {
+
+                    profilePhotoInput.required =
+                        true;
+
+                    profileRequired.style.display =
+                        "inline";
+
+
+                    resetProfilePreview();
+
+                }
+
+
+                studentModal.show();
 
             };
 
 
-            if (
-                !request.name ||
-                !request.rollNumber ||
-                !request.phone ||
-                !request.courseId ||
-                !request.semesterId ||
-                !request.sectionId
-            ) {
+        /* =========================================================
+           SAVE / UPDATE STUDENT
+        ========================================================= */
 
-                showToast(
-                    "Validation Error",
-                    "Please fill all required fields.",
-                    "error"
-                );
+        document.getElementById(
+            "studentForm"
+        ).addEventListener(
+            "submit",
+            async event => {
 
-                return;
+                event.preventDefault();
 
-            }
 
-
-            if (!/^[6-9][0-9]{9}$/.test(request.phone)) {
-
-                showToast(
-                    "Invalid Phone",
-                    "Please enter a valid 10-digit Indian mobile number.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            const isEdit =
-                editingStudentId !== null;
-
-            const url =
-                isEdit
-                    ? `${STUDENT_API}/${editingStudentId}`
-                    : STUDENT_API;
-
-            const method =
-                isEdit
-                    ? "PUT"
-                    : "POST";
-
-
-            saveButton.disabled = true;
-
-            saveButton.innerHTML =
-                '<span class="spinner-border spinner-border-sm me-2"></span> Saving...';
-
-
-            try {
-
-                /*
-                 * apiFetch automatically adds JWT token.
-                 */
-                const response =
-                    await apiFetch(url, {
-
-                        method,
-
-                        headers: {
-                            "Content-Type":
-                                "application/json"
-                        },
-
-                        body:
-                            JSON.stringify(request)
-
-                    });
-
-
-                if (!response) {
-                    return;
-                }
-
-
-                if (!response.ok) {
-
-                    throw new Error(
-                        await getErrorMessage(response)
-                    );
-
-                }
-
-
-                const data =
-                    await response.json();
-
-
-                showToast(
-                    isEdit
-                        ? "Student Updated"
-                        : "Student Created",
-
-                    isEdit
-                        ? "Student details updated successfully."
-                        : "Student created successfully.",
-
-                    "success"
-                );
-
-
-                studentModal.hide();
-
-                await loadStudents();
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                showToast(
-                    "Operation Failed",
-                    error.message ||
-                    "Unable to save student.",
-                    "error"
-                );
-
-            } finally {
-
-                saveButton.disabled = false;
-
-                saveButton.innerHTML =
-                    isEdit
-                        ? '<i class="bi bi-save me-1"></i> Update Student'
-                        : '<i class="bi bi-check-lg me-1"></i> Save Student';
-
-            }
-
-        });
-
-
-    /* =========================================================
-       VIEW STUDENT
-    ========================================================= */
-
-    window.viewStudent = async function(id) {
-
-        const student =
-            students.find(
-                s => s.id === id
-            );
-
-        if (!student) {
-            return;
-        }
-
-
-        document.getElementById("viewAvatar")
-            .innerText =
-            getInitials(student.name);
-
-
-        document.getElementById("viewName")
-            .innerText =
-            student.name || "-";
-
-
-        document.getElementById("viewRoll")
-            .innerText =
-            student.rollNumber || "-";
-
-
-        document.getElementById("viewUserId")
-            .innerText =
-            student.userId ?? "-";
-
-
-        document.getElementById("viewUsername")
-            .innerText =
-            student.username || "-";
-
-
-        document.getElementById("viewPhone")
-            .innerText =
-            student.phone || "-";
-
-
-        document.getElementById("viewEmail")
-            .innerText =
-            student.email || "-";
-
-
-        document.getElementById("viewCourse")
-            .innerText =
-            getRelatedName(
-                courses,
-                student.courseId
-            );
-
-
-        document.getElementById("viewSemester")
-            .innerText =
-            getRelatedName(
-                semesters,
-                student.semesterId
-            );
-
-
-        document.getElementById("viewSection")
-            .innerText =
-            getRelatedName(
-                sections,
-                student.sectionId
-            );
-
-
-        document.getElementById("viewStatus")
-            .innerHTML =
-            getStatusBadge(student.status);
-
-
-        viewStudentModal.show();
-
-    };
-
-
-    /* =========================================================
-       DEACTIVATE STUDENT
-    ========================================================= */
-
-    window.deactivateStudent =
-        async function(id, name) {
-
-            const confirmed =
-                confirm(
-                    `Are you sure you want to deactivate "${name}"?`
-                );
-
-            if (!confirmed) {
-                return;
-            }
-
-
-            try {
-
-                /*
-                 * apiFetch automatically adds JWT token.
-                 */
-                const response =
-                    await apiFetch(
-                        `${STUDENT_API}/${id}`,
-                        {
-                            method: "DELETE"
-                        }
+                const saveButton =
+                    document.getElementById(
+                        "saveStudentBtn"
                     );
 
 
-                if (!response) {
-                    return;
-                }
+                const request = {
+
+                    name:
+                        document.getElementById(
+                            "studentName"
+                        ).value.trim(),
 
 
-                if (!response.ok) {
-
-                    throw new Error(
-                        await getErrorMessage(response)
-                    );
-
-                }
+                    rollNumber:
+                        document.getElementById(
+                            "rollNumber"
+                        ).value.trim(),
 
 
-                showToast(
-                    "Student Deactivated",
-                    "Student has been marked inactive.",
-                    "success"
-                );
+                    phone:
+                        document.getElementById(
+                            "phone"
+                        ).value.trim(),
 
 
-                await loadStudents();
+                    email:
+                        document.getElementById(
+                            "email"
+                        ).value.trim() ||
+                        null,
 
 
-            } catch (error) {
-
-                console.error(error);
-
-                showToast(
-                    "Operation Failed",
-                    error.message ||
-                    "Unable to deactivate student.",
-                    "error"
-                );
-
-            }
-
-        };
+                    courseId:
+                        Number(
+                            document.getElementById(
+                                "courseId"
+                            ).value
+                        ),
 
 
-    /* =========================================================
-       FACE REGISTRATION
-    ========================================================= */
-
-    window.openFaceRegistration =
-        function(userId, studentName) {
-
-            faceUserId = userId;
-
-            faceFile = null;
-
-            document.getElementById("faceStudentName")
-                .innerText =
-                `${studentName} • User ID: ${userId}`;
+                    semesterId:
+                        Number(
+                            document.getElementById(
+                                "semesterId"
+                            ).value
+                        ),
 
 
-            document.getElementById("facePreview")
-                .style.display = "none";
+                    sectionId:
+                        Number(
+                            document.getElementById(
+                                "sectionId"
+                            ).value
+                        )
 
-            document.getElementById("faceCamera")
-                .style.display = "none";
-
-            document.getElementById("facePlaceholder")
-                .style.display = "block";
-
-
-            document.getElementById("faceFileInput")
-                .value = "";
+                };
 
 
-            document.getElementById("captureFaceBtn")
-                .disabled = true;
-
-
-            faceModal.show();
-
-        };
-
-
-    /* =========================================================
-       START FACE CAMERA
-    ========================================================= */
-
-    document.getElementById("startFaceCameraBtn")
-        .addEventListener("click", async () => {
-
-            try {
+                /* =================================================
+                   VALIDATION
+                ================================================= */
 
                 if (
-                    !navigator.mediaDevices ||
-                    !navigator.mediaDevices.getUserMedia
+                    !request.name ||
+                    !request.rollNumber ||
+                    !request.phone ||
+                    !request.courseId ||
+                    !request.semesterId ||
+                    !request.sectionId
                 ) {
 
-                    throw new Error(
-                        "Camera is not supported by this browser."
+                    showToast(
+                        "Validation Error",
+                        "Please fill all required fields.",
+                        "error"
                     );
+
+                    return;
 
                 }
 
 
-                faceCameraStream =
-                    await navigator.mediaDevices
-                        .getUserMedia({
+                if (
+                    !/^[6-9][0-9]{9}$/
+                        .test(request.phone)
+                ) {
 
-                            video: {
-                                facingMode: "user"
-                            },
+                    showToast(
+                        "Invalid Phone",
+                        "Please enter a valid 10-digit Indian mobile number.",
+                        "error"
+                    );
 
-                            audio: false
+                    return;
 
-                        });
-
-
-                const video =
-                    document.getElementById("faceCamera");
+                }
 
 
-                video.srcObject =
-                    faceCameraStream;
+                const isEdit =
+                    editingStudentId !== null;
 
-                video.style.display =
+
+                /*
+                 * Find current student when editing.
+                 */
+                const existingStudent =
+                    isEdit
+                        ? students.find(
+                            s =>
+                                Number(s.id) ===
+                                Number(editingStudentId)
+                        )
+                        : null;
+
+
+                /*
+                 * Profile image rules:
+                 *
+                 * ADD:
+                 *   Image mandatory.
+                 *
+                 * EDIT:
+                 *   Existing image -> optional new image.
+                 *   No existing image -> mandatory.
+                 */
+                const hasExistingImage =
+                    !!(
+                        existingStudent &&
+                        existingStudent.profileImageUrl
+                    );
+
+
+                if (
+                    !isEdit &&
+                    !profilePhotoFile
+                ) {
+
+                    showToast(
+                        "Profile Photo Required",
+                        "Please select the student's profile photo.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                if (
+                    isEdit &&
+                    !hasExistingImage &&
+                    !profilePhotoFile
+                ) {
+
+                    showToast(
+                        "Profile Photo Required",
+                        "This student does not have a profile photo. Please select one.",
+                        "error"
+                    );
+
+                    return;
+
+                }
+
+
+                const url =
+                    isEdit
+                        ? `${STUDENT_API}/${editingStudentId}`
+                        : STUDENT_API;
+
+
+                const method =
+                    isEdit
+                        ? "PUT"
+                        : "POST";
+
+
+                saveButton.disabled =
+                    true;
+
+
+                saveButton.innerHTML =
+                    '<span class="spinner-border spinner-border-sm me-2"></span> Saving...';
+
+
+                try {
+
+                    /* =============================================
+                       STEP 1
+                       CREATE / UPDATE STUDENT
+                    ============================================= */
+
+                    const response =
+                        await apiFetch(
+                            url,
+                            {
+                                method,
+
+                                headers: {
+                                    "Content-Type":
+                                        "application/json"
+                                },
+
+                                body:
+                                    JSON.stringify(
+                                        request
+                                    )
+                            }
+                        );
+
+
+                    if (!response) {
+                        return;
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            await getErrorMessage(
+                                response
+                            )
+                        );
+
+                    }
+
+
+                    const student =
+                        await response.json();
+
+
+                    /* =============================================
+                       STEP 2
+                       PROFILE IMAGE
+                    ============================================= */
+
+                    /*
+                     * Only upload when a NEW image is selected.
+                     *
+                     * On edit:
+                     *   no new image => old image remains.
+                     */
+                    if (profilePhotoFile) {
+
+                        const formData =
+                            new FormData();
+
+
+                        formData.append(
+                            "file",
+                            profilePhotoFile
+                        );
+
+
+                        const imageResponse =
+                            await apiFetch(
+                                `${STUDENT_API}/${student.id}/profile-image`,
+                                {
+                                    method: "POST",
+
+                                    body: formData
+                                }
+                            );
+
+
+                        if (!imageResponse) {
+                            return;
+                        }
+
+
+                        if (!imageResponse.ok) {
+
+                            throw new Error(
+                                await getErrorMessage(
+                                    imageResponse
+                                )
+                            );
+
+                        }
+
+                    }
+
+
+                    /* =============================================
+                       SUCCESS
+                    ============================================= */
+
+                    showToast(
+                        isEdit
+                            ? "Student Updated"
+                            : "Student Created",
+
+                        isEdit
+                            ? "Student details updated successfully."
+                            : "Student created successfully.",
+
+                        "success"
+                    );
+
+
+                    studentModal.hide();
+
+
+                    /*
+                     * Reload student list so the new
+                     * profileImageUrl is displayed.
+                     */
+                    await loadStudents();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Student save failed:",
+                        error
+                    );
+
+
+                    showToast(
+                        "Operation Failed",
+
+                        error.message ||
+                        "Unable to save student.",
+
+                        "error"
+                    );
+
+
+                } finally {
+
+                    saveButton.disabled =
+                        false;
+
+
+                    saveButton.innerHTML =
+                        isEdit
+                            ? '<i class="bi bi-save me-1"></i> Update Student'
+                            : '<i class="bi bi-check-lg me-1"></i> Save Student';
+
+                }
+
+            }
+        );
+
+
+        /* =========================================================
+           VIEW STUDENT
+        ========================================================= */
+
+        window.viewStudent =
+            function (id) {
+
+                const student =
+                    students.find(
+                        s =>
+                            Number(s.id) ===
+                            Number(id)
+                    );
+
+
+                if (!student) {
+                    return;
+                }
+
+
+                const avatar =
+                    document.getElementById(
+                        "viewAvatar"
+                    );
+
+
+                /*
+                 * Clear previous image/content first.
+                 */
+                avatar.innerHTML =
+                    "";
+
+
+                if (student.profileImageUrl) {
+
+                    const image =
+                        document.createElement("img");
+
+
+                    image.src =
+                        getImageUrl(
+                            student.profileImageUrl
+                        );
+
+
+                    image.alt =
+                        `${student.name || "Student"} Profile Photo`;
+
+
+                    image.onerror =
+                        function () {
+
+                            avatar.innerText =
+                                getInitials(
+                                    student.name
+                                );
+
+                        };
+
+
+                    avatar.appendChild(
+                        image
+                    );
+
+                }
+
+                else {
+
+                    avatar.innerText =
+                        getInitials(
+                            student.name
+                        );
+
+                }
+
+
+                document.getElementById(
+                    "viewName"
+                ).innerText =
+                    student.name || "-";
+
+
+                document.getElementById(
+                    "viewRoll"
+                ).innerText =
+                    student.rollNumber || "-";
+
+
+                document.getElementById(
+                    "viewUserId"
+                ).innerText =
+                    student.userId ?? "-";
+
+
+                document.getElementById(
+                    "viewUsername"
+                ).innerText =
+                    student.username || "-";
+
+
+                document.getElementById(
+                    "viewPhone"
+                ).innerText =
+                    student.phone || "-";
+
+
+                document.getElementById(
+                    "viewEmail"
+                ).innerText =
+                    student.email || "-";
+
+
+                document.getElementById(
+                    "viewCourse"
+                ).innerText =
+                    getRelatedName(
+                        courses,
+                        student.courseId
+                    );
+
+
+                document.getElementById(
+                    "viewSemester"
+                ).innerText =
+                    getRelatedName(
+                        semesters,
+                        student.semesterId
+                    );
+
+
+                document.getElementById(
+                    "viewSection"
+                ).innerText =
+                    getRelatedName(
+                        sections,
+                        student.sectionId
+                    );
+
+
+                document.getElementById(
+                    "viewStatus"
+                ).innerHTML =
+                    getStatusBadge(
+                        student.status
+                    );
+
+
+                viewStudentModal.show();
+
+            };
+
+
+        /* =========================================================
+           DEACTIVATE
+        ========================================================= */
+
+        window.deactivateStudent =
+            async function (id, name) {
+
+                const confirmed =
+                    confirm(
+                        `Are you sure you want to deactivate "${name}"?`
+                    );
+
+
+                if (!confirmed) {
+                    return;
+                }
+
+
+                try {
+
+                    const response =
+                        await apiFetch(
+                            `${STUDENT_API}/${id}`,
+                            {
+                                method: "DELETE"
+                            }
+                        );
+
+
+                    if (!response) {
+                        return;
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            await getErrorMessage(
+                                response
+                            )
+                        );
+
+                    }
+
+
+                    showToast(
+                        "Student Deactivated",
+                        "Student has been marked inactive.",
+                        "success"
+                    );
+
+
+                    await loadStudents();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Deactivate failed:",
+                        error
+                    );
+
+
+                    showToast(
+                        "Operation Failed",
+                        error.message ||
+                        "Unable to deactivate student.",
+                        "error"
+                    );
+
+                }
+
+            };
+
+
+        /* =========================================================
+           FACE REGISTRATION
+        ========================================================= */
+
+        window.openFaceRegistration =
+            function (
+                userId,
+                studentName
+            ) {
+
+                faceUserId =
+                    userId;
+
+                faceFile =
+                    null;
+
+
+                document.getElementById(
+                    "faceStudentName"
+                ).innerText =
+                    `${studentName} • User ID: ${userId}`;
+
+
+                document.getElementById(
+                    "facePreview"
+                ).style.display =
+                    "none";
+
+
+                document.getElementById(
+                    "faceCamera"
+                ).style.display =
+                    "none";
+
+
+                document.getElementById(
+                    "facePlaceholder"
+                ).style.display =
                     "block";
 
 
-                document.getElementById("facePreview")
-                    .style.display = "none";
+                document.getElementById(
+                    "faceFileInput"
+                ).value =
+                    "";
 
 
-                document.getElementById("facePlaceholder")
-                    .style.display = "none";
+                document.getElementById(
+                    "captureFaceBtn"
+                ).disabled =
+                    true;
 
 
-                document.getElementById("captureFaceBtn")
-                    .disabled = false;
+                faceModal.show();
+
+            };
 
 
-            } catch (error) {
+        /* =========================================================
+           START CAMERA
+        ========================================================= */
 
-                console.error(error);
+        document.getElementById(
+            "startFaceCameraBtn"
+        ).addEventListener(
+            "click",
+            async () => {
 
-                showToast(
-                    "Camera Error",
-                    "Unable to access camera. Please allow camera permission.",
-                    "error"
+                try {
+
+                    if (
+                        !navigator.mediaDevices ||
+                        !navigator.mediaDevices.getUserMedia
+                    ) {
+
+                        throw new Error(
+                            "Camera is not supported by this browser."
+                        );
+
+                    }
+
+
+                    faceCameraStream =
+                        await navigator.mediaDevices
+                            .getUserMedia({
+
+                                video: {
+                                    facingMode: "user"
+                                },
+
+                                audio: false
+
+                            });
+
+
+                    const video =
+                        document.getElementById(
+                            "faceCamera"
+                        );
+
+
+                    video.srcObject =
+                        faceCameraStream;
+
+
+                    video.style.display =
+                        "block";
+
+
+                    document.getElementById(
+                        "facePreview"
+                    ).style.display =
+                        "none";
+
+
+                    document.getElementById(
+                        "facePlaceholder"
+                    ).style.display =
+                        "none";
+
+
+                    document.getElementById(
+                        "captureFaceBtn"
+                    ).disabled =
+                        false;
+
+
+                } catch (error) {
+
+                    console.error(error);
+
+
+                    showToast(
+                        "Camera Error",
+                        "Unable to access camera. Please allow camera permission.",
+                        "error"
+                    );
+
+                }
+
+            }
+        );
+
+
+        /* =========================================================
+           CAPTURE FACE
+        ========================================================= */
+
+        document.getElementById(
+            "captureFaceBtn"
+        ).addEventListener(
+            "click",
+            () => {
+
+                const video =
+                    document.getElementById(
+                        "faceCamera"
+                    );
+
+
+                if (
+                    !faceCameraStream ||
+                    !video.videoWidth
+                ) {
+
+                    return;
+
+                }
+
+
+                const canvas =
+                    document.createElement(
+                        "canvas"
+                    );
+
+
+                canvas.width =
+                    video.videoWidth;
+
+                canvas.height =
+                    video.videoHeight;
+
+
+                const context =
+                    canvas.getContext(
+                        "2d"
+                    );
+
+
+                context.drawImage(
+                    video,
+                    0,
+                    0,
+                    canvas.width,
+                    canvas.height
+                );
+
+
+                canvas.toBlob(
+                    blob => {
+
+                        if (!blob) {
+                            return;
+                        }
+
+
+                        faceFile =
+                            new File(
+                                [blob],
+                                "face-registration.jpg",
+                                {
+                                    type: "image/jpeg"
+                                }
+                            );
+
+
+                        const preview =
+                            document.getElementById(
+                                "facePreview"
+                            );
+
+
+                        preview.src =
+                            URL.createObjectURL(
+                                faceFile
+                            );
+
+
+                        preview.style.display =
+                            "block";
+
+
+                        video.style.display =
+                            "none";
+
+                    },
+
+                    "image/jpeg",
+
+                    0.92
+
                 );
 
             }
-
-        });
-
-
-    /* =========================================================
-       CAPTURE FACE
-    ========================================================= */
-
-    document.getElementById("captureFaceBtn")
-        .addEventListener("click", () => {
-
-            const video =
-                document.getElementById("faceCamera");
+        );
 
 
-            if (
-                !faceCameraStream ||
-                !video.videoWidth
-            ) {
+        /* =========================================================
+           FACE FILE UPLOAD
+        ========================================================= */
 
-                return;
+        document.getElementById(
+            "faceFileInput"
+        ).addEventListener(
+            "change",
+            event => {
 
-            }
-
-
-            const canvas =
-                document.createElement("canvas");
-
-
-            canvas.width =
-                video.videoWidth;
-
-            canvas.height =
-                video.videoHeight;
+                const file =
+                    event.target.files[0];
 
 
-            const context =
-                canvas.getContext("2d");
-
-
-            context.drawImage(
-                video,
-                0,
-                0,
-                canvas.width,
-                canvas.height
-            );
-
-
-            canvas.toBlob(blob => {
-
-                if (!blob) {
+                if (!file) {
                     return;
+                }
+
+
+                if (
+                    !file.type.startsWith(
+                        "image/"
+                    )
+                ) {
+
+                    showToast(
+                        "Invalid File",
+                        "Please select an image file.",
+                        "error"
+                    );
+
+                    event.target.value =
+                        "";
+
+                    return;
+
+                }
+
+
+                if (
+                    file.size >
+                    5 * 1024 * 1024
+                ) {
+
+                    showToast(
+                        "File Too Large",
+                        "Face image must be less than 5 MB.",
+                        "error"
+                    );
+
+                    event.target.value =
+                        "";
+
+                    return;
+
                 }
 
 
                 faceFile =
-                    new File(
-                        [blob],
-                        "face-registration.jpg",
-                        {
-                            type: "image/jpeg"
-                        }
-                    );
+                    file;
 
 
                 const preview =
-                    document.getElementById("facePreview");
+                    document.getElementById(
+                        "facePreview"
+                    );
 
 
                 preview.src =
                     URL.createObjectURL(
-                        faceFile
+                        file
                     );
 
 
@@ -3132,254 +3798,209 @@
                     "block";
 
 
-                video.style.display =
+                document.getElementById(
+                    "faceCamera"
+                ).style.display =
                     "none";
 
 
-            }, "image/jpeg", .92);
-
-        });
-
-
-    /* =========================================================
-       FACE FILE UPLOAD
-    ========================================================= */
-
-    document.getElementById("faceFileInput")
-        .addEventListener("change", event => {
-
-            const file =
-                event.target.files[0];
-
-
-            if (!file) {
-                return;
-            }
-
-
-            if (!file.type.startsWith("image/")) {
-
-                showToast(
-                    "Invalid File",
-                    "Please select an image file.",
-                    "error"
-                );
-
-                event.target.value = "";
-
-                return;
+                document.getElementById(
+                    "facePlaceholder"
+                ).style.display =
+                    "none";
 
             }
+        );
 
 
-            faceFile =
-                file;
+        /* =========================================================
+           REGISTER FACE
+        ========================================================= */
 
+        document.getElementById(
+            "registerFaceBtn"
+        ).addEventListener(
+            "click",
+            async () => {
 
-            const preview =
-                document.getElementById("facePreview");
+                if (!faceUserId) {
 
-
-            preview.src =
-                URL.createObjectURL(file);
-
-
-            preview.style.display =
-                "block";
-
-
-            document.getElementById("faceCamera")
-                .style.display = "none";
-
-
-            document.getElementById("facePlaceholder")
-                .style.display = "none";
-
-        });
-
-
-    /* =========================================================
-       REGISTER FACE API
-    ========================================================= */
-
-    document.getElementById("registerFaceBtn")
-        .addEventListener("click", async () => {
-
-            if (!faceUserId) {
-
-                showToast(
-                    "Error",
-                    "Student information is missing.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            if (!faceFile) {
-
-                showToast(
-                    "Face Required",
-                    "Please capture or upload a face image.",
-                    "error"
-                );
-
-                return;
-
-            }
-
-
-            const button =
-                document.getElementById("registerFaceBtn");
-
-
-            const formData =
-                new FormData();
-
-
-            formData.append(
-                "file",
-                faceFile
-            );
-
-
-            button.disabled = true;
-
-            button.innerHTML =
-                '<span class="spinner-border spinner-border-sm me-2"></span> Registering...';
-
-
-            try {
-
-                /*
-                 * IMPORTANT:
-                 *
-                 * Do NOT manually set Content-Type here.
-                 *
-                 * apiFetch adds Authorization.
-                 * Browser automatically creates
-                 * multipart/form-data boundary.
-                 */
-                const response =
-                    await apiFetch(
-                        `${STUDENT_API}/${faceUserId}/face`,
-                        {
-                            method: "POST",
-                            body: formData
-                        }
+                    showToast(
+                        "Error",
+                        "Student information is missing.",
+                        "error"
                     );
 
-
-                if (!response) {
                     return;
+
                 }
 
 
-                if (!response.ok) {
+                if (!faceFile) {
 
-                    throw new Error(
-                        await getErrorMessage(response)
+                    showToast(
+                        "Face Required",
+                        "Please capture or upload a face image.",
+                        "error"
                     );
 
+                    return;
+
                 }
 
 
-                const data =
-                    await response.json();
+                const button =
+                    document.getElementById(
+                        "registerFaceBtn"
+                    );
 
 
-                console.log(
-                    "Face registration response:",
-                    data
+                const formData =
+                    new FormData();
+
+
+                formData.append(
+                    "file",
+                    faceFile
                 );
 
 
-                showToast(
-                    "Face Registered",
-                    data.message ||
-                    "Student face registered successfully.",
-                    "success"
-                );
+                button.disabled =
+                    true;
 
-
-                faceModal.hide();
-
-
-            } catch (error) {
-
-                console.error(error);
-
-                showToast(
-                    "Face Registration Failed",
-                    error.message ||
-                    "Unable to register face.",
-                    "error"
-                );
-
-            } finally {
-
-                button.disabled = false;
 
                 button.innerHTML =
-                    '<i class="bi bi-shield-check me-1"></i> Register Face';
+                    '<span class="spinner-border spinner-border-sm me-2"></span> Registering...';
+
+
+                try {
+
+                    const response =
+                        await apiFetch(
+                            `${STUDENT_API}/${faceUserId}/face`,
+                            {
+                                method: "POST",
+                                body: formData
+                            }
+                        );
+
+
+                    if (!response) {
+                        return;
+                    }
+
+
+                    if (!response.ok) {
+
+                        throw new Error(
+                            await getErrorMessage(
+                                response
+                            )
+                        );
+
+                    }
+
+
+                    const data =
+                        await response.json();
+
+
+                    showToast(
+                        "Face Registered",
+                        data.message ||
+                        "Student face registered successfully.",
+                        "success"
+                    );
+
+
+                    faceModal.hide();
+
+
+                } catch (error) {
+
+                    console.error(
+                        "Face registration failed:",
+                        error
+                    );
+
+
+                    showToast(
+                        "Face Registration Failed",
+                        error.message ||
+                        "Unable to register face.",
+                        "error"
+                    );
+
+
+                } finally {
+
+                    button.disabled =
+                        false;
+
+
+                    button.innerHTML =
+                        '<i class="bi bi-shield-check me-1"></i> Register Face';
+
+                }
 
             }
+        );
 
-        });
 
+        /* =========================================================
+           STOP CAMERA
+        ========================================================= */
 
-    /* =========================================================
-       STOP FACE CAMERA WHEN MODAL CLOSES
-    ========================================================= */
-
-    document.getElementById("faceModal")
-        .addEventListener(
+        document.getElementById(
+            "faceModal"
+        ).addEventListener(
             "hidden.bs.modal",
             stopFaceCamera
         );
 
 
-    function stopFaceCamera() {
+        function stopFaceCamera() {
 
-        if (faceCameraStream) {
+            if (faceCameraStream) {
 
-            faceCameraStream
-                .getTracks()
-                .forEach(
-                    track => track.stop()
-                );
+                faceCameraStream
+                    .getTracks()
+                    .forEach(
+                        track =>
+                            track.stop()
+                    );
 
-            faceCameraStream = null;
+                faceCameraStream =
+                    null;
+
+            }
 
         }
 
-    }
+
+        /* =========================================================
+           SEARCH
+        ========================================================= */
+
+        searchInput.addEventListener(
+            "input",
+            renderStudents
+        );
 
 
-    /* =========================================================
-       SEARCH
-    ========================================================= */
-
-    searchInput.addEventListener(
-        "input",
-        renderStudents
-    );
+        statusFilter.addEventListener(
+            "change",
+            renderStudents
+        );
 
 
-    statusFilter.addEventListener(
-        "change",
-        renderStudents
-    );
+        /* =========================================================
+           REFRESH
+        ========================================================= */
 
-
-    /* =========================================================
-       REFRESH
-    ========================================================= */
-
-    document.getElementById("refreshBtn")
-        .addEventListener(
+        document.getElementById(
+            "refreshBtn"
+        ).addEventListener(
             "click",
             async () => {
 
@@ -3389,6 +4010,7 @@
                     loadSemesters(),
                     loadSections()
                 ]);
+
 
                 showToast(
                     "Refreshed",
@@ -3400,188 +4022,256 @@
         );
 
 
-    /* =========================================================
-       MOBILE SIDEBAR
-    ========================================================= */
+        /* =========================================================
+           MOBILE SIDEBAR
+        ========================================================= */
 
-    const sidebar =
-        document.getElementById("sidebar");
+        const sidebar =
+            document.getElementById(
+                "sidebar"
+            );
 
-    const overlay =
-        document.getElementById("sidebarOverlay");
+
+        const overlay =
+            document.getElementById(
+                "sidebarOverlay"
+            );
 
 
-    document.getElementById("mobileMenuBtn")
-        .addEventListener(
+        document.getElementById(
+            "mobileMenuBtn"
+        ).addEventListener(
             "click",
             () => {
 
-                sidebar.classList.toggle("show");
+                sidebar.classList.toggle(
+                    "show"
+                );
 
-                overlay.classList.toggle("show");
+                overlay.classList.toggle(
+                    "show"
+                );
 
             }
         );
 
 
-    overlay.addEventListener(
-        "click",
-        () => {
+        overlay.addEventListener(
+            "click",
+            () => {
 
-            sidebar.classList.remove("show");
+                sidebar.classList.remove(
+                    "show"
+                );
 
-            overlay.classList.remove("show");
+                overlay.classList.remove(
+                    "show"
+                );
+
+            }
+        );
+
+
+        /* =========================================================
+           HELPERS
+        ========================================================= */
+
+        function getRelatedName(
+            list,
+            id
+        ) {
+
+            const item =
+                list.find(
+                    x =>
+                        Number(x.id) ===
+                        Number(id)
+                );
+
+
+            if (!item) {
+
+                return id
+                    ? `ID: ${id}`
+                    : "-";
+
+            }
+
+
+            return getDisplayName(item);
 
         }
-    );
 
 
-    /* =========================================================
-       HELPERS
-    ========================================================= */
+        function getStatusBadge(status) {
 
-    function getRelatedName(
-        list,
-        id
-    ) {
+            if (
+                String(status)
+                    .toUpperCase() ===
+                "ACTIVE"
+            ) {
 
-        const item =
-            list.find(
-                x => Number(x.id) === Number(id)
-            );
+                return `
 
-
-        if (!item) {
-
-            return id
-                ? `ID: ${id}`
-                : "-";
-
-        }
-
-
-        return getDisplayName(item);
-
-    }
-
-
-    function getStatusBadge(status) {
-
-        if (status === "ACTIVE") {
-
-            return `
                 <span class="badge-status badge-active">
+
                     <i class="bi bi-check-circle me-1"></i>
+
                     Active
+
                 </span>
+
             `;
 
-        }
+            }
 
 
-        return `
+            return `
+
             <span class="badge-status badge-inactive">
+
                 <i class="bi bi-x-circle me-1"></i>
+
                 Inactive
+
             </span>
+
         `;
 
-    }
-
-
-    function getInitials(name) {
-
-        if (!name) {
-            return "S";
         }
 
 
-        return name
-            .trim()
-            .split(/\s+/)
-            .slice(0, 2)
-            .map(
-                word =>
-                    word.charAt(0)
-                        .toUpperCase()
-            )
-            .join("");
+        function getInitials(name) {
 
-    }
+            if (!name) {
+                return "S";
+            }
 
 
-    function escapeHtml(value) {
-
-        return String(value ?? "")
-            .replace(/&/g, "&amp;")
-            .replace(/</g, "&lt;")
-            .replace(/>/g, "&gt;")
-            .replace(/"/g, "&quot;")
-            .replace(/'/g, "&#039;");
-
-    }
-
-
-    function escapeJs(value) {
-
-        return String(value ?? "")
-            .replace(/\\/g, "\\\\")
-            .replace(/'/g, "\\'")
-            .replace(/"/g, '\\"')
-            .replace(/\n/g, "\\n")
-            .replace(/\r/g, "\\r");
-
-    }
-
-
-    async function getErrorMessage(response) {
-
-        try {
-
-            const data =
-                await response.json();
-
-            return (
-                data.message ||
-                data.error ||
-                data.detail ||
-                `Request failed with status ${response.status}`
-            );
-
-        } catch {
-
-            return `Request failed with status ${response.status}`;
+            return name
+                .trim()
+                .split(/\s+/)
+                .slice(0, 2)
+                .map(
+                    word =>
+                        word
+                            .charAt(0)
+                            .toUpperCase()
+                )
+                .join("");
 
         }
 
-    }
+
+        function getImageUrl(url) {
+
+            if (!url) {
+                return "";
+            }
 
 
-    function showLoading() {
+            if (
+                url.startsWith("http://") ||
+                url.startsWith("https://")
+            ) {
 
-        studentTableBody.innerHTML = "";
+                return url;
 
-        loadingState.style.display =
-            "flex";
-
-        emptyState.style.display =
-            "none";
-
-    }
+            }
 
 
-    function showTableError(message) {
+            /*
+             * Handles:
+             *
+             * /uploads/profiles/1.jpg
+             *
+             * uploads/profiles/1.jpg
+             */
+            return `${API_BASE_URL}${url.startsWith("/")
+                    ? url
+                    : `/${url}`
+                }`;
 
-        studentTableBody.innerHTML = "";
-
-        loadingState.style.display =
-            "none";
-
-        emptyState.style.display =
-            "flex";
+        }
 
 
-        emptyState.innerHTML = `
+        function escapeHtml(value) {
+
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+
+        function escapeJs(value) {
+
+            return String(value ?? "")
+                .replace(/\\/g, "\\\\")
+                .replace(/'/g, "\\'")
+                .replace(/"/g, '\\"')
+                .replace(/\n/g, "\\n")
+                .replace(/\r/g, "\\r");
+
+        }
+
+
+        async function getErrorMessage(
+            response
+        ) {
+
+            try {
+
+                const data =
+                    await response.json();
+
+
+                return (
+                    data.message ||
+                    data.error ||
+                    data.detail ||
+                    `Request failed with status ${response.status}`
+                );
+
+            } catch {
+
+                return `Request failed with status ${response.status}`;
+
+            }
+
+        }
+
+
+        function showLoading() {
+
+            studentTableBody.innerHTML =
+                "";
+
+            loadingState.style.display =
+                "flex";
+
+            emptyState.style.display =
+                "none";
+
+        }
+
+
+        function showTableError(message) {
+
+            studentTableBody.innerHTML =
+                "";
+
+            loadingState.style.display =
+                "none";
+
+            emptyState.style.display =
+                "flex";
+
+
+            emptyState.innerHTML = `
 
             <i class="bi bi-exclamation-triangle"></i>
 
@@ -3595,83 +4285,125 @@
 
         `;
 
-    }
+        }
 
 
-    /* =========================================================
-       TOAST
-    ========================================================= */
+        /* =========================================================
+           RESET MODAL WHEN CLOSED
+        ========================================================= */
 
-    function showToast(
-        title,
-        message,
-        type = "success"
-    ) {
+        document.getElementById(
+            "studentModal"
+        ).addEventListener(
+            "hidden.bs.modal",
+            () => {
 
-        const toast =
-            document.getElementById("appToast");
+                editingStudentId =
+                    null;
 
+                profilePhotoFile =
+                    null;
 
-        const toastTitle =
-            document.getElementById("toastTitle");
+                profilePhotoInput.value =
+                    "";
 
+                profilePhotoInput.required =
+                    false;
 
-        const toastMessage =
-            document.getElementById("toastMessage");
+                profileRequired.style.display =
+                    "none";
 
+                resetProfilePreview();
 
-        const toastIcon =
-            document.getElementById("toastIcon");
-
-
-        toastTitle.innerText =
-            title;
-
-        toastMessage.innerText =
-            message;
+            }
+        );
 
 
-        if (type === "error") {
+        /* =========================================================
+           TOAST
+        ========================================================= */
 
-            toastIcon.className =
-                "bi bi-exclamation-circle me-2 text-danger";
+        function showToast(
+            title,
+            message,
+            type = "success"
+        ) {
 
-        } else {
+            const toast =
+                document.getElementById(
+                    "appToast"
+                );
 
-            toastIcon.className =
-                "bi bi-check-circle me-2 text-success";
+
+            const toastTitle =
+                document.getElementById(
+                    "toastTitle"
+                );
+
+
+            const toastMessage =
+                document.getElementById(
+                    "toastMessage"
+                );
+
+
+            const toastIcon =
+                document.getElementById(
+                    "toastIcon"
+                );
+
+
+            toastTitle.innerText =
+                title;
+
+
+            toastMessage.innerText =
+                message;
+
+
+            if (type === "error") {
+
+                toastIcon.className =
+                    "bi bi-exclamation-circle me-2 text-danger";
+
+            } else {
+
+                toastIcon.className =
+                    "bi bi-check-circle me-2 text-success";
+
+            }
+
+
+            const instance =
+                bootstrap.Toast
+                    .getOrCreateInstance(
+                        toast,
+                        {
+                            delay: 3500
+                        }
+                    );
+
+
+            instance.show();
 
         }
 
 
-        const instance =
-            bootstrap.Toast.getOrCreateInstance(
-                toast,
-                {
-                    delay: 3500
-                }
-            );
+        /* =========================================================
+           STOP CAMERA BEFORE PAGE CLOSE
+        ========================================================= */
 
+        window.addEventListener(
+            "beforeunload",
+            () => {
 
-        instance.show();
+                stopFaceCamera();
 
-    }
+            }
+        );
 
-
-    /* =========================================================
-       STOP CAMERA BEFORE PAGE CLOSE
-    ========================================================= */
-
-    window.addEventListener(
-        "beforeunload",
-        () => {
-
-            stopFaceCamera();
-
-        }
-    );
-
-</script>
+    </script>
 
 </body>
+
 </html>

@@ -24,7 +24,6 @@ public class JwtAuthenticationFilter
 
     private final JwtService jwtService;
 
-
     @Override
     protected void doFilterInternal(
             HttpServletRequest request,
@@ -34,7 +33,6 @@ public class JwtAuthenticationFilter
 
         String authHeader =
                 request.getHeader("Authorization");
-
 
         /*
          * ============================================================
@@ -49,10 +47,8 @@ public class JwtAuthenticationFilter
             return;
         }
 
-
         String token =
                 authHeader.substring(7);
-
 
         try {
 
@@ -68,7 +64,6 @@ public class JwtAuthenticationFilter
                 return;
             }
 
-
             /*
              * ========================================================
              * EXTRACT USERNAME
@@ -77,7 +72,6 @@ public class JwtAuthenticationFilter
 
             String username =
                     jwtService.extractUsername(token);
-
 
             /*
              * ========================================================
@@ -88,7 +82,6 @@ public class JwtAuthenticationFilter
             Claims claims =
                     jwtService.getClaimsFromToken(token);
 
-
             /*
              * ========================================================
              * EXTRACT ROLE
@@ -98,6 +91,32 @@ public class JwtAuthenticationFilter
             String role =
                     claims.get("role", String.class);
 
+            /*
+             * ========================================================
+             * EXTRACT USER ID
+             * ========================================================
+             */
+
+            Long userId =
+                    claims.get("userId", Long.class);
+
+            /*
+             * ========================================================
+             * SET USER ID IN REQUEST
+             *
+             * Controllers can use:
+             *
+             * @RequestAttribute("userId")
+             * ========================================================
+             */
+
+            if (userId != null) {
+
+                request.setAttribute(
+                        "userId",
+                        userId
+                );
+            }
 
             /*
              * ========================================================
@@ -113,7 +132,6 @@ public class JwtAuthenticationFilter
                 List<GrantedAuthority> authorities =
                         Collections.emptyList();
 
-
                 if (role != null &&
                         !role.isBlank()) {
 
@@ -124,14 +142,12 @@ public class JwtAuthenticationFilter
                     );
                 }
 
-
                 UsernamePasswordAuthenticationToken authentication =
                         new UsernamePasswordAuthenticationToken(
                                 username,
                                 null,
                                 authorities
                         );
-
 
                 SecurityContextHolder
                         .getContext()
@@ -145,9 +161,9 @@ public class JwtAuthenticationFilter
             /*
              * Invalid JWT
              */
+
             SecurityContextHolder.clearContext();
         }
-
 
         filterChain.doFilter(request, response);
     }

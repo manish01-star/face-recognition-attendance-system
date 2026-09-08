@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="64dp"
+    app:cardBackgroundColor="@android:color/white"
+    app:cardCornerRadius="0dp"
+    app:cardElevation="6dp"
+    app:strokeWidth="0dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <!-- ===================================================== -->
+        <!-- HOME -->
+        <!-- ===================================================== -->
+
+        <LinearLayout
+            android:id="@+id/navHome"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="7dp"
+            android:paddingBottom="5dp">
+
+            <ImageView
+                android:id="@+id/iconHome"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_home"
+                app:tint="#7162E8" />
+
+            <TextView
+                android:id="@+id/textHome"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/home"
+                android:textColor="#7162E8"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+
+
+        <!-- ===================================================== -->
+        <!-- ATTENDANCE -->
+        <!-- ===================================================== -->
+
+        <LinearLayout
+            android:id="@+id/navAttendance"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="7dp"
+            android:paddingBottom="5dp">
+
+            <ImageView
+                android:id="@+id/iconAttendance"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_calendar"
+                app:tint="#8A8A8A" />
+
+            <TextView
+                android:id="@+id/textAttendance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/attendance"
+                android:textColor="#8A8A8A"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+
+        <!-- ===================================================== -->
+        <!-- LEAVE -->
+        <!-- ===================================================== -->
+
+        <LinearLayout
+            android:id="@+id/navLeave"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="7dp"
+            android:paddingBottom="5dp">
+
+            <ImageView
+                android:id="@+id/iconLeave"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_event"
+                app:tint="#8A8A8A" />
+
+            <TextView
+                android:id="@+id/textLeave"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/leave_title"
+                android:textColor="#8A8A8A"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+
+        <!-- ===================================================== -->
+        <!-- PROFILE -->
+        <!-- ===================================================== -->
+
+        <LinearLayout
+            android:id="@+id/navProfile"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:focusable="true"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:paddingTop="7dp"
+            android:paddingBottom="5dp">
+
+            <ImageView
+                android:id="@+id/iconProfile"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_person"
+                app:tint="#8A8A8A" />
+
+            <TextView
+                android:id="@+id/textProfile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="@string/profile"
+                android:textColor="#8A8A8A"
+                android:textSize="10sp" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</com.google.android.material.card.MaterialCardView>

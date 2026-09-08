@@ -3,6 +3,8 @@ package com.college.attendance.controller.admin;
 import com.college.attendance.dto.department.DepartmentRequest;
 import com.college.attendance.dto.department.DepartmentResponse;
 import com.college.attendance.service.DepartmentService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -13,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/departments")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AdminDepartmentController {
 

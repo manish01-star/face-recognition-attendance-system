@@ -76,6 +76,9 @@ public class SecurityConfig {
                                                                 "/courses.html",
                                                                 "/semesters.html",
                                                                 "/sections.html",
+                                                                "/leaves.html",
+                                                                "/holidays.html",
+                                                                "/policies.html",
                                                                 "/attendance.html",
                                                                 "/machine-attendance.html")
                                                 .permitAll()
@@ -104,7 +107,15 @@ public class SecurityConfig {
 
                                                 .requestMatchers(
                                                                 "/api/admin/**")
-                                                .hasRole("ADMIN")
+                                                // .hasRole("ADMIN")
+                                                .hasAnyRole(
+                                                                "ADMIN",
+                                                                "TEACHER",
+                                                                "STUDENT") // for testing
+
+                                                .requestMatchers(
+                                                                "/uploads/**")
+                                                .permitAll()
 
                                                 .requestMatchers(
                                                                 "/api/attendance/**")

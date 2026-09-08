@@ -1,64 +1,548 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- App -->
+    <!-- ===================================================== -->
+    <!-- APP -->
+    <!-- ===================================================== -->
+
     <string name="app_name">FaceAttend</string>
     <string name="app_tagline">Smart Face Recognition Attendance</string>
 
-    <!-- Common -->
-    <string name="back">Back</string>
 
-    <!-- Attendance -->
+    <!-- ===================================================== -->
+    <!-- COMMON -->
+    <!-- ===================================================== -->
+
+    <string name="back">Back</string>
+    <string name="menu">Menu</string>
+    <string name="notifications">Notifications</string>
+    <string name="profile">Profile</string>
+    <string name="user">User</string>
+    <string name="user_role">USER</string>
+
+
+    <!-- ===================================================== -->
+    <!-- BRANDING -->
+    <!-- ===================================================== -->
+
+    <string name="brand_symbol">F</string>
+    <string name="brand_name">FaceAttend</string>
+
+
+    <!-- ===================================================== -->
+    <!-- HOME -->
+    <!-- ===================================================== -->
+
+    <string name="good_morning">Good Morning</string>
+    <string name="good_afternoon">Good Afternoon</string>
+    <string name="good_evening">Good Evening</string>
+
+    <string name="today_date">Today, %1$s</string>
+
+    <string name="default_username">User</string>
+    <string name="default_role">USER</string>
+    <string name="default_date">Today</string>
+
+    <string name="todays_attendance">Today Attendance</string>
+
+    <string name="not_marked">Not marked</string>
+
+    <string name="punch_in">Punch In</string>
+    <string name="punch_out">Punch Out</string>
+    <string name="work_hours">Work hours</string>
+
+    <string name="time_placeholder">--:--</string>
+
+    <string name="view_calendar">View Calendar</string>
+
+
+    <!-- ===================================================== -->
+    <!-- HOME ICONS / SYMBOLS -->
+    <!-- ===================================================== -->
+
+    <string name="clock_symbol">◷</string>
+    <string name="location_symbol">⌖</string>
+    <string name="play_symbol">▶</string>
+
+    <string name="home_symbol">⌂</string>
+    <string name="calendar_symbol">▣</string>
+    <string name="leave_symbol">▤</string>
+
+
+    <!-- ===================================================== -->
+    <!-- CURRENT DEVICE LOCATION -->
+    <!-- ===================================================== -->
+
+    <string name="location">Location</string>
+
+    <string name="your_current_location">
+        Your Current Location
+    </string>
+
+    <string name="detecting_location">
+        Detecting location...
+    </string>
+
+    <string name="location_unavailable">
+        Location unavailable
+    </string>
+
+    <string name="current_location">
+        Current location
+    </string>
+
+    <string name="gps_ready">
+        GPS ready
+    </string>
+
+    <string name="gps_unavailable">
+        GPS unavailable
+    </string>
+
+    <string name="getting_location">
+        Getting your location...
+    </string>
+
+    <string name="getting_current_location">
+        Getting current location...
+    </string>
+
+    <string name="enable_location">
+        Please enable location/GPS
+    </string>
+
+    <string name="location_unavailable_message">
+        Location not available. Please move to an open area and try again.
+    </string>
+
+    <string name="location_failed">
+        Unable to get location
+    </string>
+
+    <string name="location_permission_required">
+        Location permission is required to mark attendance
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- ATTENDANCE POLICY / INTERNAL LOCATION -->
+    <!-- ===================================================== -->
+
+    <!--
+        These values are for internal/backend attendance validation.
+        They should NOT be displayed as the user's current location.
+    -->
+
+    <string name="attendance_radius">
+        Attendance radius: %1$s
+    </string>
+
+    <string name="radius_placeholder">
+        Radius: -- m
+    </string>
+
+    <string name="meters_unit">
+        %1$s meters
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- PUNCH -->
+    <!-- ===================================================== -->
+
+    <string name="punch_in_action">PUNCH IN</string>
+    <string name="punch_out_action">PUNCH OUT</string>
+
+    <string name="punch_in_upper">PUNCH IN</string>
+
+    <string name="attendance_completed">
+        ATTENDANCE COMPLETED
+    </string>
+
+    <string name="attendance_not_required">
+        NOT REQUIRED
+    </string>
+
+    <string name="punch_unavailable">
+        UNAVAILABLE
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- SHIFT -->
+    <!-- ===================================================== -->
+
+    <string name="shift_timings">
+        Shift timings
+    </string>
+
+    <string name="required_working_time">
+        Required working time: %1$s
+    </string>
+
+    <string name="weekly_off">
+        Weekly off: %1$s
+    </string>
+
+    <string name="required_working_time_placeholder">
+        Required: -- hrs
+    </string>
+
+    <string name="weekly_off_placeholder">
+        Weekly off: --
+    </string>
+
+    <string name="hours_unit">
+        %1$s hours
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ===================================================== -->
+
+    <string name="home">Home</string>
+    <string name="calendar">Calendar</string>
+    <string name="leave">Leave</string>
+
+
+    <!-- ===================================================== -->
+    <!-- PROFILE -->
+    <!-- ===================================================== -->
+
+    <string name="profile_initial">U</string>
+    <string name="account_information">Account Information</string>
+    <string name="username">Username</string>
+    <string name="role">Role</string>
+    <string name="attendance">Attendance</string>
+    <string name="face_recognition">Face Recognition</string>
+    <string name="logout">Logout</string>
+
+
+    <!-- ===================================================== -->
+    <!-- ATTENDANCE -->
+    <!-- ===================================================== -->
+
     <string name="check_in">Check In</string>
     <string name="check_out">Check Out</string>
 
-    <!-- Camera -->
+
+    <!-- ===================================================== -->
+    <!-- CAMERA -->
+    <!-- ===================================================== -->
+
     <string name="capture_face">Capture face</string>
     <string name="face_verification">Face Verification</string>
-    <string name="camera_instruction">Keep only your face visible and look at the camera</string>
-    <string name="keep_face_visible">Keep your face clearly visible</string>
 
-    <!-- Camera Errors -->
-    <string name="invalid_attendance_action">Invalid attendance action</string>
-    <string name="camera_start_failed">Unable to start camera</string>
-    <string name="front_camera_failed">Unable to access front camera</string>
-    <string name="camera_not_ready">Camera is not ready</string>
-    <string name="camera_permission_required">Camera permission is required for attendance</string>
+    <string name="camera_instruction">
+        Keep only your face visible and look at the camera
+    </string>
+
+    <string name="keep_face_visible">
+        Keep your face clearly visible
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- CAMERA ERRORS -->
+    <!-- ===================================================== -->
+
+    <string name="invalid_attendance_action">
+        Invalid attendance action
+    </string>
+
+    <string name="camera_start_failed">
+        Unable to start camera
+    </string>
+
+    <string name="front_camera_failed">
+        Unable to access front camera
+    </string>
+
+    <string name="camera_not_ready">
+        Camera is not ready
+    </string>
+
+    <string name="camera_permission_required">
+        Camera permission is required for attendance
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- FACE VERIFICATION RESULT -->
+    <!-- ===================================================== -->
+
     <string name="spoof_detected">Spoof Detected</string>
     <string name="unregistered">Unregistered</string>
-    <string name="attendance_registered">%1$s Successfully Registered</string>
 
-    <!-- Image -->
-    <string name="capturing_image">Capturing image...</string>
-    <string name="image_capture_failed">Unable to capture image</string>
-    <string name="image_not_found">Captured image not found</string>
+    <string name="attendance_registered">
+        %1$s Successfully Registered
+    </string>
 
-    <!-- Location -->
-    <string name="getting_location">Getting your location...</string>
-    <string name="getting_current_location">Getting current location...</string>
-    <string name="enable_location">Please enable location/GPS</string>
-    <string name="location_unavailable">Location unavailable</string>
-    <string name="location_unavailable_message">Location not available. Please move to an open area and try again.</string>
-    <string name="location_failed">Unable to get location</string>
-    <string name="location_permission_required">Location permission is required to mark attendance</string>
 
-    <!-- Verification -->
-    <string name="verifying_attendance">Verifying face and marking attendance...</string>
-    <string name="verification_failed">Verification failed. Please try again.</string>
+    <!-- ===================================================== -->
+    <!-- IMAGE -->
+    <!-- ===================================================== -->
 
-    <!-- Network -->
-    <string name="server_connection_failed">Unable to connect to server</string>
+    <string name="capturing_image">
+        Capturing image...
+    </string>
 
-    <!-- Session -->
-    <string name="session_expired">Session expired. Please login again.</string>
-    <string name="attendance_not_allowed">You are not allowed to mark attendance.</string>
+    <string name="image_capture_failed">
+        Unable to capture image
+    </string>
 
-    <!-- Success -->
-    <string name="check_in_success">Check-in successful</string>
-    <string name="check_out_success">Check-out successful</string>
+    <string name="image_not_found">
+        Captured image not found
+    </string>
 
-    <!-- Attendance Errors -->
-    <string name="attendance_failed">Attendance verification failed. Please try again.</string>
-    <string name="attendance_failed_with_code">Attendance verification failed. Error: %1$d</string>
+
+    <!-- ===================================================== -->
+    <!-- VERIFICATION -->
+    <!-- ===================================================== -->
+
+    <string name="verifying_attendance">
+        Verifying face and marking attendance...
+    </string>
+
+    <string name="verification_failed">
+        Verification failed. Please try again.
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- NETWORK -->
+    <!-- ===================================================== -->
+
+    <string name="server_connection_failed">
+        Unable to connect to server
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- SESSION -->
+    <!-- ===================================================== -->
+
+    <string name="session_expired">
+        Session expired. Please login again.
+    </string>
+
+    <string name="attendance_not_allowed">
+        You are not allowed to mark attendance.
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- SUCCESS -->
+    <!-- ===================================================== -->
+
+    <string name="check_in_success">
+        Check-in successful
+    </string>
+
+    <string name="check_out_success">
+        Check-out successful
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- ATTENDANCE ERRORS -->
+    <!-- ===================================================== -->
+
+    <string name="attendance_failed">
+        Attendance verification failed. Please try again.
+    </string>
+
+    <string name="attendance_failed_with_code">
+        Attendance verification failed. Error: %1$d
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- CALENDAR -->
+    <!-- ===================================================== -->
+
+    <string name="calendar_title">Calendar</string>
+
+    <string name="previous_month">Previous month</string>
+    <string name="next_month">Next month</string>
+
+    <string name="present">Present</string>
+    <string name="absent">Absent</string>
+    <string name="half_day">Half Day</string>
+    <string name="holiday">Holiday</string>
+
+    <string name="approved_leave">Leave</string>
+    <string name="pending_leave">Pending</string>
+    <string name="rejected_leave">Rejected</string>
+
+    <string name="attendance_summary">
+        Attendance Summary
+    </string>
+
+    <string name="attendance_percentage">
+        Attendance
+    </string>
+
+    <string name="date_details">
+        Date Details
+    </string>
+
+    <string name="selected_date">
+        Selected date
+    </string>
+
+    <string name="check_in_time">
+        Check-in
+    </string>
+
+    <string name="check_out_time">
+        Check-out
+    </string>
+
+    <string name="total_work_hours">
+        Work hours
+    </string>
+
+    <string name="status">
+        Status
+    </string>
+
+    <string name="no_attendance">
+        No attendance marked
+    </string>
+
+    <string name="no_data">
+        No data available
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- CALENDAR UI -->
+    <!-- ===================================================== -->
+
+    <string name="week_sunday">S</string>
+    <string name="week_monday">M</string>
+    <string name="week_tuesday">T</string>
+    <string name="week_wednesday">W</string>
+    <string name="week_thursday">T</string>
+    <string name="week_friday">F</string>
+    <string name="week_saturday">S</string>
+
+    <string name="zero">0</string>
+    <string name="percentage_zero">0.0%</string>
+    <string name="dash">-</string>
+
+
+    <!-- ===================================================== -->
+    <!-- LEAVE -->
+    <!-- ===================================================== -->
+
+    <string name="leave_title">Leave</string>
+
+    <string name="upcoming_holidays">
+        Upcoming Holidays
+    </string>
+
+    <string name="my_leaves">
+        My Leaves
+    </string>
+
+    <string name="apply_leave">
+        Apply Leave
+    </string>
+
+    <string name="from_date">
+        From Date
+    </string>
+
+    <string name="to_date">
+        To Date
+    </string>
+
+    <string name="leave_type">
+        Leave Type
+    </string>
+
+    <string name="description">
+        Description
+    </string>
+
+    <string name="select_from_date">
+        Select from date
+    </string>
+
+    <string name="select_to_date">
+        Select to date
+    </string>
+
+    <string name="select_leave_type">
+        Select leave type
+    </string>
+
+    <string name="casual_leave">
+        Casual Leave
+    </string>
+
+    <string name="sick_leave">
+        Sick Leave
+    </string>
+
+    <string name="personal_leave">
+        Personal Leave
+    </string>
+
+    <string name="other_leave">
+        Other
+    </string>
+
+    <string name="submit_leave">
+        Submit Leave
+    </string>
+
+    <string name="cancel">
+        Cancel
+    </string>
+
+    <string name="leave_pending">
+        PENDING
+    </string>
+
+    <string name="leave_approved">
+        APPROVED
+    </string>
+
+    <string name="leave_rejected">
+        REJECTED
+    </string>
+
+    <string name="leave_applied_successfully">
+        Leave applied successfully
+    </string>
+
+    <string name="leave_application_failed">
+        Unable to apply leave
+    </string>
+
+    <string name="no_leaves">
+        No leave applications found
+    </string>
+
+    <string name="no_upcoming_holidays">
+        No upcoming holidays
+    </string>
+
+
+    <!-- ===================================================== -->
+    <!-- HOLIDAY -->
+    <!-- ===================================================== -->
+
+    <string name="holiday_name">
+        Holiday
+    </string>
+
+    <string name="holiday_date">
+        Holiday date
+    </string>
 
 </resources>

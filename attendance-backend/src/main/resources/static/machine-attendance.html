@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-
 <html lang="en">
 
 <head>
@@ -9,16 +8,11 @@
 
     <title>Machine Attendance | College Attendance</title>
 
-    <link
-        href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
-        rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <link
-        rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 
     <style>
-
         * {
             box-sizing: border-box;
         }
@@ -32,14 +26,18 @@
             color: #1f2937;
         }
 
+        /* =========================================================
+           NAVBAR
+           ========================================================= */
+
         .navbar {
             background: #ffffff;
             border-bottom: 1px solid #e5e7eb;
-            min-height: 70px;
+            min-height: 64px;
         }
 
         .brand {
-            font-size: 21px;
+            font-size: 20px;
             font-weight: 700;
             color: #111827;
             text-decoration: none;
@@ -48,111 +46,128 @@
         }
 
         .brand-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 11px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
             display: inline-flex;
             align-items: center;
             justify-content: center;
             background: #111827;
             color: white;
-            margin-right: 10px;
+            margin-right: 9px;
         }
 
         .machine-badge {
             background: #f3f4f6;
             color: #374151;
             border: 1px solid #e5e7eb;
-            padding: 7px 12px;
+            padding: 6px 11px;
             border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
         }
 
+        /* =========================================================
+           PAGE
+           ========================================================= */
+
         .page-wrapper {
-            padding: 35px 15px 50px;
+            padding: 25px 15px 35px;
         }
 
         .page-title {
-            font-size: 30px;
+            font-size: 28px;
             font-weight: 700;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
         }
 
         .page-subtitle {
             color: #6b7280;
-            margin-bottom: 30px;
+            margin-bottom: 22px;
+            font-size: 14px;
         }
+
+        /* =========================================================
+           CARD
+           ========================================================= */
 
         .attendance-card {
             background: #ffffff;
             border: 1px solid #e5e7eb;
-            border-radius: 18px;
+            border-radius: 16px;
             overflow: hidden;
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.035);
         }
 
         .card-header-custom {
-            padding: 22px 25px;
+            padding: 17px 20px;
             border-bottom: 1px solid #eef0f3;
         }
 
         .card-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 700;
             margin: 0;
         }
 
+        /* =========================================================
+           USER
+           ========================================================= */
+
         .user-section {
-            padding: 25px;
+            padding: 20px;
         }
 
         .user-id-input {
-            height: 52px;
-            border-radius: 10px;
+            height: 48px;
+            border-radius: 9px;
             font-size: 16px;
         }
 
         .user-help {
-            font-size: 12px;
+            font-size: 11px;
             color: #6b7280;
-            margin-top: 7px;
+            margin-top: 6px;
         }
 
         .selected-user {
             display: none;
             background: #f9fafb;
             border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
+            border-radius: 10px;
+            padding: 11px 13px;
+            margin-top: 12px;
         }
 
         .selected-user-label {
             color: #6b7280;
-            font-size: 12px;
-            margin-bottom: 3px;
+            font-size: 11px;
+            margin-bottom: 2px;
         }
 
         .selected-user-name {
             font-weight: 700;
-            font-size: 16px;
+            font-size: 15px;
         }
 
         .selected-user-id {
             color: #6b7280;
-            font-size: 13px;
+            font-size: 12px;
         }
 
+        /* =========================================================
+           CAMERA
+           ========================================================= */
+
         .camera-area {
-            padding: 25px;
+            padding: 20px;
         }
 
         .camera-box {
             width: 100%;
             aspect-ratio: 4 / 3;
             background: #111827;
-            border-radius: 15px;
+            border-radius: 13px;
             overflow: hidden;
             position: relative;
             display: flex;
@@ -178,47 +193,57 @@
         .camera-placeholder {
             color: #9ca3af;
             text-align: center;
-            padding: 20px;
+            padding: 15px;
         }
 
         .camera-placeholder i {
-            font-size: 52px;
+            font-size: 42px;
             display: block;
-            margin-bottom: 12px;
+            margin-bottom: 8px;
+        }
+
+        .camera-placeholder div {
+            font-size: 14px;
+        }
+
+        .camera-placeholder small {
+            font-size: 11px;
         }
 
         .camera-controls {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 15px;
+            gap: 8px;
+            margin-top: 11px;
         }
 
         .camera-controls button {
-            height: 48px;
-            border-radius: 10px;
+            height: 44px;
+            border-radius: 9px;
             font-weight: 600;
+            font-size: 14px;
         }
 
         .camera-status {
             display: flex;
             align-items: center;
-            gap: 8px;
-            margin-top: 13px;
-            font-size: 13px;
+            gap: 7px;
+            margin-top: 9px;
+            font-size: 11px;
             color: #6b7280;
         }
 
         .status-dot {
-            width: 9px;
-            height: 9px;
+            width: 8px;
+            height: 8px;
             border-radius: 50%;
             background: #9ca3af;
+            flex-shrink: 0;
         }
 
         .status-dot.active {
             background: #10b981;
-            box-shadow: 0 0 0 4px rgba(16, 185, 129, 0.12);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
         }
 
         .face-guide {
@@ -232,31 +257,41 @@
 
         .face-guide-text {
             position: absolute;
-            bottom: 15px;
+            bottom: 12px;
             left: 0;
             right: 0;
             text-align: center;
             color: white;
-            font-size: 13px;
+            font-size: 11px;
             background: rgba(0, 0, 0, 0.35);
-            padding: 7px;
+            padding: 6px;
         }
 
+        /* =========================================================
+           ACTION
+           ========================================================= */
+
         .action-section {
-            padding: 25px;
+            padding: 20px;
+        }
+
+        .action-description {
+            font-size: 12px;
+            color: #6b7280;
         }
 
         .action-buttons {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-top: 20px;
+            gap: 9px;
+            margin-top: 13px;
         }
 
         .btn-attendance {
-            height: 52px;
-            border-radius: 10px;
+            height: 46px;
+            border-radius: 9px;
             font-weight: 600;
+            font-size: 14px;
         }
 
         .btn-checkin {
@@ -281,14 +316,18 @@
         }
 
         .btn-attendance:disabled {
-            opacity: 0.65;
+            opacity: 0.55;
             cursor: not-allowed;
         }
 
+        /* =========================================================
+           STATUS
+           ========================================================= */
+
         .status-card {
-            margin-top: 20px;
-            padding: 20px;
-            border-radius: 14px;
+            margin-top: 14px;
+            padding: 14px;
+            border-radius: 12px;
             display: none;
         }
 
@@ -305,15 +344,15 @@
         }
 
         .status-icon {
-            width: 42px;
-            height: 42px;
-            min-width: 42px;
+            width: 36px;
+            height: 36px;
+            min-width: 36px;
             border-radius: 50%;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            font-size: 21px;
-            margin-right: 12px;
+            font-size: 18px;
+            margin-right: 10px;
         }
 
         .success-icon {
@@ -328,28 +367,38 @@
 
         .status-title {
             font-weight: 700;
-            margin-bottom: 3px;
+            font-size: 14px;
+            margin-bottom: 2px;
         }
 
         .status-message {
             margin: 0;
-            font-size: 14px;
+            font-size: 12px;
         }
+
+        /* =========================================================
+           INFO
+           ========================================================= */
 
         .info-box {
             background: #f9fafb;
             border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 20px;
+            border-radius: 10px;
+            padding: 9px 12px;
+            margin-top: 12px;
         }
 
         .info-row {
             display: flex;
             justify-content: space-between;
             gap: 10px;
-            padding: 7px 0;
-            font-size: 14px;
+            padding: 5px 0;
+            font-size: 12px;
+            border-bottom: 1px solid #eef0f3;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
         }
 
         .info-label {
@@ -361,73 +410,202 @@
             text-align: right;
         }
 
+        /* =========================================================
+           SECURITY
+           ========================================================= */
+
         .security-note {
-            margin-top: 18px;
-            font-size: 13px;
+            margin-top: 13px;
+            font-size: 11px;
             color: #6b7280;
             display: flex;
-            gap: 8px;
+            gap: 7px;
             align-items: flex-start;
+            line-height: 1.4;
         }
 
         .security-note i {
             color: #059669;
-            font-size: 16px;
+            font-size: 14px;
+            flex-shrink: 0;
         }
 
+        /* =========================================================
+           SPINNER
+           ========================================================= */
+
         .spinner-border {
-            width: 18px;
-            height: 18px;
+            width: 17px;
+            height: 17px;
             border-width: 2px;
         }
+
+        /* =========================================================
+           DESKTOP
+           ========================================================= */
+
+        @media (min-width: 992px) {
+
+            .page-wrapper {
+                padding-top: 30px;
+            }
+
+            .camera-box {
+                min-height: 430px;
+            }
+
+        }
+
+        /* =========================================================
+           MOBILE
+           ========================================================= */
 
         @media (max-width: 767px) {
 
             .navbar {
-                min-height: 62px;
+                min-height: 58px;
             }
 
             .brand {
-                font-size: 18px;
+                font-size: 17px;
             }
 
             .brand-icon {
-                width: 35px;
-                height: 35px;
+                width: 34px;
+                height: 34px;
+                border-radius: 9px;
+                margin-right: 8px;
+            }
+
+            .machine-badge {
+                padding: 5px 9px;
+                font-size: 10px;
             }
 
             .page-wrapper {
-                padding: 25px 12px 40px;
+                padding: 15px 10px 25px;
             }
 
             .page-title {
-                font-size: 24px;
+                font-size: 22px;
             }
 
             .page-subtitle {
+                font-size: 12px;
+                margin-bottom: 14px;
+            }
+
+            .attendance-card {
+                border-radius: 13px;
+            }
+
+            .card-header-custom {
+                padding: 13px 15px;
+            }
+
+            .card-title {
                 font-size: 14px;
+            }
+
+            .user-section,
+            .camera-area,
+            .action-section {
+                padding: 14px;
+            }
+
+            .user-id-input {
+                height: 44px;
+                font-size: 15px;
+            }
+
+            .user-help {
+                font-size: 10px;
+            }
+
+            .camera-box {
+                aspect-ratio: 4 / 3;
+            }
+
+            .camera-controls {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .camera-controls button {
+                height: 42px;
+                font-size: 12px;
+            }
+
+            .action-buttons {
+                grid-template-columns: 1fr 1fr;
+            }
+
+            .btn-attendance {
+                height: 43px;
+                font-size: 12px;
+            }
+
+            .security-note {
+                font-size: 10px;
+                margin-top: 10px;
+            }
+
+            .status-card {
+                padding: 12px;
+            }
+
+            .status-icon {
+                width: 32px;
+                height: 32px;
+                min-width: 32px;
+                font-size: 16px;
+                margin-right: 8px;
+            }
+
+            .status-title {
+                font-size: 13px;
+            }
+
+            .status-message {
+                font-size: 11px;
+            }
+
+            .info-row {
+                font-size: 11px;
+                padding: 4px 0;
+            }
+
+        }
+
+        /* =========================================================
+           VERY SMALL MOBILE
+           ========================================================= */
+
+        @media (max-width: 380px) {
+
+            .page-wrapper {
+                padding-left: 7px;
+                padding-right: 7px;
             }
 
             .camera-area,
             .user-section,
             .action-section {
-                padding: 18px;
+                padding: 11px;
             }
 
-            .camera-controls {
-                grid-template-columns: 1fr;
+            .card-header-custom {
+                padding: 11px 12px;
             }
 
-            .action-buttons {
-                grid-template-columns: 1fr;
+            .camera-controls button {
+                font-size: 11px;
             }
 
-            .face-guide {
-                width: 55%;
-                height: 62%;
+            .btn-attendance {
+                font-size: 11px;
             }
+
         }
-
     </style>
 
 </head>
@@ -436,9 +614,9 @@
 <body>
 
 
-    <!-- ============================================================
+    <!-- =========================================================
          NAVBAR
-         ============================================================ -->
+         ========================================================= -->
 
     <nav class="navbar">
 
@@ -470,9 +648,9 @@
     </nav>
 
 
-    <!-- ============================================================
+    <!-- =========================================================
          PAGE
-         ============================================================ -->
+         ========================================================= -->
 
     <div class="container page-wrapper">
 
@@ -483,22 +661,21 @@
 
 
         <p class="page-subtitle">
-
-            Enter the registered user ID, capture a live face and
-            verify attendance.
-
+            Enter user ID, capture face and verify attendance.
         </p>
 
 
-        <div class="row g-4">
+        <div class="row g-3">
 
 
-            <!-- ====================================================
-                 USER SECTION
-                 ==================================================== -->
+            <!-- =====================================================
+                 LEFT
+                 ===================================================== -->
 
             <div class="col-lg-5">
 
+
+                <!-- USER -->
 
                 <div class="attendance-card">
 
@@ -519,36 +696,25 @@
                     <div class="user-section">
 
 
-                        <label
-                            for="userIdInput"
-                            class="form-label fw-semibold">
+                        <label for="userIdInput" class="form-label fw-semibold mb-1 ">
 
                             User ID
 
                         </label>
 
 
-                        <input
-                            type="number"
-                            id="userIdInput"
-                            class="form-control user-id-input"
-                            placeholder="Enter User ID"
-                            min="1"
-                            autocomplete="off">
+                        <input type="text" id="userIdInput" class="form-control user-id-input"
+                            placeholder="Enter User ID" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
 
 
                         <div class="user-help">
 
-                            Enter the registered user ID before
-                            starting face verification.
+                            Enter the registered user ID.
 
                         </div>
 
 
-                        <button
-                            type="button"
-                            class="btn btn-dark w-100 mt-3"
-                            id="setUserBtn">
+                        <button type="button" class="btn btn-dark w-100 mt-2" id="setUserBtn">
 
                             <i class="bi bi-check-circle me-1"></i>
 
@@ -557,35 +723,23 @@
                         </button>
 
 
-                        <div
-                            id="selectedUser"
-                            class="selected-user">
-
+                        <div id="selectedUser" class="selected-user">
 
                             <div class="selected-user-label">
-
                                 Selected User
-
                             </div>
 
-
-                            <div
-                                id="selectedUserName"
-                                class="selected-user-name">
+                            <div id="selectedUserName" class="selected-user-name">
 
                                 User
 
                             </div>
 
-
-                            <div
-                                id="selectedUserId"
-                                class="selected-user-id">
+                            <div id="selectedUserId" class="selected-user-id">
 
                                 User ID: -
 
                             </div>
-
 
                         </div>
 
@@ -595,26 +749,20 @@
                             <i class="bi bi-shield-check"></i>
 
                             <span>
-
-                                The machine verifies the captured
-                                face against the registered face
-                                of the supplied User ID.
-
+                                Face is verified against the registered
+                                face of the supplied User ID.
                             </span>
 
                         </div>
-
 
                     </div>
 
                 </div>
 
 
-                <!-- =================================================
-                     ATTENDANCE
-                     ================================================= -->
+                <!-- ATTENDANCE -->
 
-                <div class="attendance-card mt-4">
+                <div class="attendance-card mt-3">
 
 
                     <div class="card-header-custom">
@@ -633,7 +781,7 @@
                     <div class="action-section">
 
 
-                        <div class="form-text">
+                        <div class="action-description">
 
                             Capture a live face first, then select
                             Check In or Check Out.
@@ -644,11 +792,7 @@
                         <div class="action-buttons">
 
 
-                            <button
-                                type="button"
-                                class="btn btn-attendance btn-checkin"
-                                id="checkInBtn"
-                                disabled>
+                            <button type="button" class="btn btn-attendance btn-checkin" id="checkInBtn" disabled>
 
                                 <i class="bi bi-box-arrow-in-right me-1"></i>
 
@@ -657,11 +801,7 @@
                             </button>
 
 
-                            <button
-                                type="button"
-                                class="btn btn-attendance btn-checkout"
-                                id="checkOutBtn"
-                                disabled>
+                            <button type="button" class="btn btn-attendance btn-checkout" id="checkOutBtn" disabled>
 
                                 <i class="bi bi-box-arrow-right me-1"></i>
 
@@ -675,13 +815,10 @@
 
                         <!-- SUCCESS -->
 
-                        <div
-                            id="successCard"
-                            class="status-card status-success">
+                        <div id="successCard" class="status-card status-success">
 
 
                             <div class="d-flex align-items-start">
-
 
                                 <span class="status-icon success-icon">
 
@@ -692,29 +829,22 @@
 
                                 <div>
 
-                                    <div
-                                        id="successTitle"
-                                        class="status-title">
+                                    <div id="successTitle" class="status-title">
 
                                         Attendance Marked
 
                                     </div>
 
 
-                                    <p
-                                        id="successMessage"
-                                        class="status-message">
+                                    <p id="successMessage" class="status-message">
                                     </p>
 
                                 </div>
 
-
                             </div>
 
 
-                            <div
-                                id="successInfo"
-                                class="info-box">
+                            <div id="successInfo" class="info-box">
                             </div>
 
 
@@ -723,13 +853,10 @@
 
                         <!-- ERROR -->
 
-                        <div
-                            id="errorCard"
-                            class="status-card status-error">
+                        <div id="errorCard" class="status-card status-error">
 
 
                             <div class="d-flex align-items-start">
-
 
                                 <span class="status-icon error-icon">
 
@@ -740,22 +867,17 @@
 
                                 <div>
 
-                                    <div
-                                        id="errorTitle"
-                                        class="status-title">
+                                    <div id="errorTitle" class="status-title">
 
                                         Attendance Failed
 
                                     </div>
 
 
-                                    <p
-                                        id="errorMessage"
-                                        class="status-message">
+                                    <p id="errorMessage" class="status-message">
                                     </p>
 
                                 </div>
-
 
                             </div>
 
@@ -767,13 +889,12 @@
 
                 </div>
 
-
             </div>
 
 
-            <!-- ====================================================
+            <!-- =====================================================
                  CAMERA
-                 ==================================================== -->
+                 ===================================================== -->
 
             <div class="col-lg-7">
 
@@ -800,52 +921,35 @@
                         <div class="camera-box">
 
 
-                            <video
-                                id="camera"
-                                autoplay
-                                playsinline>
+                            <video id="camera" autoplay playsinline>
                             </video>
 
 
-                            <img
-                                id="preview"
-                                alt="Captured face">
+                            <img id="preview" alt="Captured face">
 
 
-                            <div
-                                id="faceGuide"
-                                class="face-guide"
-                                style="display:none;">
+                            <div id="faceGuide" class="face-guide" style="display:none;">
                             </div>
 
 
-                            <div
-                                id="faceGuideText"
-                                class="face-guide-text"
-                                style="display:none;">
+                            <div id="faceGuideText" class="face-guide-text" style="display:none;">
 
                                 Keep your face inside the frame
 
                             </div>
 
 
-                            <div
-                                id="cameraPlaceholder"
-                                class="camera-placeholder">
-
+                            <div id="cameraPlaceholder" class="camera-placeholder">
 
                                 <i class="bi bi-camera-video"></i>
-
 
                                 <div>
                                     Camera is not started
                                 </div>
 
-
                                 <small>
-                                    Select a user and start the camera
+                                    Select a user and start camera
                                 </small>
-
 
                             </div>
 
@@ -855,19 +959,12 @@
 
                         <div class="camera-status">
 
-
-                            <span
-                                id="statusDot"
-                                class="status-dot">
+                            <span id="statusDot" class="status-dot">
                             </span>
-
 
                             <span id="cameraStatusText">
-
                                 Camera inactive
-
                             </span>
-
 
                         </div>
 
@@ -875,11 +972,7 @@
                         <div class="camera-controls">
 
 
-                            <button
-                                type="button"
-                                class="btn btn-dark"
-                                id="startCameraBtn"
-                                disabled>
+                            <button type="button" class="btn btn-dark" id="startCameraBtn" disabled>
 
                                 <i class="bi bi-camera-video me-1"></i>
 
@@ -888,15 +981,11 @@
                             </button>
 
 
-                            <button
-                                type="button"
-                                class="btn btn-outline-dark"
-                                id="captureBtn"
-                                disabled>
+                            <button type="button" class="btn btn-outline-dark" id="captureBtn" disabled>
 
                                 <i class="bi bi-camera me-1"></i>
 
-                                Capture Face
+                                Capture
 
                             </button>
 
@@ -904,10 +993,7 @@
                         </div>
 
 
-                        <button
-                            type="button"
-                            class="btn btn-outline-secondary w-100 mt-2"
-                            id="retakeBtn"
+                        <button type="button" class="btn btn-outline-secondary w-100 mt-2" id="retakeBtn"
                             style="display:none;">
 
                             <i class="bi bi-arrow-counterclockwise me-1"></i>
@@ -919,18 +1005,13 @@
 
                         <div class="security-note">
 
-
                             <i class="bi bi-shield-check"></i>
 
-
                             <span>
-
-                                The captured image is sent to the
-                                attendance server for face detection,
-                                liveness and registered-face matching.
-
+                                Face detection, liveness and registered
+                                face matching are performed by the
+                                attendance server.
                             </span>
-
 
                         </div>
 
@@ -947,9 +1028,9 @@
     </div>
 
 
-    <!-- ============================================================
+    <!-- =========================================================
          AUTH
-         ============================================================ -->
+         ========================================================= -->
 
     <script src="js/auth.js"></script>
 
@@ -957,19 +1038,9 @@
     <script>
 
 
-        /*
-         * ============================================================
-         * AUTHENTICATION GUARD
-         * ============================================================
-         *
-         * Machine API itself is permitAll() in Spring Security.
-         *
-         * However, this page still requires the user to be logged in
-         * because this is an admin/machine management page.
-         *
-         * apiFetch() will automatically attach JWT.
-         * ============================================================
-         */
+        /* =========================================================
+           AUTHENTICATION
+           ========================================================= */
 
         if (!requireAuth()) {
 
@@ -978,21 +1049,17 @@
         }
 
 
-        /*
-         * ============================================================
-         * CONFIGURATION
-         * ============================================================
-         */
+        /* =========================================================
+           CONFIGURATION
+           ========================================================= */
 
         const API_BASE_URL =
             "http://localhost:8080";
 
 
-        /*
-         * ============================================================
-         * STATE
-         * ============================================================
-         */
+        /* =========================================================
+           STATE
+           ========================================================= */
 
         let selectedUserId = null;
 
@@ -1001,85 +1068,80 @@
         let capturedFile = null;
 
 
-        /*
-         * ============================================================
-         * DOM
-         * ============================================================
-         */
+        /* =========================================================
+           DOM
+           ========================================================= */
 
         const userIdInput =
             document.getElementById("userIdInput");
 
-
         const setUserBtn =
             document.getElementById("setUserBtn");
-
 
         const selectedUser =
             document.getElementById("selectedUser");
 
-
         const selectedUserName =
             document.getElementById("selectedUserName");
-
 
         const selectedUserIdElement =
             document.getElementById("selectedUserId");
 
-
         const camera =
             document.getElementById("camera");
-
 
         const preview =
             document.getElementById("preview");
 
-
         const cameraPlaceholder =
             document.getElementById("cameraPlaceholder");
-
 
         const startCameraBtn =
             document.getElementById("startCameraBtn");
 
-
         const captureBtn =
             document.getElementById("captureBtn");
-
 
         const retakeBtn =
             document.getElementById("retakeBtn");
 
-
         const checkInBtn =
             document.getElementById("checkInBtn");
-
 
         const checkOutBtn =
             document.getElementById("checkOutBtn");
 
-
         const faceGuide =
             document.getElementById("faceGuide");
-
 
         const faceGuideText =
             document.getElementById("faceGuideText");
 
-
         const statusDot =
             document.getElementById("statusDot");
-
 
         const cameraStatusText =
             document.getElementById("cameraStatusText");
 
 
-        /*
-         * ============================================================
-         * SET USER
-         * ============================================================
-         */
+        /* =========================================================
+           USER ID - ONLY NUMBERS
+           ========================================================= */
+
+        userIdInput.addEventListener(
+            "input",
+            function () {
+
+                this.value =
+                    this.value.replace(/\D/g, "");
+
+            }
+        );
+
+
+        /* =========================================================
+           SET USER
+           ========================================================= */
 
         setUserBtn.addEventListener(
             "click",
@@ -1102,7 +1164,6 @@
 
 
         function setUser() {
-
 
             hideMessages();
 
@@ -1194,11 +1255,9 @@
         }
 
 
-        /*
-         * ============================================================
-         * START CAMERA
-         * ============================================================
-         */
+        /* =========================================================
+           START CAMERA
+           ========================================================= */
 
         startCameraBtn.addEventListener(
             "click",
@@ -1207,7 +1266,6 @@
 
 
         async function startCamera() {
-
 
             hideMessages();
 
@@ -1224,7 +1282,6 @@
 
 
             try {
-
 
                 stopCamera();
 
@@ -1274,15 +1331,11 @@
 
                 camera.style.display = "block";
 
-
                 preview.style.display = "none";
-
 
                 cameraPlaceholder.style.display = "none";
 
-
                 faceGuide.style.display = "block";
-
 
                 faceGuideText.style.display = "block";
 
@@ -1294,18 +1347,16 @@
 
 
                 cameraStatusText.innerText =
-                    "Camera active — position your face inside the frame";
+                    "Camera active";
 
 
                 startCameraBtn.innerHTML =
-                    '<i class="bi bi-camera-video-off me-1"></i> Restart Camera';
-
+                    '<i class="bi bi-camera-video-off me-1"></i> Restart';
 
             }
 
 
             catch (error) {
-
 
                 console.error(
                     "Camera Error:",
@@ -1323,14 +1374,11 @@
         }
 
 
-        /*
-         * ============================================================
-         * CAMERA ERROR
-         * ============================================================
-         */
+        /* =========================================================
+           CAMERA ERROR
+           ========================================================= */
 
         function getCameraErrorMessage(error) {
-
 
             if (!error) {
 
@@ -1376,16 +1424,14 @@
 
 
             return error.message ||
-                "Unable to access camera. Please check camera permissions.";
+                "Unable to access camera.";
 
         }
 
 
-        /*
-         * ============================================================
-         * CAPTURE FACE
-         * ============================================================
-         */
+        /* =========================================================
+           CAPTURE FACE
+           ========================================================= */
 
         captureBtn.addEventListener(
             "click",
@@ -1394,7 +1440,6 @@
 
 
         function captureFace() {
-
 
             hideMessages();
 
@@ -1451,10 +1496,6 @@
                 canvas.getContext("2d");
 
 
-            /*
-             * Mirror captured image.
-             */
-
             context.translate(
                 canvas.width,
                 0
@@ -1479,7 +1520,6 @@
             canvas.toBlob(
 
                 function (blob) {
-
 
                     if (!blob) {
 
@@ -1553,7 +1593,7 @@
 
 
                     cameraStatusText.innerText =
-                        "Face captured — ready for verification.";
+                        "Face captured";
 
                 },
 
@@ -1566,18 +1606,15 @@
         }
 
 
-        /*
-         * ============================================================
-         * RETAKE
-         * ============================================================
-         */
+        /* =========================================================
+           RETAKE
+           ========================================================= */
 
         retakeBtn.addEventListener(
 
             "click",
 
             async function () {
-
 
                 capturedFile = null;
 
@@ -1605,11 +1642,9 @@
         );
 
 
-        /*
-         * ============================================================
-         * CHECK IN
-         * ============================================================
-         */
+        /* =========================================================
+           CHECK IN
+           ========================================================= */
 
         checkInBtn.addEventListener(
 
@@ -1624,11 +1659,9 @@
         );
 
 
-        /*
-         * ============================================================
-         * CHECK OUT
-         * ============================================================
-         */
+        /* =========================================================
+           CHECK OUT
+           ========================================================= */
 
         checkOutBtn.addEventListener(
 
@@ -1643,32 +1676,11 @@
         );
 
 
-        /*
-         * ============================================================
-         * MARK ATTENDANCE
-         * ============================================================
-         *
-         * BACKEND CONTRACT:
-         *
-         * POST /api/attendance/machine/check-in
-         *
-         * multipart/form-data:
-         *
-         * userId = 8
-         * file   = image
-         *
-         *
-         * POST /api/attendance/machine/check-out
-         *
-         * multipart/form-data:
-         *
-         * userId = 8
-         * file   = image
-         * ============================================================
-         */
+        /* =========================================================
+           MARK ATTENDANCE
+           ========================================================= */
 
         async function markAttendance(action) {
-
 
             hideMessages();
 
@@ -1710,33 +1722,17 @@
             checkOutBtn.disabled = true;
 
 
-            button.innerHTML =
-                '<span class="spinner-border me-2"></span> Verifying...';
-
-
             /*
-             * ========================================================
-             * FORM DATA
-             * ========================================================
+             * Only spinner.
              */
+
+            button.innerHTML =
+                '<span class="spinner-border" role="status" aria-hidden="true"></span>';
+
 
             const formData =
                 new FormData();
 
-
-            /*
-             * IMPORTANT:
-             *
-             * userId controller mein:
-             *
-             * @RequestParam("userId")
-             *
-             * hai.
-             *
-             * Therefore userId URL mein nahi jayega.
-             *
-             * It will be sent as multipart form parameter.
-             */
 
             formData.append(
                 "userId",
@@ -1744,31 +1740,11 @@
             );
 
 
-            /*
-             * Face image.
-             */
-
             formData.append(
                 "file",
                 capturedFile
             );
 
-
-            /*
-             * ========================================================
-             * CORRECT API URL
-             * ========================================================
-             *
-             * check-in:
-             *
-             * /api/attendance/machine/check-in
-             *
-             * check-out:
-             *
-             * /api/attendance/machine/check-out
-             *
-             * NO /{userId} HERE.
-             */
 
             const url =
                 `${API_BASE_URL}/api/attendance/machine/${action}`;
@@ -1788,21 +1764,6 @@
 
             try {
 
-
-                /*
-                 * apiFetch() automatically attaches JWT.
-                 *
-                 * DO NOT manually set:
-                 *
-                 * Authorization
-                 *
-                 * Content-Type
-                 *
-                 *
-                 * Browser automatically creates the correct
-                 * multipart/form-data boundary.
-                 */
-
                 const response =
                     await apiFetch(
 
@@ -1816,13 +1777,6 @@
                     );
 
 
-                /*
-                 * apiFetch() returns null for:
-                 *
-                 * 401
-                 * 403
-                 */
-
                 if (!response) {
 
                     return;
@@ -1835,12 +1789,6 @@
                     response.status
                 );
 
-
-                /*
-                 * ====================================================
-                 * READ RESPONSE
-                 * ====================================================
-                 */
 
                 let data = null;
 
@@ -1857,14 +1805,12 @@
                     )
                 ) {
 
-
                     try {
 
                         data =
                             await response.json();
 
                     }
-
 
                     catch (jsonError) {
 
@@ -1877,13 +1823,10 @@
 
                 }
 
-
                 else {
-
 
                     const text =
                         await response.text();
-
 
                     console.error(
                         "Non-JSON response:",
@@ -1899,11 +1842,9 @@
                 );
 
 
-                /*
-                 * ====================================================
-                 * HTTP ERROR
-                 * ====================================================
-                 */
+                /* =================================================
+                   HTTP ERROR
+                   ================================================= */
 
                 if (!response.ok) {
 
@@ -1917,28 +1858,22 @@
                 }
 
 
-                /*
-                 * ====================================================
-                 * SUCCESS
-                 * ====================================================
-                 */
+                /* =================================================
+                   SUCCESS
+                   ================================================= */
 
                 if (
                     data &&
                     data.success === true
                 ) {
 
-
                     showSuccess(data);
-
 
                     clearCapture();
 
                 }
 
-
                 else {
-
 
                     showError(
                         getErrorTitle(data),
@@ -1952,7 +1887,6 @@
 
             catch (error) {
 
-
                 console.error(
                     "Machine Attendance API Error:",
                     error
@@ -1961,8 +1895,7 @@
 
                 showError(
                     "Server Error",
-                    "Unable to connect with attendance server. " +
-                    "Please make sure Spring Boot is running."
+                    "Unable to connect with attendance server."
                 );
 
             }
@@ -1970,34 +1903,27 @@
 
             finally {
 
+                /*
+                 * IMPORTANT:
+                 *
+                 * Do NOT enable buttons here.
+                 *
+                 * If verification fails, user must Retake.
+                 */
 
                 button.innerHTML =
                     originalHtml;
-
-
-                if (capturedFile) {
-
-                    checkInBtn.disabled =
-                        false;
-
-                    checkOutBtn.disabled =
-                        false;
-
-                }
 
             }
 
         }
 
 
-        /*
-         * ============================================================
-         * SUCCESS
-         * ============================================================
-         */
+        /* =========================================================
+           SUCCESS
+           ========================================================= */
 
         function showSuccess(data) {
-
 
             hideMessages();
 
@@ -2035,8 +1961,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                            data.userId ?? selectedUserId
-                        )}
+                data.userId ?? selectedUserId
+            )}
                     </span>
 
                 </div>
@@ -2050,8 +1976,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                            data.username || "-"
-                        )}
+                data.username || "-"
+            )}
                     </span>
 
                 </div>
@@ -2065,8 +1991,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                            data.action || "-"
-                        )}
+                data.action || "-"
+            )}
                     </span>
 
                 </div>
@@ -2080,8 +2006,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                            data.attendanceDate || "-"
-                        )}
+                data.attendanceDate || "-"
+            )}
                     </span>
 
                 </div>
@@ -2095,8 +2021,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                            data.checkInTime || "-"
-                        )}
+                data.checkInTime || "-"
+            )}
                     </span>
 
                 </div>
@@ -2110,8 +2036,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                            data.checkOutTime || "-"
-                        )}
+                data.checkOutTime || "-"
+            )}
                     </span>
 
                 </div>
@@ -2125,8 +2051,8 @@
 
                     <span class="info-value">
                         ${formatConfidence(
-                            data.confidence
-                        )}
+                data.confidence
+            )}
                     </span>
 
                 </div>
@@ -2140,8 +2066,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                            data.source || "MACHINE"
-                        )}
+                data.source || "MACHINE"
+            )}
                     </span>
 
                 </div>
@@ -2164,17 +2090,14 @@
         }
 
 
-        /*
-         * ============================================================
-         * ERROR
-         * ============================================================
-         */
+        /* =========================================================
+           ERROR
+           ========================================================= */
 
         function showError(
             title,
             message
         ) {
-
 
             hideMessages();
 
@@ -2214,14 +2137,11 @@
         }
 
 
-        /*
-         * ============================================================
-         * ERROR TITLE
-         * ============================================================
-         */
+        /* =========================================================
+           ERROR TITLE
+           ========================================================= */
 
         function getErrorTitle(data) {
-
 
             if (!data) {
 
@@ -2236,6 +2156,12 @@
                 ).toUpperCase();
 
 
+            const message =
+                String(
+                    data.message || ""
+                ).toLowerCase();
+
+
             switch (action) {
 
 
@@ -2246,7 +2172,7 @@
 
                 case "UNREGISTERED":
 
-                    return "Face Not Registered";
+                    return "Unregistered";
 
 
                 case "ALREADY_MARKED":
@@ -2268,49 +2194,43 @@
 
                     return "Check-Out Failed";
 
-
-                default:
-
-
-                    if (
-                        data.message &&
-                        data.message
-                            .toLowerCase()
-                            .includes("spoof")
-                    ) {
-
-                        return "Spoof Detected";
-
-                    }
+            }
 
 
-                    if (
-                        data.message &&
-                        data.message
-                            .toLowerCase()
-                            .includes("face")
-                    ) {
+            /*
+             * Fallback based on backend message.
+             */
 
-                        return "Face Verification Failed";
+            if (
+                message.includes("spoof")
+            ) {
 
-                    }
-
-
-                    return "Attendance Failed";
+                return "Spoof Detected";
 
             }
+
+
+            if (
+                message.includes("unregistered") ||
+                message.includes("face mismatch") ||
+                message.includes("face verification")
+            ) {
+
+                return "Unregistered";
+
+            }
+
+
+            return "Attendance Failed";
 
         }
 
 
-        /*
-         * ============================================================
-         * ERROR MESSAGE
-         * ============================================================
-         */
+        /* =========================================================
+           ERROR MESSAGE
+           ========================================================= */
 
         function getErrorMessage(data) {
-
 
             if (
                 data &&
@@ -2327,14 +2247,11 @@
         }
 
 
-        /*
-         * ============================================================
-         * HIDE MESSAGES
-         * ============================================================
-         */
+        /* =========================================================
+           HIDE MESSAGES
+           ========================================================= */
 
         function hideMessages() {
-
 
             document.getElementById(
                 "successCard"
@@ -2350,14 +2267,11 @@
         }
 
 
-        /*
-         * ============================================================
-         * CONFIDENCE
-         * ============================================================
-         */
+        /* =========================================================
+           CONFIDENCE
+           ========================================================= */
 
         function formatConfidence(value) {
-
 
             if (
                 value === null ||
@@ -2385,51 +2299,38 @@
         }
 
 
-        /*
-         * ============================================================
-         * CLEAR CAPTURE
-         * ============================================================
-         */
+        /* =========================================================
+           CLEAR CAPTURE AFTER SUCCESS
+           ========================================================= */
 
         function clearCapture() {
-
 
             capturedFile = null;
 
 
             preview.src = "";
 
-
-            preview.style.display =
-                "none";
+            preview.style.display = "none";
 
 
-            retakeBtn.style.display =
-                "none";
+            retakeBtn.style.display = "none";
 
 
-            checkInBtn.disabled =
-                true;
+            checkInBtn.disabled = true;
+
+            checkOutBtn.disabled = true;
 
 
-            checkOutBtn.disabled =
-                true;
-
-
-            camera.style.display =
-                "none";
+            camera.style.display = "none";
 
 
             cameraPlaceholder.style.display =
                 "flex";
 
 
-            faceGuide.style.display =
-                "none";
+            faceGuide.style.display = "none";
 
-
-            faceGuideText.style.display =
-                "none";
+            faceGuideText.style.display = "none";
 
 
             cameraStatusText.innerText =
@@ -2438,14 +2339,11 @@
         }
 
 
-        /*
-         * ============================================================
-         * ESCAPE HTML
-         * ============================================================
-         */
+        /* =========================================================
+           ESCAPE HTML
+           ========================================================= */
 
         function escapeHtml(value) {
-
 
             return String(value)
 
@@ -2477,17 +2375,13 @@
         }
 
 
-        /*
-         * ============================================================
-         * STOP CAMERA
-         * ============================================================
-         */
+        /* =========================================================
+           STOP CAMERA
+           ========================================================= */
 
         function stopCamera() {
 
-
             if (cameraStream) {
-
 
                 cameraStream
                     .getTracks()
@@ -2515,11 +2409,9 @@
         }
 
 
-        /*
-         * ============================================================
-         * PAGE CLOSE
-         * ============================================================
-         */
+        /* =========================================================
+           PAGE CLOSE
+           ========================================================= */
 
         window.addEventListener(
 
@@ -2534,11 +2426,9 @@
         );
 
 
-        /*
-         * ============================================================
-         * INITIAL STATE
-         * ============================================================
-         */
+        /* =========================================================
+           INITIAL STATE
+           ========================================================= */
 
         checkInBtn.disabled = true;
 
@@ -2552,8 +2442,7 @@
     </script>
 
 
-    <script
-        src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
     </script>
 
 

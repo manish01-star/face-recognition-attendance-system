@@ -2,6 +2,8 @@ package com.college.attendance.controller.admin;
 
 import com.college.attendance.dto.face.FaceRegistrationResponse;
 import com.college.attendance.service.FaceRegistrationService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -9,6 +11,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/api/admin/faces")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AdminFaceController {
 

@@ -4,6 +4,8 @@ import com.college.attendance.dto.face.FaceRegistrationResponse;
 import com.college.attendance.dto.section.SectionRequest;
 import com.college.attendance.dto.section.SectionResponse;
 import com.college.attendance.service.SectionService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -14,6 +16,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/sections")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AdminSectionController {
 

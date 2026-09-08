@@ -26,4 +26,6 @@ public class TeacherResponse {
     private String departmentName;
 
     private String status;
+
+    private String profileImageUrl;
 }

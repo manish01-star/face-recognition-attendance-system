@@ -1,0 +1,2617 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Holidays | FaceAttend Admin</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: "Inter", "Segoe UI", Arial, sans-serif;
+            background: #f5f7fb;
+            color: #1e293b;
+        }
+
+        /* =====================================================
+           SIDEBAR
+        ===================================================== */
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 250px;
+            height: 100vh;
+            background: #111827;
+            color: #fff;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .brand {
+            height: 70px;
+            display: flex;
+            align-items: center;
+            padding: 0 22px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .brand-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            background: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 11px;
+            font-size: 19px;
+        }
+
+        .brand-text {
+            font-size: 19px;
+            font-weight: 700;
+            letter-spacing: .2px;
+        }
+
+        .sidebar-section {
+            padding: 22px 18px 8px;
+            font-size: 11px;
+            color: #94a3b8;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+            padding: 0 10px;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 4px;
+        }
+
+        .sidebar-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 13px;
+            border-radius: 8px;
+            color: #cbd5e1;
+            text-decoration: none;
+            font-size: 14px;
+            transition: .2s;
+        }
+
+        .sidebar-link i {
+            font-size: 17px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-link:hover {
+            background: rgba(255, 255, 255, .06);
+            color: #fff;
+        }
+
+        .sidebar-link.active {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        /* =====================================================
+           MAIN
+        ===================================================== */
+
+        .main {
+            margin-left: 250px;
+            min-height: 100vh;
+        }
+
+        /* =====================================================
+           NAVBAR
+        ===================================================== */
+
+        .navbar {
+            height: 70px;
+            background: #fff;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 30px;
+            position: sticky;
+            top: 0;
+            z-index: 900;
+        }
+
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 13px;
+        }
+
+        .menu-toggle {
+            display: none;
+            border: none;
+            background: transparent;
+            font-size: 23px;
+            cursor: pointer;
+        }
+
+        .page-heading {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .navbar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification {
+            position: relative;
+            font-size: 20px;
+            color: #475569;
+            cursor: pointer;
+        }
+
+        .notification-dot {
+            position: absolute;
+            top: 0;
+            right: -2px;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #ef4444;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+        }
+
+        .profile-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: #2563eb;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+        }
+
+        .profile-info {
+            line-height: 1.2;
+        }
+
+        .profile-name {
+            font-size: 13px;
+            font-weight: 700;
+        }
+
+        .profile-role {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        /* =====================================================
+           CONTENT
+        ===================================================== */
+
+        .content {
+            padding: 30px;
+        }
+
+        .page-title-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .page-title h1 {
+            font-size: 25px;
+            margin-bottom: 5px;
+        }
+
+        .page-title p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .btn {
+            border: none;
+            border-radius: 8px;
+            padding: 10px 16px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: .2s;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .btn-success {
+            background: #16a34a;
+            color: #fff;
+        }
+
+        .btn-danger {
+            background: #dc2626;
+            color: #fff;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #334155;
+        }
+
+        /* =====================================================
+           STAT CARDS
+        ===================================================== */
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .stat-label {
+            color: #64748b;
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .stat-icon {
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            background: #eff6ff;
+            color: #2563eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 21px;
+        }
+
+        /* =====================================================
+           CARD
+        ===================================================== */
+
+        .card {
+            background: #fff;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .card-header h3 {
+            font-size: 16px;
+        }
+
+        .card-header span {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        /* =====================================================
+           FILTERS
+        ===================================================== */
+
+        .filters {
+            padding: 18px 20px;
+            display: grid;
+            grid-template-columns: 1fr 180px 160px;
+            gap: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .input-group {
+            position: relative;
+        }
+
+        .input-group i {
+            position: absolute;
+            left: 12px;
+            top: 11px;
+            color: #94a3b8;
+        }
+
+        .form-control,
+        .form-select {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #dbe2ea;
+            border-radius: 7px;
+            padding: 0 12px;
+            font-size: 13px;
+            outline: none;
+            background: #fff;
+            color: #334155;
+        }
+
+        .input-group .form-control {
+            padding-left: 36px;
+        }
+
+        .form-control:focus,
+        .form-select:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .08);
+        }
+
+        /* =====================================================
+           TABLE
+        ===================================================== */
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead th {
+            background: #f8fafc;
+            color: #64748b;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: .5px;
+            padding: 13px 15px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        tbody td {
+            padding: 15px;
+            border-top: 1px solid #eef2f7;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        tbody tr:hover {
+            background: #fafcff;
+        }
+
+        .holiday-name {
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .holiday-description {
+            max-width: 260px;
+            color: #64748b;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .date-cell {
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .type-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 9px;
+            border-radius: 20px;
+            background: #eff6ff;
+            color: #2563eb;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .status-active {
+            background: #dcfce7;
+            color: #15803d;
+        }
+
+        .status-inactive {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .actions {
+            display: flex;
+            align-items: center;
+            gap: 7px;
+        }
+
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 7px;
+            border: 1px solid #e2e8f0;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            color: #475569;
+        }
+
+        .action-btn:hover {
+            background: #f8fafc;
+        }
+
+        .action-edit:hover {
+            color: #2563eb;
+            border-color: #93c5fd;
+        }
+
+        .action-delete:hover {
+            color: #dc2626;
+            border-color: #fca5a5;
+        }
+
+        .action-activate:hover {
+            color: #16a34a;
+            border-color: #86efac;
+        }
+
+        /* =====================================================
+           EMPTY / LOADER
+        ===================================================== */
+
+        .loader-container,
+        .empty-container {
+            padding: 60px 20px;
+            text-align: center;
+            color: #64748b;
+        }
+
+        .spinner {
+            width: 32px;
+            height: 32px;
+            border: 3px solid #e2e8f0;
+            border-top-color: #2563eb;
+            border-radius: 50%;
+            animation: spin .8s linear infinite;
+            margin: 0 auto 12px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .empty-container i {
+            font-size: 38px;
+            color: #cbd5e1;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .empty-container p {
+            font-size: 13px;
+        }
+
+        /* =====================================================
+           MODAL
+        ===================================================== */
+
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, .55);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            width: 100%;
+            max-width: 580px;
+            max-height: 90vh;
+            overflow-y: auto;
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, .2);
+        }
+
+        .modal-header {
+            padding: 18px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-header h3 {
+            font-size: 17px;
+        }
+
+        .close-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: #f1f5f9;
+            border-radius: 7px;
+            cursor: pointer;
+            color: #475569;
+            font-size: 18px;
+        }
+
+        .modal-body {
+            padding: 20px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            margin-bottom: 7px;
+        }
+
+        .form-group label .required {
+            color: #dc2626;
+        }
+
+        textarea.form-control {
+            height: 100px;
+            resize: vertical;
+            padding: 10px 12px;
+        }
+
+        .modal-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* =====================================================
+           TOAST
+        ===================================================== */
+
+        .toast-container {
+            position: fixed;
+            right: 25px;
+            bottom: 25px;
+            z-index: 5000;
+        }
+
+        .toast {
+            min-width: 280px;
+            max-width: 400px;
+            background: #1e293b;
+            color: #fff;
+            padding: 13px 16px;
+            border-radius: 9px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, .2);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            margin-top: 10px;
+            animation: toastIn .25s ease;
+        }
+
+        .toast.success {
+            background: #15803d;
+        }
+
+        .toast.error {
+            background: #dc2626;
+        }
+
+        @keyframes toastIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* =====================================================
+           RESPONSIVE
+        ===================================================== */
+
+        @media (max-width: 1100px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filters {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 768px) {
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: .25s;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main {
+                margin-left: 0;
+            }
+
+            .menu-toggle {
+                display: block;
+            }
+
+            .navbar {
+                padding: 0 18px;
+            }
+
+            .profile-info {
+                display: none;
+            }
+
+            .content {
+                padding: 20px 15px;
+            }
+
+            .page-title-row {
+                align-items: flex-start;
+                gap: 15px;
+            }
+
+            .page-title h1 {
+                font-size: 22px;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr 1fr;
+                gap: 12px;
+            }
+
+            .stat-card {
+                padding: 15px;
+            }
+
+            .filters {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .page-title-row {
+                flex-direction: column;
+            }
+
+            .page-title-row .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .navbar-right {
+                gap: 12px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- =====================================================
+         SIDEBAR
+    ===================================================== -->
+
+    <aside class="sidebar" id="sidebar">
+
+        <div class="brand">
+            <div class="brand-icon">
+                <i class="bi bi-person-bounding-box"></i>
+            </div>
+
+            <div class="brand-text">
+                FaceAttend
+            </div>
+        </div>
+
+        <div class="sidebar-section">
+            Main
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a href="index.html" class="sidebar-link" data-page="index.html">
+                    <i class="bi bi-grid-1x2"></i>
+                    <span>Dashboard</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-section">
+            Management
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a href="students.html" class="sidebar-link" data-page="students.html">
+                    <i class="bi bi-people"></i>
+                    <span>Students</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="teachers.html" class="sidebar-link" data-page="teachers.html">
+                    <i class="bi bi-person-workspace"></i>
+                    <span>Teachers</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="departments.html" class="sidebar-link" data-page="departments.html">
+                    <i class="bi bi-building"></i>
+                    <span>Departments</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="courses.html" class="sidebar-link" data-page="courses.html">
+                    <i class="bi bi-journal-text"></i>
+                    <span>Courses</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="semesters.html" class="sidebar-link" data-page="semesters.html">
+                    <i class="bi bi-layers"></i>
+                    <span>Semesters</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="sections.html" class="sidebar-link" data-page="sections.html">
+                    <i class="bi bi-diagram-3"></i>
+                    <span>Sections</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="leaves.html" class="sidebar-link" data-page="leaves.html">
+                    <i class="bi bi-calendar2-x"></i>
+                    <span>Leave Requests</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="holidays.html" class="sidebar-link active" data-page="holidays.html">
+                    <i class="bi bi-calendar-event"></i>
+                    <span>Holidays</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-section">
+            Attendance
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a href="attendance.html" class="sidebar-link" data-page="attendance.html">
+                    <i class="bi bi-calendar-check"></i>
+                    <span>Attendance</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="machine-attendance.html" class="sidebar-link" data-page="machine-attendance.html">
+                    <i class="bi bi-fingerprint"></i>
+                    <span>Machine Attendance</span>
+                </a>
+            </li>
+
+        </ul>
+
+        <div class="sidebar-section">
+            System
+        </div>
+
+        <ul class="sidebar-menu">
+
+            <li>
+                <a href="settings.html" class="sidebar-link" data-page="settings.html">
+                    <i class="bi bi-gear"></i>
+                    <span>Settings</span>
+                </a>
+            </li>
+
+        </ul>
+
+    </aside>
+
+
+    <!-- =====================================================
+         MAIN
+    ===================================================== -->
+
+    <main class="main">
+
+        <!-- NAVBAR -->
+
+        <nav class="navbar">
+
+            <div class="navbar-left">
+
+                <button class="menu-toggle" id="menuToggle">
+                    <i class="bi bi-list"></i>
+                </button>
+
+                <div class="page-heading">
+                    Holidays
+                </div>
+
+            </div>
+
+            <div class="navbar-right">
+
+                <div class="notification">
+                    <i class="bi bi-bell"></i>
+                    <span class="notification-dot"></span>
+                </div>
+
+                <div class="profile">
+
+                    <div class="profile-avatar" id="profileAvatar">
+                        A
+                    </div>
+
+                    <div class="profile-info">
+                        <div class="profile-name" id="profileName">
+                            Admin
+                        </div>
+
+                        <div class="profile-role">
+                            Administrator
+                        </div>
+                    </div>
+
+                </div>
+
+            </div>
+
+        </nav>
+
+
+        <!-- CONTENT -->
+
+        <section class="content">
+
+            <!-- PAGE TITLE -->
+
+            <div class="page-title-row">
+
+                <div class="page-title">
+                    <h1>Holidays</h1>
+                    <p>Manage college holidays and non-working days.</p>
+                </div>
+
+                <button class="btn btn-primary" id="addHolidayBtn">
+                    <i class="bi bi-plus-lg"></i>
+                    Add Holiday
+                </button>
+
+            </div>
+
+
+            <!-- =================================================
+                 STATS
+            ================================================= -->
+
+            <div class="stats-grid">
+
+                <div class="stat-card">
+
+                    <div>
+                        <div class="stat-label">
+                            Total Holidays
+                        </div>
+
+                        <div class="stat-value" id="totalCount">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar3"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+                        <div class="stat-label">
+                            Active Holidays
+                        </div>
+
+                        <div class="stat-value" id="activeCount">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-check"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+                        <div class="stat-label">
+                            Inactive Holidays
+                        </div>
+
+                        <div class="stat-value" id="inactiveCount">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar-x"></i>
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+                        <div class="stat-label">
+                            Current Year
+                        </div>
+
+                        <div class="stat-value" id="currentYearCount">
+                            0
+                        </div>
+                    </div>
+
+                    <div class="stat-icon">
+                        <i class="bi bi-calendar2-week"></i>
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =================================================
+                 HOLIDAY CARD
+            ================================================= -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+                        <h3>Holiday List</h3>
+                        <span id="resultInfo">
+                            Loading holidays...
+                        </span>
+                    </div>
+
+                </div>
+
+
+                <!-- FILTERS -->
+
+                <div class="filters">
+
+                    <div class="input-group">
+
+                        <i class="bi bi-search"></i>
+
+                        <input type="text" id="searchInput" class="form-control"
+                            placeholder="Search holiday name or description...">
+
+                    </div>
+
+
+                    <select id="statusFilter" class="form-select">
+
+                        <option value="ALL">
+                            All Status
+                        </option>
+
+                        <option value="ACTIVE">
+                            Active
+                        </option>
+
+                        <option value="INACTIVE">
+                            Inactive
+                        </option>
+
+                    </select>
+
+
+                    <select id="yearFilter" class="form-select">
+
+                        <option value="ALL">
+                            All Years
+                        </option>
+
+                    </select>
+
+                </div>
+
+
+                <!-- TABLE -->
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+                                <th>#</th>
+                                <th>Holiday</th>
+                                <th>Date</th>
+                                <th>Type</th>
+                                <th>Description</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="holidayTableBody">
+
+                            <tr id="loadingRow">
+
+                                <td colspan="7">
+
+                                    <div class="loader-container">
+
+                                        <div class="spinner"></div>
+
+                                        <div>
+                                            Loading holidays...
+                                        </div>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+
+    <!-- =====================================================
+         ADD / EDIT MODAL
+    ===================================================== -->
+
+    <div class="modal-overlay" id="holidayModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <h3 id="modalTitle">
+                    Add Holiday
+                </h3>
+
+                <button class="close-btn" id="closeModalBtn">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+
+            </div>
+
+
+            <form id="holidayForm">
+
+                <div class="modal-body">
+
+                    <div class="form-group">
+
+                        <label>
+                            Holiday Name
+                            <span class="required">*</span>
+                        </label>
+
+                        <input type="text" id="holidayName" class="form-control" maxlength="100"
+                            placeholder="e.g. Republic Day" required>
+
+                    </div>
+
+
+                    <div class="form-row">
+
+                        <div class="form-group">
+
+                            <label>
+                                Holiday Date
+                                <span class="required">*</span>
+                            </label>
+
+                            <input type="date" id="holidayDate" class="form-control" required>
+
+                        </div>
+
+
+                        <div class="form-group">
+
+                            <label>
+                                Holiday Type
+                                <span class="required">*</span>
+                            </label>
+
+                            <select id="holidayType" class="form-select" required>
+
+                                <option value="">
+                                    Select Type
+                                </option>
+
+                                <option value="NATIONAL">
+                                    National
+                                </option>
+
+                                <option value="FESTIVAL">
+                                    Festival
+                                </option>
+
+                                <option value="COLLEGE">
+                                    College
+                                </option>
+
+                                <option value="OTHER">
+                                    Other
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="form-group">
+
+                        <label>
+                            Description
+                            <span class="required">*</span>
+                        </label>
+
+                        <textarea id="holidayDescription" class="form-control" maxlength="500"
+                            placeholder="Enter holiday description..." required></textarea>
+
+                    </div>
+
+
+                    <div class="form-group" id="statusGroup" style="display:none;">
+
+                        <label>
+                            Status
+                        </label>
+
+                        <select id="holidayStatus" class="form-select">
+
+                            <option value="ACTIVE">
+                                Active
+                            </option>
+
+                            <option value="INACTIVE">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <div class="modal-footer">
+
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">
+                        Cancel
+                    </button>
+
+                    <button type="submit" class="btn btn-primary" id="saveHolidayBtn">
+
+                        <i class="bi bi-check-lg"></i>
+                        Save Holiday
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+
+    <!-- =====================================================
+         TOAST
+    ===================================================== -->
+
+    <div class="toast-container" id="toastContainer"></div>
+
+
+    <!-- =====================================================
+         AUTH
+    ===================================================== -->
+
+    <script src="js/auth.js"></script>
+
+
+    <!-- =====================================================
+         JAVASCRIPT
+    ===================================================== -->
+
+    <script>
+
+        const API_BASE_URL = "http://localhost:8080";
+
+        let holidays = [];
+        let filteredHolidays = [];
+        let editingHolidayId = null;
+
+
+        // =====================================================
+        // INITIALIZATION
+        // =====================================================
+
+        document.addEventListener("DOMContentLoaded", () => {
+
+            loadProfile();
+            loadHolidays();
+
+            setupEvents();
+            populateYearFilter();
+
+        });
+
+
+        // =====================================================
+        // EVENTS
+        // =====================================================
+
+        function setupEvents() {
+
+            document
+                .getElementById("addHolidayBtn")
+                .addEventListener("click", openAddModal);
+
+
+            document
+                .getElementById("closeModalBtn")
+                .addEventListener("click", closeModal);
+
+
+            document
+                .getElementById("cancelBtn")
+                .addEventListener("click", closeModal);
+
+
+            document
+                .getElementById("holidayForm")
+                .addEventListener("submit", saveHoliday);
+
+
+            document
+                .getElementById("searchInput")
+                .addEventListener("input", applyFilters);
+
+
+            document
+                .getElementById("statusFilter")
+                .addEventListener("change", applyFilters);
+
+
+            document
+                .getElementById("yearFilter")
+                .addEventListener("change", applyFilters);
+
+
+            document
+                .getElementById("menuToggle")
+                .addEventListener("click", () => {
+
+                    document
+                        .getElementById("sidebar")
+                        .classList.toggle("open");
+
+                });
+
+
+            document
+                .getElementById("holidayModal")
+                .addEventListener("click", event => {
+
+                    if (event.target.id === "holidayModal") {
+                        closeModal();
+                    }
+
+                });
+
+
+            document.addEventListener("keydown", event => {
+
+                if (event.key === "Escape") {
+                    closeModal();
+                }
+
+            });
+
+        }
+
+
+        // =====================================================
+        // PROFILE
+        // =====================================================
+
+        function loadProfile() {
+
+            try {
+
+                const username =
+                    typeof getUsername === "function"
+                        ? getUsername()
+                        : localStorage.getItem("username");
+
+                if (username) {
+
+                    document.getElementById("profileName").textContent =
+                        username;
+
+                    document.getElementById("profileAvatar").textContent =
+                        username.charAt(0).toUpperCase();
+
+                }
+
+            } catch (error) {
+
+                console.warn("Unable to load profile");
+
+            }
+
+        }
+
+
+        // =====================================================
+        // LOAD HOLIDAYS
+        // =====================================================
+
+        async function loadHolidays() {
+
+            showLoading();
+
+            try {
+
+                const response = await apiFetch(
+                    `${API_BASE_URL}/api/holidays/admin`
+                );
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        await getErrorMessage(response)
+                    );
+
+                }
+
+                holidays = await response.json();
+
+                if (!Array.isArray(holidays)) {
+                    holidays = [];
+                }
+
+                populateYearFilter();
+
+                updateStats();
+
+                applyFilters();
+
+            } catch (error) {
+
+                console.error("Load holidays error:", error);
+
+                showError(
+                    error.message || "Failed to load holidays"
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
+        // FILTERS
+        // =====================================================
+
+        function applyFilters() {
+
+            const search =
+                document
+                    .getElementById("searchInput")
+                    .value
+                    .trim()
+                    .toLowerCase();
+
+
+            const status =
+                document
+                    .getElementById("statusFilter")
+                    .value;
+
+
+            const year =
+                document
+                    .getElementById("yearFilter")
+                    .value;
+
+
+            filteredHolidays =
+                holidays.filter(holiday => {
+
+                    const name =
+                        String(
+                            holiday.holidayName ??
+                            holiday.name ??
+                            ""
+                        ).toLowerCase();
+
+
+                    const description =
+                        String(
+                            holiday.description ??
+                            ""
+                        ).toLowerCase();
+
+
+                    const holidayStatus =
+                        String(
+                            holiday.status ??
+                            ""
+                        ).toUpperCase();
+
+
+                    const holidayDate =
+                        holiday.holidayDate ??
+                        "";
+
+
+                    const holidayYear =
+                        holidayDate
+                            ? holidayDate.substring(0, 4)
+                            : "";
+
+
+                    const matchesSearch =
+                        !search ||
+                        name.includes(search) ||
+                        description.includes(search);
+
+
+                    const matchesStatus =
+                        status === "ALL" ||
+                        holidayStatus === status;
+
+
+                    const matchesYear =
+                        year === "ALL" ||
+                        holidayYear === year;
+
+
+                    return (
+                        matchesSearch &&
+                        matchesStatus &&
+                        matchesYear
+                    );
+
+                });
+
+
+            renderTable();
+
+            document.getElementById("resultInfo").textContent =
+                `${filteredHolidays.length} holiday(s) found`;
+
+        }
+
+
+        // =====================================================
+        // POPULATE YEAR FILTER
+        // =====================================================
+
+        function populateYearFilter() {
+
+            const yearSelect =
+                document.getElementById("yearFilter");
+
+
+            const currentValue =
+                yearSelect.value;
+
+
+            const years = new Set();
+
+            holidays.forEach(holiday => {
+
+                const date =
+                    holiday.holidayDate;
+
+                if (date) {
+
+                    years.add(
+                        date.substring(0, 4)
+                    );
+
+                }
+
+            });
+
+
+            const sortedYears =
+                Array.from(years).sort(
+                    (a, b) => b - a
+                );
+
+
+            yearSelect.innerHTML = `
+                <option value="ALL">
+                    All Years
+                </option>
+            `;
+
+
+            sortedYears.forEach(year => {
+
+                const option =
+                    document.createElement("option");
+
+                option.value = year;
+                option.textContent = year;
+
+                yearSelect.appendChild(option);
+
+            });
+
+
+            if (
+                currentValue &&
+                (
+                    currentValue === "ALL" ||
+                    sortedYears.includes(currentValue)
+                )
+            ) {
+                yearSelect.value = currentValue;
+            }
+
+        }
+
+
+        // =====================================================
+        // STATS
+        // =====================================================
+
+        function updateStats() {
+
+            const total =
+                holidays.length;
+
+
+            const active =
+                holidays.filter(
+                    h =>
+                        String(h.status)
+                            .toUpperCase() === "ACTIVE"
+                ).length;
+
+
+            const inactive =
+                holidays.filter(
+                    h =>
+                        String(h.status)
+                            .toUpperCase() === "INACTIVE"
+                ).length;
+
+
+            const currentYear =
+                new Date()
+                    .getFullYear()
+                    .toString();
+
+
+            const currentYearCount =
+                holidays.filter(h => {
+
+                    const date =
+                        h.holidayDate;
+
+                    return date &&
+                        date.substring(0, 4) === currentYear;
+
+                }).length;
+
+
+            document.getElementById("totalCount").textContent =
+                total;
+
+
+            document.getElementById("activeCount").textContent =
+                active;
+
+
+            document.getElementById("inactiveCount").textContent =
+                inactive;
+
+
+            document.getElementById("currentYearCount").textContent =
+                currentYearCount;
+
+        }
+
+
+        // =====================================================
+        // RENDER TABLE
+        // =====================================================
+
+        function renderTable() {
+
+            const tbody =
+                document.getElementById("holidayTableBody");
+
+
+            if (!filteredHolidays.length) {
+
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty-container">
+
+                                <i class="bi bi-calendar-x"></i>
+
+                                <p>
+                                    No holidays found
+                                </p>
+
+                            </div>
+                        </td>
+                    </tr>
+                `;
+
+                return;
+            }
+
+
+            tbody.innerHTML =
+                filteredHolidays
+                    .map(
+                        (holiday, index) =>
+                            createHolidayRow(
+                                holiday,
+                                index
+                            )
+                    )
+                    .join("");
+
+        }
+
+
+        // =====================================================
+        // CREATE ROW
+        // =====================================================
+
+        function createHolidayRow(
+            holiday,
+            index
+        ) {
+
+            const id =
+                holiday.id;
+
+
+            const name =
+                holiday.holidayName ??
+                holiday.name ??
+                "-";
+
+
+            const date =
+                holiday.holidayDate ??
+                "";
+
+
+            const type =
+                holiday.holidayType ??
+                holiday.type ??
+                "-";
+
+
+            const description =
+                holiday.description ??
+                "-";
+
+
+            const status =
+                String(
+                    holiday.status ??
+                    ""
+                ).toUpperCase();
+
+
+            const formattedDate =
+                formatDate(date);
+
+
+            const statusClass =
+                status === "ACTIVE"
+                    ? "status-active"
+                    : "status-inactive";
+
+
+            const actions =
+                status === "ACTIVE"
+                    ? `
+                        <button
+                            class="action-btn action-edit"
+                            title="Edit"
+                            onclick="editHoliday(${id})">
+
+                            <i class="bi bi-pencil"></i>
+
+                        </button>
+
+                        <button
+                            class="action-btn action-delete"
+                            title="Deactivate"
+                            onclick="deleteHoliday(${id})">
+
+                            <i class="bi bi-trash"></i>
+
+                        </button>
+                    `
+                    : `
+                        <button
+                            class="action-btn action-edit"
+                            title="Edit"
+                            onclick="editHoliday(${id})">
+
+                            <i class="bi bi-pencil"></i>
+
+                        </button>
+
+                        <button
+                            class="action-btn action-activate"
+                            title="Activate"
+                            onclick="activateHoliday(${id})">
+
+                            <i class="bi bi-check-circle"></i>
+
+                        </button>
+                    `;
+
+
+            return `
+                <tr>
+
+                    <td>
+                        ${index + 1}
+                    </td>
+
+                    <td>
+                        <div class="holiday-name">
+                            ${escapeHtml(name)}
+                        </div>
+                    </td>
+
+                    <td>
+                        <div class="date-cell">
+                            ${formattedDate}
+                        </div>
+                    </td>
+
+                    <td>
+                        <span class="type-badge">
+                            ${escapeHtml(type)}
+                        </span>
+                    </td>
+
+                    <td>
+                        <div
+                            class="holiday-description"
+                            title="${escapeHtml(description)}">
+
+                            ${escapeHtml(description)}
+
+                        </div>
+                    </td>
+
+                    <td>
+                        <span
+                            class="status-badge ${statusClass}">
+
+                            ${escapeHtml(status || "-")}
+
+                        </span>
+                    </td>
+
+                    <td>
+                        <div class="actions">
+                            ${actions}
+                        </div>
+                    </td>
+
+                </tr>
+            `;
+
+        }
+
+
+        // =====================================================
+        // ADD MODAL
+        // =====================================================
+
+        function openAddModal() {
+
+            editingHolidayId = null;
+
+            document.getElementById("modalTitle").textContent =
+                "Add Holiday";
+
+
+            document.getElementById("saveHolidayBtn").innerHTML =
+                `<i class="bi bi-check-lg"></i> Save Holiday`;
+
+
+            document
+                .getElementById("holidayForm")
+                .reset();
+
+
+            document.getElementById("statusGroup").style.display =
+                "none";
+
+
+            document.getElementById("holidayModal")
+                .classList.add("show");
+
+        }
+
+
+        // =====================================================
+        // EDIT HOLIDAY
+        // =====================================================
+
+        async function editHoliday(id) {
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/holidays/${id}`
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        await getErrorMessage(response)
+                    );
+
+                }
+
+
+                const holiday =
+                    await response.json();
+
+
+                editingHolidayId = id;
+
+
+                document.getElementById("modalTitle")
+                    .textContent =
+                    "Edit Holiday";
+
+
+                document.getElementById("holidayName").value =
+                    holiday.holidayName ??
+                    holiday.name ??
+                    "";
+
+
+                document.getElementById("holidayDate").value =
+                    holiday.holidayDate ??
+                    "";
+
+
+                document.getElementById("holidayType").value =
+                    holiday.holidayType ??
+                    holiday.type ??
+                    "";
+
+
+                document.getElementById("holidayDescription").value =
+                    holiday.description ??
+                    "";
+
+
+                document.getElementById("holidayStatus").value =
+                    holiday.status ??
+                    "ACTIVE";
+
+
+                document.getElementById("statusGroup").style.display =
+                    "block";
+
+
+                document.getElementById("saveHolidayBtn").innerHTML =
+                    `<i class="bi bi-check-lg"></i> Update Holiday`;
+
+
+                document.getElementById("holidayModal")
+                    .classList.add("show");
+
+
+            } catch (error) {
+
+                console.error("Get holiday error:", error);
+
+                showToast(
+                    error.message ||
+                    "Unable to load holiday",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
+        // SAVE / UPDATE
+        // =====================================================
+
+        async function saveHoliday(event) {
+
+            event.preventDefault();
+
+
+            const name =
+                document
+                    .getElementById("holidayName")
+                    .value
+                    .trim();
+
+
+            const date =
+                document
+                    .getElementById("holidayDate")
+                    .value;
+
+
+            const type =
+                document
+                    .getElementById("holidayType")
+                    .value;
+
+
+            const description =
+                document
+                    .getElementById("holidayDescription")
+                    .value
+                    .trim();
+
+
+            const status =
+                document
+                    .getElementById("holidayStatus")
+                    .value;
+
+
+            if (!name) {
+
+                showToast(
+                    "Holiday name is required",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!date) {
+
+                showToast(
+                    "Holiday date is required",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!type) {
+
+                showToast(
+                    "Holiday type is required",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!description) {
+
+                showToast(
+                    "Holiday description is required",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const payload = {
+
+                holidayName: name,
+                holidayDate: date,
+                holidayType: type,
+                description: description
+
+            };
+
+
+            // Status is only sent during update
+            if (editingHolidayId !== null) {
+
+                payload.status = status;
+
+            }
+
+
+            const saveButton =
+                document.getElementById("saveHolidayBtn");
+
+
+            const originalText =
+                saveButton.innerHTML;
+
+
+            saveButton.disabled = true;
+
+            saveButton.innerHTML =
+                `<i class="bi bi-arrow-repeat"></i> Saving...`;
+
+
+            try {
+
+                const url =
+                    editingHolidayId === null
+                        ? `${API_BASE_URL}/api/holidays`
+                        : `${API_BASE_URL}/api/holidays/${editingHolidayId}`;
+
+
+                const method =
+                    editingHolidayId === null
+                        ? "POST"
+                        : "PUT";
+
+
+                const response =
+                    await apiFetch(
+                        url,
+                        {
+                            method: method,
+
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
+
+                            body:
+                                JSON.stringify(payload)
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        await getErrorMessage(response)
+                    );
+
+                }
+
+
+                closeModal();
+
+
+                showToast(
+                    editingHolidayId === null
+                        ? "Holiday created successfully"
+                        : "Holiday updated successfully",
+                    "success"
+                );
+
+
+                await loadHolidays();
+
+
+            } catch (error) {
+
+                console.error("Save holiday error:", error);
+
+                showToast(
+                    error.message ||
+                    "Unable to save holiday",
+                    "error"
+                );
+
+            } finally {
+
+                saveButton.disabled = false;
+
+                saveButton.innerHTML =
+                    originalText;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // DELETE / SOFT DELETE
+        // =====================================================
+
+        async function deleteHoliday(id) {
+
+            const holiday =
+                holidays.find(
+                    h => Number(h.id) === Number(id)
+                );
+
+
+            const name =
+                holiday?.holidayName ??
+                holiday?.name ??
+                "this holiday";
+
+
+            const confirmed =
+                confirm(
+                    `Are you sure you want to deactivate "${name}"?`
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/holidays/${id}`,
+                        {
+                            method: "DELETE"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        await getErrorMessage(response)
+                    );
+
+                }
+
+
+                showToast(
+                    "Holiday deactivated successfully",
+                    "success"
+                );
+
+
+                await loadHolidays();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Delete holiday error:",
+                    error
+                );
+
+
+                showToast(
+                    error.message ||
+                    "Unable to deactivate holiday",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
+        // ACTIVATE
+        // =====================================================
+
+        async function activateHoliday(id) {
+
+            const confirmed =
+                confirm(
+                    "Are you sure you want to activate this holiday?"
+                );
+
+
+            if (!confirmed) {
+                return;
+            }
+
+
+            try {
+
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/holidays/${id}/activate`,
+                        {
+                            method: "PUT"
+                        }
+                    );
+
+
+                if (!response.ok) {
+
+                    throw new Error(
+                        await getErrorMessage(response)
+                    );
+
+                }
+
+
+                showToast(
+                    "Holiday activated successfully",
+                    "success"
+                );
+
+
+                await loadHolidays();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Activate holiday error:",
+                    error
+                );
+
+
+                showToast(
+                    error.message ||
+                    "Unable to activate holiday",
+                    "error"
+                );
+
+            }
+
+        }
+
+
+        // =====================================================
+        // CLOSE MODAL
+        // =====================================================
+
+        function closeModal() {
+
+            document
+                .getElementById("holidayModal")
+                .classList.remove("show");
+
+
+            editingHolidayId = null;
+
+        }
+
+
+        // =====================================================
+        // LOADING
+        // =====================================================
+
+        function showLoading() {
+
+            document.getElementById("holidayTableBody")
+                .innerHTML = `
+                    <tr>
+
+                        <td colspan="7">
+
+                            <div class="loader-container">
+
+                                <div class="spinner"></div>
+
+                                <div>
+                                    Loading holidays...
+                                </div>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                `;
+
+        }
+
+
+        // =====================================================
+        // ERROR
+        // =====================================================
+
+        function showError(message) {
+
+            document.getElementById("holidayTableBody")
+                .innerHTML = `
+                    <tr>
+
+                        <td colspan="7">
+
+                            <div class="empty-container">
+
+                                <i class="bi bi-exclamation-triangle"></i>
+
+                                <p>
+                                    ${escapeHtml(message)}
+                                </p>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+                `;
+
+            document.getElementById("resultInfo").textContent =
+                "Unable to load holidays";
+
+        }
+
+
+        // =====================================================
+        // ERROR MESSAGE
+        // =====================================================
+
+        async function getErrorMessage(response) {
+
+            try {
+
+                const data =
+                    await response.json();
+
+
+                return (
+                    data.message ||
+                    data.error ||
+                    "Request failed"
+                );
+
+            } catch (error) {
+
+                return `Request failed (${response.status})`;
+
+            }
+
+        }
+
+
+        // =====================================================
+        // DATE FORMAT
+        // =====================================================
+
+        function formatDate(dateString) {
+
+            if (!dateString) {
+                return "-";
+            }
+
+
+            const date =
+                new Date(`${dateString}T00:00:00`);
+
+
+            if (Number.isNaN(date.getTime())) {
+                return dateString;
+            }
+
+
+            return date.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
+        }
+
+
+        // =====================================================
+        // TOAST
+        // =====================================================
+
+        function showToast(
+            message,
+            type = "success"
+        ) {
+
+            const container =
+                document.getElementById(
+                    "toastContainer"
+                );
+
+
+            const toast =
+                document.createElement("div");
+
+
+            toast.className =
+                `toast ${type}`;
+
+
+            const icon =
+                type === "success"
+                    ? "bi-check-circle"
+                    : "bi-exclamation-circle";
+
+
+            toast.innerHTML = `
+                <i class="bi ${icon}"></i>
+                <span>${escapeHtml(message)}</span>
+            `;
+
+
+            container.appendChild(toast);
+
+
+            setTimeout(() => {
+
+                toast.remove();
+
+            }, 3500);
+
+        }
+
+
+        // =====================================================
+        // ESCAPE HTML
+        // =====================================================
+
+        function escapeHtml(value) {
+
+            return String(value ?? "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+
+        }
+
+    </script>
+
+</body>
+
+</html>

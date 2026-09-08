@@ -5,8 +5,11 @@ import com.college.attendance.dto.student.StudentRequest;
 import com.college.attendance.dto.student.StudentResponse;
 import com.college.attendance.service.FaceRegistrationService;
 import com.college.attendance.service.StudentService;
+
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -17,13 +20,16 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/admin/students")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AdminStudentController {
 
     private final StudentService studentService;
-
     private final FaceRegistrationService faceRegistrationService;
 
+    // =====================================================
+    // CREATE
+    // =====================================================
 
     @PostMapping
     public ResponseEntity<StudentResponse> create(
@@ -41,6 +47,9 @@ public class AdminStudentController {
                 .body(response);
     }
 
+    // =====================================================
+    // GET ALL
+    // =====================================================
 
     @GetMapping
     public ResponseEntity<List<StudentResponse>> getAll() {
@@ -50,6 +59,9 @@ public class AdminStudentController {
         );
     }
 
+    // =====================================================
+    // GET BY ID
+    // =====================================================
 
     @GetMapping("/{id}")
     public ResponseEntity<StudentResponse> getById(
@@ -61,6 +73,9 @@ public class AdminStudentController {
         );
     }
 
+    // =====================================================
+    // UPDATE
+    // =====================================================
 
     @PutMapping("/{id}")
     public ResponseEntity<StudentResponse> update(
@@ -76,6 +91,9 @@ public class AdminStudentController {
         );
     }
 
+    // =====================================================
+    // DELETE / DEACTIVATE
+    // =====================================================
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(
@@ -87,6 +105,26 @@ public class AdminStudentController {
         return ResponseEntity.noContent().build();
     }
 
+    // =====================================================
+    // PROFILE IMAGE
+    // =====================================================
+
+    @PostMapping(
+            value = "/{studentId}/profile-image",
+            consumes = MediaType.MULTIPART_FORM_DATA_VALUE
+    )
+    public ResponseEntity<StudentResponse> uploadProfileImage(
+            @PathVariable Long studentId,
+            @RequestParam("file") MultipartFile file
+    ) throws Exception {
+
+        return ResponseEntity.ok(
+                studentService.uploadProfileImage(
+                        studentId,
+                        file
+                )
+        );
+    }
 
     // =====================================================
     // FACE REGISTER

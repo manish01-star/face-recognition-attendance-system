@@ -41,6 +41,14 @@ public class User {
     @Builder.Default
     private UserStatus status = UserStatus.ACTIVE;
 
+    /**
+     * Profile image URL/path.
+     * Actual image file should be stored in local storage/S3,
+     * not inside the database.
+     */
+    @Column(name = "profile_image_url", length = 500)
+    private String profileImageUrl;
+
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 

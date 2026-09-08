@@ -3,12 +3,14 @@ package com.college.attendance.controller.admin;
 import com.college.attendance.dto.dashboard.AdminDashboardResponse;
 import com.college.attendance.service.DashboardService;
 
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/admin/dashboard")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class AdminDashboardController {
 
