@@ -559,8 +559,7 @@ public class CameraActivity extends AppCompatActivity {
         // CAMERA
         // =====================================================
 
-        CameraSelector cameraSelector =
-                CameraSelector.DEFAULT_BACK_CAMERA;
+        CameraSelector cameraSelector = CameraSelector.DEFAULT_FRONT_CAMERA;
 
         try {
 
