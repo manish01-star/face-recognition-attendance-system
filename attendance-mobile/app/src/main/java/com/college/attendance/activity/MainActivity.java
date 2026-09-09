@@ -5,35 +5,35 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
-import android.graphics.drawable.GradientDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.location.Location;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.view.Gravity;
+import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import com.bumptech.glide.Glide;
 import com.college.attendance.R;
 import com.college.attendance.api.ApiClient;
 import com.college.attendance.api.ApiService;
 import com.college.attendance.dto.AttendancePolicyResponse;
 import com.college.attendance.dto.AttendanceResponse;
+import com.college.attendance.dto.UserProfileResponse;
 import com.college.attendance.utils.SessionManager;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -49,7 +49,33 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 @SuppressLint("SetTextI18n")
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends BaseActivity {
+
+    private static final String TAG = "MainActivity";
+
+    // =========================================================
+    // CONSTANTS
+    // =========================================================
+
+    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
+
+    private static final String PROFILE_IMAGE_BASE_URL =
+            "http://192.168.137.1:8080";
+
+    private static final String EXTRA_CURRENT_LATITUDE =
+            "CURRENT_LATITUDE";
+
+    private static final String EXTRA_CURRENT_LONGITUDE =
+            "CURRENT_LONGITUDE";
+
+    // =========================================================
+    // CURRENT TAB
+    // =========================================================
+
+    @Override
+    protected Tab getCurrentTab() {
+        return Tab.HOME;
+    }
 
     // =========================================================
     // HEADER
@@ -57,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
 
     private ImageButton btnMenu;
     private ImageButton btnNotification;
-    private ImageButton btnProfile;
+    private ShapeableImageView btnProfile;
 
     // =========================================================
     // USER
@@ -77,6 +103,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvCheckOutTime;
     private TextView tvWorkHours;
 
+    // Kept for compatibility
     private MaterialButton btnCheckIn;
     private MaterialButton btnCheckOut;
 
@@ -100,26 +127,11 @@ public class MainActivity extends AppCompatActivity {
 
     private FusedLocationProviderClient fusedLocationClient;
 
-    /**
-     * Current device GPS coordinates.
-     *
-     * These are kept internally for attendance/punching.
-     * They are NOT displayed in the UI.
-     */
     private Double currentLatitude;
     private Double currentLongitude;
 
     private boolean locationLoaded = false;
     private boolean locationLoading = false;
-
-    private static final int LOCATION_PERMISSION_REQUEST_CODE = 1001;
-
-    /**
-     * Reverse geocoding runs in background thread
-     * so UI thread is not blocked.
-     */
-    private final ExecutorService geocoderExecutor =
-            Executors.newSingleThreadExecutor();
 
     // =========================================================
     // POLICY
@@ -129,12 +141,8 @@ public class MainActivity extends AppCompatActivity {
     private TextView tvWeeklyOff;
 
     // =========================================================
-    // NAVIGATION
+    // CALENDAR
     // =========================================================
-
-    private LinearLayout navHome;
-    private LinearLayout navCalendar;
-    private LinearLayout navLeave;
 
     private TextView tvViewCalendar;
 
@@ -152,11 +160,37 @@ public class MainActivity extends AppCompatActivity {
     private AttendanceResponse todayAttendance;
     private AttendancePolicyResponse attendancePolicy;
 
+    /**
+     * true  = today's attendance state successfully resolved.
+     * false = still loading or failed.
+     */
     private boolean attendanceLoaded = false;
+
+    /**
+     * Prevents duplicate attendance API requests.
+     */
+    private boolean attendanceLoading = false;
+
+    /**
+     * Policy is independent of punch button.
+     */
     private boolean policyLoaded = false;
 
+    /**
+     * Prevents multiple punch clicks while attendance
+     * state is being resolved.
+     */
+    private boolean punchActionInProgress = false;
+
     // =========================================================
-    // TIME HANDLER
+    // GEOCODER
+    // =========================================================
+
+    private final ExecutorService geocoderExecutor =
+            Executors.newSingleThreadExecutor();
+
+    // =========================================================
+    // WORK HOURS HANDLER
     // =========================================================
 
     private final Handler workHoursHandler =
@@ -168,13 +202,17 @@ public class MainActivity extends AppCompatActivity {
                 @Override
                 public void run() {
 
+                    if (isFinishing() || isDestroyed()) {
+                        return;
+                    }
+
                     updateWorkHours();
 
                     if (isCheckedIn()) {
 
                         workHoursHandler.postDelayed(
                                 this,
-                                60000
+                                60_000
                         );
                     }
                 }
@@ -209,11 +247,10 @@ public class MainActivity extends AppCompatActivity {
 
         initializeViews();
 
-        sessionManager =
-                new SessionManager(this);
+        sessionManager = new SessionManager(this);
 
         // -----------------------------------------------------
-        // SESSION CHECK
+        // SESSION
         // -----------------------------------------------------
 
         if (!sessionManager.isLoggedIn()) {
@@ -227,17 +264,14 @@ public class MainActivity extends AppCompatActivity {
         // API
         // -----------------------------------------------------
 
-        apiService =
-                ApiClient.getApiService(this);
+        apiService = ApiClient.getApiService(this);
 
         // -----------------------------------------------------
-        // LOCATION CLIENT
+        // LOCATION
         // -----------------------------------------------------
 
         fusedLocationClient =
-                LocationServices.getFusedLocationProviderClient(
-                        this
-                );
+                LocationServices.getFusedLocationProviderClient(this);
 
         // -----------------------------------------------------
         // USER
@@ -252,16 +286,16 @@ public class MainActivity extends AppCompatActivity {
         setupHeader();
 
         // -----------------------------------------------------
+        // PROFILE
+        // -----------------------------------------------------
+
+        loadProfileImage();
+
+        // -----------------------------------------------------
         // BUTTONS
         // -----------------------------------------------------
 
         setupPunchButtons();
-
-        // -----------------------------------------------------
-        // BOTTOM NAVIGATION
-        // -----------------------------------------------------
-
-        setupBottomNavigation();
 
         // -----------------------------------------------------
         // DATE
@@ -274,21 +308,8 @@ public class MainActivity extends AppCompatActivity {
         // -----------------------------------------------------
 
         showInitialAttendanceState();
-
         showInitialPolicyState();
-
         showInitialLocationState();
-
-        /*
-         * IMPORTANT:
-         *
-         * API calls are NOT made here.
-         *
-         * They are made from onResume().
-         *
-         * This prevents duplicate API requests because
-         * Android calls onResume() immediately after onCreate().
-         */
     }
 
     // =========================================================
@@ -309,14 +330,22 @@ public class MainActivity extends AppCompatActivity {
         updateTodayDate();
 
         /*
-         * Refresh all required Home data whenever
-         * user returns to this screen.
+         * Attendance determines only:
+         *
+         * PUNCH IN
+         * PUNCH OUT
+         * COMPLETED
          */
-
         loadTodayAttendance();
 
+        /*
+         * Policy is independent from camera opening.
+         */
         loadAttendancePolicy();
 
+        /*
+         * Location is completely independent.
+         */
         loadCurrentLocation();
     }
 
@@ -326,22 +355,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void initializeViews() {
 
-        // -----------------------------------------------------
-        // HEADER
-        // -----------------------------------------------------
-
-        btnMenu =
-                findViewById(R.id.btnMenu);
+        btnMenu = findViewById(R.id.btnMenu);
 
         btnNotification =
                 findViewById(R.id.btnNotification);
 
         btnProfile =
                 findViewById(R.id.btnProfile);
-
-        // -----------------------------------------------------
-        // USER
-        // -----------------------------------------------------
 
         tvWelcome =
                 findViewById(R.id.tvWelcome);
@@ -355,10 +375,6 @@ public class MainActivity extends AppCompatActivity {
         tvTodayDate =
                 findViewById(R.id.tvTodayDate);
 
-        // -----------------------------------------------------
-        // ATTENDANCE
-        // -----------------------------------------------------
-
         tvAttendanceStatus =
                 findViewById(R.id.tvAttendanceStatus);
 
@@ -371,13 +387,8 @@ public class MainActivity extends AppCompatActivity {
         tvWorkHours =
                 findViewById(R.id.tvWorkHours);
 
-        // Existing buttons kept for compatibility.
         btnCheckIn = null;
         btnCheckOut = null;
-
-        // -----------------------------------------------------
-        // PUNCH
-        // -----------------------------------------------------
 
         cardPunch =
                 findViewById(R.id.cardPunch);
@@ -394,38 +405,17 @@ public class MainActivity extends AppCompatActivity {
         tvPunchTime =
                 findViewById(R.id.tvPunchTime);
 
-        // -----------------------------------------------------
-        // LOCATION
-        // -----------------------------------------------------
-
         tvLocationName =
                 findViewById(R.id.tvLocationName);
 
         tvLocationRadius =
                 findViewById(R.id.tvLocationRadius);
 
-        // -----------------------------------------------------
-        // POLICY
-        // -----------------------------------------------------
-
         tvShiftTiming =
                 findViewById(R.id.tvShiftTiming);
 
         tvWeeklyOff =
                 findViewById(R.id.tvWeeklyOff);
-
-        // -----------------------------------------------------
-        // NAVIGATION
-        // -----------------------------------------------------
-
-        navHome =
-                findViewById(R.id.navHome);
-
-        navCalendar =
-                findViewById(R.id.navCalendar);
-
-        navLeave =
-                findViewById(R.id.navLeave);
 
         tvViewCalendar =
                 findViewById(R.id.tvViewCalendar);
@@ -443,21 +433,23 @@ public class MainActivity extends AppCompatActivity {
         String role =
                 sessionManager.getRole();
 
-        if (username == null
-                || username.trim().isEmpty()) {
-
+        if (isEmpty(username)) {
             username = "User";
         }
 
-        if (role == null
-                || role.trim().isEmpty()) {
-
+        if (isEmpty(role)) {
             role = "USER";
         }
 
-        tvUsername.setText(username);
+        tvUsername.setText(
+                username.trim()
+        );
 
-        tvRole.setText(role);
+        tvRole.setText(
+                role.trim().toUpperCase(
+                        Locale.getDefault()
+                )
+        );
 
         Calendar calendar =
                 Calendar.getInstance();
@@ -489,40 +481,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void setupHeader() {
 
-        // -----------------------------------------------------
-        // PROFILE CIRCLE
-        // -----------------------------------------------------
-
-        GradientDrawable profileBackground =
-                new GradientDrawable();
-
-        profileBackground.setShape(
-                GradientDrawable.OVAL
-        );
-
-        profileBackground.setColor(
-                Color.rgb(
-                        238,
-                        238,
-                        238
-                )
-        );
-
-        btnProfile.setBackground(
-                profileBackground
-        );
-
-        // -----------------------------------------------------
-        // MENU
-        // -----------------------------------------------------
-
         btnMenu.setOnClickListener(
                 v -> showMenu()
         );
-
-        // -----------------------------------------------------
-        // NOTIFICATION
-        // -----------------------------------------------------
 
         btnNotification.setOnClickListener(
                 v -> Toast.makeText(
@@ -532,13 +493,171 @@ public class MainActivity extends AppCompatActivity {
                 ).show()
         );
 
-        // -----------------------------------------------------
-        // PROFILE
-        // -----------------------------------------------------
-
         btnProfile.setOnClickListener(
                 v -> openProfile()
         );
+    }
+
+    // =========================================================
+    // PROFILE
+    // =========================================================
+
+    private void loadProfileImage() {
+
+        if (apiService == null) {
+
+            setDefaultProfileImage();
+
+            return;
+        }
+
+        apiService
+                .getMyProfile()
+                .enqueue(
+                        new Callback<UserProfileResponse>() {
+
+                            @Override
+                            public void onResponse(
+                                    Call<UserProfileResponse> call,
+                                    Response<UserProfileResponse> response) {
+
+                                if (!response.isSuccessful()
+                                        || response.body() == null) {
+
+                                    setDefaultProfileImage();
+
+                                    return;
+                                }
+
+                                UserProfileResponse profile =
+                                        response.body();
+
+                                updateHeaderUserInfo(profile);
+
+                                loadProfileImageFromUrl(
+                                        profile.getProfileImageUrl()
+                                );
+                            }
+
+                            @Override
+                            public void onFailure(
+                                    Call<UserProfileResponse> call,
+                                    Throwable t) {
+
+                                Log.e(
+                                        TAG,
+                                        "Profile loading failed",
+                                        t
+                                );
+
+                                setDefaultProfileImage();
+                            }
+                        }
+                );
+    }
+
+    // =========================================================
+    // UPDATE HEADER USER INFO
+    // =========================================================
+
+    private void updateHeaderUserInfo(
+            UserProfileResponse profile) {
+
+        if (profile == null) {
+            return;
+        }
+
+        String username =
+                profile.getUsername();
+
+        String role =
+                profile.getRole();
+
+        if (isEmpty(username)) {
+
+            username =
+                    sessionManager.getUsername();
+        }
+
+        if (isEmpty(username)) {
+
+            username = "User";
+        }
+
+        tvUsername.setText(
+                username.trim()
+        );
+
+        if (isEmpty(role)) {
+
+            role =
+                    sessionManager.getRole();
+        }
+
+        if (isEmpty(role)) {
+
+            role = "USER";
+        }
+
+        tvRole.setText(
+                role.trim().toUpperCase(
+                        Locale.getDefault()
+                )
+        );
+    }
+
+    // =========================================================
+    // LOAD PROFILE IMAGE
+    // =========================================================
+
+    private void loadProfileImageFromUrl(
+            String profileImageUrl) {
+
+        if (isEmpty(profileImageUrl)) {
+
+            setDefaultProfileImage();
+
+            return;
+        }
+
+        String imageUrl =
+                profileImageUrl.trim();
+
+        if (!imageUrl.startsWith("http://")
+                && !imageUrl.startsWith("https://")) {
+
+            if (!imageUrl.startsWith("/")) {
+                imageUrl = "/" + imageUrl;
+            }
+
+            imageUrl =
+                    PROFILE_IMAGE_BASE_URL
+                            + imageUrl;
+        }
+
+        Log.d(
+                TAG,
+                "Profile image URL: " + imageUrl
+        );
+
+        Glide.with(MainActivity.this)
+                .load(imageUrl)
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
+                .circleCrop()
+                .into(btnProfile);
+    }
+
+    // =========================================================
+    // DEFAULT PROFILE IMAGE
+    // =========================================================
+
+    private void setDefaultProfileImage() {
+
+        Glide.with(MainActivity.this)
+                .load(R.drawable.ic_person)
+                .circleCrop()
+                .into(btnProfile);
     }
 
     // =========================================================
@@ -554,9 +673,7 @@ public class MainActivity extends AppCompatActivity {
                 );
 
         popupMenu.getMenu().add("Calendar");
-
         popupMenu.getMenu().add("Leave");
-
         popupMenu.getMenu().add("Profile");
 
         popupMenu.setOnMenuItemClickListener(
@@ -565,10 +682,6 @@ public class MainActivity extends AppCompatActivity {
                     String title =
                             item.getTitle().toString();
 
-                    // -------------------------------------------------
-                    // CALENDAR
-                    // -------------------------------------------------
-
                     if ("Calendar".equals(title)) {
 
                         openCalendar();
@@ -576,20 +689,12 @@ public class MainActivity extends AppCompatActivity {
                         return true;
                     }
 
-                    // -------------------------------------------------
-                    // LEAVE
-                    // -------------------------------------------------
-
                     if ("Leave".equals(title)) {
 
                         openLeave();
 
                         return true;
                     }
-
-                    // -------------------------------------------------
-                    // PROFILE
-                    // -------------------------------------------------
 
                     if ("Profile".equals(title)) {
 
@@ -606,18 +711,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // =========================================================
-    // PUNCH BUTTONS
+    // PUNCH BUTTON SETUP
     // =========================================================
 
     private void setupPunchButtons() {
 
+        /*
+         * Camera must not be blocked by:
+         *
+         * - location
+         * - GPS
+         * - policy
+         *
+         * Attendance state is the only thing that determines
+         * Punch In / Punch Out / Completed.
+         */
+
+        btnMainPunch.setEnabled(true);
+        btnMainPunch.setClickable(true);
+
         btnMainPunch.setOnClickListener(
                 v -> handleMainPunch()
         );
-
-        // -----------------------------------------------------
-        // VIEW CALENDAR
-        // -----------------------------------------------------
 
         tvViewCalendar.setOnClickListener(
                 v -> openCalendar()
@@ -630,76 +745,494 @@ public class MainActivity extends AppCompatActivity {
 
     private void handleMainPunch() {
 
-        // -----------------------------------------------------
-        // ATTENDANCE NOT LOADED
-        // -----------------------------------------------------
+        if (punchActionInProgress) {
+
+            Log.d(
+                    TAG,
+                    "Punch already in progress."
+            );
+
+            return;
+        }
+
+        /*
+         * If today's attendance is still being resolved,
+         * wait for the API result.
+         */
+        if (!attendanceLoaded) {
+
+            if (attendanceLoading) {
+
+                Toast.makeText(
+                        this,
+                        "Checking today's attendance...",
+                        Toast.LENGTH_SHORT
+                ).show();
+
+                return;
+            }
+
+            punchActionInProgress = true;
+
+            btnMainPunch.setEnabled(false);
+
+            Toast.makeText(
+                    this,
+                    "Checking today's attendance...",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            loadTodayAttendanceForPunch();
+
+            return;
+        }
+
+        /*
+         * Attendance is already known.
+         * Open camera immediately.
+         */
+        openPunchCameraFromAttendance();
+    }
+
+    // =========================================================
+    // LOAD TODAY ATTENDANCE FOR PUNCH
+    // =========================================================
+
+    private void loadTodayAttendanceForPunch() {
+
+        if (apiService == null) {
+
+            punchActionInProgress = false;
+
+            btnMainPunch.setEnabled(true);
+
+            Toast.makeText(
+                    this,
+                    "API service is unavailable.",
+                    Toast.LENGTH_LONG
+            ).show();
+
+            return;
+        }
+
+        if (attendanceLoading) {
+            return;
+        }
+
+        attendanceLoading = true;
+
+        String today =
+                apiDateFormat.format(new Date());
+
+        Log.d(
+                TAG,
+                "Checking attendance for date: " + today
+        );
+
+        apiService
+                .getMyAttendanceByDate(today)
+                .enqueue(
+                        new Callback<AttendanceResponse>() {
+
+                            @Override
+                            public void onResponse(
+                                    Call<AttendanceResponse> call,
+                                    Response<AttendanceResponse> response) {
+
+                                attendanceLoading = false;
+                                punchActionInProgress = false;
+
+                                Log.d(
+                                        TAG,
+                                        "Attendance response code: "
+                                                + response.code()
+                                );
+
+                                // -------------------------------------------------
+                                // ATTENDANCE EXISTS
+                                // -------------------------------------------------
+
+                                if (response.isSuccessful()
+                                        && response.body() != null) {
+
+                                    todayAttendance =
+                                            response.body();
+
+                                    attendanceLoaded = true;
+
+                                    Log.d(
+                                            TAG,
+                                            "Today's attendance loaded successfully."
+                                    );
+
+                                    updateAttendanceUI();
+
+                                    /*
+                                     * IMPORTANT:
+                                     *
+                                     * Do not check:
+                                     * - location
+                                     * - policy
+                                     *
+                                     * Camera opens immediately.
+                                     */
+                                    openPunchCameraFromAttendance();
+
+                                    return;
+                                }
+
+                                // -------------------------------------------------
+                                // NO ATTENDANCE FOR TODAY
+                                // -------------------------------------------------
+
+                                if (response.code() == 404) {
+
+                                    todayAttendance = null;
+
+                                    attendanceLoaded = true;
+
+                                    Log.d(
+                                            TAG,
+                                            "No attendance found for today. "
+                                                    + "Punch In required."
+                                    );
+
+                                    showNotMarked();
+
+                                    /*
+                                     * No attendance = PUNCH IN.
+                                     *
+                                     * Camera opens immediately.
+                                     */
+                                    openPunchCameraFromAttendance();
+
+                                    return;
+                                }
+
+                                // -------------------------------------------------
+                                // SESSION EXPIRED
+                                // -------------------------------------------------
+
+                                if (response.code() == 401) {
+
+                                    handleSessionExpired();
+
+                                    return;
+                                }
+
+                                // -------------------------------------------------
+                                // ACCESS DENIED
+                                // -------------------------------------------------
+
+                                if (response.code() == 403) {
+
+                                    attendanceLoaded = false;
+
+                                    btnMainPunch.setEnabled(true);
+
+                                    tvAttendanceStatus.setText(
+                                            "Access denied"
+                                    );
+
+                                    Toast.makeText(
+                                            MainActivity.this,
+                                            "You are not allowed to access attendance.",
+                                            Toast.LENGTH_LONG
+                                    ).show();
+
+                                    return;
+                                }
+
+                                // -------------------------------------------------
+                                // OTHER HTTP ERROR
+                                // -------------------------------------------------
+
+                                attendanceLoaded = false;
+
+                                btnMainPunch.setEnabled(true);
+
+                                String errorMessage =
+                                        "HTTP " + response.code();
+
+                                try {
+
+                                    if (response.errorBody() != null) {
+
+                                        String errorBody =
+                                                response.errorBody().string();
+
+                                        if (!isEmpty(errorBody)) {
+
+                                            errorMessage +=
+                                                    " - "
+                                                            + errorBody;
+                                        }
+                                    }
+
+                                } catch (Exception e) {
+
+                                    Log.e(
+                                            TAG,
+                                            "Unable to read error body",
+                                            e
+                                    );
+                                }
+
+                                Log.e(
+                                        TAG,
+                                        "Attendance API error: "
+                                                + errorMessage
+                                );
+
+                                Toast.makeText(
+                                        MainActivity.this,
+                                        "Unable to check today's attendance.",
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+
+                            @Override
+                            public void onFailure(
+                                    Call<AttendanceResponse> call,
+                                    Throwable t) {
+
+                                attendanceLoading = false;
+                                punchActionInProgress = false;
+                                attendanceLoaded = false;
+
+                                btnMainPunch.setEnabled(true);
+
+                                /*
+                                 * onFailure() can mean:
+                                 *
+                                 * 1. Network/connection error
+                                 * 2. Timeout
+                                 * 3. Server unreachable
+                                 * 4. Cleartext HTTP problem
+                                 * 5. JSON/Gson parsing error
+                                 * 6. Response conversion error
+                                 *
+                                 * Therefore always log the complete
+                                 * Throwable.
+                                 */
+
+                                Log.e(
+                                        TAG,
+                                        "Attendance API onFailure",
+                                        t
+                                );
+
+                                Log.e(
+                                        TAG,
+                                        "Attendance API error class: "
+                                                + t.getClass().getName()
+                                );
+
+                                Log.e(
+                                        TAG,
+                                        "Attendance API error message: "
+                                                + t.getMessage()
+                                );
+
+                                String error =
+                                        t.getMessage();
+
+                                if (isEmpty(error)) {
+
+                                    error =
+                                            "Unable to connect to server";
+                                }
+
+                                Toast.makeText(
+                                        MainActivity.this,
+                                        "Connection error: " + error,
+                                        Toast.LENGTH_LONG
+                                ).show();
+                            }
+                        }
+                );
+    }
+
+    // =========================================================
+    // LOAD TODAY ATTENDANCE
+    // =========================================================
+
+    private void loadTodayAttendance() {
+
+        if (apiService == null) {
+            return;
+        }
+
+        if (attendanceLoading) {
+            return;
+        }
+
+        attendanceLoading = true;
+        attendanceLoaded = false;
+
+        refreshPunchButton();
+
+        String today =
+                apiDateFormat.format(new Date());
+
+        Log.d(
+                TAG,
+                "Loading today's attendance: " + today
+        );
+
+        apiService
+                .getMyAttendanceByDate(today)
+                .enqueue(
+                        new Callback<AttendanceResponse>() {
+
+                            @Override
+                            public void onResponse(
+                                    Call<AttendanceResponse> call,
+                                    Response<AttendanceResponse> response) {
+
+                                attendanceLoading = false;
+
+                                Log.d(
+                                        TAG,
+                                        "Attendance load response: "
+                                                + response.code()
+                                );
+
+                                // -------------------------------------------------
+                                // ATTENDANCE EXISTS
+                                // -------------------------------------------------
+
+                                if (response.isSuccessful()
+                                        && response.body() != null) {
+
+                                    todayAttendance =
+                                            response.body();
+
+                                    attendanceLoaded = true;
+
+                                    updateAttendanceUI();
+
+                                    refreshPunchButton();
+
+                                    return;
+                                }
+
+                                // -------------------------------------------------
+                                // NO ATTENDANCE
+                                // -------------------------------------------------
+
+                                if (response.code() == 404) {
+
+                                    todayAttendance = null;
+
+                                    attendanceLoaded = true;
+
+                                    Log.d(
+                                            TAG,
+                                            "No attendance found for today."
+                                    );
+
+                                    showNotMarked();
+
+                                    refreshPunchButton();
+
+                                    return;
+                                }
+
+                                // -------------------------------------------------
+                                // SESSION EXPIRED
+                                // -------------------------------------------------
+
+                                if (response.code() == 401) {
+
+                                    handleSessionExpired();
+
+                                    return;
+                                }
+
+                                // -------------------------------------------------
+                                // ACCESS DENIED
+                                // -------------------------------------------------
+
+                                if (response.code() == 403) {
+
+                                    attendanceLoaded = false;
+
+                                    tvAttendanceStatus.setText(
+                                            "Access denied"
+                                    );
+
+                                    refreshPunchButton();
+
+                                    return;
+                                }
+
+                                // -------------------------------------------------
+                                // OTHER ERROR
+                                // -------------------------------------------------
+
+                                attendanceLoaded = false;
+
+                                tvAttendanceStatus.setText(
+                                        "Unable to load"
+                                );
+
+                                refreshPunchButton();
+                            }
+
+                            @Override
+                            public void onFailure(
+                                    Call<AttendanceResponse> call,
+                                    Throwable t) {
+
+                                attendanceLoading = false;
+                                attendanceLoaded = false;
+
+                                Log.e(
+                                        TAG,
+                                        "Attendance loading failed",
+                                        t
+                                );
+
+                                Log.e(
+                                        TAG,
+                                        "Attendance error class: "
+                                                + t.getClass().getName()
+                                );
+
+                                Log.e(
+                                        TAG,
+                                        "Attendance error message: "
+                                                + t.getMessage()
+                                );
+
+                                tvAttendanceStatus.setText(
+                                        "Unable to load"
+                                );
+
+                                refreshPunchButton();
+                            }
+                        }
+                );
+    }
+
+    // =========================================================
+    // OPEN CAMERA FROM ATTENDANCE
+    // =========================================================
+
+    private void openPunchCameraFromAttendance() {
 
         if (!attendanceLoaded) {
 
-            loadTodayAttendance();
-
-            Toast.makeText(
-                    this,
-                    "Loading attendance...",
-                    Toast.LENGTH_SHORT
-            ).show();
+            btnMainPunch.setEnabled(true);
 
             return;
         }
 
-        // -----------------------------------------------------
-        // POLICY NOT LOADED
-        // -----------------------------------------------------
-
-        if (!policyLoaded) {
-
-            loadAttendancePolicy();
-
-            Toast.makeText(
-                    this,
-                    "Loading attendance policy...",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            return;
-        }
+        String action;
 
         // -----------------------------------------------------
-        // LOCATION NOT AVAILABLE
-        // -----------------------------------------------------
-
-        if (!locationLoaded
-                || currentLatitude == null
-                || currentLongitude == null) {
-
-            loadCurrentLocation();
-
-            Toast.makeText(
-                    this,
-                    "Current location is unavailable.",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            return;
-        }
-
-        // -----------------------------------------------------
-        // POLICY NOT AVAILABLE
-        // -----------------------------------------------------
-
-        if (attendancePolicy == null) {
-
-            Toast.makeText(
-                    this,
-                    "Attendance policy is unavailable.",
-                    Toast.LENGTH_SHORT
-            ).show();
-
-            return;
-        }
-
-        // -----------------------------------------------------
-        // ATTENDANCE NOT MARKED
+        // PUNCH IN
         // -----------------------------------------------------
 
         if (todayAttendance == null
@@ -707,37 +1240,45 @@ public class MainActivity extends AppCompatActivity {
                 todayAttendance.getCheckInTime()
         )) {
 
-            openCamera(
-                    CameraActivity.ACTION_CHECK_IN
-            );
-
-            return;
+            action =
+                    CameraActivity.ACTION_CHECK_IN;
         }
 
         // -----------------------------------------------------
-        // CHECKED IN BUT NOT CHECKED OUT
+        // PUNCH OUT
         // -----------------------------------------------------
 
-        if (isEmpty(
+        else if (isEmpty(
                 todayAttendance.getCheckOutTime()
         )) {
 
-            openCamera(
-                    CameraActivity.ACTION_CHECK_OUT
-            );
-
-            return;
+            action =
+                    CameraActivity.ACTION_CHECK_OUT;
         }
 
         // -----------------------------------------------------
         // COMPLETED
         // -----------------------------------------------------
 
-        Toast.makeText(
-                this,
-                "Today's attendance is already completed.",
-                Toast.LENGTH_SHORT
-        ).show();
+        else {
+
+            Toast.makeText(
+                    this,
+                    "Today's attendance is already completed.",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            updatePunchCard();
+
+            return;
+        }
+
+        Log.d(
+                TAG,
+                "Opening camera for action: " + action
+        );
+
+        openCamera(action);
     }
 
     // =========================================================
@@ -745,6 +1286,22 @@ public class MainActivity extends AppCompatActivity {
     // =========================================================
 
     private void openCamera(String action) {
+
+        if (isEmpty(action)) {
+
+            Log.e(
+                    TAG,
+                    "Cannot open camera: action is empty"
+            );
+
+            Toast.makeText(
+                    this,
+                    "Unable to start attendance.",
+                    Toast.LENGTH_SHORT
+            ).show();
+
+            return;
+        }
 
         Intent intent =
                 new Intent(
@@ -757,14 +1314,20 @@ public class MainActivity extends AppCompatActivity {
                 action
         );
 
-        // -----------------------------------------------------
-        // INTERNAL DEVICE LOCATION
-        // -----------------------------------------------------
+        /*
+         * Location is OPTIONAL.
+         *
+         * CameraActivity can open even if:
+         *
+         * - GPS is unavailable
+         * - location permission is denied
+         * - current location has not loaded yet
+         */
 
         if (currentLatitude != null) {
 
             intent.putExtra(
-                    "CURRENT_LATITUDE",
+                    EXTRA_CURRENT_LATITUDE,
                     currentLatitude
             );
         }
@@ -772,46 +1335,46 @@ public class MainActivity extends AppCompatActivity {
         if (currentLongitude != null) {
 
             intent.putExtra(
-                    "CURRENT_LONGITUDE",
+                    EXTRA_CURRENT_LONGITUDE,
                     currentLongitude
             );
         }
+
+        Log.d(
+                TAG,
+                "Starting CameraActivity"
+        );
 
         startActivity(intent);
     }
 
     // =========================================================
-    // CURRENT DEVICE LOCATION
+    // CURRENT LOCATION
     // =========================================================
 
     private void loadCurrentLocation() {
 
         if (fusedLocationClient == null) {
-
             return;
         }
-
-        // -----------------------------------------------------
-        // ALREADY LOADING
-        // -----------------------------------------------------
 
         if (locationLoading) {
-
             return;
         }
 
-        // -----------------------------------------------------
-        // PERMISSION CHECK
-        // -----------------------------------------------------
+        boolean fineGranted =
+                ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_FINE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED;
 
-        if (ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED
-                && ContextCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-        ) != PackageManager.PERMISSION_GRANTED) {
+        boolean coarseGranted =
+                ContextCompat.checkSelfPermission(
+                        this,
+                        Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED;
+
+        if (!fineGranted && !coarseGranted) {
 
             requestLocationPermission();
 
@@ -819,14 +1382,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         locationLoading = true;
-
         locationLoaded = false;
 
         showLocationLoading();
-
-        // -----------------------------------------------------
-        // GET CURRENT DEVICE GPS
-        // -----------------------------------------------------
 
         fusedLocationClient
                 .getCurrentLocation(
@@ -847,14 +1405,8 @@ public class MainActivity extends AppCompatActivity {
 
                                 showLocationUnavailable();
 
-                                refreshPunchButton();
-
                                 return;
                             }
-
-                            // -------------------------------------------------
-                            // SAVE DEVICE GPS INTERNALLY
-                            // -------------------------------------------------
 
                             currentLatitude =
                                     location.getLatitude();
@@ -864,28 +1416,33 @@ public class MainActivity extends AppCompatActivity {
 
                             locationLoaded = true;
 
-                            // -------------------------------------------------
-                            // UPDATE READABLE LOCATION
-                            // -------------------------------------------------
+                            Log.d(
+                                    TAG,
+                                    "Location: lat="
+                                            + currentLatitude
+                                            + ", lng="
+                                            + currentLongitude
+                            );
 
                             updateCurrentLocationUI();
-
-                            refreshPunchButton();
                         }
                 )
                 .addOnFailureListener(
                         e -> {
 
                             locationLoading = false;
-
                             locationLoaded = false;
 
                             currentLatitude = null;
                             currentLongitude = null;
 
-                            showLocationUnavailable();
+                            Log.e(
+                                    TAG,
+                                    "Location fetch failed",
+                                    e
+                            );
 
-                            refreshPunchButton();
+                            showLocationUnavailable();
                         }
                 );
     }
@@ -922,9 +1479,7 @@ public class MainActivity extends AppCompatActivity {
                 grantResults
         );
 
-        if (requestCode
-                != LOCATION_PERMISSION_REQUEST_CODE) {
-
+        if (requestCode != LOCATION_PERMISSION_REQUEST_CODE) {
             return;
         }
 
@@ -932,8 +1487,7 @@ public class MainActivity extends AppCompatActivity {
 
         for (int result : grantResults) {
 
-            if (result
-                    == PackageManager.PERMISSION_GRANTED) {
+            if (result == PackageManager.PERMISSION_GRANTED) {
 
                 granted = true;
 
@@ -953,13 +1507,11 @@ public class MainActivity extends AppCompatActivity {
             currentLongitude = null;
 
             showLocationPermissionRequired();
-
-            refreshPunchButton();
         }
     }
 
     // =========================================================
-    // LOCATION UI - LOADING
+    // LOCATION UI
     // =========================================================
 
     private void showLocationLoading() {
@@ -973,10 +1525,6 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    // =========================================================
-    // LOCATION UI - SUCCESS
-    // =========================================================
-
     private void updateCurrentLocationUI() {
 
         if (currentLatitude == null
@@ -986,16 +1534,6 @@ public class MainActivity extends AppCompatActivity {
 
             return;
         }
-
-        /*
-         * Do NOT display:
-         *
-         * latitude
-         * longitude
-         * attendance radius
-         *
-         * Only show readable device location.
-         */
 
         tvLocationName.setText(
                 "Finding location name..."
@@ -1059,7 +1597,6 @@ public class MainActivity extends AppCompatActivity {
                     );
 
             if (!Geocoder.isPresent()) {
-
                 return "Current location";
             }
 
@@ -1079,33 +1616,17 @@ public class MainActivity extends AppCompatActivity {
             Address address =
                     addresses.get(0);
 
-            // -------------------------------------------------
-            // CITY
-            // -------------------------------------------------
-
             String locality =
                     address.getLocality();
 
-            // -------------------------------------------------
-            // DISTRICT
-            // -------------------------------------------------
-
             String subAdminArea =
                     address.getSubAdminArea();
-
-            // -------------------------------------------------
-            // STATE
-            // -------------------------------------------------
 
             String adminArea =
                     address.getAdminArea();
 
             StringBuilder location =
                     new StringBuilder();
-
-            // -------------------------------------------------
-            // LOCALITY
-            // -------------------------------------------------
 
             if (!isEmpty(locality)) {
 
@@ -1114,10 +1635,6 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
 
-            // -------------------------------------------------
-            // DISTRICT
-            // -------------------------------------------------
-
             if (!isEmpty(subAdminArea)
                     && !containsIgnoreCase(
                     location.toString(),
@@ -1125,7 +1642,6 @@ public class MainActivity extends AppCompatActivity {
             )) {
 
                 if (location.length() > 0) {
-
                     location.append(", ");
                 }
 
@@ -1134,10 +1650,6 @@ public class MainActivity extends AppCompatActivity {
                 );
             }
 
-            // -------------------------------------------------
-            // STATE
-            // -------------------------------------------------
-
             if (!isEmpty(adminArea)
                     && !containsIgnoreCase(
                     location.toString(),
@@ -1145,7 +1657,6 @@ public class MainActivity extends AppCompatActivity {
             )) {
 
                 if (location.length() > 0) {
-
                     location.append(", ");
                 }
 
@@ -1153,10 +1664,6 @@ public class MainActivity extends AppCompatActivity {
                         adminArea.trim()
                 );
             }
-
-            // -------------------------------------------------
-            // FALLBACK ADDRESS
-            // -------------------------------------------------
 
             if (location.length() == 0) {
 
@@ -1171,12 +1678,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            // -------------------------------------------------
-            // FINAL FALLBACK
-            // -------------------------------------------------
-
             if (location.length() == 0) {
-
                 return "Current location";
             }
 
@@ -1184,16 +1686,28 @@ public class MainActivity extends AppCompatActivity {
 
         } catch (IOException e) {
 
+            Log.w(
+                    TAG,
+                    "Reverse geocoding failed",
+                    e
+            );
+
             return "Current location";
 
         } catch (Exception e) {
+
+            Log.w(
+                    TAG,
+                    "Unexpected geocoding error",
+                    e
+            );
 
             return "Current location";
         }
     }
 
     // =========================================================
-    // CONTAINS IGNORE CASE
+    // STRING CONTAINS
     // =========================================================
 
     private boolean containsIgnoreCase(
@@ -1209,16 +1723,13 @@ public class MainActivity extends AppCompatActivity {
         return source
                 .toLowerCase(Locale.getDefault())
                 .contains(
-                        value
-                                .trim()
-                                .toLowerCase(
-                                        Locale.getDefault()
-                                )
+                        value.trim()
+                                .toLowerCase(Locale.getDefault())
                 );
     }
 
     // =========================================================
-    // LOCATION UI - UNAVAILABLE
+    // LOCATION UNAVAILABLE
     // =========================================================
 
     private void showLocationUnavailable() {
@@ -1233,7 +1744,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // =========================================================
-    // LOCATION UI - PERMISSION
+    // LOCATION PERMISSION REQUIRED
     // =========================================================
 
     private void showLocationPermissionRequired() {
@@ -1249,121 +1760,6 @@ public class MainActivity extends AppCompatActivity {
 
     // =========================================================
     // ATTENDANCE
-    // =========================================================
-
-    private void loadTodayAttendance() {
-
-        attendanceLoaded = false;
-
-        refreshPunchButton();
-
-        String today =
-                apiDateFormat.format(
-                        new Date()
-                );
-
-        apiService
-                .getMyAttendanceByDate(today)
-                .enqueue(
-                        new Callback<AttendanceResponse>() {
-
-                            @Override
-                            public void onResponse(
-                                    Call<AttendanceResponse> call,
-                                    Response<AttendanceResponse> response) {
-
-                                if (response.isSuccessful()
-                                        && response.body() != null) {
-
-                                    todayAttendance =
-                                            response.body();
-
-                                    attendanceLoaded = true;
-
-                                    updateAttendanceUI();
-
-                                    refreshPunchButton();
-
-                                    return;
-                                }
-
-                                // -------------------------------------------------
-                                // NO ATTENDANCE FOR TODAY
-                                // -------------------------------------------------
-
-                                if (response.code() == 404) {
-
-                                    todayAttendance = null;
-
-                                    attendanceLoaded = true;
-
-                                    showNotMarked();
-
-                                    refreshPunchButton();
-
-                                    return;
-                                }
-
-                                // -------------------------------------------------
-                                // SESSION EXPIRED
-                                // -------------------------------------------------
-
-                                if (response.code() == 401) {
-
-                                    handleSessionExpired();
-
-                                    return;
-                                }
-
-                                // -------------------------------------------------
-                                // ACCESS DENIED
-                                // -------------------------------------------------
-
-                                if (response.code() == 403) {
-
-                                    attendanceLoaded = true;
-
-                                    tvAttendanceStatus.setText(
-                                            "Access denied"
-                                    );
-
-                                    refreshPunchButton();
-
-                                    return;
-                                }
-
-                                // -------------------------------------------------
-                                // OTHER ERROR
-                                // -------------------------------------------------
-
-                                attendanceLoaded = false;
-
-                                tvAttendanceStatus.setText(
-                                        "Unable to load"
-                                );
-
-                                refreshPunchButton();
-                            }
-
-                            @Override
-                            public void onFailure(
-                                    Call<AttendanceResponse> call,
-                                    Throwable t) {
-
-                                attendanceLoaded = false;
-
-                                tvAttendanceStatus.setText(
-                                        "Unable to load"
-                                );
-
-                                refreshPunchButton();
-                            }
-                        }
-                );
-    }
-
-    // =========================================================
-    // UPDATE ATTENDANCE UI
     // =========================================================
 
     private void updateAttendanceUI() {
@@ -1384,82 +1780,40 @@ public class MainActivity extends AppCompatActivity {
         String status =
                 todayAttendance.getStatus();
 
-        if (status == null
-                || status.trim().isEmpty()) {
-
+        if (isEmpty(status)) {
             status = "PRESENT";
         }
 
-        tvAttendanceStatus.setText(
-                status
-        );
-
-        // -----------------------------------------------------
-        // PRESENT
-        // -----------------------------------------------------
+        tvAttendanceStatus.setText(status);
 
         if ("PRESENT".equalsIgnoreCase(status)) {
 
             tvAttendanceStatus.setTextColor(
-                    Color.rgb(
-                            30,
-                            158,
-                            90
-                    )
+                    Color.rgb(30, 158, 90)
             );
 
             tvAttendanceStatus.setBackgroundColor(
-                    Color.rgb(
-                            234,
-                            248,
-                            240
-                    )
+                    Color.rgb(234, 248, 240)
             );
 
-        }
-
-        // -----------------------------------------------------
-        // ABSENT
-        // -----------------------------------------------------
-
-        else if ("ABSENT".equalsIgnoreCase(status)) {
+        } else if ("ABSENT".equalsIgnoreCase(status)) {
 
             tvAttendanceStatus.setTextColor(
-                    Color.rgb(
-                            210,
-                            60,
-                            60
-                    )
+                    Color.rgb(210, 60, 60)
             );
 
-        }
-
-        // -----------------------------------------------------
-        // HALF DAY
-        // -----------------------------------------------------
-
-        else if ("HD".equalsIgnoreCase(status)
+        } else if ("HD".equalsIgnoreCase(status)
                 || "HALFDAY".equalsIgnoreCase(status)
                 || "HALF_DAY".equalsIgnoreCase(status)) {
 
             tvAttendanceStatus.setTextColor(
-                    Color.rgb(
-                            220,
-                            140,
-                            40
-                    )
+                    Color.rgb(220, 140, 40)
             );
         }
 
-        // -----------------------------------------------------
-        // CHECK IN
-        // -----------------------------------------------------
-
         if (isEmpty(checkIn)) {
 
-            tvCheckInTime.setText(
-                    "--:--"
-            );
+            tvCheckInTime.setText("--:--");
 
         } else {
 
@@ -1468,15 +1822,9 @@ public class MainActivity extends AppCompatActivity {
             );
         }
 
-        // -----------------------------------------------------
-        // CHECK OUT
-        // -----------------------------------------------------
-
         if (isEmpty(checkOut)) {
 
-            tvCheckOutTime.setText(
-                    "--:--"
-            );
+            tvCheckOutTime.setText("--:--");
 
         } else {
 
@@ -1485,16 +1833,7 @@ public class MainActivity extends AppCompatActivity {
             );
         }
 
-        // -----------------------------------------------------
-        // WORK HOURS
-        // -----------------------------------------------------
-
         updateWorkHours();
-
-        // -----------------------------------------------------
-        // PUNCH CARD
-        // -----------------------------------------------------
-
         updatePunchCard();
     }
 
@@ -1509,32 +1848,16 @@ public class MainActivity extends AppCompatActivity {
         );
 
         tvAttendanceStatus.setTextColor(
-                Color.rgb(
-                        110,
-                        110,
-                        110
-                )
+                Color.rgb(110, 110, 110)
         );
 
         tvAttendanceStatus.setBackgroundColor(
-                Color.rgb(
-                        240,
-                        240,
-                        240
-                )
+                Color.rgb(240, 240, 240)
         );
 
-        tvCheckInTime.setText(
-                "--:--"
-        );
-
-        tvCheckOutTime.setText(
-                "--:--"
-        );
-
-        tvWorkHours.setText(
-                "--:--"
-        );
+        tvCheckInTime.setText("--:--");
+        tvCheckOutTime.setText("--:--");
+        tvWorkHours.setText("--:--");
 
         updatePunchCard();
     }
@@ -1545,23 +1868,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateWorkHours() {
 
-        // -----------------------------------------------------
-        // REMOVE OLD TIMER
-        // -----------------------------------------------------
-
         workHoursHandler.removeCallbacks(
                 workHoursRunnable
         );
 
-        // -----------------------------------------------------
-        // NO ATTENDANCE
-        // -----------------------------------------------------
-
         if (todayAttendance == null) {
 
-            tvWorkHours.setText(
-                    "--:--"
-            );
+            tvWorkHours.setText("--:--");
 
             return;
         }
@@ -1572,87 +1885,45 @@ public class MainActivity extends AppCompatActivity {
         String checkOut =
                 todayAttendance.getCheckOutTime();
 
-        // -----------------------------------------------------
-        // NO CHECK-IN
-        // -----------------------------------------------------
-
         if (isEmpty(checkIn)) {
 
-            tvWorkHours.setText(
-                    "--:--"
-            );
+            tvWorkHours.setText("--:--");
 
             return;
         }
-
-        // -----------------------------------------------------
-        // PARSE CHECK-IN
-        // -----------------------------------------------------
 
         Date checkInDate =
                 parseAttendanceTime(checkIn);
 
         if (checkInDate == null) {
 
-            tvWorkHours.setText(
-                    "--:--"
-            );
+            tvWorkHours.setText("--:--");
 
             return;
         }
 
         Date endDate;
 
-        // -----------------------------------------------------
-        // CHECKED OUT
-        // -----------------------------------------------------
-
         if (!isEmpty(checkOut)) {
 
             endDate =
                     parseAttendanceTime(checkOut);
 
-        }
+        } else {
 
-        // -----------------------------------------------------
-        // STILL CHECKED IN
-        // -----------------------------------------------------
-
-        else {
-
-            /*
-             * Important:
-             *
-             * checkInDate is attached to TODAY's date.
-             *
-             * Therefore current Date() is now comparable
-             * with checkInDate.
-             */
-
-            endDate =
-                    new Date();
+            endDate = new Date();
         }
 
         if (endDate == null) {
 
-            tvWorkHours.setText(
-                    "--:--"
-            );
+            tvWorkHours.setText("--:--");
 
             return;
         }
 
-        // -----------------------------------------------------
-        // DIFFERENCE
-        // -----------------------------------------------------
-
         long difference =
                 endDate.getTime()
                         - checkInDate.getTime();
-
-        // -----------------------------------------------------
-        // MIDNIGHT CROSSING
-        // -----------------------------------------------------
 
         if (difference < 0) {
 
@@ -1663,40 +1934,14 @@ public class MainActivity extends AppCompatActivity {
                             * 1000L;
         }
 
-        // -----------------------------------------------------
-        // TOTAL MINUTES
-        // -----------------------------------------------------
-
         long totalMinutes =
-                difference
-                        / (60L * 1000L);
-
-        // -----------------------------------------------------
-        // HOURS
-        // -----------------------------------------------------
+                difference / (60L * 1000L);
 
         long hours =
                 totalMinutes / 60L;
 
-        // -----------------------------------------------------
-        // MINUTES
-        // -----------------------------------------------------
-
         long minutes =
                 totalMinutes % 60L;
-
-        // -----------------------------------------------------
-        // DISPLAY
-        // -----------------------------------------------------
-        //
-        // Example:
-        //
-        // Check-in : 02:55 PM
-        // Current  : 05:23 PM
-        //
-        // Work    : 02:28
-        //
-        // -----------------------------------------------------
 
         String workHours =
                 String.format(
@@ -1706,19 +1951,13 @@ public class MainActivity extends AppCompatActivity {
                         minutes
                 );
 
-        tvWorkHours.setText(
-                workHours
-        );
-
-        // -----------------------------------------------------
-        // UPDATE EVERY MINUTE
-        // -----------------------------------------------------
+        tvWorkHours.setText(workHours);
 
         if (isEmpty(checkOut)) {
 
             workHoursHandler.postDelayed(
                     workHoursRunnable,
-                    60000
+                    60_000
             );
         }
     }
@@ -1726,43 +1965,15 @@ public class MainActivity extends AppCompatActivity {
     // =========================================================
     // PARSE ATTENDANCE TIME
     // =========================================================
-    //
-    // API examples:
-    //
-    // 14:55:00
-    // 14:55
-    // 14:55:00.123
-    //
-    // Also supports:
-    //
-    // 2026-09-07T14:55:00
-    // 2026-09-07 14:55:00
-    //
-    // IMPORTANT:
-    //
-    // Parsed time is attached to TODAY's date.
-    //
-    // This prevents:
-    //
-    // 1970 -> 2026
-    //
-    // huge work-hour calculation.
-    //
-    // =========================================================
 
     private Date parseAttendanceTime(String value) {
 
         if (isEmpty(value)) {
-
             return null;
         }
 
         String time =
                 value.trim();
-
-        // -----------------------------------------------------
-        // REMOVE ISO DATE
-        // -----------------------------------------------------
 
         if (time.contains("T")) {
 
@@ -1771,10 +1982,6 @@ public class MainActivity extends AppCompatActivity {
                             time.indexOf("T") + 1
                     );
         }
-
-        // -----------------------------------------------------
-        // REMOVE SPACE DATE
-        // -----------------------------------------------------
 
         if (time.contains(" ")) {
 
@@ -1785,10 +1992,6 @@ public class MainActivity extends AppCompatActivity {
                     parts[parts.length - 1];
         }
 
-        // -----------------------------------------------------
-        // REMOVE Z
-        // -----------------------------------------------------
-
         if (time.endsWith("Z")) {
 
             time =
@@ -1797,10 +2000,6 @@ public class MainActivity extends AppCompatActivity {
                             time.length() - 1
                     );
         }
-
-        // -----------------------------------------------------
-        // REMOVE TIMEZONE
-        // -----------------------------------------------------
 
         int plusIndex =
                 time.indexOf("+");
@@ -1814,10 +2013,6 @@ public class MainActivity extends AppCompatActivity {
                     );
         }
 
-        // -----------------------------------------------------
-        // REMOVE MILLISECONDS
-        // -----------------------------------------------------
-
         int dotIndex =
                 time.indexOf(".");
 
@@ -1830,14 +2025,9 @@ public class MainActivity extends AppCompatActivity {
                     );
         }
 
-        // -----------------------------------------------------
-        // PARSE TIME
-        // -----------------------------------------------------
-
         Date parsedTime = null;
 
         String[] formats = {
-
                 "HH:mm:ss",
                 "HH:mm"
         };
@@ -1858,7 +2048,6 @@ public class MainActivity extends AppCompatActivity {
                         sdf.parse(time);
 
                 if (parsedTime != null) {
-
                     break;
                 }
 
@@ -1867,44 +2056,25 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if (parsedTime == null) {
-
             return null;
         }
-
-        // -----------------------------------------------------
-        // EXTRACT ONLY TIME
-        // -----------------------------------------------------
 
         Calendar parsedCalendar =
                 Calendar.getInstance();
 
-        parsedCalendar.setTime(
-                parsedTime
-        );
+        parsedCalendar.setTime(parsedTime);
 
         int hour =
-                parsedCalendar.get(
-                        Calendar.HOUR_OF_DAY
-                );
+                parsedCalendar.get(Calendar.HOUR_OF_DAY);
 
         int minute =
-                parsedCalendar.get(
-                        Calendar.MINUTE
-                );
+                parsedCalendar.get(Calendar.MINUTE);
 
         int second =
-                parsedCalendar.get(
-                        Calendar.SECOND
-                );
+                parsedCalendar.get(Calendar.SECOND);
 
         int millisecond =
-                parsedCalendar.get(
-                        Calendar.MILLISECOND
-                );
-
-        // -----------------------------------------------------
-        // ATTACH TIME TO TODAY
-        // -----------------------------------------------------
+                parsedCalendar.get(Calendar.MILLISECOND);
 
         Calendar today =
                 Calendar.getInstance();
@@ -1942,7 +2112,6 @@ public class MainActivity extends AppCompatActivity {
                 parseAttendanceTime(value);
 
         if (date == null) {
-
             return value;
         }
 
@@ -1961,6 +2130,29 @@ public class MainActivity extends AppCompatActivity {
 
     private void updatePunchCard() {
 
+        /*
+         * Punch state depends ONLY on attendance.
+         *
+         * Location and policy never disable the button.
+         */
+
+        if (!attendanceLoaded) {
+
+            tvPunchAction.setText(
+                    "PUNCH"
+            );
+
+            tvPunchTime.setText(
+                    getCurrentTime()
+            );
+
+            btnMainPunch.setText("▶");
+
+            btnMainPunch.setEnabled(true);
+
+            return;
+        }
+
         // -----------------------------------------------------
         // NO ATTENDANCE
         // -----------------------------------------------------
@@ -1975,15 +2167,9 @@ public class MainActivity extends AppCompatActivity {
                     getCurrentTime()
             );
 
-            btnMainPunch.setText(
-                    "▶"
-            );
+            btnMainPunch.setText("▶");
 
-            btnMainPunch.setEnabled(
-                    attendanceLoaded
-                            && policyLoaded
-                            && locationLoaded
-            );
+            btnMainPunch.setEnabled(true);
 
             return;
         }
@@ -2008,15 +2194,9 @@ public class MainActivity extends AppCompatActivity {
                     getCurrentTime()
             );
 
-            btnMainPunch.setText(
-                    "▶"
-            );
+            btnMainPunch.setText("▶");
 
-            btnMainPunch.setEnabled(
-                    attendanceLoaded
-                            && policyLoaded
-                            && locationLoaded
-            );
+            btnMainPunch.setEnabled(true);
 
             return;
         }
@@ -2035,15 +2215,9 @@ public class MainActivity extends AppCompatActivity {
                     getCurrentTime()
             );
 
-            btnMainPunch.setText(
-                    "▶"
-            );
+            btnMainPunch.setText("▶");
 
-            btnMainPunch.setEnabled(
-                    attendanceLoaded
-                            && policyLoaded
-                            && locationLoaded
-            );
+            btnMainPunch.setEnabled(true);
 
             return;
         }
@@ -2060,13 +2234,9 @@ public class MainActivity extends AppCompatActivity {
                 formatDisplayTime(checkOut)
         );
 
-        btnMainPunch.setText(
-                "✓"
-        );
+        btnMainPunch.setText("✓");
 
-        btnMainPunch.setEnabled(
-                false
-        );
+        btnMainPunch.setEnabled(false);
     }
 
     // =========================================================
@@ -2074,33 +2244,6 @@ public class MainActivity extends AppCompatActivity {
     // =========================================================
 
     private void refreshPunchButton() {
-
-        if (!attendanceLoaded
-                || !policyLoaded
-                || !locationLoaded) {
-
-            btnMainPunch.setEnabled(
-                    false
-            );
-
-            return;
-        }
-
-        if (attendancePolicy == null) {
-
-            btnMainPunch.setEnabled(
-                    false
-            );
-
-            return;
-        }
-
-        /*
-         * No getAttendanceRequired() check here.
-         *
-         * This avoids compilation problems if that
-         * field/method does not exist in your DTO.
-         */
 
         updatePunchCard();
     }
@@ -2117,9 +2260,7 @@ public class MainActivity extends AppCompatActivity {
                         Locale.getDefault()
                 );
 
-        return formatter.format(
-                new Date()
-        );
+        return formatter.format(new Date());
     }
 
     // =========================================================
@@ -2128,9 +2269,11 @@ public class MainActivity extends AppCompatActivity {
 
     private void loadAttendancePolicy() {
 
-        policyLoaded = false;
+        if (apiService == null) {
+            return;
+        }
 
-        refreshPunchButton();
+        policyLoaded = false;
 
         apiService
                 .getCurrentPolicy()
@@ -2142,10 +2285,6 @@ public class MainActivity extends AppCompatActivity {
                                     Call<AttendancePolicyResponse> call,
                                     Response<AttendancePolicyResponse> response) {
 
-                                // -------------------------------------------------
-                                // SUCCESS
-                                // -------------------------------------------------
-
                                 if (response.isSuccessful()
                                         && response.body() != null) {
 
@@ -2156,14 +2295,8 @@ public class MainActivity extends AppCompatActivity {
 
                                     updatePolicyUI();
 
-                                    refreshPunchButton();
-
                                     return;
                                 }
-
-                                // -------------------------------------------------
-                                // SESSION EXPIRED
-                                // -------------------------------------------------
 
                                 if (response.code() == 401) {
 
@@ -2172,17 +2305,11 @@ public class MainActivity extends AppCompatActivity {
                                     return;
                                 }
 
-                                // -------------------------------------------------
-                                // POLICY ERROR
-                                // -------------------------------------------------
-
                                 attendancePolicy = null;
 
                                 policyLoaded = false;
 
                                 showPolicyUnavailable();
-
-                                refreshPunchButton();
                             }
 
                             @Override
@@ -2194,9 +2321,13 @@ public class MainActivity extends AppCompatActivity {
 
                                 policyLoaded = false;
 
-                                showPolicyUnavailable();
+                                Log.e(
+                                        TAG,
+                                        "Policy loading failed",
+                                        t
+                                );
 
-                                refreshPunchButton();
+                                showPolicyUnavailable();
                             }
                         }
                 );
@@ -2215,29 +2346,7 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        /*
-         * IMPORTANT:
-         *
-         * Policy latitude
-         * Policy longitude
-         * Attendance radius
-         *
-         * are NOT displayed.
-         *
-         * They are backend validation values only.
-         */
-
-        // -----------------------------------------------------
-        // WORKING HOURS
-        // -----------------------------------------------------
-
-        if (attendancePolicy.getWorkingHours()
-                != null) {
-
-            /*
-             * Avoid stripTrailingZeros().toPlainString()
-             * because DTO type may not always be BigDecimal.
-             */
+        if (attendancePolicy.getWorkingHours() != null) {
 
             String hours =
                     String.valueOf(
@@ -2256,10 +2365,6 @@ public class MainActivity extends AppCompatActivity {
                     "Required working time: --"
             );
         }
-
-        // -----------------------------------------------------
-        // WEEKLY OFF
-        // -----------------------------------------------------
 
         boolean saturdayOff =
                 Boolean.TRUE.equals(
@@ -2313,18 +2418,6 @@ public class MainActivity extends AppCompatActivity {
         tvWeeklyOff.setText(
                 "Weekly off: --"
         );
-
-        /*
-         * IMPORTANT:
-         *
-         * Do NOT touch:
-         *
-         * tvLocationName
-         * tvLocationRadius
-         *
-         * Policy API failure has nothing to do with
-         * current device GPS.
-         */
     }
 
     // =========================================================
@@ -2337,29 +2430,23 @@ public class MainActivity extends AppCompatActivity {
                 "Loading"
         );
 
-        tvCheckInTime.setText(
-                "--:--"
-        );
-
-        tvCheckOutTime.setText(
-                "--:--"
-        );
-
-        tvWorkHours.setText(
-                "--:--"
-        );
+        tvCheckInTime.setText("--:--");
+        tvCheckOutTime.setText("--:--");
+        tvWorkHours.setText("--:--");
 
         tvPunchAction.setText(
-                "PUNCH IN"
+                "PUNCH"
         );
 
         tvPunchTime.setText(
                 getCurrentTime()
         );
 
-        btnMainPunch.setEnabled(
-                false
-        );
+        /*
+         * Button remains enabled while API is loading.
+         */
+        btnMainPunch.setEnabled(true);
+        btnMainPunch.setClickable(true);
     }
 
     // =========================================================
@@ -2399,44 +2486,7 @@ public class MainActivity extends AppCompatActivity {
     private void updateTodayDate() {
 
         tvTodayDate.setText(
-                displayDateFormat.format(
-                        new Date()
-                )
-        );
-    }
-
-    // =========================================================
-    // BOTTOM NAVIGATION
-    // =========================================================
-
-    private void setupBottomNavigation() {
-
-        // -----------------------------------------------------
-        // HOME
-        // -----------------------------------------------------
-
-        navHome.setOnClickListener(
-                v -> {
-                    /*
-                     * Already on Home.
-                     */
-                }
-        );
-
-        // -----------------------------------------------------
-        // CALENDAR
-        // -----------------------------------------------------
-
-        navCalendar.setOnClickListener(
-                v -> openCalendar()
-        );
-
-        // -----------------------------------------------------
-        // LEAVE
-        // -----------------------------------------------------
-
-        navLeave.setOnClickListener(
-                v -> openLeave()
+                displayDateFormat.format(new Date())
         );
     }
 
@@ -2480,30 +2530,13 @@ public class MainActivity extends AppCompatActivity {
 
     private void openProfile() {
 
-        try {
+        Intent intent =
+                new Intent(
+                        MainActivity.this,
+                        ProfileActivity.class
+                );
 
-            Class<?> activityClass =
-                    Class.forName(
-                            getPackageName()
-                                    + ".activity.ProfileActivity"
-                    );
-
-            Intent intent =
-                    new Intent(
-                            MainActivity.this,
-                            activityClass
-                    );
-
-            startActivity(intent);
-
-        } catch (ClassNotFoundException e) {
-
-            Toast.makeText(
-                    MainActivity.this,
-                    "ProfileActivity is not created yet.",
-                    Toast.LENGTH_SHORT
-            ).show();
-        }
+        startActivity(intent);
     }
 
     // =========================================================
@@ -2527,28 +2560,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // =========================================================
-    // LOGIN
-    // =========================================================
-
-    private void openLogin() {
-
-        Intent intent =
-                new Intent(
-                        MainActivity.this,
-                        LoginActivity.class
-                );
-
-        intent.setFlags(
-                Intent.FLAG_ACTIVITY_NEW_TASK
-                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
-        );
-
-        startActivity(intent);
-
-        finish();
-    }
-
-    // =========================================================
     // CHECKED IN
     // =========================================================
 
@@ -2564,7 +2575,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     // =========================================================
-    // EMPTY STRING
+    // EMPTY
     // =========================================================
 
     private boolean isEmpty(String value) {
@@ -2587,5 +2598,27 @@ public class MainActivity extends AppCompatActivity {
         geocoderExecutor.shutdownNow();
 
         super.onDestroy();
+    }
+
+    // =========================================================
+// OPEN LOGIN
+// =========================================================
+
+    private void openLogin() {
+
+        Intent intent =
+                new Intent(
+                        MainActivity.this,
+                        LoginActivity.class
+                );
+
+        intent.setFlags(
+                Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TASK
+        );
+
+        startActivity(intent);
+
+        finish();
     }
 }

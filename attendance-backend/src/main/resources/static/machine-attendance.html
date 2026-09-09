@@ -8,441 +8,1021 @@
 
     <title>Machine Attendance | College Attendance</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
     <style>
+        /* =========================================================
+           RESET
+        ========================================================= */
+
         * {
             box-sizing: border-box;
         }
 
+
         body {
             margin: 0;
             min-height: 100vh;
+
             background: #f5f7fb;
-            font-family: Inter, system-ui, -apple-system,
-                BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
             color: #1f2937;
         }
 
+
+        /* =========================================================
+           SVG ICON
+        ========================================================= */
+
+        .icon {
+            width: 18px;
+            height: 18px;
+
+            display: inline-block;
+
+            vertical-align: middle;
+
+            stroke: currentColor;
+
+            fill: none;
+
+            stroke-width: 1.8;
+
+            stroke-linecap: round;
+
+            stroke-linejoin: round;
+        }
+
+
+        .icon-sm {
+            width: 15px;
+            height: 15px;
+        }
+
+
+        .icon-lg {
+            width: 22px;
+            height: 22px;
+        }
+
+
         /* =========================================================
            NAVBAR
-           ========================================================= */
+        ========================================================= */
 
         .navbar {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
+            width: 100%;
+
             min-height: 64px;
+
+            background: #ffffff;
+
+            border-bottom: 1px solid #e5e7eb;
         }
 
-        .brand {
-            font-size: 20px;
-            font-weight: 700;
-            color: #111827;
-            text-decoration: none;
-            display: inline-flex;
+
+        .navbar-container {
+            width: 100%;
+
+            max-width: 1320px;
+
+            margin: 0 auto;
+
+            padding: 0 15px;
+
+            min-height: 64px;
+
+            display: flex;
+
             align-items: center;
+
+            justify-content: space-between;
         }
+
+
+        .brand {
+            display: inline-flex;
+
+            align-items: center;
+
+            color: #111827;
+
+            text-decoration: none;
+
+            font-size: 20px;
+
+            font-weight: 700;
+        }
+
 
         .brand-icon {
             width: 38px;
+
             height: 38px;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            background: #111827;
-            color: white;
+
             margin-right: 9px;
+
+            border-radius: 10px;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #111827;
+
+            color: #ffffff;
         }
 
+
+        .brand-icon .icon {
+            width: 21px;
+            height: 21px;
+        }
+
+
         .machine-badge {
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 5px;
+
             background: #f3f4f6;
+
             color: #374151;
+
             border: 1px solid #e5e7eb;
+
             padding: 6px 11px;
+
             border-radius: 20px;
+
             font-size: 11px;
+
             font-weight: 700;
         }
+
+
+        /* =========================================================
+           CONTAINER
+        ========================================================= */
+
+        .container {
+            width: 100%;
+
+            max-width: 1320px;
+
+            margin: 0 auto;
+
+            padding-left: 15px;
+
+            padding-right: 15px;
+        }
+
 
         /* =========================================================
            PAGE
-           ========================================================= */
+        ========================================================= */
 
         .page-wrapper {
-            padding: 25px 15px 35px;
+            padding-top: 25px;
+
+            padding-bottom: 35px;
         }
+
 
         .page-title {
+            margin: 0 0 4px;
+
             font-size: 28px;
+
+            line-height: 1.3;
+
             font-weight: 700;
-            margin-bottom: 4px;
+
+            color: #1f2937;
         }
 
+
         .page-subtitle {
+            margin: 0 0 22px;
+
             color: #6b7280;
-            margin-bottom: 22px;
+
             font-size: 14px;
+
+            line-height: 1.5;
         }
+
+
+        /* =========================================================
+           GRID
+        ========================================================= */
+
+        .main-grid {
+            display: grid;
+
+            grid-template-columns: 5fr 7fr;
+
+            gap: 16px;
+
+            align-items: start;
+        }
+
 
         /* =========================================================
            CARD
-           ========================================================= */
+        ========================================================= */
 
         .attendance-card {
+            width: 100%;
+
             background: #ffffff;
+
             border: 1px solid #e5e7eb;
+
             border-radius: 16px;
+
             overflow: hidden;
-            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.035);
+
+            box-shadow:
+                0 6px 24px rgba(0, 0, 0, 0.035);
         }
+
 
         .card-header-custom {
             padding: 17px 20px;
+
             border-bottom: 1px solid #eef0f3;
         }
 
+
         .card-title {
-            font-size: 16px;
-            font-weight: 700;
             margin: 0;
+
+            display: flex;
+
+            align-items: center;
+
+            font-size: 16px;
+
+            line-height: 1.4;
+
+            font-weight: 700;
+
+            color: #1f2937;
         }
+
+
+        .card-title .icon {
+            margin-right: 8px;
+
+            color: #374151;
+        }
+
 
         /* =========================================================
            USER
-           ========================================================= */
+        ========================================================= */
 
         .user-section {
             padding: 20px;
         }
 
-        .user-id-input {
-            height: 48px;
-            border-radius: 9px;
-            font-size: 16px;
+
+        .form-label {
+            display: block;
+
+            margin-bottom: 6px;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+
+            font-weight: 600;
+
+            color: #374151;
         }
 
-        .user-help {
-            font-size: 11px;
-            color: #6b7280;
-            margin-top: 6px;
+
+        .user-id-input {
+            width: 100%;
+
+            height: 48px;
+
+            padding: 0 13px;
+
+            border: 1px solid #d1d5db;
+
+            border-radius: 9px;
+
+            outline: none;
+
+            background: #ffffff;
+
+            color: #111827;
+
+            font-family: inherit;
+
+            font-size: 16px;
+
+            transition:
+                border-color 0.2s ease,
+                box-shadow 0.2s ease;
         }
+
+
+        .user-id-input::placeholder {
+            color: #9ca3af;
+        }
+
+
+        .user-id-input:focus {
+            border-color: #111827;
+
+            box-shadow:
+                0 0 0 3px rgba(17, 24, 39, 0.08);
+        }
+
+
+        .user-help {
+            margin-top: 6px;
+
+            font-size: 11px;
+
+            line-height: 1.4;
+
+            color: #6b7280;
+        }
+
+
+        /* =========================================================
+           SELECTED USER
+        ========================================================= */
 
         .selected-user {
             display: none;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 11px 13px;
+
             margin-top: 12px;
+
+            padding: 11px 13px;
+
+            background: #f9fafb;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 10px;
         }
+
 
         .selected-user-label {
-            color: #6b7280;
-            font-size: 11px;
             margin-bottom: 2px;
+
+            color: #6b7280;
+
+            font-size: 11px;
         }
 
+
         .selected-user-name {
-            font-weight: 700;
             font-size: 15px;
+
+            font-weight: 700;
+
+            color: #1f2937;
         }
+
 
         .selected-user-id {
             color: #6b7280;
+
             font-size: 12px;
         }
 
+
         /* =========================================================
-           CAMERA
-           ========================================================= */
+           BUTTON BASE
+        ========================================================= */
 
-        .camera-area {
-            padding: 20px;
-        }
+        .btn {
+            border: 1px solid transparent;
 
-        .camera-box {
-            width: 100%;
-            aspect-ratio: 4 / 3;
-            background: #111827;
-            border-radius: 13px;
-            overflow: hidden;
-            position: relative;
-            display: flex;
+            display: inline-flex;
+
             align-items: center;
+
             justify-content: center;
-        }
 
-        #camera {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-            transform: scaleX(-1);
-        }
+            gap: 5px;
 
-        #preview {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            display: none;
-        }
+            font-family: inherit;
 
-        .camera-placeholder {
-            color: #9ca3af;
-            text-align: center;
-            padding: 15px;
-        }
-
-        .camera-placeholder i {
-            font-size: 42px;
-            display: block;
-            margin-bottom: 8px;
-        }
-
-        .camera-placeholder div {
             font-size: 14px;
-        }
 
-        .camera-placeholder small {
-            font-size: 11px;
-        }
-
-        .camera-controls {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 8px;
-            margin-top: 11px;
-        }
-
-        .camera-controls button {
-            height: 44px;
-            border-radius: 9px;
             font-weight: 600;
-            font-size: 14px;
+
+            line-height: 1.4;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition:
+                background 0.2s ease,
+                border-color 0.2s ease,
+                color 0.2s ease,
+                opacity 0.2s ease,
+                transform 0.1s ease;
         }
 
-        .camera-status {
-            display: flex;
-            align-items: center;
-            gap: 7px;
-            margin-top: 9px;
-            font-size: 11px;
-            color: #6b7280;
+
+        .btn:active {
+            transform: scale(0.99);
         }
 
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #9ca3af;
-            flex-shrink: 0;
+
+        .btn:disabled {
+            opacity: 0.55;
+
+            cursor: not-allowed;
+
+            transform: none;
         }
 
-        .status-dot.active {
-            background: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+
+        .btn-dark {
+            width: 100%;
+
+            height: 44px;
+
+            margin-top: 10px;
+
+            padding: 0 15px;
+
+            border-radius: 9px;
+
+            background: #111827;
+
+            border-color: #111827;
+
+            color: #ffffff;
         }
 
-        .face-guide {
-            position: absolute;
-            width: 48%;
-            height: 65%;
-            border: 2px dashed rgba(255, 255, 255, 0.75);
-            border-radius: 50%;
-            pointer-events: none;
+
+        .btn-dark:hover:not(:disabled) {
+            background: #000000;
+
+            border-color: #000000;
+
+            color: #ffffff;
         }
 
-        .face-guide-text {
-            position: absolute;
-            bottom: 12px;
-            left: 0;
-            right: 0;
-            text-align: center;
-            color: white;
-            font-size: 11px;
-            background: rgba(0, 0, 0, 0.35);
-            padding: 6px;
+
+        .btn-outline-dark {
+            background: #ffffff;
+
+            border-color: #1f2937;
+
+            color: #111827;
         }
+
+
+        .btn-outline-dark:hover:not(:disabled) {
+            background: #f9fafb;
+        }
+
+
+        .btn-outline-secondary {
+            background: #ffffff;
+
+            border-color: #d1d5db;
+
+            color: #4b5563;
+        }
+
+
+        .btn-outline-secondary:hover:not(:disabled) {
+            background: #f9fafb;
+
+            border-color: #9ca3af;
+        }
+
 
         /* =========================================================
-           ACTION
-           ========================================================= */
+           SECURITY NOTE
+        ========================================================= */
+
+        .security-note {
+            margin-top: 13px;
+
+            display: flex;
+
+            align-items: flex-start;
+
+            gap: 7px;
+
+            color: #6b7280;
+
+            font-size: 11px;
+
+            line-height: 1.4;
+        }
+
+
+        .security-note .icon {
+            width: 15px;
+
+            height: 15px;
+
+            flex-shrink: 0;
+
+            color: #059669;
+        }
+
+
+        /* =========================================================
+           ATTENDANCE
+        ========================================================= */
 
         .action-section {
             padding: 20px;
         }
 
+
         .action-description {
-            font-size: 12px;
             color: #6b7280;
+
+            font-size: 12px;
+
+            line-height: 1.5;
         }
+
 
         .action-buttons {
             display: grid;
+
             grid-template-columns: 1fr 1fr;
+
             gap: 9px;
+
             margin-top: 13px;
         }
 
+
         .btn-attendance {
+            width: 100%;
+
             height: 46px;
+
             border-radius: 9px;
-            font-weight: 600;
-            font-size: 14px;
         }
+
 
         .btn-checkin {
             background: #111827;
-            color: white;
-            border: none;
+
+            border-color: #111827;
+
+            color: #ffffff;
         }
 
-        .btn-checkin:hover {
+
+        .btn-checkin:hover:not(:disabled) {
             background: #000000;
-            color: white;
+
+            border-color: #000000;
+
+            color: #ffffff;
         }
+
 
         .btn-checkout {
-            background: white;
+            background: #ffffff;
+
+            border-color: #d1d5db;
+
             color: #111827;
-            border: 1px solid #d1d5db;
         }
 
-        .btn-checkout:hover {
+
+        .btn-checkout:hover:not(:disabled) {
             background: #f9fafb;
+
+            border-color: #9ca3af;
         }
 
-        .btn-attendance:disabled {
-            opacity: 0.55;
-            cursor: not-allowed;
-        }
 
         /* =========================================================
-           STATUS
-           ========================================================= */
+           STATUS CARD
+        ========================================================= */
 
         .status-card {
-            margin-top: 14px;
-            padding: 14px;
-            border-radius: 12px;
             display: none;
+
+            margin-top: 14px;
+
+            padding: 14px;
+
+            border-radius: 12px;
         }
+
 
         .status-success {
             background: #ecfdf5;
+
             border: 1px solid #a7f3d0;
+
             color: #065f46;
         }
 
+
         .status-error {
             background: #fef2f2;
+
             border: 1px solid #fecaca;
+
             color: #991b1b;
         }
 
+
+        .status-content {
+            display: flex;
+
+            align-items: flex-start;
+        }
+
+
         .status-icon {
             width: 36px;
+
             height: 36px;
+
             min-width: 36px;
-            border-radius: 50%;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
+
             margin-right: 10px;
+
+            border-radius: 50%;
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
         }
+
+
+        .status-icon .icon {
+            width: 18px;
+
+            height: 18px;
+        }
+
 
         .success-icon {
             background: #d1fae5;
+
             color: #047857;
         }
 
+
         .error-icon {
             background: #fee2e2;
+
             color: #dc2626;
         }
 
+
         .status-title {
-            font-weight: 700;
-            font-size: 14px;
             margin-bottom: 2px;
+
+            font-size: 14px;
+
+            line-height: 1.4;
+
+            font-weight: 700;
         }
+
 
         .status-message {
             margin: 0;
+
             font-size: 12px;
+
+            line-height: 1.5;
         }
+
 
         /* =========================================================
-           INFO
-           ========================================================= */
+           INFO BOX
+        ========================================================= */
 
         .info-box {
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 9px 12px;
             margin-top: 12px;
+
+            padding: 9px 12px;
+
+            background: #f9fafb;
+
+            border: 1px solid #e5e7eb;
+
+            border-radius: 10px;
         }
+
 
         .info-row {
             display: flex;
+
+            align-items: center;
+
             justify-content: space-between;
+
             gap: 10px;
+
             padding: 5px 0;
-            font-size: 12px;
+
             border-bottom: 1px solid #eef0f3;
+
+            font-size: 12px;
         }
+
 
         .info-row:last-child {
             border-bottom: none;
         }
 
+
         .info-label {
             color: #6b7280;
         }
 
+
         .info-value {
-            font-weight: 600;
             text-align: right;
+
+            font-weight: 600;
+
+            color: #1f2937;
+
+            word-break: break-word;
         }
 
-        /* =========================================================
-           SECURITY
-           ========================================================= */
 
-        .security-note {
-            margin-top: 13px;
-            font-size: 11px;
-            color: #6b7280;
+        /* =========================================================
+           CAMERA
+        ========================================================= */
+
+        .camera-area {
+            padding: 20px;
+        }
+
+
+        .camera-box {
+            width: 100%;
+
+            aspect-ratio: 4 / 3;
+
+            min-height: 300px;
+
+            position: relative;
+
+            overflow: hidden;
+
             display: flex;
-            gap: 7px;
-            align-items: flex-start;
+
+            align-items: center;
+
+            justify-content: center;
+
+            background: #111827;
+
+            border-radius: 13px;
+        }
+
+
+        #camera {
+            width: 100%;
+
+            height: 100%;
+
+            display: none;
+
+            object-fit: cover;
+
+            transform: scaleX(-1);
+        }
+
+
+        #preview {
+            width: 100%;
+
+            height: 100%;
+
+            display: none;
+
+            object-fit: cover;
+        }
+
+
+        .camera-placeholder {
+            padding: 15px;
+
+            color: #9ca3af;
+
+            text-align: center;
+        }
+
+
+        .camera-placeholder .icon {
+            display: block;
+
+            width: 42px;
+
+            height: 42px;
+
+            margin: 0 auto 8px;
+        }
+
+
+        .camera-placeholder div {
+            font-size: 14px;
+
             line-height: 1.4;
         }
 
-        .security-note i {
-            color: #059669;
-            font-size: 14px;
-            flex-shrink: 0;
+
+        .camera-placeholder small {
+            display: block;
+
+            margin-top: 3px;
+
+            font-size: 11px;
+
+            line-height: 1.4;
         }
+
+
+        /* =========================================================
+           FACE GUIDE
+        ========================================================= */
+
+        .face-guide {
+            position: absolute;
+
+            width: 48%;
+
+            height: 65%;
+
+            border: 2px dashed rgba(255, 255, 255, 0.75);
+
+            border-radius: 50%;
+
+            pointer-events: none;
+        }
+
+
+        .face-guide-text {
+            position: absolute;
+
+            bottom: 12px;
+
+            left: 0;
+
+            right: 0;
+
+            padding: 6px;
+
+            background: rgba(0, 0, 0, 0.35);
+
+            color: #ffffff;
+
+            text-align: center;
+
+            font-size: 11px;
+
+            line-height: 1.4;
+        }
+
+
+        /* =========================================================
+           CAMERA STATUS
+        ========================================================= */
+
+        .camera-status {
+            margin-top: 9px;
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: #6b7280;
+
+            font-size: 11px;
+
+            line-height: 1.4;
+        }
+
+
+        .status-dot {
+            width: 8px;
+
+            height: 8px;
+
+            flex-shrink: 0;
+
+            border-radius: 50%;
+
+            background: #9ca3af;
+        }
+
+
+        .status-dot.active {
+            background: #10b981;
+
+            box-shadow:
+                0 0 0 3px rgba(16, 185, 129, 0.12);
+        }
+
+
+        /* =========================================================
+           CAMERA CONTROLS
+        ========================================================= */
+
+        .camera-controls {
+            display: grid;
+
+            grid-template-columns: 1fr 1fr;
+
+            gap: 8px;
+
+            margin-top: 11px;
+        }
+
+
+        .camera-controls .btn {
+            width: 100%;
+
+            height: 44px;
+
+            border-radius: 9px;
+        }
+
+
+        .retake-btn {
+            width: 100%;
+
+            height: 44px;
+
+            margin-top: 8px;
+
+            border-radius: 9px;
+        }
+
 
         /* =========================================================
            SPINNER
-           ========================================================= */
+        ========================================================= */
 
-        .spinner-border {
+        .spinner {
             width: 17px;
+
             height: 17px;
-            border-width: 2px;
+
+            border: 2px solid rgba(255, 255, 255, 0.35);
+
+            border-top-color: #ffffff;
+
+            border-radius: 50%;
+
+            animation: spin 0.7s linear infinite;
         }
+
+
+        @keyframes spin {
+
+            from {
+                transform: rotate(0deg);
+            }
+
+            to {
+                transform: rotate(360deg);
+            }
+
+        }
+
 
         /* =========================================================
            DESKTOP
-           ========================================================= */
+        ========================================================= */
 
         @media (min-width: 992px) {
 
@@ -450,15 +1030,35 @@
                 padding-top: 30px;
             }
 
+
             .camera-box {
                 min-height: 430px;
             }
 
         }
 
+
+        /* =========================================================
+           TABLET / MOBILE
+        ========================================================= */
+
+        @media (max-width: 991px) {
+
+            .main-grid {
+                grid-template-columns: 1fr;
+            }
+
+
+            .camera-box {
+                min-height: 0;
+            }
+
+        }
+
+
         /* =========================================================
            MOBILE
-           ========================================================= */
+        ========================================================= */
 
         @media (max-width: 767px) {
 
@@ -466,46 +1066,86 @@
                 min-height: 58px;
             }
 
+
+            .navbar-container {
+                min-height: 58px;
+
+                padding-left: 10px;
+
+                padding-right: 10px;
+            }
+
+
             .brand {
                 font-size: 17px;
             }
 
+
             .brand-icon {
                 width: 34px;
+
                 height: 34px;
-                border-radius: 9px;
+
                 margin-right: 8px;
+
+                border-radius: 9px;
             }
+
+
+            .brand-icon .icon {
+                width: 19px;
+
+                height: 19px;
+            }
+
 
             .machine-badge {
                 padding: 5px 9px;
+
                 font-size: 10px;
             }
 
-            .page-wrapper {
-                padding: 15px 10px 25px;
+
+            .container {
+                padding-left: 10px;
+
+                padding-right: 10px;
             }
+
+
+            .page-wrapper {
+                padding-top: 15px;
+
+                padding-bottom: 25px;
+            }
+
 
             .page-title {
                 font-size: 22px;
             }
 
+
             .page-subtitle {
-                font-size: 12px;
                 margin-bottom: 14px;
+
+                font-size: 12px;
             }
+
 
             .attendance-card {
                 border-radius: 13px;
             }
 
+
             .card-header-custom {
                 padding: 13px 15px;
             }
 
+
             .card-title {
                 font-size: 14px;
             }
+
 
             .user-section,
             .camera-area,
@@ -513,79 +1153,102 @@
                 padding: 14px;
             }
 
+
             .user-id-input {
                 height: 44px;
+
                 font-size: 15px;
             }
+
 
             .user-help {
                 font-size: 10px;
             }
 
+
             .camera-box {
                 aspect-ratio: 4 / 3;
             }
+
 
             .camera-controls {
                 grid-template-columns: 1fr 1fr;
             }
 
-            .camera-controls button {
+
+            .camera-controls .btn {
                 height: 42px;
+
                 font-size: 12px;
             }
+
 
             .action-buttons {
                 grid-template-columns: 1fr 1fr;
             }
 
+
             .btn-attendance {
                 height: 43px;
+
                 font-size: 12px;
             }
 
+
             .security-note {
-                font-size: 10px;
                 margin-top: 10px;
+
+                font-size: 10px;
             }
+
 
             .status-card {
                 padding: 12px;
             }
 
+
             .status-icon {
                 width: 32px;
+
                 height: 32px;
+
                 min-width: 32px;
-                font-size: 16px;
+
                 margin-right: 8px;
             }
+
 
             .status-title {
                 font-size: 13px;
             }
 
+
             .status-message {
                 font-size: 11px;
             }
 
+
             .info-row {
-                font-size: 11px;
                 padding: 4px 0;
+
+                font-size: 11px;
             }
 
         }
 
+
         /* =========================================================
            VERY SMALL MOBILE
-           ========================================================= */
+        ========================================================= */
 
         @media (max-width: 380px) {
 
-            .page-wrapper {
+            .container {
                 padding-left: 7px;
+
                 padding-right: 7px;
             }
+
 
             .camera-area,
             .user-section,
@@ -593,16 +1256,26 @@
                 padding: 11px;
             }
 
+
             .card-header-custom {
                 padding: 11px 12px;
             }
 
-            .camera-controls button {
+
+            .camera-controls .btn {
                 font-size: 11px;
             }
 
+
             .btn-attendance {
                 font-size: 11px;
+            }
+
+
+            .machine-badge {
+                font-size: 9px;
+
+                padding: 4px 7px;
             }
 
         }
@@ -613,22 +1286,36 @@
 
 <body>
 
-
     <!-- =========================================================
          NAVBAR
-         ========================================================= -->
+    ========================================================= -->
 
     <nav class="navbar">
 
-        <div class="container d-flex justify-content-between align-items-center">
+        <div class="navbar-container">
+
 
             <a href="#" class="brand">
 
                 <span class="brand-icon">
 
-                    <i class="bi bi-person-bounding-box"></i>
+                    <!-- Person Bounding Box -->
+
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                        <rect x="3" y="3" width="18" height="18" rx="3">
+                        </rect>
+
+                        <circle cx="12" cy="9" r="2.5">
+                        </circle>
+
+                        <path d="M7.5 18c.7-2.4 2.1-3.6 4.5-3.6s3.8 1.2 4.5 3.6">
+                        </path>
+
+                    </svg>
 
                 </span>
+
 
                 College Attendance
 
@@ -637,7 +1324,21 @@
 
             <span class="machine-badge">
 
-                <i class="bi bi-pc-display me-1"></i>
+                <!-- Monitor -->
+
+                <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+
+                    <rect x="3" y="4" width="18" height="13" rx="2">
+                    </rect>
+
+                    <path d="M8 21h8">
+                    </path>
+
+                    <path d="M12 17v4">
+                    </path>
+
+                </svg>
+
 
                 MACHINE
 
@@ -650,7 +1351,7 @@
 
     <!-- =========================================================
          PAGE
-         ========================================================= -->
+    ========================================================= -->
 
     <div class="container page-wrapper">
 
@@ -665,17 +1366,19 @@
         </p>
 
 
-        <div class="row g-3">
+        <div class="main-grid">
 
 
-            <!-- =====================================================
-                 LEFT
-                 ===================================================== -->
+            <!-- =================================================
+                 LEFT COLUMN
+            ================================================= -->
 
-            <div class="col-lg-5">
+            <div>
 
 
-                <!-- USER -->
+                <!-- =================================================
+                     USER IDENTIFICATION
+                ================================================= -->
 
                 <div class="attendance-card">
 
@@ -684,7 +1387,27 @@
 
                         <h5 class="card-title">
 
-                            <i class="bi bi-person-vcard me-2"></i>
+                            <!-- Person Card -->
+
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                                <rect x="3" y="4" width="18" height="16" rx="2">
+                                </rect>
+
+                                <circle cx="9" cy="10" r="2">
+                                </circle>
+
+                                <path d="M5.5 16c.6-2 1.8-3 3.5-3s2.9 1 3.5 3">
+                                </path>
+
+                                <path d="M14 9h4">
+                                </path>
+
+                                <path d="M14 13h4">
+                                </path>
+
+                            </svg>
+
 
                             User Identification
 
@@ -696,15 +1419,15 @@
                     <div class="user-section">
 
 
-                        <label for="userIdInput" class="form-label fw-semibold mb-1 ">
+                        <label for="userIdInput" class="form-label">
 
                             User ID
 
                         </label>
 
 
-                        <input type="text" id="userIdInput" class="form-control user-id-input"
-                            placeholder="Enter User ID" inputmode="numeric" pattern="[0-9]*" autocomplete="off">
+                        <input type="text" id="userIdInput" class="user-id-input" placeholder="Enter User ID"
+                            inputmode="numeric" pattern="[0-9]*" autocomplete="off">
 
 
                         <div class="user-help">
@@ -714,14 +1437,27 @@
                         </div>
 
 
-                        <button type="button" class="btn btn-dark w-100 mt-2" id="setUserBtn">
+                        <button type="button" class="btn btn-dark" id="setUserBtn">
 
-                            <i class="bi bi-check-circle me-1"></i>
+                            <!-- Check -->
+
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+
+                                <circle cx="12" cy="12" r="9">
+                                </circle>
+
+                                <path d="m8 12 2.5 2.5L16 9">
+                                </path>
+
+                            </svg>
+
 
                             Continue
 
                         </button>
 
+
+                        <!-- SELECTED USER -->
 
                         <div id="selectedUser" class="selected-user">
 
@@ -729,11 +1465,13 @@
                                 Selected User
                             </div>
 
+
                             <div id="selectedUserName" class="selected-user-name">
 
                                 User
 
                             </div>
+
 
                             <div id="selectedUserId" class="selected-user-id">
 
@@ -744,9 +1482,22 @@
                         </div>
 
 
+                        <!-- SECURITY -->
+
                         <div class="security-note">
 
-                            <i class="bi bi-shield-check"></i>
+                            <!-- Shield Check -->
+
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                                <path d="M12 3l7 3v5c0 4.5-2.7 8-7 10-4.3-2-7-5.5-7-10V6l7-3z">
+                                </path>
+
+                                <path d="m8.5 12 2.2 2.2 4.8-5">
+                                </path>
+
+                            </svg>
+
 
                             <span>
                                 Face is verified against the registered
@@ -760,16 +1511,38 @@
                 </div>
 
 
-                <!-- ATTENDANCE -->
+                <!-- =================================================
+                     ATTENDANCE
+                ================================================= -->
 
-                <div class="attendance-card mt-3">
+                <div class="attendance-card" style="margin-top: 16px;">
 
 
                     <div class="card-header-custom">
 
                         <h5 class="card-title">
 
-                            <i class="bi bi-calendar-check me-2"></i>
+                            <!-- Calendar Check -->
+
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                                <rect x="3" y="4" width="18" height="17" rx="2">
+                                </rect>
+
+                                <path d="M16 2v4">
+                                </path>
+
+                                <path d="M8 2v4">
+                                </path>
+
+                                <path d="M3 10h18">
+                                </path>
+
+                                <path d="m8 15 2 2 4-4">
+                                </path>
+
+                            </svg>
+
 
                             Mark Attendance
 
@@ -792,37 +1565,78 @@
                         <div class="action-buttons">
 
 
+                            <!-- CHECK IN -->
+
                             <button type="button" class="btn btn-attendance btn-checkin" id="checkInBtn" disabled>
 
-                                <i class="bi bi-box-arrow-in-right me-1"></i>
+                                <!-- Login Arrow -->
+
+                                <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <path d="M10 17l5-5-5-5">
+                                    </path>
+
+                                    <path d="M15 12H3">
+                                    </path>
+
+                                    <path d="M21 3v18">
+                                    </path>
+
+                                </svg>
+
 
                                 Check In
 
                             </button>
 
 
+                            <!-- CHECK OUT -->
+
                             <button type="button" class="btn btn-attendance btn-checkout" id="checkOutBtn" disabled>
 
-                                <i class="bi bi-box-arrow-right me-1"></i>
+                                <!-- Logout Arrow -->
+
+                                <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <path d="M14 17l5-5-5-5">
+                                    </path>
+
+                                    <path d="M19 12H7">
+                                    </path>
+
+                                    <path d="M3 3v18">
+                                    </path>
+
+                                </svg>
+
 
                                 Check Out
 
                             </button>
 
-
                         </div>
 
 
-                        <!-- SUCCESS -->
+                        <!-- =================================================
+                             SUCCESS
+                        ================================================= -->
 
                         <div id="successCard" class="status-card status-success">
 
 
-                            <div class="d-flex align-items-start">
+                            <div class="status-content">
+
 
                                 <span class="status-icon success-icon">
 
-                                    <i class="bi bi-check-lg"></i>
+                                    <!-- Check -->
+
+                                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                                        <path d="m5 12 4 4L19 6">
+                                        </path>
+
+                                    </svg>
 
                                 </span>
 
@@ -851,16 +1665,29 @@
                         </div>
 
 
-                        <!-- ERROR -->
+                        <!-- =================================================
+                             ERROR
+                        ================================================= -->
 
                         <div id="errorCard" class="status-card status-error">
 
 
-                            <div class="d-flex align-items-start">
+                            <div class="status-content">
+
 
                                 <span class="status-icon error-icon">
 
-                                    <i class="bi bi-x-lg"></i>
+                                    <!-- X -->
+
+                                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                                        <path d="M6 6l12 12">
+                                        </path>
+
+                                        <path d="M18 6L6 18">
+                                        </path>
+
+                                    </svg>
 
                                 </span>
 
@@ -884,7 +1711,6 @@
 
                         </div>
 
-
                     </div>
 
                 </div>
@@ -892,11 +1718,11 @@
             </div>
 
 
-            <!-- =====================================================
-                 CAMERA
-                 ===================================================== -->
+            <!-- =================================================
+                 RIGHT COLUMN - CAMERA
+            ================================================= -->
 
-            <div class="col-lg-7">
+            <div>
 
 
                 <div class="attendance-card">
@@ -906,7 +1732,18 @@
 
                         <h5 class="card-title">
 
-                            <i class="bi bi-camera me-2"></i>
+                            <!-- Camera -->
+
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                                <path d="M4 7h4l2-2h4l2 2h4v12H4z">
+                                </path>
+
+                                <circle cx="12" cy="13" r="4">
+                                </circle>
+
+                            </svg>
+
 
                             Live Face Verification
 
@@ -918,6 +1755,8 @@
                     <div class="camera-area">
 
 
+                        <!-- CAMERA BOX -->
+
                         <div class="camera-box">
 
 
@@ -928,24 +1767,38 @@
                             <img id="preview" alt="Captured face">
 
 
-                            <div id="faceGuide" class="face-guide" style="display:none;">
+                            <div id="faceGuide" class="face-guide" style="display: none;">
                             </div>
 
 
-                            <div id="faceGuideText" class="face-guide-text" style="display:none;">
+                            <div id="faceGuideText" class="face-guide-text" style="display: none;">
 
                                 Keep your face inside the frame
 
                             </div>
 
 
+                            <!-- CAMERA PLACEHOLDER -->
+
                             <div id="cameraPlaceholder" class="camera-placeholder">
 
-                                <i class="bi bi-camera-video"></i>
+                                <!-- Camera Video -->
+
+                                <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <path d="M15 10l4-2v8l-4-2">
+                                    </path>
+
+                                    <rect x="3" y="6" width="12" height="12" rx="2">
+                                    </rect>
+
+                                </svg>
+
 
                                 <div>
                                     Camera is not started
                                 </div>
+
 
                                 <small>
                                     Select a user and start camera
@@ -953,14 +1806,16 @@
 
                             </div>
 
-
                         </div>
 
+
+                        <!-- CAMERA STATUS -->
 
                         <div class="camera-status">
 
                             <span id="statusDot" class="status-dot">
                             </span>
+
 
                             <span id="cameraStatusText">
                                 Camera inactive
@@ -969,43 +1824,102 @@
                         </div>
 
 
+                        <!-- CAMERA CONTROLS -->
+
                         <div class="camera-controls">
 
 
+                            <!-- START CAMERA -->
+
                             <button type="button" class="btn btn-dark" id="startCameraBtn" disabled>
 
-                                <i class="bi bi-camera-video me-1"></i>
+                                <!-- Camera Video -->
+
+                                <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <path d="M15 10l4-2v8l-4-2">
+                                    </path>
+
+                                    <rect x="3" y="6" width="12" height="12" rx="2">
+                                    </rect>
+
+                                </svg>
+
 
                                 Start Camera
 
                             </button>
 
 
+                            <!-- CAPTURE -->
+
                             <button type="button" class="btn btn-outline-dark" id="captureBtn" disabled>
 
-                                <i class="bi bi-camera me-1"></i>
+                                <!-- Camera -->
+
+                                <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+
+                                    <path d="M4 7h4l2-2h4l2 2h4v12H4z">
+                                    </path>
+
+                                    <circle cx="12" cy="13" r="4">
+                                    </circle>
+
+                                </svg>
+
 
                                 Capture
 
                             </button>
 
-
                         </div>
 
 
-                        <button type="button" class="btn btn-outline-secondary w-100 mt-2" id="retakeBtn"
-                            style="display:none;">
+                        <!-- RETAKE -->
 
-                            <i class="bi bi-arrow-counterclockwise me-1"></i>
+                        <button type="button" class="btn btn-outline-secondary retake-btn" id="retakeBtn"
+                            style="display: none;">
+
+                            <!-- Refresh -->
+
+                            <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+
+                                <path d="M20 11a8 8 0 0 0-14.9-4">
+                                </path>
+
+                                <path d="M4 4v5h5">
+                                </path>
+
+                                <path d="M4 13a8 8 0 0 0 14.9 4">
+                                </path>
+
+                                <path d="M20 20v-5h-5">
+                                </path>
+
+                            </svg>
+
 
                             Retake Photo
 
                         </button>
 
 
+                        <!-- SECURITY -->
+
                         <div class="security-note">
 
-                            <i class="bi bi-shield-check"></i>
+                            <!-- Shield Check -->
+
+                            <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+
+                                <path d="M12 3l7 3v5c0 4.5-2.7 8-7 10-4.3-2-7-5.5-7-10V6l7-3z">
+                                </path>
+
+                                <path d="m8.5 12 2.2 2.2 4.8-5">
+                                </path>
+
+                            </svg>
+
 
                             <span>
                                 Face detection, liveness and registered
@@ -1015,13 +1929,11 @@
 
                         </div>
 
-
                     </div>
 
                 </div>
 
             </div>
-
 
         </div>
 
@@ -1030,28 +1942,29 @@
 
     <!-- =========================================================
          AUTH
-         ========================================================= -->
+    ========================================================= -->
 
     <script src="js/auth.js"></script>
 
 
     <script>
 
-
         /* =========================================================
            AUTHENTICATION
-           ========================================================= */
+        ========================================================= */
 
         if (!requireAuth()) {
 
-            throw new Error("Authentication required");
+            throw new Error(
+                "Authentication required"
+            );
 
         }
 
 
         /* =========================================================
            CONFIGURATION
-           ========================================================= */
+        ========================================================= */
 
         const API_BASE_URL =
             "http://localhost:8080";
@@ -1059,7 +1972,7 @@
 
         /* =========================================================
            STATE
-           ========================================================= */
+        ========================================================= */
 
         let selectedUserId = null;
 
@@ -1070,70 +1983,123 @@
 
         /* =========================================================
            DOM
-           ========================================================= */
+        ========================================================= */
 
         const userIdInput =
-            document.getElementById("userIdInput");
+            document.getElementById(
+                "userIdInput"
+            );
+
 
         const setUserBtn =
-            document.getElementById("setUserBtn");
+            document.getElementById(
+                "setUserBtn"
+            );
+
 
         const selectedUser =
-            document.getElementById("selectedUser");
+            document.getElementById(
+                "selectedUser"
+            );
+
 
         const selectedUserName =
-            document.getElementById("selectedUserName");
+            document.getElementById(
+                "selectedUserName"
+            );
+
 
         const selectedUserIdElement =
-            document.getElementById("selectedUserId");
+            document.getElementById(
+                "selectedUserId"
+            );
+
 
         const camera =
-            document.getElementById("camera");
+            document.getElementById(
+                "camera"
+            );
+
 
         const preview =
-            document.getElementById("preview");
+            document.getElementById(
+                "preview"
+            );
+
 
         const cameraPlaceholder =
-            document.getElementById("cameraPlaceholder");
+            document.getElementById(
+                "cameraPlaceholder"
+            );
+
 
         const startCameraBtn =
-            document.getElementById("startCameraBtn");
+            document.getElementById(
+                "startCameraBtn"
+            );
+
 
         const captureBtn =
-            document.getElementById("captureBtn");
+            document.getElementById(
+                "captureBtn"
+            );
+
 
         const retakeBtn =
-            document.getElementById("retakeBtn");
+            document.getElementById(
+                "retakeBtn"
+            );
+
 
         const checkInBtn =
-            document.getElementById("checkInBtn");
+            document.getElementById(
+                "checkInBtn"
+            );
+
 
         const checkOutBtn =
-            document.getElementById("checkOutBtn");
+            document.getElementById(
+                "checkOutBtn"
+            );
+
 
         const faceGuide =
-            document.getElementById("faceGuide");
+            document.getElementById(
+                "faceGuide"
+            );
+
 
         const faceGuideText =
-            document.getElementById("faceGuideText");
+            document.getElementById(
+                "faceGuideText"
+            );
+
 
         const statusDot =
-            document.getElementById("statusDot");
+            document.getElementById(
+                "statusDot"
+            );
+
 
         const cameraStatusText =
-            document.getElementById("cameraStatusText");
+            document.getElementById(
+                "cameraStatusText"
+            );
 
 
         /* =========================================================
            USER ID - ONLY NUMBERS
-           ========================================================= */
+        ========================================================= */
 
         userIdInput.addEventListener(
             "input",
             function () {
 
                 this.value =
-                    this.value.replace(/\D/g, "");
+                    this.value.replace(
+                        /\D/g,
+                        ""
+                    );
 
             }
         );
@@ -1141,7 +2107,7 @@
 
         /* =========================================================
            SET USER
-           ========================================================= */
+        ========================================================= */
 
         setUserBtn.addEventListener(
             "click",
@@ -1153,7 +2119,11 @@
             "keydown",
             function (event) {
 
-                if (event.key === "Enter") {
+                if (
+                    event.key === "Enter"
+                ) {
+
+                    event.preventDefault();
 
                     setUser();
 
@@ -1209,27 +2179,36 @@
 
             preview.src = "";
 
-            preview.style.display = "none";
+            preview.style.display =
+                "none";
 
 
-            retakeBtn.style.display = "none";
+            retakeBtn.style.display =
+                "none";
 
 
-            camera.style.display = "none";
+            camera.style.display =
+                "none";
 
 
-            cameraPlaceholder.style.display = "flex";
+            cameraPlaceholder.style.display =
+                "flex";
 
 
-            faceGuide.style.display = "none";
-
-            faceGuideText.style.display = "none";
-
-
-            selectedUserId = id;
+            faceGuide.style.display =
+                "none";
 
 
-            selectedUser.style.display = "block";
+            faceGuideText.style.display =
+                "none";
+
+
+            selectedUserId =
+                id;
+
+
+            selectedUser.style.display =
+                "block";
 
 
             selectedUserName.innerText =
@@ -1240,13 +2219,20 @@
                 "User ID: " + id;
 
 
-            startCameraBtn.disabled = false;
+            startCameraBtn.disabled =
+                false;
 
-            captureBtn.disabled = true;
 
-            checkInBtn.disabled = true;
+            captureBtn.disabled =
+                true;
 
-            checkOutBtn.disabled = true;
+
+            checkInBtn.disabled =
+                true;
+
+
+            checkOutBtn.disabled =
+                true;
 
 
             cameraStatusText.innerText =
@@ -1257,7 +2243,7 @@
 
         /* =========================================================
            START CAMERA
-           ========================================================= */
+        ========================================================= */
 
         startCameraBtn.addEventListener(
             "click",
@@ -1329,29 +2315,71 @@
                 await camera.play();
 
 
-                camera.style.display = "block";
-
-                preview.style.display = "none";
-
-                cameraPlaceholder.style.display = "none";
-
-                faceGuide.style.display = "block";
-
-                faceGuideText.style.display = "block";
+                camera.style.display =
+                    "block";
 
 
-                captureBtn.disabled = false;
+                preview.style.display =
+                    "none";
 
 
-                statusDot.classList.add("active");
+                cameraPlaceholder.style.display =
+                    "none";
+
+
+                faceGuide.style.display =
+                    "block";
+
+
+                faceGuideText.style.display =
+                    "block";
+
+
+                captureBtn.disabled =
+                    false;
+
+
+                statusDot.classList.add(
+                    "active"
+                );
 
 
                 cameraStatusText.innerText =
                     "Camera active";
 
 
-                startCameraBtn.innerHTML =
-                    '<i class="bi bi-camera-video-off me-1"></i> Restart';
+                startCameraBtn.innerHTML = `
+
+                    <svg
+                        class="icon icon-sm"
+                        viewBox="0 0 24 24"
+                        aria-hidden="true">
+
+                        <path
+                            d="M6 6l12 12">
+                        </path>
+
+                        <path
+                            d="M18 6L6 18">
+                        </path>
+
+                        <path
+                            d="M15 10l4-2v8l-4-2">
+                        </path>
+
+                        <rect
+                            x="3"
+                            y="6"
+                            width="12"
+                            height="12"
+                            rx="2">
+                        </rect>
+
+                    </svg>
+
+                    Restart
+
+                `;
 
             }
 
@@ -1376,7 +2404,7 @@
 
         /* =========================================================
            CAMERA ERROR
-           ========================================================= */
+        ========================================================= */
 
         function getCameraErrorMessage(error) {
 
@@ -1388,7 +2416,8 @@
 
 
             if (
-                error.name === "NotAllowedError"
+                error.name ===
+                "NotAllowedError"
             ) {
 
                 return "Camera permission was denied. Please allow camera access.";
@@ -1397,7 +2426,8 @@
 
 
             if (
-                error.name === "NotFoundError"
+                error.name ===
+                "NotFoundError"
             ) {
 
                 return "No camera was found on this machine.";
@@ -1406,7 +2436,8 @@
 
 
             if (
-                error.name === "NotReadableError"
+                error.name ===
+                "NotReadableError"
             ) {
 
                 return "Camera is already being used by another application.";
@@ -1415,7 +2446,8 @@
 
 
             if (
-                error.name === "SecurityError"
+                error.name ===
+                "SecurityError"
             ) {
 
                 return "Camera access is blocked by browser security policy.";
@@ -1431,7 +2463,7 @@
 
         /* =========================================================
            CAPTURE FACE
-           ========================================================= */
+        ========================================================= */
 
         captureBtn.addEventListener(
             "click",
@@ -1481,7 +2513,9 @@
 
 
             const canvas =
-                document.createElement("canvas");
+                document.createElement(
+                    "canvas"
+                );
 
 
             canvas.width =
@@ -1493,8 +2527,15 @@
 
 
             const context =
-                canvas.getContext("2d");
+                canvas.getContext(
+                    "2d"
+                );
 
+
+            /*
+             * Mirror captured image
+             * because live camera is mirrored.
+             */
 
             context.translate(
                 canvas.width,
@@ -1540,7 +2581,8 @@
                             "machine-live-face.jpg",
 
                             {
-                                type: "image/jpeg"
+                                type:
+                                    "image/jpeg"
                             }
 
                         );
@@ -1576,7 +2618,7 @@
 
 
                     retakeBtn.style.display =
-                        "block";
+                        "flex";
 
 
                     checkInBtn.disabled =
@@ -1608,7 +2650,7 @@
 
         /* =========================================================
            RETAKE
-           ========================================================= */
+        ========================================================= */
 
         retakeBtn.addEventListener(
 
@@ -1621,15 +2663,20 @@
 
                 preview.src = "";
 
-                preview.style.display = "none";
+                preview.style.display =
+                    "none";
 
 
-                retakeBtn.style.display = "none";
+                retakeBtn.style.display =
+                    "none";
 
 
-                checkInBtn.disabled = true;
+                checkInBtn.disabled =
+                    true;
 
-                checkOutBtn.disabled = true;
+
+                checkOutBtn.disabled =
+                    true;
 
 
                 hideMessages();
@@ -1644,7 +2691,7 @@
 
         /* =========================================================
            CHECK IN
-           ========================================================= */
+        ========================================================= */
 
         checkInBtn.addEventListener(
 
@@ -1652,7 +2699,9 @@
 
             function () {
 
-                markAttendance("check-in");
+                markAttendance(
+                    "check-in"
+                );
 
             }
 
@@ -1661,7 +2710,7 @@
 
         /* =========================================================
            CHECK OUT
-           ========================================================= */
+        ========================================================= */
 
         checkOutBtn.addEventListener(
 
@@ -1669,7 +2718,9 @@
 
             function () {
 
-                markAttendance("check-out");
+                markAttendance(
+                    "check-out"
+                );
 
             }
 
@@ -1678,7 +2729,7 @@
 
         /* =========================================================
            MARK ATTENDANCE
-           ========================================================= */
+        ========================================================= */
 
         async function markAttendance(action) {
 
@@ -1717,17 +2768,28 @@
                 button.innerHTML;
 
 
-            checkInBtn.disabled = true;
+            checkInBtn.disabled =
+                true;
 
-            checkOutBtn.disabled = true;
+
+            checkOutBtn.disabled =
+                true;
 
 
             /*
-             * Only spinner.
+             * Only spinner while request
+             * is being processed.
              */
 
-            button.innerHTML =
-                '<span class="spinner-border" role="status" aria-hidden="true"></span>';
+            button.innerHTML = `
+
+                <span
+                    class="spinner"
+                    role="status"
+                    aria-hidden="true">
+                </span>
+
+            `;
 
 
             const formData =
@@ -1771,6 +2833,7 @@
 
                         {
                             method: "POST",
+
                             body: formData
                         }
 
@@ -1821,12 +2884,11 @@
 
                     }
 
-                }
-
-                else {
+                } else {
 
                     const text =
                         await response.text();
+
 
                     console.error(
                         "Non-JSON response:",
@@ -1842,9 +2904,9 @@
                 );
 
 
-                /* =================================================
+                /* =============================================
                    HTTP ERROR
-                   ================================================= */
+                ============================================= */
 
                 if (!response.ok) {
 
@@ -1858,9 +2920,9 @@
                 }
 
 
-                /* =================================================
+                /* =============================================
                    SUCCESS
-                   ================================================= */
+                ============================================= */
 
                 if (
                     data &&
@@ -1871,9 +2933,7 @@
 
                     clearCapture();
 
-                }
-
-                else {
+                } else {
 
                     showError(
                         getErrorTitle(data),
@@ -1904,11 +2964,10 @@
             finally {
 
                 /*
-                 * IMPORTANT:
-                 *
                  * Do NOT enable buttons here.
                  *
-                 * If verification fails, user must Retake.
+                 * If verification fails,
+                 * user must Retake.
                  */
 
                 button.innerHTML =
@@ -1921,7 +2980,7 @@
 
         /* =========================================================
            SUCCESS
-           ========================================================= */
+        ========================================================= */
 
         function showSuccess(data) {
 
@@ -1961,7 +3020,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                data.userId ?? selectedUserId
+                data.userId ??
+                selectedUserId
             )}
                     </span>
 
@@ -1976,7 +3036,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                data.username || "-"
+                data.username ||
+                "-"
             )}
                     </span>
 
@@ -1991,7 +3052,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                data.action || "-"
+                data.action ||
+                "-"
             )}
                     </span>
 
@@ -2006,7 +3068,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                data.attendanceDate || "-"
+                data.attendanceDate ||
+                "-"
             )}
                     </span>
 
@@ -2021,7 +3084,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                data.checkInTime || "-"
+                data.checkInTime ||
+                "-"
             )}
                     </span>
 
@@ -2036,7 +3100,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                data.checkOutTime || "-"
+                data.checkOutTime ||
+                "-"
             )}
                     </span>
 
@@ -2066,7 +3131,8 @@
 
                     <span class="info-value">
                         ${escapeHtml(
-                data.source || "MACHINE"
+                data.source ||
+                "MACHINE"
             )}
                     </span>
 
@@ -2092,7 +3158,7 @@
 
         /* =========================================================
            ERROR
-           ========================================================= */
+        ========================================================= */
 
         function showError(
             title,
@@ -2139,7 +3205,7 @@
 
         /* =========================================================
            ERROR TITLE
-           ========================================================= */
+        ========================================================= */
 
         function getErrorTitle(data) {
 
@@ -2152,18 +3218,19 @@
 
             const action =
                 String(
-                    data.action || ""
+                    data.action ||
+                    ""
                 ).toUpperCase();
 
 
             const message =
                 String(
-                    data.message || ""
+                    data.message ||
+                    ""
                 ).toLowerCase();
 
 
             switch (action) {
-
 
                 case "SPOOF_DETECTED":
 
@@ -2202,7 +3269,9 @@
              */
 
             if (
-                message.includes("spoof")
+                message.includes(
+                    "spoof"
+                )
             ) {
 
                 return "Spoof Detected";
@@ -2211,9 +3280,15 @@
 
 
             if (
-                message.includes("unregistered") ||
-                message.includes("face mismatch") ||
-                message.includes("face verification")
+                message.includes(
+                    "unregistered"
+                ) ||
+                message.includes(
+                    "face mismatch"
+                ) ||
+                message.includes(
+                    "face verification"
+                )
             ) {
 
                 return "Unregistered";
@@ -2228,7 +3303,7 @@
 
         /* =========================================================
            ERROR MESSAGE
-           ========================================================= */
+        ========================================================= */
 
         function getErrorMessage(data) {
 
@@ -2249,7 +3324,7 @@
 
         /* =========================================================
            HIDE MESSAGES
-           ========================================================= */
+        ========================================================= */
 
         function hideMessages() {
 
@@ -2269,7 +3344,7 @@
 
         /* =========================================================
            CONFIDENCE
-           ========================================================= */
+        ========================================================= */
 
         function formatConfidence(value) {
 
@@ -2287,21 +3362,26 @@
                 Number(value);
 
 
-            if (Number.isNaN(number)) {
+            if (
+                Number.isNaN(number)
+            ) {
 
                 return "-";
 
             }
 
 
-            return number.toFixed(2) + "%";
+            return (
+                number.toFixed(2) +
+                "%"
+            );
 
         }
 
 
         /* =========================================================
            CLEAR CAPTURE AFTER SUCCESS
-           ========================================================= */
+        ========================================================= */
 
         function clearCapture() {
 
@@ -2310,27 +3390,36 @@
 
             preview.src = "";
 
-            preview.style.display = "none";
+            preview.style.display =
+                "none";
 
 
-            retakeBtn.style.display = "none";
+            retakeBtn.style.display =
+                "none";
 
 
-            checkInBtn.disabled = true;
+            checkInBtn.disabled =
+                true;
 
-            checkOutBtn.disabled = true;
+
+            checkOutBtn.disabled =
+                true;
 
 
-            camera.style.display = "none";
+            camera.style.display =
+                "none";
 
 
             cameraPlaceholder.style.display =
                 "flex";
 
 
-            faceGuide.style.display = "none";
+            faceGuide.style.display =
+                "none";
 
-            faceGuideText.style.display = "none";
+
+            faceGuideText.style.display =
+                "none";
 
 
             cameraStatusText.innerText =
@@ -2341,7 +3430,7 @@
 
         /* =========================================================
            ESCAPE HTML
-           ========================================================= */
+        ========================================================= */
 
         function escapeHtml(value) {
 
@@ -2377,7 +3466,7 @@
 
         /* =========================================================
            STOP CAMERA
-           ========================================================= */
+        ========================================================= */
 
         function stopCamera() {
 
@@ -2411,7 +3500,7 @@
 
         /* =========================================================
            PAGE CLOSE
-           ========================================================= */
+        ========================================================= */
 
         window.addEventListener(
 
@@ -2428,21 +3517,23 @@
 
         /* =========================================================
            INITIAL STATE
-           ========================================================= */
+        ========================================================= */
 
-        checkInBtn.disabled = true;
-
-        checkOutBtn.disabled = true;
-
-        captureBtn.disabled = true;
-
-        startCameraBtn.disabled = true;
+        checkInBtn.disabled =
+            true;
 
 
-    </script>
+        checkOutBtn.disabled =
+            true;
 
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
+        captureBtn.disabled =
+            true;
+
+
+        startCameraBtn.disabled =
+            true;
+
     </script>
 
 

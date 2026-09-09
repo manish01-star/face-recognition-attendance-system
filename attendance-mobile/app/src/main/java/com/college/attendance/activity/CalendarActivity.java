@@ -11,7 +11,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.college.attendance.R;
 import com.college.attendance.api.ApiClient;
@@ -35,7 +34,16 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CalendarActivity extends AppCompatActivity {
+public class CalendarActivity extends BaseActivity {
+
+    // =========================================================
+    // CURRENT TAB
+    // =========================================================
+
+    @Override
+    protected Tab getCurrentTab() {
+        return Tab.ATTENDANCE;
+    }
 
     // =========================================================
     // VIEWS
@@ -135,8 +143,6 @@ public class CalendarActivity extends AppCompatActivity {
 
     /*
      * Minimum working hours required for PRESENT.
-     *
-     * This value will be replaced by the Attendance Policy API.
      *
      * Default = 6 hours.
      */
@@ -259,10 +265,16 @@ public class CalendarActivity extends AppCompatActivity {
 
     private void setupListeners() {
 
-        // Back button
+        // =====================================================
+        // BACK BUTTON
+        // =====================================================
+
         btnBack.setOnClickListener(v -> finish());
 
-        // Previous month
+        // =====================================================
+        // PREVIOUS MONTH
+        // =====================================================
+
         btnPreviousMonth.setOnClickListener(v -> {
 
             currentMonth.add(
@@ -276,11 +288,16 @@ public class CalendarActivity extends AppCompatActivity {
             );
 
             updateMonthTitle();
+
             renderCalendar();
+
             loadMonthlyData();
         });
 
-        // Next month
+        // =====================================================
+        // NEXT MONTH
+        // =====================================================
+
         btnNextMonth.setOnClickListener(v -> {
 
             currentMonth.add(
@@ -294,46 +311,24 @@ public class CalendarActivity extends AppCompatActivity {
             );
 
             updateMonthTitle();
+
             renderCalendar();
+
             loadMonthlyData();
         });
 
-
-        // =====================================================
-        // BOTTOM NAVIGATION
-        // =====================================================
-
-        // HOME
-        findViewById(R.id.navHome).setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    CalendarActivity.this,
-                    MainActivity.class
-            );
-
-            startActivity(intent);
-            finish();
-        });
-
-
-        // CALENDAR
-        findViewById(R.id.navCalendar).setOnClickListener(v -> {
-            // Already on CalendarActivity
-        });
-
-
-        // LEAVE
-        findViewById(R.id.navLeave).setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    CalendarActivity.this,
-                    LeaveActivity.class
-            );
-
-            startActivity(intent);
-            finish();
-        });
+        /*
+         * Bottom navigation intentionally removed.
+         *
+         * BaseActivity handles:
+         *
+         * navHome
+         * navAttendance
+         * navLeave
+         * navProfile
+         */
     }
+
     // =========================================================
     // LOAD ALL DATA
     // =========================================================
@@ -482,6 +477,7 @@ public class CalendarActivity extends AppCompatActivity {
                                 }
 
                                 holidayDates.clear();
+
                                 holidayNames.clear();
 
                                 if (!response.isSuccessful()
@@ -687,11 +683,10 @@ public class CalendarActivity extends AppCompatActivity {
                                 if (!response.isSuccessful()
                                         || response.body() == null) {
 
-                                    /*
-                                     * Safe defaults.
-                                     */
                                     saturdayOff = false;
+
                                     sundayOff = true;
+
                                     workingHoursThreshold = 6.0;
 
                                     policyLoaded = false;
@@ -716,18 +711,6 @@ public class CalendarActivity extends AppCompatActivity {
                                                 policy.getSundayOff()
                                         );
 
-                                /*
-                                 * IMPORTANT:
-                                 *
-                                 * Backend policy se working hours
-                                 * read kar rahe hain.
-                                 *
-                                 * Example:
-                                 *
-                                 * workingHours = 6.00
-                                 * workingHours = 7.50
-                                 * workingHours = 8.00
-                                 */
                                 if (policy.getWorkingHours() != null) {
 
                                     try {
@@ -736,9 +719,6 @@ public class CalendarActivity extends AppCompatActivity {
                                                 policy.getWorkingHours()
                                                         .doubleValue();
 
-                                        /*
-                                         * Invalid value protection.
-                                         */
                                         if (workingHoursThreshold <= 0) {
 
                                             workingHoursThreshold = 6.0;
@@ -767,7 +747,9 @@ public class CalendarActivity extends AppCompatActivity {
                                     @NonNull Throwable t) {
 
                                 saturdayOff = false;
+
                                 sundayOff = true;
+
                                 workingHoursThreshold = 6.0;
 
                                 policyLoaded = false;
@@ -1040,15 +1022,6 @@ public class CalendarActivity extends AppCompatActivity {
             return "NONE";
         }
 
-        /*
-         * IMPORTANT:
-         *
-         * Attendance status ko blindly trust nahi karna.
-         *
-         * Final status check-in / check-out ke basis par
-         * calculate hoga.
-         */
-
         String checkIn =
                 attendance.getCheckInTime();
 
@@ -1056,12 +1029,6 @@ public class CalendarActivity extends AppCompatActivity {
                 attendance.getCheckOutTime();
 
         /*
-         * -----------------------------------------------------
-         * CHECK-IN EXISTS + CHECK-OUT MISSING
-         * -----------------------------------------------------
-         *
-         * Requirement:
-         *
          * Check-in without checkout = ABSENT
          */
         if (hasTimeValue(checkIn)
@@ -1071,12 +1038,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         /*
-         * -----------------------------------------------------
-         * CHECK-IN MISSING
-         * -----------------------------------------------------
-         *
-         * Agar attendance record hai but check-in missing hai,
-         * ise valid Present/HD nahi maana jayega.
+         * Missing check-in = ABSENT
          */
         if (!hasTimeValue(checkIn)) {
 
@@ -1084,35 +1046,19 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         /*
-         * -----------------------------------------------------
-         * CHECK-IN + CHECK-OUT
-         * -----------------------------------------------------
+         * Check-in + checkout
          */
-
         long workedSeconds =
                 calculateWorkSeconds(
                         checkIn,
                         checkOut
                 );
 
-        /*
-         * Time calculate nahi hua.
-         *
-         * Safe behaviour:
-         * ABSENT.
-         */
         if (workedSeconds < 0) {
 
             return "ABSENT";
         }
 
-        /*
-         * Policy working hours ko seconds mein convert.
-         *
-         * Example:
-         *
-         * 6 hours = 21600 sec
-         */
         long requiredSeconds =
                 Math.round(
                         workingHoursThreshold
@@ -1121,9 +1067,7 @@ public class CalendarActivity extends AppCompatActivity {
                 );
 
         /*
-         * -----------------------------------------------------
-         * FULL WORKING HOURS
-         * -----------------------------------------------------
+         * Full working hours = PRESENT
          */
         if (workedSeconds >= requiredSeconds) {
 
@@ -1131,12 +1075,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         /*
-         * -----------------------------------------------------
-         * LESS THAN REQUIRED HOURS
-         * -----------------------------------------------------
-         *
-         * Check-in + checkout hai,
-         * lekin required hours complete nahi hue.
+         * Less than required hours = HALF DAY
          */
         return "HALF_DAY";
     }
@@ -1804,7 +1743,7 @@ public class CalendarActivity extends AppCompatActivity {
         }
 
         /*
-         * Remove timezone if present.
+         * Remove timezone.
          *
          * Example:
          * 15:49:39+05:30

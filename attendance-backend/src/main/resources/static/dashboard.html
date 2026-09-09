@@ -1,34 +1,36 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
 
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
     <title>Admin Dashboard | College Attendance</title>
 
-    <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- =====================================================
+         SIDEBAR CSS
+    ====================================================== -->
+
+    <link rel="stylesheet"
+          href="/css/sidebar.css">
+
 
     <style>
+
         * {
             box-sizing: border-box;
         }
 
-        :root {
-            --sidebar-width: 250px;
 
-            --primary: #111827;
-            --primary-light: #1f2937;
+        :root {
 
             --background: #f5f7fb;
-
             --border: #e5e7eb;
-
             --text: #111827;
             --muted: #6b7280;
 
@@ -36,15 +38,21 @@
             --danger: #dc2626;
             --warning: #d97706;
             --info: #2563eb;
+
         }
 
 
-        /* =====================================================
-           BODY
-        ===================================================== */
+        html,
+        body {
+
+            margin: 0;
+            padding: 0;
+            min-height: 100%;
+
+        }
+
 
         body {
-            margin: 0;
 
             background: var(--background);
 
@@ -57,301 +65,60 @@
                 BlinkMacSystemFont,
                 "Segoe UI",
                 sans-serif;
+
+        }
+
+
+        button,
+        a {
+
+            font-family: inherit;
+
         }
 
 
         /* =====================================================
-           SIDEBAR
-        ===================================================== */
+           ICONS
+        ====================================================== */
 
-        .sidebar {
-            position: fixed;
+        .icon {
 
-            top: 0;
-            left: 0;
-
-            width: var(--sidebar-width);
-            height: 100vh;
-
-            background: #111827;
-
-            color: white;
-
-            z-index: 1050;
-
-            overflow-y: auto;
-
-            transition: transform 0.3s ease;
-        }
-
-
-        .sidebar::-webkit-scrollbar {
-            width: 5px;
-        }
-
-        .sidebar::-webkit-scrollbar-thumb {
-            background: #374151;
-            border-radius: 10px;
-        }
-
-
-        /* BRAND */
-
-        .sidebar-brand {
-            height: 72px;
-
-            display: flex;
-
-            align-items: center;
-
-            padding: 0 22px;
-
-            border-bottom:
-                1px solid rgba(255, 255, 255, 0.08);
-
-            position: sticky;
-
-            top: 0;
-
-            background: #111827;
-
-            z-index: 2;
-        }
-
-
-        .brand-icon {
-            width: 38px;
-            height: 38px;
-
-            border-radius: 10px;
-
-            display: flex;
+            display: inline-flex;
 
             align-items: center;
             justify-content: center;
 
-            background: white;
-
-            color: #111827;
-
-            margin-right: 10px;
-
-            font-size: 19px;
-
-            flex-shrink: 0;
-        }
-
-
-        .brand-name {
-            font-size: 16px;
-
-            font-weight: 700;
-
-            margin: 0;
-
-            white-space: nowrap;
-        }
-
-
-        /* SECTION */
-
-        .sidebar-section {
-            padding: 20px 14px 8px;
-
-            color: #9ca3af;
-
-            font-size: 10px;
-
-            font-weight: 700;
-
-            text-transform: uppercase;
-
-            letter-spacing: 0.8px;
-        }
-
-
-        /* MENU */
-
-        .sidebar-menu {
-            list-style: none;
-
-            padding: 0 12px;
-
-            margin: 0;
-        }
-
-
-        .sidebar-menu li {
-            margin-bottom: 3px;
-        }
-
-
-        .sidebar-link {
-            display: flex;
-
-            align-items: center;
-
-            gap: 12px;
-
-            padding: 10px 13px;
-
-            border-radius: 9px;
-
-            color: #d1d5db;
-
-            text-decoration: none;
-
-            font-size: 13.5px;
-
-            transition:
-                background 0.2s ease,
-                color 0.2s ease;
-        }
-
-
-        .sidebar-link i {
             width: 20px;
+            height: 20px;
 
             font-size: 16px;
 
-            text-align: center;
+            line-height: 1;
 
             flex-shrink: 0;
-        }
 
-
-        .sidebar-link:hover {
-            background: #1f2937;
-
-            color: white;
-        }
-
-
-        .sidebar-link.active {
-            background: white;
-
-            color: #111827;
-
-            font-weight: 600;
-
-            box-shadow:
-                0 2px 8px rgba(0, 0, 0, 0.08);
-        }
-
-
-        /* SIDEBAR FOOTER */
-
-        .sidebar-footer {
-            position: sticky;
-
-            bottom: 0;
-
-            margin-top: 18px;
-
-            padding: 14px;
-
-            border-top:
-                1px solid rgba(255, 255, 255, 0.08);
-
-            background: #111827;
-        }
-
-
-        .admin-profile {
-            display: flex;
-
-            align-items: center;
-
-            gap: 10px;
-        }
-
-
-        .admin-avatar {
-            width: 38px;
-            height: 38px;
-
-            border-radius: 50%;
-
-            display: flex;
-
-            align-items: center;
-            justify-content: center;
-
-            background: #374151;
-
-            color: #e5e7eb;
-
-            font-size: 17px;
-
-            flex-shrink: 0;
-        }
-
-
-        .admin-info {
-            flex: 1;
-
-            min-width: 0;
-        }
-
-
-        .admin-name {
-            font-size: 13px;
-
-            font-weight: 600;
-
-            color: white;
-
-            white-space: nowrap;
-
-            overflow: hidden;
-
-            text-overflow: ellipsis;
-        }
-
-
-        .admin-role {
-            font-size: 11px;
-
-            color: #9ca3af;
-        }
-
-
-        .logout-btn {
-            border: 0;
-
-            background: transparent;
-
-            color: #9ca3af;
-
-            font-size: 17px;
-
-            padding: 5px;
-
-            transition: color 0.2s ease;
-        }
-
-
-        .logout-btn:hover {
-            color: #f87171;
         }
 
 
         /* =====================================================
-           MAIN
-        ===================================================== */
+           MAIN WRAPPER
+        ====================================================== */
 
         .main-wrapper {
-            margin-left: var(--sidebar-width);
+
+            margin-left: 250px;
 
             min-height: 100vh;
+
         }
 
 
         /* =====================================================
            TOP NAVBAR
-        ===================================================== */
+        ====================================================== */
 
         .top-navbar {
+
             height: 72px;
 
             background: white;
@@ -372,10 +139,23 @@
             top: 0;
 
             z-index: 1000;
+
+        }
+
+
+        .top-left {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
         }
 
 
         .mobile-menu-btn {
+
             display: none;
 
             border: 0;
@@ -384,40 +164,50 @@
 
             color: #111827;
 
-            font-size: 23px;
+            font-size: 24px;
 
             padding: 0;
+
+            cursor: pointer;
+
         }
 
 
         .top-title {
+
             margin: 0;
 
             font-size: 18px;
 
             font-weight: 700;
+
         }
 
 
         .top-subtitle {
+
             margin: 2px 0 0;
 
             color: var(--muted);
 
             font-size: 12px;
+
         }
 
 
         .top-right {
+
             display: flex;
 
             align-items: center;
 
             gap: 15px;
+
         }
 
 
         .date-display {
+
             font-size: 13px;
 
             color: var(--muted);
@@ -427,49 +217,199 @@
             align-items: center;
 
             gap: 7px;
+
         }
 
 
         /* =====================================================
            PAGE
-        ===================================================== */
+        ====================================================== */
 
         .page-content {
+
             padding: 30px;
+
         }
 
 
         .welcome-section {
+
             margin-bottom: 24px;
+
         }
 
 
         .welcome-title {
+
             font-size: 25px;
 
             font-weight: 700;
 
             margin: 0 0 5px;
+
         }
 
 
         .welcome-text {
+
             margin: 0;
 
             color: var(--muted);
 
             font-size: 14px;
+
+        }
+
+
+        /* =====================================================
+           GRID
+        ====================================================== */
+
+        .row {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            margin-left: -6px;
+
+            margin-right: -6px;
+
+        }
+
+
+        .row.g-3 {
+
+            row-gap: 12px;
+
+        }
+
+
+        .row.g-4 {
+
+            row-gap: 16px;
+
+        }
+
+
+        .row > [class*="col-"] {
+
+            padding-left: 6px;
+
+            padding-right: 6px;
+
+        }
+
+
+        .col-xl-3,
+        .col-xl-4,
+        .col-xl-5,
+        .col-xl-7,
+        .col-md-6,
+        .col-md-12 {
+
+            width: 100%;
+
+        }
+
+
+        @media (min-width: 768px) {
+
+            .col-md-6 {
+
+                width: 50%;
+
+            }
+
+
+            .col-md-12 {
+
+                width: 100%;
+
+            }
+
+        }
+
+
+        @media (min-width: 992px) {
+
+            .col-xl-3 {
+
+                width: 25%;
+
+            }
+
+
+            .col-xl-4 {
+
+                width: 33.333333%;
+
+            }
+
+
+            .col-xl-5 {
+
+                width: 41.666667%;
+
+            }
+
+
+            .col-xl-7 {
+
+                width: 58.333333%;
+
+            }
+
+        }
+
+
+        .mb-4 {
+
+            margin-bottom: 24px;
+
+        }
+
+
+        .mb-3 {
+
+            margin-bottom: 16px;
+
+        }
+
+
+        .me-1 {
+
+            margin-right: 4px;
+
+        }
+
+
+        .me-2 {
+
+            margin-right: 8px;
+
+        }
+
+
+        .py-4 {
+
+            padding-top: 24px;
+
+            padding-bottom: 24px;
+
         }
 
 
         /* =====================================================
            STAT CARDS
-        ===================================================== */
+        ====================================================== */
 
         .stat-card {
+
             background: white;
 
-            border: 1px solid var(--border);
+            border:
+                1px solid var(--border);
 
             border-radius: 15px;
 
@@ -483,27 +423,33 @@
             transition:
                 transform 0.2s ease,
                 box-shadow 0.2s ease;
+
         }
 
 
         .stat-card:hover {
+
             transform: translateY(-2px);
 
             box-shadow:
                 0 8px 25px rgba(0, 0, 0, 0.06);
+
         }
 
 
         .stat-top {
+
             display: flex;
 
             align-items: flex-start;
 
             justify-content: space-between;
+
         }
 
 
         .stat-label {
+
             font-size: 13px;
 
             color: var(--muted);
@@ -511,20 +457,25 @@
             font-weight: 500;
 
             margin-bottom: 8px;
+
         }
 
 
         .stat-value {
+
             font-size: 28px;
 
             font-weight: 750;
 
             line-height: 1;
+
         }
 
 
         .stat-icon {
+
             width: 45px;
+
             height: 45px;
 
             border-radius: 12px;
@@ -532,45 +483,63 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             font-size: 20px;
 
             flex-shrink: 0;
+
         }
 
 
         .icon-blue {
+
             background: #eff6ff;
+
             color: #2563eb;
+
         }
 
 
         .icon-purple {
+
             background: #f5f3ff;
+
             color: #7c3aed;
+
         }
 
 
         .icon-green {
+
             background: #ecfdf5;
+
             color: #059669;
+
         }
 
 
         .icon-orange {
+
             background: #fff7ed;
+
             color: #ea580c;
+
         }
 
 
         .icon-cyan {
+
             background: #ecfeff;
+
             color: #0891b2;
+
         }
 
 
         .stat-footer {
+
             margin-top: 15px;
 
             padding-top: 12px;
@@ -581,17 +550,20 @@
             font-size: 12px;
 
             color: var(--muted);
+
         }
 
 
         /* =====================================================
            DASHBOARD CARD
-        ===================================================== */
+        ====================================================== */
 
         .dashboard-card {
+
             background: white;
 
-            border: 1px solid var(--border);
+            border:
+                1px solid var(--border);
 
             border-radius: 15px;
 
@@ -599,10 +571,19 @@
                 0 4px 18px rgba(0, 0, 0, 0.03);
 
             overflow: hidden;
+
+        }
+
+
+        .dashboard-card.h-100 {
+
+            height: 100%;
+
         }
 
 
         .dashboard-card-header {
+
             padding: 17px 20px;
 
             border-bottom:
@@ -615,102 +596,189 @@
             justify-content: space-between;
 
             gap: 10px;
+
         }
 
 
         .dashboard-card-title {
+
             font-size: 15px;
 
             font-weight: 700;
 
             margin: 0;
+
         }
 
 
-        .dashboard-card-title i {
+        .dashboard-card-title .card-icon {
+
             color: #4b5563;
+
         }
 
 
         .dashboard-card-body {
+
             padding: 20px;
+
+        }
+
+
+        /* =====================================================
+           BUTTONS
+        ====================================================== */
+
+        .btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            border-radius: 6px;
+
+            padding: 6px 12px;
+
+            font-size: 13px;
+
+            line-height: 1.5;
+
+            text-decoration: none;
+
+            cursor: pointer;
+
+            transition: all 0.2s ease;
+
+        }
+
+
+        .btn-sm {
+
+            padding: 5px 10px;
+
+            font-size: 12px;
+
+        }
+
+
+        .btn-outline-dark {
+
+            color: #111827;
+
+            background: white;
+
+            border:
+                1px solid #111827;
+
+        }
+
+
+        .btn-outline-dark:hover {
+
+            background: #111827;
+
+            color: white;
+
         }
 
 
         /* =====================================================
            ATTENDANCE SUMMARY
-        ===================================================== */
+        ====================================================== */
 
         .attendance-summary {
+
             display: grid;
 
             grid-template-columns:
                 repeat(3, 1fr);
 
             gap: 12px;
+
         }
 
 
         .attendance-box {
+
             padding: 18px 12px;
 
             border-radius: 12px;
 
             text-align: center;
+
         }
 
 
         .attendance-number {
+
             font-size: 24px;
 
             font-weight: 700;
 
             margin-bottom: 4px;
+
         }
 
 
         .attendance-label {
+
             font-size: 12px;
 
             color: var(--muted);
+
         }
 
 
         .present-box {
+
             background: #ecfdf5;
+
         }
 
 
         .present-box .attendance-number {
+
             color: #047857;
+
         }
 
 
         .absent-box {
+
             background: #fef2f2;
+
         }
 
 
         .absent-box .attendance-number {
+
             color: #dc2626;
+
         }
 
 
         .total-box {
+
             background: #eff6ff;
+
         }
 
 
         .total-box .attendance-number {
+
             color: #2563eb;
+
         }
 
 
         /* =====================================================
            QUICK MANAGEMENT
-        ===================================================== */
+        ====================================================== */
 
         .module-card {
+
             display: flex;
 
             align-items: center;
@@ -719,7 +787,8 @@
 
             padding: 14px;
 
-            border: 1px solid var(--border);
+            border:
+                1px solid var(--border);
 
             border-radius: 12px;
 
@@ -730,10 +799,12 @@
             transition: 0.2s;
 
             height: 100%;
+
         }
 
 
         .module-card:hover {
+
             border-color: #cbd5e1;
 
             background: #f9fafb;
@@ -741,11 +812,14 @@
             transform: translateY(-1px);
 
             color: var(--text);
+
         }
 
 
         .module-icon {
+
             width: 42px;
+
             height: 42px;
 
             min-width: 42px;
@@ -755,6 +829,7 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             font-size: 18px;
@@ -762,19 +837,23 @@
             background: #f3f4f6;
 
             color: #374151;
+
         }
 
 
         .module-name {
+
             font-size: 13.5px;
 
             font-weight: 650;
 
             margin-bottom: 3px;
+
         }
 
 
         .module-description {
+
             font-size: 11px;
 
             color: var(--muted);
@@ -782,30 +861,45 @@
             margin: 0;
 
             line-height: 1.4;
+
         }
 
 
         .module-arrow {
+
             margin-left: auto;
 
             color: #9ca3af;
 
             font-size: 14px;
+
         }
 
 
         /* =====================================================
            TABLE
-        ===================================================== */
+        ====================================================== */
+
+        .table-responsive {
+
+            width: 100%;
+
+            overflow-x: auto;
+
+        }
+
 
         .attendance-table {
+
             width: 100%;
 
             border-collapse: collapse;
+
         }
 
 
         .attendance-table th {
+
             font-size: 11px;
 
             text-transform: uppercase;
@@ -820,10 +914,14 @@
                 1px solid var(--border);
 
             white-space: nowrap;
+
+            text-align: left;
+
         }
 
 
         .attendance-table td {
+
             padding: 13px 15px;
 
             font-size: 13px;
@@ -832,25 +930,32 @@
                 1px solid #f0f0f0;
 
             white-space: nowrap;
+
         }
 
 
         .attendance-table tr:last-child td {
+
             border-bottom: none;
+
         }
 
 
         .user-cell {
+
             display: flex;
 
             align-items: center;
 
             gap: 9px;
+
         }
 
 
         .user-avatar {
+
             width: 32px;
+
             height: 32px;
 
             border-radius: 50%;
@@ -860,6 +965,7 @@
             display: flex;
 
             align-items: center;
+
             justify-content: center;
 
             color: #6b7280;
@@ -867,17 +973,42 @@
             font-size: 13px;
 
             flex-shrink: 0;
+
         }
 
 
         .user-name {
+
             font-weight: 600;
 
             font-size: 13px;
+
+        }
+
+
+        .text-muted {
+
+            color: var(--muted);
+
+        }
+
+
+        .text-danger {
+
+            color: var(--danger);
+
+        }
+
+
+        .text-center {
+
+            text-align: center;
+
         }
 
 
         .status-badge {
+
             display: inline-flex;
 
             align-items: center;
@@ -889,53 +1020,65 @@
             font-size: 10px;
 
             font-weight: 700;
+
         }
 
 
         .badge-present {
+
             background: #ecfdf5;
 
             color: #047857;
+
         }
 
 
         .badge-absent {
+
             background: #fef2f2;
 
             color: #b91c1c;
+
         }
 
 
         .badge-unknown {
+
             background: #f3f4f6;
 
             color: #6b7280;
+
         }
 
 
         .empty-state {
+
             text-align: center;
 
             padding: 35px 20px !important;
 
             color: var(--muted);
+
         }
 
 
-        .empty-state i {
+        .empty-state .empty-icon {
+
             font-size: 30px;
 
             display: block;
 
             margin-bottom: 8px;
+
         }
 
 
         /* =====================================================
            FOOTER
-        ===================================================== */
+        ====================================================== */
 
         .footer {
+
             padding: 20px 30px;
 
             border-top:
@@ -954,14 +1097,16 @@
             align-items: center;
 
             margin-top: 20px;
+
         }
 
 
         /* =====================================================
            LOADING
-        ===================================================== */
+        ====================================================== */
 
         .dashboard-loading {
+
             position: fixed;
 
             inset: 0;
@@ -978,10 +1123,12 @@
             align-items: center;
 
             justify-content: center;
+
         }
 
 
         .loading-box {
+
             background: white;
 
             padding: 25px 30px;
@@ -992,76 +1139,94 @@
                 0 10px 35px rgba(0, 0, 0, 0.12);
 
             text-align: center;
+
         }
 
 
-        .loading-box .spinner-border {
+        .spinner-border {
+
             width: 28px;
+
             height: 28px;
+
+            border:
+                3px solid #d1d5db;
+
+            border-top-color: #111827;
+
+            border-radius: 50%;
+
+            animation:
+                spin 0.8s linear infinite;
+
+            margin: 0 auto 16px;
+
         }
 
 
-        /* =====================================================
-           MOBILE OVERLAY
-        ===================================================== */
+        @keyframes spin {
 
-        .sidebar-overlay {
-            display: none;
+            to {
 
-            position: fixed;
+                transform: rotate(360deg);
 
-            inset: 0;
+            }
 
-            background:
-                rgba(0, 0, 0, 0.4);
+        }
 
-            z-index: 1040;
+
+        .fw-semibold {
+
+            font-weight: 600;
+
+        }
+
+
+        .small {
+
+            font-size: 12px;
+
         }
 
 
         /* =====================================================
            RESPONSIVE
-        ===================================================== */
+        ====================================================== */
 
         @media (max-width: 991px) {
 
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-
-            .sidebar.show {
-                transform: translateX(0);
-            }
-
-
             .main-wrapper {
+
                 margin-left: 0;
+
             }
 
 
             .mobile-menu-btn {
-                display: block;
-            }
 
-
-            .sidebar-overlay.show {
                 display: block;
+
             }
 
 
             .page-content {
+
                 padding: 22px 18px;
+
             }
 
 
             .top-navbar {
+
                 padding: 0 18px;
+
             }
 
 
             .date-display {
+
                 display: none;
+
             }
 
         }
@@ -1070,22 +1235,38 @@
         @media (max-width: 767px) {
 
             .welcome-title {
+
                 font-size: 22px;
+
             }
 
 
             .stat-value {
+
                 font-size: 25px;
+
             }
 
 
             .dashboard-card-header {
+
                 padding: 15px;
+
             }
 
 
             .dashboard-card-body {
+
                 padding: 15px;
+
+            }
+
+
+            .attendance-summary {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+
             }
 
         }
@@ -1094,26 +1275,35 @@
         @media (max-width: 575px) {
 
             .top-title {
+
                 font-size: 16px;
+
             }
 
 
             .top-subtitle {
+
                 display: none;
+
             }
 
 
             .welcome-title {
+
                 font-size: 21px;
+
             }
 
 
             .attendance-summary {
+
                 grid-template-columns: 1fr;
+
             }
 
 
             .footer {
+
                 flex-direction: column;
 
                 gap: 5px;
@@ -1121,10 +1311,19 @@
                 text-align: center;
 
                 padding: 16px;
+
             }
 
         }
+
     </style>
+
+
+    <!-- =====================================================
+         SIDEBAR JS
+    ====================================================== -->
+
+    <script src="/js/sidebar.js" defer></script>
 
 </head>
 
@@ -1132,1581 +1331,1295 @@
 <body>
 
 
-    <!-- =========================================================
+<!-- =====================================================
      LOADING
-========================================================= -->
+====================================================== -->
 
-    <div id="loadingOverlay" class="dashboard-loading">
+<div id="loadingOverlay"
+     class="dashboard-loading">
 
-        <div class="loading-box">
+    <div class="loading-box">
 
-            <div class="spinner-border text-dark mb-3" role="status" aria-label="Loading">
-            </div>
-
-            <div class="fw-semibold">
-                Loading dashboard...
-            </div>
-
-            <small class="text-muted">
-                Please wait
-            </small>
-
+        <div class="spinner-border"
+             role="status"
+             aria-label="Loading">
         </div>
+
+        <div class="fw-semibold">
+            Loading dashboard...
+        </div>
+
+        <small class="text-muted">
+            Please wait
+        </small>
 
     </div>
 
+</div>
 
-    <!-- =========================================================
-     SIDEBAR
-========================================================= -->
 
-    <aside id="sidebar" class="sidebar">
+<!-- =====================================================
+     SIDEBAR COMPONENT
+====================================================== -->
 
+<div id="sidebar-container"></div>
 
-        <!-- BRAND -->
 
-        <div class="sidebar-brand">
-
-            <span class="brand-icon">
-                <i class="bi bi-person-bounding-box"></i>
-            </span>
-
-            <p class="brand-name">
-                College Attendance
-            </p>
-
-        </div>
-
-
-        <!-- MAIN -->
-
-        <div class="sidebar-section">
-            Main
-        </div>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="dashboard.html" class="sidebar-link" data-page="dashboard.html">
-
-                    <i class="bi bi-grid-1x2"></i>
-
-                    <span>Dashboard</span>
-
-                </a>
-            </li>
-
-        </ul>
-
-
-        <!-- MANAGEMENT -->
-
-        <div class="sidebar-section">
-            Management
-        </div>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="students.html" class="sidebar-link" data-page="students.html">
-
-                    <i class="bi bi-mortarboard"></i>
-
-                    <span>Students</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="teachers.html" class="sidebar-link" data-page="teachers.html">
-
-                    <i class="bi bi-person-workspace"></i>
-
-                    <span>Teachers</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="departments.html" class="sidebar-link" data-page="departments.html">
-
-                    <i class="bi bi-building"></i>
-
-                    <span>Departments</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="courses.html" class="sidebar-link" data-page="courses.html">
-
-                    <i class="bi bi-book"></i>
-
-                    <span>Courses</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="semesters.html" class="sidebar-link" data-page="semesters.html">
-
-                    <i class="bi bi-layers"></i>
-
-                    <span>Semesters</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="sections.html" class="sidebar-link" data-page="sections.html">
-
-                    <i class="bi bi-diagram-3"></i>
-
-                    <span>Sections</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="leaves.html" class="sidebar-link" data-page="leaves.html">
-
-                    <i class="bi bi-calendar2-x"></i>
-
-                    <span>Leave Requests</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="holidays.html" class="sidebar-link" data-page="holidays.html">
-
-                    <i class="bi bi-calendar-event"></i>
-
-                    <span>Holidays</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="policies.html" class="sidebar-link" data-page="policies.html">
-
-                    <i class="bi bi-shield-check"></i>
-
-                    <span>Attendance Policies</span>
-
-                </a>
-            </li>
-
-        </ul>
-
-
-        <!-- ATTENDANCE -->
-
-        <div class="sidebar-section">
-            Attendance
-        </div>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="attendance.html" class="sidebar-link" data-page="attendance.html">
-
-                    <i class="bi bi-calendar-check"></i>
-
-                    <span>Attendance</span>
-
-                </a>
-            </li>
-
-
-            <li>
-                <a href="machine-attendance.html" class="sidebar-link" data-page="machine-attendance.html">
-
-                    <i class="bi bi-camera"></i>
-
-                    <span>Machine Attendance</span>
-
-                </a>
-            </li>
-
-        </ul>
-
-
-        <!-- PROFILE -->
-
-        <div class="sidebar-footer">
-
-            <div class="admin-profile">
-
-                <div class="admin-avatar">
-                    <i class="bi bi-person"></i>
-                </div>
-
-                <div class="admin-info">
-
-                    <div id="adminName" class="admin-name">
-                        Administrator
-                    </div>
-
-                    <div class="admin-role">
-                        Admin Panel
-                    </div>
-
-                </div>
-
-                <button type="button" class="logout-btn" id="logoutBtn" title="Logout" aria-label="Logout">
-
-                    <i class="bi bi-box-arrow-right"></i>
-
-                </button>
-
-            </div>
-
-        </div>
-
-    </aside>
-
-
-    <!-- MOBILE OVERLAY -->
-
-    <div id="sidebarOverlay" class="sidebar-overlay"></div>
-
-
-    <!-- =========================================================
+<!-- =====================================================
      MAIN WRAPPER
-========================================================= -->
+====================================================== -->
 
-    <div class="main-wrapper">
-
-
-        <!-- TOP NAVBAR -->
-
-        <nav class="top-navbar">
-
-            <div class="d-flex align-items-center gap-3">
-
-                <button type="button" id="mobileMenuBtn" class="mobile-menu-btn" aria-label="Open menu">
-
-                    <i class="bi bi-list"></i>
-
-                </button>
-
-                <div>
-
-                    <h6 class="top-title">
-                        Admin Dashboard
-                    </h6>
-
-                    <p class="top-subtitle">
-                        College Attendance Management System
-                    </p>
-
-                </div>
-
-            </div>
+<div class="main-wrapper">
 
 
-            <div class="top-right">
+    <!-- =================================================
+         TOP NAVBAR
+    ================================================== -->
 
-                <div class="date-display">
-
-                    <i class="bi bi-calendar3"></i>
-
-                    <span id="currentDate">
-                        --
-                    </span>
-
-                </div>
-
-            </div>
-
-        </nav>
+    <nav class="top-navbar">
 
 
-        <!-- =====================================================
-         PAGE CONTENT
-    ===================================================== -->
-
-        <main class="page-content">
+        <div class="top-left">
 
 
-            <!-- WELCOME -->
+            <button type="button"
+                    id="mobileMenuBtn"
+                    class="mobile-menu-btn"
+                    aria-label="Open menu">
 
-            <section class="welcome-section">
+                ☰
 
-                <h1 class="welcome-title">
-                    Welcome back, Admin 👋
-                </h1>
+            </button>
 
-                <p class="welcome-text">
-                    Here's what's happening with your college
-                    attendance system today.
+
+            <div>
+
+                <h6 class="top-title">
+
+                    Admin Dashboard
+
+                </h6>
+
+
+                <p class="top-subtitle">
+
+                    College Attendance Management System
+
                 </p>
 
-            </section>
+            </div>
 
 
-            <!-- =================================================
+        </div>
+
+
+        <div class="top-right">
+
+
+            <div class="date-display">
+
+                <span>📅</span>
+
+                <span id="currentDate">
+                    --
+                </span>
+
+            </div>
+
+        </div>
+
+
+    </nav>
+
+
+    <!-- =================================================
+         PAGE CONTENT
+    ================================================== -->
+
+    <main class="page-content">
+
+
+        <!-- =================================================
+             WELCOME
+        ================================================== -->
+
+        <section class="welcome-section">
+
+            <h1 class="welcome-title">
+
+                Welcome back, Admin 👋
+
+            </h1>
+
+
+            <p class="welcome-text">
+
+                Here's what's happening with your college
+                attendance system today.
+
+            </p>
+
+        </section>
+
+
+        <!-- =================================================
              PRIMARY STATS
-        ================================================= -->
+        ================================================== -->
 
-            <section class="row g-3 mb-4">
+        <section class="row g-3 mb-4">
 
 
-                <!-- STUDENTS -->
+            <!-- STUDENTS -->
 
-                <div class="col-xl-3 col-md-6">
+            <div class="col-xl-3 col-md-6">
 
-                    <div class="stat-card">
+                <div class="stat-card">
 
-                        <div class="stat-top">
+                    <div class="stat-top">
 
-                            <div>
+                        <div>
 
-                                <div class="stat-label">
-                                    Total Students
-                                </div>
-
-                                <div id="totalStudents" class="stat-value">
-                                    --
-                                </div>
-
+                            <div class="stat-label">
+                                Total Students
                             </div>
 
-                            <div class="stat-icon icon-blue">
-
-                                <i class="bi bi-mortarboard"></i>
-
+                            <div id="totalStudents"
+                                 class="stat-value">
+                                --
                             </div>
 
                         </div>
 
 
-                        <div class="stat-footer">
-
-                            <i class="bi bi-people me-1"></i>
-
-                            Registered students
-
+                        <div class="stat-icon icon-blue">
+                            🎓
                         </div>
 
                     </div>
 
-                </div>
 
-
-                <!-- TEACHERS -->
-
-                <div class="col-xl-3 col-md-6">
-
-                    <div class="stat-card">
-
-                        <div class="stat-top">
-
-                            <div>
-
-                                <div class="stat-label">
-                                    Total Teachers
-                                </div>
-
-                                <div id="totalTeachers" class="stat-value">
-                                    --
-                                </div>
-
-                            </div>
-
-                            <div class="stat-icon icon-purple">
-
-                                <i class="bi bi-person-workspace"></i>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="stat-footer">
-
-                            <i class="bi bi-person-check me-1"></i>
-
-                            Active teaching staff
-
-                        </div>
-
+                    <div class="stat-footer">
+                        👥 Registered students
                     </div>
 
                 </div>
 
+            </div>
 
-                <!-- COURSES -->
 
-                <div class="col-xl-3 col-md-6">
+            <!-- TEACHERS -->
 
-                    <div class="stat-card">
+            <div class="col-xl-3 col-md-6">
 
-                        <div class="stat-top">
+                <div class="stat-card">
 
-                            <div>
+                    <div class="stat-top">
 
-                                <div class="stat-label">
-                                    Total Courses
-                                </div>
+                        <div>
 
-                                <div id="totalCourses" class="stat-value">
-                                    --
-                                </div>
-
+                            <div class="stat-label">
+                                Total Teachers
                             </div>
 
-                            <div class="stat-icon icon-green">
-
-                                <i class="bi bi-book"></i>
-
+                            <div id="totalTeachers"
+                                 class="stat-value">
+                                --
                             </div>
 
                         </div>
 
 
-                        <div class="stat-footer">
-
-                            <i class="bi bi-journal-text me-1"></i>
-
-                            Available courses
-
+                        <div class="stat-icon icon-purple">
+                            👨‍🏫
                         </div>
 
                     </div>
 
-                </div>
 
-
-                <!-- DEPARTMENTS -->
-
-                <div class="col-xl-3 col-md-6">
-
-                    <div class="stat-card">
-
-                        <div class="stat-top">
-
-                            <div>
-
-                                <div class="stat-label">
-                                    Departments
-                                </div>
-
-                                <div id="totalDepartments" class="stat-value">
-                                    --
-                                </div>
-
-                            </div>
-
-                            <div class="stat-icon icon-orange">
-
-                                <i class="bi bi-building"></i>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="stat-footer">
-
-                            <i class="bi bi-diagram-3 me-1"></i>
-
-                            Academic departments
-
-                        </div>
-
+                    <div class="stat-footer">
+                        ✓ Active teaching staff
                     </div>
 
                 </div>
 
-            </section>
+            </div>
 
 
-            <!-- =================================================
+            <!-- COURSES -->
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Total Courses
+                            </div>
+
+                            <div id="totalCourses"
+                                 class="stat-value">
+                                --
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon icon-green">
+                            📖
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-footer">
+                        📚 Available courses
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- DEPARTMENTS -->
+
+            <div class="col-xl-3 col-md-6">
+
+                <div class="stat-card">
+
+                    <div class="stat-top">
+
+                        <div>
+
+                            <div class="stat-label">
+                                Departments
+                            </div>
+
+                            <div id="totalDepartments"
+                                 class="stat-value">
+                                --
+                            </div>
+
+                        </div>
+
+
+                        <div class="stat-icon icon-orange">
+                            ▦
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-footer">
+                        ◇ Academic departments
+                    </div>
+
+                </div>
+
+            </div>
+
+
+        </section>
+
+
+        <!-- =================================================
              SECONDARY STATS
-        ================================================= -->
+        ================================================== -->
 
-            <section class="row g-3 mb-4">
+        <section class="row g-3 mb-4">
 
 
-                <!-- SEMESTERS -->
+            <!-- SEMESTERS -->
 
-                <div class="col-xl-4 col-md-6">
+            <div class="col-xl-4 col-md-6">
 
-                    <div class="stat-card">
+                <div class="stat-card">
 
-                        <div class="stat-top">
+                    <div class="stat-top">
 
-                            <div>
+                        <div>
 
-                                <div class="stat-label">
-                                    Semesters
-                                </div>
-
-                                <div id="totalSemesters" class="stat-value">
-                                    --
-                                </div>
-
+                            <div class="stat-label">
+                                Semesters
                             </div>
 
-                            <div class="stat-icon icon-cyan">
-
-                                <i class="bi bi-layers"></i>
-
+                            <div id="totalSemesters"
+                                 class="stat-value">
+                                --
                             </div>
 
                         </div>
 
 
-                        <div class="stat-footer">
-                            Academic semesters
+                        <div class="stat-icon icon-cyan">
+                            ▤
                         </div>
 
                     </div>
 
-                </div>
 
-
-                <!-- SECTIONS -->
-
-                <div class="col-xl-4 col-md-6">
-
-                    <div class="stat-card">
-
-                        <div class="stat-top">
-
-                            <div>
-
-                                <div class="stat-label">
-                                    Sections
-                                </div>
-
-                                <div id="totalSections" class="stat-value">
-                                    --
-                                </div>
-
-                            </div>
-
-                            <div class="stat-icon icon-blue">
-
-                                <i class="bi bi-diagram-3"></i>
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="stat-footer">
-                            Active class sections
-                        </div>
-
+                    <div class="stat-footer">
+                        Academic semesters
                     </div>
 
                 </div>
 
+            </div>
 
-                <!-- TODAY ATTENDANCE -->
 
-                <div class="col-xl-4 col-md-12">
+            <!-- SECTIONS -->
 
-                    <div class="stat-card">
+            <div class="col-xl-4 col-md-6">
 
-                        <div class="stat-top">
+                <div class="stat-card">
 
-                            <div>
+                    <div class="stat-top">
 
-                                <div class="stat-label">
-                                    Today's Attendance
-                                </div>
+                        <div>
 
-                                <div id="todayAttendance" class="stat-value">
-                                    --
-                                </div>
-
+                            <div class="stat-label">
+                                Sections
                             </div>
 
-                            <div class="stat-icon icon-green">
-
-                                <i class="bi bi-calendar-check"></i>
-
+                            <div id="totalSections"
+                                 class="stat-value">
+                                --
                             </div>
 
                         </div>
 
 
-                        <div class="stat-footer">
-                            Attendance records today
+                        <div class="stat-icon icon-blue">
+                            ◇
                         </div>
 
                     </div>
 
+
+                    <div class="stat-footer">
+                        Active class sections
+                    </div>
+
                 </div>
 
-            </section>
+            </div>
 
 
-            <!-- =================================================
-             ATTENDANCE + QUICK MANAGEMENT
-        ================================================= -->
+            <!-- TODAY ATTENDANCE -->
 
-            <section class="row g-4 mb-4">
+            <div class="col-xl-4 col-md-12">
 
+                <div class="stat-card">
 
-                <!-- TODAY ATTENDANCE -->
+                    <div class="stat-top">
 
-                <div class="col-xl-5">
+                        <div>
 
-                    <div class="dashboard-card h-100">
-
-                        <div class="dashboard-card-header">
-
-                            <h5 class="dashboard-card-title">
-
-                                <i class="bi bi-calendar-check me-2"></i>
-
+                            <div class="stat-label">
                                 Today's Attendance
+                            </div>
 
-                            </h5>
-
-
-                            <a href="attendance.html" class="btn btn-sm btn-outline-dark">
-
-                                View All
-
-                            </a>
+                            <div id="todayAttendance"
+                                 class="stat-value">
+                                --
+                            </div>
 
                         </div>
 
 
-                        <div class="dashboard-card-body">
+                        <div class="stat-icon icon-green">
+                            ✓
+                        </div>
 
-                            <div class="attendance-summary">
+                    </div>
 
 
-                                <div class="attendance-box total-box">
+                    <div class="stat-footer">
+                        Attendance records today
+                    </div>
 
-                                    <div id="attendanceTotal" class="attendance-number">
-                                        --
-                                    </div>
+                </div>
 
-                                    <div class="attendance-label">
-                                        Total
-                                    </div>
+            </div>
 
+
+        </section>
+
+
+        <!-- =================================================
+             ATTENDANCE + QUICK MANAGEMENT
+        ================================================== -->
+
+        <section class="row g-4 mb-4">
+
+
+            <!-- TODAY ATTENDANCE -->
+
+            <div class="col-xl-5">
+
+                <div class="dashboard-card h-100">
+
+
+                    <div class="dashboard-card-header">
+
+                        <h5 class="dashboard-card-title">
+
+                            <span class="card-icon">
+                                ✓
+                            </span>
+
+                            Today's Attendance
+
+                        </h5>
+
+
+                        <a href="attendance.html"
+                           class="btn btn-sm btn-outline-dark">
+
+                            View All
+
+                        </a>
+
+                    </div>
+
+
+                    <div class="dashboard-card-body">
+
+                        <div class="attendance-summary">
+
+
+                            <div class="attendance-box total-box">
+
+                                <div id="attendanceTotal"
+                                     class="attendance-number">
+                                    --
                                 </div>
 
-
-                                <div class="attendance-box present-box">
-
-                                    <div id="attendancePresent" class="attendance-number">
-                                        --
-                                    </div>
-
-                                    <div class="attendance-label">
-                                        Present
-                                    </div>
-
-                                </div>
-
-
-                                <div class="attendance-box absent-box">
-
-                                    <div id="attendanceAbsent" class="attendance-number">
-                                        --
-                                    </div>
-
-                                    <div class="attendance-label">
-                                        Absent
-                                    </div>
-
+                                <div class="attendance-label">
+                                    Total
                                 </div>
 
                             </div>
+
+
+                            <div class="attendance-box present-box">
+
+                                <div id="attendancePresent"
+                                     class="attendance-number">
+                                    --
+                                </div>
+
+                                <div class="attendance-label">
+                                    Present
+                                </div>
+
+                            </div>
+
+
+                            <div class="attendance-box absent-box">
+
+                                <div id="attendanceAbsent"
+                                     class="attendance-number">
+                                    --
+                                </div>
+
+                                <div class="attendance-label">
+                                    Absent
+                                </div>
+
+                            </div>
+
 
                         </div>
 
                     </div>
 
+
                 </div>
 
-
-                <!-- QUICK MANAGEMENT -->
-
-                <div class="col-xl-7">
-
-                    <div class="dashboard-card h-100">
-
-                        <div class="dashboard-card-header">
-
-                            <h5 class="dashboard-card-title">
-
-                                <i class="bi bi-lightning-charge me-2"></i>
-
-                                Quick Management
-
-                            </h5>
-
-                        </div>
+            </div>
 
 
-                        <div class="dashboard-card-body">
+            <!-- QUICK MANAGEMENT -->
 
-                            <div class="row g-3">
+            <div class="col-xl-7">
+
+                <div class="dashboard-card h-100">
 
 
-                                <div class="col-md-6">
+                    <div class="dashboard-card-header">
 
-                                    <a href="students.html" class="module-card">
+                        <h5 class="dashboard-card-title">
 
-                                        <div class="module-icon">
-                                            <i class="bi bi-mortarboard"></i>
+                            <span class="card-icon">
+                                ⚡
+                            </span>
+
+                            Quick Management
+
+                        </h5>
+
+                    </div>
+
+
+                    <div class="dashboard-card-body">
+
+
+                        <div class="row g-3">
+
+
+                            <!-- STUDENTS -->
+
+                            <div class="col-md-6">
+
+                                <a href="students.html"
+                                   class="module-card">
+
+                                    <div class="module-icon">
+                                        🎓
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="module-name">
+                                            Manage Students
                                         </div>
 
-                                        <div>
 
-                                            <div class="module-name">
-                                                Manage Students
-                                            </div>
+                                        <p class="module-description">
+                                            Add, update and manage students
+                                        </p>
 
-                                            <p class="module-description">
-                                                Add, update and manage students
-                                            </p>
-
-                                        </div>
-
-                                        <i class="bi bi-chevron-right module-arrow"></i>
-
-                                    </a>
-
-                                </div>
+                                    </div>
 
 
-                                <div class="col-md-6">
+                                    <span class="module-arrow">
+                                        ›
+                                    </span>
 
-                                    <a href="teachers.html" class="module-card">
-
-                                        <div class="module-icon">
-                                            <i class="bi bi-person-workspace"></i>
-                                        </div>
-
-                                        <div>
-
-                                            <div class="module-name">
-                                                Manage Teachers
-                                            </div>
-
-                                            <p class="module-description">
-                                                Manage teaching staff
-                                            </p>
-
-                                        </div>
-
-                                        <i class="bi bi-chevron-right module-arrow"></i>
-
-                                    </a>
-
-                                </div>
-
-
-                                <div class="col-md-6">
-
-                                    <a href="courses.html" class="module-card">
-
-                                        <div class="module-icon">
-                                            <i class="bi bi-book"></i>
-                                        </div>
-
-                                        <div>
-
-                                            <div class="module-name">
-                                                Manage Courses
-                                            </div>
-
-                                            <p class="module-description">
-                                                Create and manage courses
-                                            </p>
-
-                                        </div>
-
-                                        <i class="bi bi-chevron-right module-arrow"></i>
-
-                                    </a>
-
-                                </div>
-
-
-                                <div class="col-md-6">
-
-                                    <a href="attendance.html" class="module-card">
-
-                                        <div class="module-icon">
-                                            <i class="bi bi-calendar-check"></i>
-                                        </div>
-
-                                        <div>
-
-                                            <div class="module-name">
-                                                Attendance
-                                            </div>
-
-                                            <p class="module-description">
-                                                View attendance records
-                                            </p>
-
-                                        </div>
-
-                                        <i class="bi bi-chevron-right module-arrow"></i>
-
-                                    </a>
-
-                                </div>
-
-
-                                <div class="col-md-6">
-
-                                    <a href="machine-attendance.html" class="module-card">
-
-                                        <div class="module-icon">
-                                            <i class="bi bi-camera"></i>
-                                        </div>
-
-                                        <div>
-
-                                            <div class="module-name">
-                                                Machine Attendance
-                                            </div>
-
-                                            <p class="module-description">
-                                                Face recognition attendance
-                                            </p>
-
-                                        </div>
-
-                                        <i class="bi bi-chevron-right module-arrow"></i>
-
-                                    </a>
-
-                                </div>
-
-
-                                <div class="col-md-6">
-
-                                    <a href="leaves.html" class="module-card">
-
-                                        <div class="module-icon">
-                                            <i class="bi bi-calendar2-x"></i>
-                                        </div>
-
-                                        <div>
-
-                                            <div class="module-name">
-                                                Leave Requests
-                                            </div>
-
-                                            <p class="module-description">
-                                                Review pending leave requests
-                                            </p>
-
-                                        </div>
-
-                                        <i class="bi bi-chevron-right module-arrow"></i>
-
-                                    </a>
-
-                                </div>
-
+                                </a>
 
                             </div>
+
+
+                            <!-- TEACHERS -->
+
+                            <div class="col-md-6">
+
+                                <a href="teachers.html"
+                                   class="module-card">
+
+                                    <div class="module-icon">
+                                        👨‍🏫
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="module-name">
+                                            Manage Teachers
+                                        </div>
+
+
+                                        <p class="module-description">
+                                            Manage teaching staff
+                                        </p>
+
+                                    </div>
+
+
+                                    <span class="module-arrow">
+                                        ›
+                                    </span>
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- COURSES -->
+
+                            <div class="col-md-6">
+
+                                <a href="courses.html"
+                                   class="module-card">
+
+                                    <div class="module-icon">
+                                        📖
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="module-name">
+                                            Manage Courses
+                                        </div>
+
+
+                                        <p class="module-description">
+                                            Create and manage courses
+                                        </p>
+
+                                    </div>
+
+
+                                    <span class="module-arrow">
+                                        ›
+                                    </span>
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- ATTENDANCE -->
+
+                            <div class="col-md-6">
+
+                                <a href="attendance.html"
+                                   class="module-card">
+
+                                    <div class="module-icon">
+                                        ✓
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="module-name">
+                                            Attendance
+                                        </div>
+
+
+                                        <p class="module-description">
+                                            View attendance records
+                                        </p>
+
+                                    </div>
+
+
+                                    <span class="module-arrow">
+                                        ›
+                                    </span>
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- MACHINE ATTENDANCE -->
+
+                            <div class="col-md-6">
+
+                                <a href="machine-attendance.html"
+                                   class="module-card">
+
+                                    <div class="module-icon">
+                                        📷
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="module-name">
+                                            Machine Attendance
+                                        </div>
+
+
+                                        <p class="module-description">
+                                            Face recognition attendance
+                                        </p>
+
+                                    </div>
+
+
+                                    <span class="module-arrow">
+                                        ›
+                                    </span>
+
+                                </a>
+
+                            </div>
+
+
+                            <!-- LEAVE -->
+
+                            <div class="col-md-6">
+
+                                <a href="leaves.html"
+                                   class="module-card">
+
+                                    <div class="module-icon">
+                                        📅
+                                    </div>
+
+
+                                    <div>
+
+                                        <div class="module-name">
+                                            Leave Requests
+                                        </div>
+
+
+                                        <p class="module-description">
+                                            Review pending leave requests
+                                        </p>
+
+                                    </div>
+
+
+                                    <span class="module-arrow">
+                                        ›
+                                    </span>
+
+                                </a>
+
+                            </div>
+
 
                         </div>
 
                     </div>
 
+
                 </div>
 
-            </section>
+            </div>
 
 
-            <!-- =================================================
+        </section>
+
+
+        <!-- =================================================
              RECENT ATTENDANCE
-        ================================================= -->
+        ================================================== -->
 
-            <section class="dashboard-card">
-
-
-                <div class="dashboard-card-header">
-
-                    <h5 class="dashboard-card-title">
-
-                        <i class="bi bi-clock-history me-2"></i>
-
-                        Recent Attendance
-
-                    </h5>
+        <section class="dashboard-card">
 
 
-                    <a href="attendance.html" class="btn btn-sm btn-outline-dark">
-
-                        View Attendance
-
-                    </a>
-
-                </div>
+            <div class="dashboard-card-header">
 
 
-                <div class="table-responsive">
+                <h5 class="dashboard-card-title">
 
-                    <table class="attendance-table">
+                    <span class="card-icon">
+                        ◷
+                    </span>
 
-                        <thead>
+                    Recent Attendance
 
-                            <tr>
-
-                                <th>User</th>
-
-                                <th>Date</th>
-
-                                <th>Check In</th>
-
-                                <th>Check Out</th>
-
-                                <th>Status</th>
-
-                            </tr>
-
-                        </thead>
+                </h5>
 
 
-                        <tbody id="recentAttendanceBody">
+                <a href="attendance.html"
+                   class="btn btn-sm btn-outline-dark">
 
-                            <tr>
+                    View Attendance
 
-                                <td colspan="5" class="text-center text-muted py-4">
-
-                                    Loading attendance...
-
-                                </td>
-
-                            </tr>
-
-                        </tbody>
-
-                    </table>
-
-                </div>
-
-            </section>
+                </a>
 
 
-        </main>
+            </div>
 
 
-        <!-- FOOTER -->
-
-        <footer class="footer">
-
-            <span>
-
-                ©
-                <span id="currentYear"></span>
-
-                College Attendance System
-
-            </span>
-
-            <span>
-                Admin Panel
-            </span>
-
-        </footer>
+            <div class="table-responsive">
 
 
-    </div>
+                <table class="attendance-table">
 
 
-    <!-- Bootstrap JS -->
+                    <thead>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js">
-    </script>
+                        <tr>
 
+                            <th>User</th>
 
-    <script>
+                            <th>Date</th>
 
-        /* =========================================================
-           CONFIGURATION
-        ========================================================= */
+                            <th>Check In</th>
 
-        const API_BASE_URL =
-            "http://localhost:8080";
+                            <th>Check Out</th>
 
+                            <th>Status</th>
 
-        /* =========================================================
-           AUTHENTICATION
-        ========================================================= */
+                        </tr>
 
-        function getToken() {
-
-            return localStorage.getItem(
-                "accessToken"
-            );
-
-        }
+                    </thead>
 
 
-        const token =
+                    <tbody id="recentAttendanceBody">
+
+                        <tr>
+
+                            <td colspan="5"
+                                class="text-center text-muted py-4">
+
+                                Loading attendance...
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+
+                </table>
+
+
+            </div>
+
+
+        </section>
+
+
+    </main>
+
+
+    <!-- =================================================
+         FOOTER
+    ================================================== -->
+
+    <footer class="footer">
+
+
+        <span>
+
+            ©
+
+            <span id="currentYear"></span>
+
+            College Attendance System
+
+        </span>
+
+
+        <span>
+
+            Admin Panel
+
+        </span>
+
+
+    </footer>
+
+
+</div>
+
+
+<script>
+
+
+    /* =====================================================
+       CONFIGURATION
+    ====================================================== */
+
+    const API_BASE_URL =
+        "http://localhost:8080";
+
+
+    /* =====================================================
+       AUTHENTICATION
+    ====================================================== */
+
+    function getToken() {
+
+        return localStorage.getItem(
+            "accessToken"
+        );
+
+    }
+
+
+    const token = getToken();
+
+
+    if (!token) {
+
+        window.location.replace(
+            "login.html"
+        );
+
+    }
+
+
+    /* =====================================================
+       ELEMENTS
+    ====================================================== */
+
+    const loadingOverlay =
+        document.getElementById(
+            "loadingOverlay"
+        );
+
+
+    const recentAttendanceBody =
+        document.getElementById(
+            "recentAttendanceBody"
+        );
+
+
+    /* =====================================================
+       AUTHENTICATED FETCH
+    ====================================================== */
+
+    async function authenticatedFetch(
+        url,
+        options = {}
+    ) {
+
+        const currentToken =
             getToken();
 
 
-        if (!token) {
+        if (!currentToken) {
 
-            window.location.replace(
-                "login.html"
+            handleUnauthorized();
+
+            throw new Error(
+                "Authentication token not found"
             );
 
         }
 
 
-        /* =========================================================
-           ELEMENTS
-        ========================================================= */
+        const headers = {
 
-        const sidebar =
-            document.getElementById(
-                "sidebar"
-            );
+            ...(options.headers || {}),
 
+            "Authorization":
+                `Bearer ${currentToken}`
 
-        const sidebarOverlay =
-            document.getElementById(
-                "sidebarOverlay"
-            );
+        };
 
 
-        const mobileMenuBtn =
-            document.getElementById(
-                "mobileMenuBtn"
-            );
-
-
-        const loadingOverlay =
-            document.getElementById(
-                "loadingOverlay"
-            );
-
-
-        const recentAttendanceBody =
-            document.getElementById(
-                "recentAttendanceBody"
-            );
-
-
-        /* =========================================================
-           AUTHENTICATED FETCH
-        ========================================================= */
-
-        async function authenticatedFetch(
-            url,
-            options = {}
+        if (
+            options.body &&
+            !headers["Content-Type"]
         ) {
 
-            const currentToken =
-                getToken();
+            headers["Content-Type"] =
+                "application/json";
+
+        }
 
 
-            if (!currentToken) {
-
-                handleUnauthorized();
-
-                throw new Error(
-                    "Authentication token not found"
-                );
-
-            }
-
-
-            const headers = {
-
-                ...(options.headers || {}),
-
-                "Authorization":
-                    `Bearer ${currentToken}`
-
-            };
+        const response =
+            await fetch(
+                url,
+                {
+                    ...options,
+                    headers
+                }
+            );
 
 
-            if (
-                options.body &&
-                !headers["Content-Type"]
-            ) {
+        if (
+            response.status === 401 ||
+            response.status === 403
+        ) {
 
-                headers["Content-Type"] =
-                    "application/json";
+            handleUnauthorized();
 
-            }
+            throw new Error(
+                "Session expired. Please login again."
+            );
 
+        }
+
+
+        return response;
+
+    }
+
+
+    /* =====================================================
+       CURRENT DATE
+    ====================================================== */
+
+    function setCurrentDate() {
+
+        const now =
+            new Date();
+
+
+        const formatted =
+            now.toLocaleDateString(
+                "en-IN",
+                {
+                    day: "2-digit",
+                    month: "short",
+                    year: "numeric"
+                }
+            );
+
+
+        const currentDate =
+            document.getElementById(
+                "currentDate"
+            );
+
+
+        if (currentDate) {
+
+            currentDate.innerText =
+                formatted;
+
+        }
+
+
+        const currentYear =
+            document.getElementById(
+                "currentYear"
+            );
+
+
+        if (currentYear) {
+
+            currentYear.innerText =
+                now.getFullYear();
+
+        }
+
+    }
+
+
+    /* =====================================================
+       LOAD DASHBOARD
+    ====================================================== */
+
+    async function loadDashboard() {
+
+        showLoading();
+
+
+        try {
 
             const response =
-                await fetch(
-                    url,
+                await authenticatedFetch(
+                    `${API_BASE_URL}/api/admin/dashboard`,
                     {
-                        ...options,
-                        headers
+                        method: "GET"
                     }
                 );
 
 
-            if (
-                response.status === 401 ||
-                response.status === 403
-            ) {
+            if (!response.ok) {
 
-                handleUnauthorized();
+                let message =
+                    `HTTP ${response.status}`;
 
-                throw new Error(
-                    "Session expired. Please login again."
-                );
 
-            }
+                try {
 
+                    const errorData =
+                        await response.json();
 
-            return response;
 
-        }
+                    message =
+                        errorData.message ||
+                        message;
 
-
-        /* =========================================================
-           MOBILE SIDEBAR
-        ========================================================= */
-
-        if (mobileMenuBtn) {
-
-            mobileMenuBtn.addEventListener(
-                "click",
-                () => {
-
-                    sidebar.classList.add("show");
-
-                    sidebarOverlay.classList.add("show");
-
-                }
-            );
-
-        }
-
-
-        if (sidebarOverlay) {
-
-            sidebarOverlay.addEventListener(
-                "click",
-                closeSidebar
-            );
-
-        }
-
-
-        function closeSidebar() {
-
-            sidebar.classList.remove("show");
-
-            sidebarOverlay.classList.remove("show");
-
-        }
-
-
-        /* =========================================================
-           SIDEBAR LINKS
-        ========================================================= */
-
-        document
-            .querySelectorAll(".sidebar-link")
-            .forEach(link => {
-
-                link.addEventListener(
-                    "click",
-                    () => {
-
-                        closeSidebar();
-
-                    }
-                );
-
-            });
-
-
-        /* =========================================================
-           ACTIVE SIDEBAR
-        ========================================================= */
-
-        function setActiveSidebar() {
-
-            let currentPage =
-                window.location.pathname
-                    .split("/")
-                    .pop()
-                    .toLowerCase();
-
-
-            if (
-                !currentPage ||
-                currentPage === ""
-            ) {
-
-                currentPage =
-                    "dashboard.html";
-
-            }
-
-
-            document
-                .querySelectorAll(".sidebar-link")
-                .forEach(link => {
-
-                    const page =
-                        (
-                            link.dataset.page ||
-                            ""
-                        ).toLowerCase();
-
-
-                    link.classList.remove("active");
-
-
-                    if (
-                        page === currentPage
-                    ) {
-
-                        link.classList.add("active");
-
-                    }
-
-                });
-
-        }
-
-
-        /* =========================================================
-           CURRENT DATE
-        ========================================================= */
-
-        function setCurrentDate() {
-
-            const now =
-                new Date();
-
-
-            const formatted =
-                now.toLocaleDateString(
-                    "en-IN",
-                    {
-                        day: "2-digit",
-                        month: "short",
-                        year: "numeric"
-                    }
-                );
-
-
-            const currentDate =
-                document.getElementById(
-                    "currentDate"
-                );
-
-
-            if (currentDate) {
-
-                currentDate.innerText =
-                    formatted;
-
-            }
-
-
-            const currentYear =
-                document.getElementById(
-                    "currentYear"
-                );
-
-
-            if (currentYear) {
-
-                currentYear.innerText =
-                    now.getFullYear();
-
-            }
-
-        }
-
-
-        /* =========================================================
-           ADMIN NAME
-        ========================================================= */
-
-        function setAdminName() {
-
-            const username =
-                localStorage.getItem(
-                    "adminUsername"
-                );
-
-
-            const adminName =
-                document.getElementById(
-                    "adminName"
-                );
-
-
-            if (
-                adminName &&
-                username
-            ) {
-
-                adminName.innerText =
-                    username;
-
-            }
-
-        }
-
-
-        /* =========================================================
-           LOAD DASHBOARD
-        ========================================================= */
-
-        async function loadDashboard() {
-
-            showLoading();
-
-
-            try {
-
-                const response =
-                    await authenticatedFetch(
-                        `${API_BASE_URL}/api/admin/dashboard`,
-                        {
-                            method: "GET"
-                        }
-                    );
-
-
-                if (!response.ok) {
-
-                    let message =
-                        `HTTP ${response.status}`;
-
-
-                    try {
-
-                        const errorData =
-                            await response.json();
-
-
-                        message =
-                            errorData.message ||
-                            message;
-
-                    } catch (error) {
-
-                    }
-
-
-                    throw new Error(message);
+                } catch (error) {
 
                 }
 
 
-                const data =
-                    await response.json();
-
-
-                console.log(
-                    "Dashboard Response:",
-                    data
-                );
-
-
-                updateDashboard(data);
-
-
-            } catch (error) {
-
-                console.error(
-                    "Dashboard API Error:",
-                    error
-                );
-
-
-                if (!getToken()) {
-
-                    return;
-
-                }
-
-
-                showDashboardError();
-
-            } finally {
-
-                hideLoading();
+                throw new Error(message);
 
             }
 
-        }
+
+            const data =
+                await response.json();
 
 
-        /* =========================================================
-           UPDATE DASHBOARD
-        ========================================================= */
-
-        function updateDashboard(data) {
-
-            setValue(
-                "totalStudents",
-                data.totalStudents
+            console.log(
+                "Dashboard Response:",
+                data
             );
 
 
-            setValue(
-                "totalTeachers",
-                data.totalTeachers
+            updateDashboard(data);
+
+
+        } catch (error) {
+
+            console.error(
+                "Dashboard API Error:",
+                error
             );
 
 
-            setValue(
-                "totalDepartments",
-                data.totalDepartments
-            );
+            if (!getToken()) {
+
+                return;
+
+            }
 
 
-            setValue(
-                "totalCourses",
-                data.totalCourses
-            );
+            showDashboardError();
 
+        } finally {
 
-            setValue(
-                "totalSemesters",
-                data.totalSemesters
-            );
-
-
-            setValue(
-                "totalSections",
-                data.totalSections
-            );
-
-
-            setValue(
-                "todayAttendance",
-                data.todayAttendance
-            );
-
-
-            setValue(
-                "attendanceTotal",
-                data.todayAttendance
-            );
-
-
-            setValue(
-                "attendancePresent",
-                data.todayPresent
-            );
-
-
-            setValue(
-                "attendanceAbsent",
-                data.todayAbsent
-            );
-
-
-            renderRecentAttendance(
-                Array.isArray(data.recentAttendance)
-                    ? data.recentAttendance
-                    : []
-            );
+            hideLoading();
 
         }
 
+    }
 
-        /* =========================================================
-           SET VALUE
-        ========================================================= */
 
-        function setValue(
-            elementId,
-            value
+    /* =====================================================
+       UPDATE DASHBOARD
+    ====================================================== */
+
+    function updateDashboard(data) {
+
+        setValue(
+            "totalStudents",
+            data.totalStudents
+        );
+
+
+        setValue(
+            "totalTeachers",
+            data.totalTeachers
+        );
+
+
+        setValue(
+            "totalDepartments",
+            data.totalDepartments
+        );
+
+
+        setValue(
+            "totalCourses",
+            data.totalCourses
+        );
+
+
+        setValue(
+            "totalSemesters",
+            data.totalSemesters
+        );
+
+
+        setValue(
+            "totalSections",
+            data.totalSections
+        );
+
+
+        setValue(
+            "todayAttendance",
+            data.todayAttendance
+        );
+
+
+        setValue(
+            "attendanceTotal",
+            data.todayAttendance
+        );
+
+
+        setValue(
+            "attendancePresent",
+            data.todayPresent
+        );
+
+
+        setValue(
+            "attendanceAbsent",
+            data.todayAbsent
+        );
+
+
+        renderRecentAttendance(
+            Array.isArray(
+                data.recentAttendance
+            )
+                ? data.recentAttendance
+                : []
+        );
+
+    }
+
+
+    /* =====================================================
+       SET VALUE
+    ====================================================== */
+
+    function setValue(
+        elementId,
+        value
+    ) {
+
+        const element =
+            document.getElementById(
+                elementId
+            );
+
+
+        if (!element) {
+
+            return;
+
+        }
+
+
+        if (
+            value === null ||
+            value === undefined ||
+            value === ""
         ) {
 
-            const element =
-                document.getElementById(
-                    elementId
-                );
-
-
-            if (!element) {
-
-                return;
-
-            }
-
-
-            if (
-                value === null ||
-                value === undefined ||
-                value === ""
-            ) {
-
-                element.innerText =
-                    "0";
-
-                return;
-
-            }
-
-
-            const number =
-                Number(value);
-
-
-            if (
-                Number.isNaN(number)
-            ) {
-
-                element.innerText =
-                    escapeHtml(value);
-
-                return;
-
-            }
-
-
             element.innerText =
-                number.toLocaleString(
-                    "en-IN"
-                );
+                "0";
+
+            return;
 
         }
 
 
-        /* =========================================================
-           RECENT ATTENDANCE
-        ========================================================= */
+        const number =
+            Number(value);
 
-        function renderRecentAttendance(records) {
 
-            if (
-                !records ||
-                records.length === 0
-            ) {
+        if (
+            Number.isNaN(number)
+        ) {
 
-                recentAttendanceBody.innerHTML = `
+            element.innerText =
+                escapeHtml(value);
+
+            return;
+
+        }
+
+
+        element.innerText =
+            number.toLocaleString(
+                "en-IN"
+            );
+
+    }
+
+
+    /* =====================================================
+       RECENT ATTENDANCE
+    ====================================================== */
+
+    function renderRecentAttendance(records) {
+
+        if (
+            !records ||
+            records.length === 0
+        ) {
+
+            recentAttendanceBody.innerHTML = `
 
                 <tr>
 
@@ -2714,7 +2627,9 @@
                         colspan="5"
                         class="empty-state">
 
-                        <i class="bi bi-calendar-x"></i>
+                        <span class="empty-icon">
+                            📅
+                        </span>
 
                         No attendance records found.
 
@@ -2724,47 +2639,47 @@
 
             `;
 
-                return;
+            return;
 
-            }
-
-
-            recentAttendanceBody.innerHTML =
-                records
-                    .slice(0, 10)
-                    .map(record => {
-
-                        const status =
-                            String(
-                                record.status || ""
-                            ).toUpperCase();
+        }
 
 
-                        let badgeClass =
-                            "badge-unknown";
+        recentAttendanceBody.innerHTML =
+            records
+                .slice(0, 10)
+                .map(record => {
+
+                    const status =
+                        String(
+                            record.status || ""
+                        ).toUpperCase();
 
 
-                        if (
-                            status === "PRESENT"
-                        ) {
-
-                            badgeClass =
-                                "badge-present";
-
-                        }
+                    let badgeClass =
+                        "badge-unknown";
 
 
-                        else if (
-                            status === "ABSENT"
-                        ) {
+                    if (
+                        status === "PRESENT"
+                    ) {
 
-                            badgeClass =
-                                "badge-absent";
+                        badgeClass =
+                            "badge-present";
 
-                        }
+                    }
 
 
-                        return `
+                    else if (
+                        status === "ABSENT"
+                    ) {
+
+                        badgeClass =
+                            "badge-absent";
+
+                    }
+
+
+                    return `
 
                         <tr>
 
@@ -2773,9 +2688,7 @@
                                 <div class="user-cell">
 
                                     <div class="user-avatar">
-
-                                        <i class="bi bi-person"></i>
-
+                                        👤
                                     </div>
 
                                     <div>
@@ -2783,8 +2696,8 @@
                                         <div class="user-name">
 
                                             ${escapeHtml(
-                            record.username || "-"
-                        )}
+                                                record.username || "-"
+                                            )}
 
                                         </div>
 
@@ -2792,8 +2705,8 @@
 
                                             ID:
                                             ${escapeHtml(
-                            record.userId ?? "-"
-                        )}
+                                                record.userId ?? "-"
+                                            )}
 
                                         </small>
 
@@ -2805,23 +2718,29 @@
 
 
                             <td>
+
                                 ${escapeHtml(
-                            record.attendanceDate || "-"
-                        )}
+                                    record.attendanceDate || "-"
+                                )}
+
                             </td>
 
 
                             <td>
+
                                 ${escapeHtml(
-                            record.checkInTime || "-"
-                        )}
+                                    record.checkInTime || "-"
+                                )}
+
                             </td>
 
 
                             <td>
+
                                 ${escapeHtml(
-                            record.checkOutTime || "-"
-                        )}
+                                    record.checkOutTime || "-"
+                                )}
+
                             </td>
 
 
@@ -2831,8 +2750,8 @@
                                     class="status-badge ${badgeClass}">
 
                                     ${escapeHtml(
-                            record.status || "-"
-                        )}
+                                        record.status || "-"
+                                    )}
 
                                 </span>
 
@@ -2842,88 +2761,90 @@
 
                     `;
 
-                    })
-                    .join("");
+                })
+                .join("");
 
-        }
-
-
-        /* =========================================================
-           UNAUTHORIZED
-        ========================================================= */
-
-        function handleUnauthorized() {
-
-            localStorage.removeItem(
-                "accessToken"
-            );
+    }
 
 
-            localStorage.removeItem(
-                "adminUsername"
-            );
+    /* =====================================================
+       UNAUTHORIZED
+    ====================================================== */
+
+    function handleUnauthorized() {
+
+        localStorage.removeItem(
+            "accessToken"
+        );
 
 
-            window.location.replace(
-                "login.html"
-            );
-
-        }
+        localStorage.removeItem(
+            "adminUsername"
+        );
 
 
-        /* =========================================================
-           DASHBOARD ERROR
-        ========================================================= */
+        window.location.replace(
+            "login.html"
+        );
 
-        function showDashboardError() {
-
-            const ids = [
-
-                "totalStudents",
-                "totalTeachers",
-                "totalDepartments",
-                "totalCourses",
-                "totalSemesters",
-                "totalSections",
-                "todayAttendance",
-                "attendanceTotal",
-                "attendancePresent",
-                "attendanceAbsent"
-
-            ];
+    }
 
 
-            ids.forEach(id => {
+    /* =====================================================
+       DASHBOARD ERROR
+    ====================================================== */
 
-                const element =
-                    document.getElementById(id);
+    function showDashboardError() {
+
+        const ids = [
+
+            "totalStudents",
+            "totalTeachers",
+            "totalDepartments",
+            "totalCourses",
+            "totalSemesters",
+            "totalSections",
+            "todayAttendance",
+            "attendanceTotal",
+            "attendancePresent",
+            "attendanceAbsent"
+
+        ];
 
 
-                if (element) {
+        ids.forEach(id => {
 
-                    element.innerText =
-                        "--";
-
-                }
-
-            });
+            const element =
+                document.getElementById(id);
 
 
-            recentAttendanceBody.innerHTML = `
+            if (element) {
+
+                element.innerText =
+                    "--";
+
+            }
+
+        });
+
+
+        recentAttendanceBody.innerHTML = `
 
             <tr>
 
                 <td
                     colspan="5"
-                    class="text-center py-4">
+                    class="text-center"
+                    style="padding: 24px;">
 
-                    <div class="text-danger mb-1">
+                    <div
+                        class="text-danger"
+                        style="margin-bottom: 4px;">
 
-                        <i class="bi bi-exclamation-circle me-1"></i>
-
-                        Unable to load dashboard data.
+                        ⚠ Unable to load dashboard data.
 
                     </div>
+
 
                     <small class="text-muted">
 
@@ -2938,140 +2859,101 @@
 
         `;
 
-        }
+    }
 
 
-        /* =========================================================
-           LOADING
-        ========================================================= */
+    /* =====================================================
+       LOADING
+    ====================================================== */
 
-        function showLoading() {
+    function showLoading() {
 
-            if (loadingOverlay) {
+        if (loadingOverlay) {
 
-                loadingOverlay.style.display =
-                    "flex";
-
-            }
+            loadingOverlay.style.display =
+                "flex";
 
         }
 
+    }
 
-        function hideLoading() {
 
-            if (loadingOverlay) {
+    function hideLoading() {
 
-                loadingOverlay.style.display =
-                    "none";
+        if (loadingOverlay) {
 
-            }
+            loadingOverlay.style.display =
+                "none";
 
         }
 
+    }
 
-        /* =========================================================
-           HTML ESCAPE
-        ========================================================= */
 
-        function escapeHtml(value) {
+    /* =====================================================
+       HTML ESCAPE
+    ====================================================== */
 
-            return String(value)
+    function escapeHtml(value) {
 
-                .replace(
-                    /&/g,
-                    "&amp;"
-                )
+        return String(value)
 
-                .replace(
-                    /</g,
-                    "&lt;"
-                )
+            .replace(
+                /&/g,
+                "&amp;"
+            )
 
-                .replace(
-                    />/g,
-                    "&gt;"
-                )
+            .replace(
+                /</g,
+                "&lt;"
+            )
 
-                .replace(
-                    /"/g,
-                    "&quot;"
-                )
+            .replace(
+                />/g,
+                "&gt;"
+            )
 
-                .replace(
-                    /'/g,
-                    "&#039;"
+            .replace(
+                /"/g,
+                "&quot;"
+            )
+
+            .replace(
+                /'/g,
+                "&#039;"
+            );
+
+    }
+
+
+    /* =====================================================
+       INITIALIZE DASHBOARD
+    ====================================================== */
+
+    document.addEventListener(
+        "DOMContentLoaded",
+        () => {
+
+            if (!getToken()) {
+
+                window.location.replace(
+                    "login.html"
                 );
 
-        }
-
-
-        /* =========================================================
-           LOGOUT
-        ========================================================= */
-
-        const logoutBtn =
-            document.getElementById(
-                "logoutBtn"
-            );
-
-
-        if (logoutBtn) {
-
-            logoutBtn.addEventListener(
-                "click",
-                () => {
-
-                    localStorage.removeItem(
-                        "accessToken"
-                    );
-
-
-                    localStorage.removeItem(
-                        "adminUsername"
-                    );
-
-
-                    window.location.replace(
-                        "login.html"
-                    );
-
-                }
-            );
-
-        }
-
-
-        /* =========================================================
-           INITIALIZE
-        ========================================================= */
-
-        document.addEventListener(
-            "DOMContentLoaded",
-            () => {
-
-                if (!getToken()) {
-
-                    window.location.replace(
-                        "login.html"
-                    );
-
-                    return;
-
-                }
-
-
-                setCurrentDate();
-
-                setAdminName();
-
-                setActiveSidebar();
-
-                loadDashboard();
+                return;
 
             }
-        );
 
-    </script>
+
+            setCurrentDate();
+
+
+            loadDashboard();
+
+        }
+    );
+
+</script>
 
 
 </body>

@@ -9,6 +9,7 @@
 
     <title>Leave Requests | Admin Panel</title>
 
+    <link rel="stylesheet" href="/css/sidebar.css">
 
     <style>
         * {
@@ -18,109 +19,10 @@
             font-family: Inter, Arial, sans-serif;
         }
 
-
         body {
             background: #f5f7fb;
             color: #1e293b;
         }
-
-
-        /* =========================
-           LAYOUT
-        ========================== */
-
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-
-        /* =========================
-           SIDEBAR
-        ========================== */
-
-        .sidebar {
-            width: 250px;
-            background: #111827;
-            color: white;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1000;
-            transition: 0.3s;
-        }
-
-
-        .brand {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            padding: 0 22px;
-            font-size: 20px;
-            font-weight: 700;
-            border-bottom: 1px solid #273244;
-        }
-
-
-        .brand span {
-            color: #60a5fa;
-            margin-right: 8px;
-        }
-
-
-        .menu {
-            padding: 20px 12px;
-        }
-
-
-        .menu-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #94a3b8;
-            padding: 0 12px;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #cbd5e1;
-            text-decoration: none;
-            padding: 12px 14px;
-            margin-bottom: 5px;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-
-        .menu a:hover,
-        .menu a.active {
-            background: #2563eb;
-            color: white;
-        }
-
-
-        .menu-icon {
-            width: 20px;
-            text-align: center;
-        }
-
-
-        /* =========================
-           MAIN
-        ========================== */
-
-        .main {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            min-height: 100vh;
-        }
-
 
         /* =========================
            NAVBAR
@@ -139,12 +41,16 @@
             z-index: 500;
         }
 
+        .navbar-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
 
         .page-title {
             font-size: 20px;
             font-weight: 700;
         }
-
 
         .nav-right {
             display: flex;
@@ -152,23 +58,20 @@
             gap: 15px;
         }
 
-
-        .admin-info {
+        /* Scope these because sidebar also uses same class names */
+        .navbar .admin-info {
             text-align: right;
         }
 
-
-        .admin-name {
+        .navbar .admin-name {
             font-size: 14px;
             font-weight: 600;
         }
 
-
-        .admin-role {
+        .navbar .admin-role {
             font-size: 11px;
             color: #64748b;
         }
-
 
         .avatar {
             width: 38px;
@@ -182,16 +85,6 @@
             font-weight: 700;
         }
 
-
-        .menu-toggle {
-            display: none;
-            border: none;
-            background: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-
         /* =========================
            CONTENT
         ========================== */
@@ -200,18 +93,15 @@
             padding: 30px;
         }
 
-
         .breadcrumb {
             color: #64748b;
             font-size: 13px;
             margin-bottom: 25px;
         }
 
-
         .breadcrumb span {
             color: #2563eb;
         }
-
 
         /* =========================
            STATS
@@ -224,7 +114,6 @@
             margin-bottom: 25px;
         }
 
-
         .stat-card {
             background: white;
             border-radius: 12px;
@@ -235,19 +124,16 @@
             justify-content: space-between;
         }
 
-
         .stat-label {
             font-size: 13px;
             color: #64748b;
             margin-bottom: 5px;
         }
 
-
         .stat-value {
             font-size: 25px;
             font-weight: 700;
         }
-
 
         .stat-icon {
             width: 48px;
@@ -259,26 +145,21 @@
             font-size: 22px;
         }
 
-
         .blue {
             background: #dbeafe;
         }
-
 
         .orange {
             background: #ffedd5;
         }
 
-
         .green {
             background: #dcfce7;
         }
 
-
         .red {
             background: #fee2e2;
         }
-
 
         /* =========================
            CARD
@@ -291,7 +172,6 @@
             overflow: hidden;
         }
 
-
         .card-header {
             padding: 20px;
             display: flex;
@@ -301,19 +181,16 @@
             border-bottom: 1px solid #e5e7eb;
         }
 
-
         .card-title {
             font-size: 17px;
             font-weight: 700;
         }
-
 
         .card-subtitle {
             font-size: 12px;
             color: #64748b;
             margin-top: 4px;
         }
-
 
         /* =========================
            BUTTON
@@ -329,56 +206,46 @@
             transition: 0.2s;
         }
 
-
         .btn-primary {
             background: #2563eb;
             color: white;
         }
 
-
         .btn-primary:hover {
             background: #1d4ed8;
         }
-
 
         .btn-secondary {
             background: #e2e8f0;
             color: #334155;
         }
 
-
         .btn-secondary:hover {
             background: #cbd5e1;
         }
-
 
         .btn-success {
             background: #dcfce7;
             color: #15803d;
         }
 
-
         .btn-success:hover {
             background: #bbf7d0;
         }
-
 
         .btn-danger {
             background: #fee2e2;
             color: #dc2626;
         }
 
-
         .btn-danger:hover {
             background: #fecaca;
         }
-
 
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed;
         }
-
 
         /* =========================
            FILTERS
@@ -391,11 +258,9 @@
             border-bottom: 1px solid #e5e7eb;
         }
 
-
         .search {
             flex: 1;
         }
-
 
         .input,
         .select,
@@ -409,12 +274,10 @@
             font-size: 13px;
         }
 
-
         .textarea {
             min-height: 100px;
             resize: vertical;
         }
-
 
         .input:focus,
         .select:focus,
@@ -423,11 +286,9 @@
             box-shadow: 0 0 0 2px #dbeafe;
         }
 
-
         .filter-select {
             width: 180px;
         }
-
 
         /* =========================
            TABLE
@@ -437,13 +298,11 @@
             overflow-x: auto;
         }
 
-
         table {
             width: 100%;
             border-collapse: collapse;
             min-width: 950px;
         }
-
 
         th {
             background: #f8fafc;
@@ -455,23 +314,19 @@
             letter-spacing: 0.4px;
         }
 
-
         td {
             padding: 15px 18px;
             border-top: 1px solid #eef2f7;
             font-size: 13px;
         }
 
-
         tr:hover {
             background: #f8fafc;
         }
 
-
         .user-name {
             font-weight: 600;
         }
-
 
         .user-id {
             color: #64748b;
@@ -479,11 +334,9 @@
             margin-top: 3px;
         }
 
-
         .date-info {
             font-weight: 600;
         }
-
 
         .date-days {
             color: #64748b;
@@ -491,11 +344,9 @@
             margin-top: 3px;
         }
 
-
         .leave-type {
             font-weight: 600;
         }
-
 
         .description-preview {
             color: #64748b;
@@ -504,7 +355,6 @@
             overflow: hidden;
             text-overflow: ellipsis;
         }
-
 
         /* =========================
            BADGES
@@ -518,48 +368,40 @@
             font-weight: 600;
         }
 
-
         .badge-pending {
             background: #ffedd5;
             color: #c2410c;
         }
-
 
         .badge-approved {
             background: #dcfce7;
             color: #15803d;
         }
 
-
         .badge-rejected {
             background: #fee2e2;
             color: #b91c1c;
         }
-
 
         .badge-casual {
             background: #dbeafe;
             color: #1d4ed8;
         }
 
-
         .badge-sick {
             background: #fef3c7;
             color: #92400e;
         }
-
 
         .badge-personal {
             background: #ede9fe;
             color: #6d28d9;
         }
 
-
         .badge-other {
             background: #f1f5f9;
             color: #475569;
         }
-
 
         /* =========================
            ACTIONS
@@ -571,7 +413,6 @@
             flex-wrap: wrap;
         }
 
-
         .action-btn {
             border: none;
             padding: 7px 10px;
@@ -581,24 +422,20 @@
             font-weight: 600;
         }
 
-
         .action-view {
             background: #dbeafe;
             color: #1d4ed8;
         }
-
 
         .action-approve {
             background: #dcfce7;
             color: #15803d;
         }
 
-
         .action-reject {
             background: #fee2e2;
             color: #dc2626;
         }
-
 
         /* =========================
            MODAL
@@ -615,11 +452,9 @@
             padding: 20px;
         }
 
-
         .modal-overlay.show {
             display: flex;
         }
-
 
         .modal {
             width: 100%;
@@ -630,7 +465,6 @@
             overflow-y: auto;
         }
 
-
         .modal-header {
             padding: 20px;
             border-bottom: 1px solid #e5e7eb;
@@ -639,12 +473,10 @@
             align-items: center;
         }
 
-
         .modal-title {
             font-size: 18px;
             font-weight: 700;
         }
-
 
         .close {
             border: none;
@@ -654,11 +486,9 @@
             color: #64748b;
         }
 
-
         .modal-body {
             padding: 22px;
         }
-
 
         .detail-grid {
             display: grid;
@@ -666,18 +496,15 @@
             gap: 18px;
         }
 
-
         .detail-item {
             display: flex;
             flex-direction: column;
             gap: 5px;
         }
 
-
         .detail-item.full {
             grid-column: 1 / -1;
         }
-
 
         .detail-label {
             font-size: 11px;
@@ -687,13 +514,11 @@
             font-weight: 600;
         }
 
-
         .detail-value {
             font-size: 14px;
             font-weight: 600;
             color: #1e293b;
         }
-
 
         .detail-description {
             background: #f8fafc;
@@ -706,13 +531,11 @@
             white-space: pre-wrap;
         }
 
-
         .review-section {
             margin-top: 20px;
             padding-top: 20px;
             border-top: 1px solid #e5e7eb;
         }
-
 
         .review-label {
             font-size: 12px;
@@ -722,7 +545,6 @@
             display: block;
         }
 
-
         .modal-footer {
             padding: 18px 22px;
             border-top: 1px solid #e5e7eb;
@@ -730,7 +552,6 @@
             justify-content: flex-end;
             gap: 10px;
         }
-
 
         /* =========================
            TOAST
@@ -752,21 +573,17 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
-
         .toast.show {
             display: block;
         }
-
 
         .toast.success {
             background: #15803d;
         }
 
-
         .toast.error {
             background: #dc2626;
         }
-
 
         /* =========================
            LOADER / EMPTY
@@ -779,14 +596,12 @@
             font-size: 13px;
         }
 
-
         .empty {
             text-align: center;
             padding: 45px;
             color: #64748b;
             font-size: 13px;
         }
-
 
         /* =========================
            FOOTER
@@ -798,7 +613,6 @@
             color: #94a3b8;
             font-size: 12px;
         }
-
 
         /* =========================
            RESPONSIVE
@@ -812,45 +626,20 @@
 
         }
 
-
         @media (max-width: 900px) {
-
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-
-            .main {
-                margin-left: 0;
-                width: 100%;
-            }
-
-
-            .menu-toggle {
-                display: block;
-            }
-
 
             .stats {
                 grid-template-columns: 1fr 1fr;
             }
-
 
             .card-header {
                 align-items: flex-start;
                 flex-direction: column;
             }
 
-
             .filters {
                 flex-direction: column;
             }
-
 
             .filter-select {
                 width: 100%;
@@ -858,38 +647,31 @@
 
         }
 
-
         @media (max-width: 600px) {
 
             .content {
                 padding: 18px;
             }
 
-
             .navbar {
                 padding: 0 18px;
             }
 
-
-            .admin-info {
+            .navbar .admin-info {
                 display: none;
             }
-
 
             .stats {
                 grid-template-columns: 1fr;
             }
 
-
             .detail-grid {
                 grid-template-columns: 1fr;
             }
 
-
             .detail-item.full {
                 grid-column: auto;
             }
-
 
             .modal {
                 max-height: 95vh;
@@ -904,363 +686,274 @@
 <body>
 
 
-    <div class="app">
-
-
-        <!-- =====================================================
-         SIDEBAR
+    <!-- =====================================================
+         REUSABLE SIDEBAR
     ===================================================== -->
 
-        <aside class="sidebar" id="sidebar">
+    <div id="sidebar-container"></div>
 
 
-            <div class="brand">
-
-                <span>◆</span>
-
-                College Attendance
-
-            </div>
-
-
-            <div class="menu">
-
-
-                <!-- MAIN -->
-
-                <div class="menu-title">
-                    Main
-                </div>
-
-
-                <a href="dashboard.html">
-
-                    <span class="menu-icon">
-                        ▦
-                    </span>
-
-                    Dashboard
-
-                </a>
-
-
-                <!-- MANAGEMENT -->
-
-                <div class="menu-title">
-                    Management
-                </div>
-
-
-                <a href="students.html">
-
-                    <span class="menu-icon">
-                        👨‍🎓
-                    </span>
-
-                    Students
-
-                </a>
-
-
-                <a href="teachers.html">
-
-                    <span class="menu-icon">
-                        👨‍🏫
-                    </span>
-
-                    Teachers
-
-                </a>
-
-
-                <a href="departments.html">
-
-                    <span class="menu-icon">
-                        🏢
-                    </span>
-
-                    Departments
-
-                </a>
-
-
-                <a href="courses.html">
-
-                    <span class="menu-icon">
-                        📚
-                    </span>
-
-                    Courses
-
-                </a>
-
-
-                <a href="semesters.html">
-
-                    <span class="menu-icon">
-                        📖
-                    </span>
-
-                    Semesters
-
-                </a>
-
-
-                <a href="sections.html">
-
-                    <span class="menu-icon">
-                        §
-                    </span>
-
-                    Sections
-
-                </a>
-
-
-                <!-- LEAVE REQUESTS -->
-
-                <a href="leaves.html" class="active">
-
-                    <span class="menu-icon">
-                        🗓
-                    </span>
-
-                    Leave Requests
-
-                </a>
-
-
-                <!-- ATTENDANCE -->
-
-                <div class="menu-title">
-                    Attendance
-                </div>
-
-
-                <a href="attendance.html">
-
-                    <span class="menu-icon">
-                        ✓
-                    </span>
-
-                    Attendance
-
-                </a>
-
-
-                <a href="machine-attendance.html">
-
-                    <span class="menu-icon">
-                        📷
-                    </span>
-
-                    Machine Attendance
-
-                </a>
-
-
-            </div>
-
-
-        </aside>
-
-
-        <!-- =====================================================
+    <!-- =====================================================
          MAIN
     ===================================================== -->
 
-        <main class="main">
+    <main class="main-wrapper">
 
 
-            <!-- NAVBAR -->
+        <!-- =================================================
+             NAVBAR
+        ================================================= -->
 
-            <nav class="navbar">
+        <nav class="navbar">
 
 
-                <div style="display:flex;align-items:center;gap:15px;">
+            <div class="navbar-left">
 
-                    <button class="menu-toggle" onclick="toggleSidebar()">
+                <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
 
-                        ☰
+                    ☰
+
+                </button>
+
+
+                <div class="page-title">
+
+                    Leave Requests
+
+                </div>
+
+            </div>
+
+
+            <div class="nav-right">
+
+
+                <div class="admin-info">
+
+                    <div class="admin-name">
+
+                        Administrator
+
+                    </div>
+
+
+                    <div class="admin-role">
+
+                        System Admin
+
+                    </div>
+
+                </div>
+
+
+                <div class="avatar">
+
+                    A
+
+                </div>
+
+            </div>
+
+
+        </nav>
+
+
+        <!-- =================================================
+             CONTENT
+        ================================================= -->
+
+        <section class="content">
+
+
+            <div class="breadcrumb">
+
+                Admin /
+
+                <span>
+                    Leave Requests
+                </span>
+
+            </div>
+
+
+            <!-- =================================================
+                 STATS
+            ================================================= -->
+
+            <div class="stats">
+
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Total Requests
+                        </div>
+
+                        <div class="stat-value" id="totalLeaves">
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon blue">
+
+                        ≡
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Pending Requests
+                        </div>
+
+                        <div class="stat-value" id="pendingLeaves">
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon orange">
+
+                        ⏳
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Approved
+                        </div>
+
+                        <div class="stat-value" id="approvedLeaves">
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon green">
+
+                        ✓
+
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Rejected
+                        </div>
+
+                        <div class="stat-value" id="rejectedLeaves">
+                            0
+                        </div>
+
+                    </div>
+
+
+                    <div class="stat-icon red">
+
+                        ×
+
+                    </div>
+
+                </div>
+
+
+            </div>
+
+
+            <!-- =================================================
+                 LEAVE TABLE
+            ================================================= -->
+
+            <div class="card">
+
+
+                <div class="card-header">
+
+
+                    <div>
+
+                        <div class="card-title">
+
+                            Leave Request Management
+
+                        </div>
+
+
+                        <div class="card-subtitle">
+
+                            Review and manage student and teacher leave requests
+
+                        </div>
+
+                    </div>
+
+
+                    <button type="button" class="btn btn-primary" onclick="loadLeaves()">
+
+                        ↻ Refresh
 
                     </button>
 
 
-                    <div class="page-title">
-
-                        Leave Requests
-
-                    </div>
-
                 </div>
 
 
-                <div class="nav-right">
+                <!-- FILTERS -->
+
+                <div class="filters">
 
 
-                    <div class="admin-info">
+                    <div class="search">
 
-                        <div class="admin-name">
-
-                            Administrator
-
-                        </div>
-
-
-                        <div class="admin-role">
-
-                            System Admin
-
-                        </div>
+                        <input type="text" id="searchInput" class="input"
+                            placeholder="Search by username, leave type or description..." oninput="filterLeaves()">
 
                     </div>
 
 
-                    <div class="avatar">
+                    <div class="filter-select">
 
-                        A
+                        <select id="statusFilter" class="select" onchange="filterLeaves()">
 
-                    </div>
+                            <option value="ALL">
+                                All Status
+                            </option>
 
-                </div>
+                            <option value="PENDING">
+                                Pending
+                            </option>
 
-
-            </nav>
-
-
-            <!-- =====================================================
-             CONTENT
-        ===================================================== -->
-
-            <section class="content">
-
-
-                <div class="breadcrumb">
-
-                    Admin /
-
-                    <span>
-                        Leave Requests
-                    </span>
-
-                </div>
-
-
-                <!-- =================================================
-                 STATS
-            ================================================= -->
-
-                <div class="stats">
-
-
-                    <!-- TOTAL -->
-
-                    <div class="stat-card">
-
-                        <div>
-
-                            <div class="stat-label">
-                                Total Requests
-                            </div>
-
-                            <div class="stat-value" id="totalLeaves">
-
-                                0
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="stat-icon blue">
-
-                            ≡
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- PENDING -->
-
-                    <div class="stat-card">
-
-                        <div>
-
-                            <div class="stat-label">
-                                Pending Requests
-                            </div>
-
-                            <div class="stat-value" id="pendingLeaves">
-
-                                0
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="stat-icon orange">
-
-                            ⏳
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- APPROVED -->
-
-                    <div class="stat-card">
-
-                        <div>
-
-                            <div class="stat-label">
+                            <option value="APPROVED">
                                 Approved
-                            </div>
+                            </option>
 
-                            <div class="stat-value" id="approvedLeaves">
-
-                                0
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="stat-icon green">
-
-                            ✓
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- REJECTED -->
-
-                    <div class="stat-card">
-
-                        <div>
-
-                            <div class="stat-label">
+                            <option value="REJECTED">
                                 Rejected
-                            </div>
+                            </option>
 
-                            <div class="stat-value" id="rejectedLeaves">
-
-                                0
-
-                            </div>
-
-                        </div>
-
-
-                        <div class="stat-icon red">
-
-                            ×
-
-                        </div>
+                        </select>
 
                     </div>
 
@@ -1268,164 +961,66 @@
                 </div>
 
 
-                <!-- =================================================
-                 LEAVE TABLE
-            ================================================= -->
+                <!-- TABLE -->
 
-                <div class="card">
+                <div class="table-wrapper">
 
 
-                    <div class="card-header">
+                    <table>
 
 
-                        <div>
+                        <thead>
 
-                            <div class="card-title">
+                            <tr>
 
-                                Leave Request Management
+                                <th>#</th>
 
-                            </div>
+                                <th>User</th>
 
+                                <th>Leave</th>
 
-                            <div class="card-subtitle">
+                                <th>Date</th>
 
-                                Review and manage student and teacher leave requests
+                                <th>Description</th>
 
-                            </div>
+                                <th>Status</th>
 
-                        </div>
+                                <th>Actions</th>
 
+                            </tr>
 
-                        <button class="btn btn-primary" onclick="loadLeaves()">
-
-                            ↻ Refresh
-
-                        </button>
+                        </thead>
 
 
-                    </div>
+                        <tbody id="leaveTableBody"></tbody>
 
 
-                    <!-- FILTERS -->
-
-                    <div class="filters">
-
-
-                        <div class="search">
-
-                            <input type="text" id="searchInput" class="input"
-                                placeholder="Search by username, leave type or description..." oninput="filterLeaves()">
-
-                        </div>
-
-
-                        <div class="filter-select">
-
-                            <select id="statusFilter" class="select" onchange="filterLeaves()">
-
-                                <option value="ALL">
-                                    All Status
-                                </option>
-
-                                <option value="PENDING">
-                                    Pending
-                                </option>
-
-                                <option value="APPROVED">
-                                    Approved
-                                </option>
-
-                                <option value="REJECTED">
-                                    Rejected
-                                </option>
-
-                            </select>
-
-                        </div>
-
-
-                    </div>
-
-
-                    <!-- TABLE -->
-
-                    <div class="table-wrapper">
-
-
-                        <table>
-
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>
-                                        #
-                                    </th>
-
-                                    <th>
-                                        User
-                                    </th>
-
-                                    <th>
-                                        Leave
-                                    </th>
-
-                                    <th>
-                                        Date
-                                    </th>
-
-                                    <th>
-                                        Description
-                                    </th>
-
-                                    <th>
-                                        Status
-                                    </th>
-
-                                    <th>
-                                        Actions
-                                    </th>
-
-                                </tr>
-
-                            </thead>
-
-
-                            <tbody id="leaveTableBody">
-
-                            </tbody>
-
-
-                        </table>
-
-
-                    </div>
+                    </table>
 
 
                 </div>
 
 
-            </section>
+            </div>
 
 
-            <footer>
-
-                © 2026 College Attendance System.
-                All rights reserved.
-
-            </footer>
+        </section>
 
 
-        </main>
+        <footer>
+
+            © 2026 College Attendance System.
+            All rights reserved.
+
+        </footer>
 
 
-    </div>
+    </main>
 
 
     <!-- =========================================================
-     LEAVE DETAILS / REVIEW MODAL
-========================================================= -->
+         LEAVE DETAILS / REVIEW MODAL
+    ========================================================== -->
 
     <div class="modal-overlay" id="leaveModal">
 
@@ -1443,7 +1038,7 @@
                 </div>
 
 
-                <button class="close" onclick="closeModal()">
+                <button type="button" class="close" onclick="closeModal()">
 
                     ×
 
@@ -1459,8 +1054,6 @@
                 <div class="detail-grid">
 
 
-                    <!-- USER -->
-
                     <div class="detail-item">
 
                         <div class="detail-label">
@@ -1468,15 +1061,11 @@
                         </div>
 
                         <div class="detail-value" id="detailUsername">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- USER ID -->
 
                     <div class="detail-item">
 
@@ -1485,15 +1074,11 @@
                         </div>
 
                         <div class="detail-value" id="detailUserId">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- LEAVE TYPE -->
 
                     <div class="detail-item">
 
@@ -1502,15 +1087,11 @@
                         </div>
 
                         <div class="detail-value" id="detailLeaveType">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- STATUS -->
 
                     <div class="detail-item">
 
@@ -1519,15 +1100,11 @@
                         </div>
 
                         <div class="detail-value" id="detailStatus">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- FROM DATE -->
 
                     <div class="detail-item">
 
@@ -1536,15 +1113,11 @@
                         </div>
 
                         <div class="detail-value" id="detailFromDate">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- TO DATE -->
 
                     <div class="detail-item">
 
@@ -1553,15 +1126,11 @@
                         </div>
 
                         <div class="detail-value" id="detailToDate">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- APPLIED AT -->
 
                     <div class="detail-item">
 
@@ -1570,15 +1139,11 @@
                         </div>
 
                         <div class="detail-value" id="detailAppliedAt">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- REVIEWED AT -->
 
                     <div class="detail-item">
 
@@ -1587,15 +1152,11 @@
                         </div>
 
                         <div class="detail-value" id="detailReviewedAt">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- DESCRIPTION -->
 
                     <div class="detail-item full">
 
@@ -1603,17 +1164,12 @@
                             Description
                         </div>
 
-
                         <div class="detail-description" id="detailDescription">
-
                             -
-
                         </div>
 
                     </div>
 
-
-                    <!-- ADMIN REMARK -->
 
                     <div class="detail-item full">
 
@@ -1621,11 +1177,8 @@
                             Admin Remark
                         </div>
 
-
                         <div class="detail-description" id="detailAdminRemark">
-
                             -
-
                         </div>
 
                     </div>
@@ -1633,8 +1186,6 @@
 
                 </div>
 
-
-                <!-- REVIEW -->
 
                 <div class="review-section" id="reviewSection">
 
@@ -1692,16 +1243,24 @@
 
 
     <!-- =========================================================
-     TOAST
-========================================================= -->
+         TOAST
+    ========================================================== -->
 
-    <div class="toast" id="toast">
+    <div class="toast" id="toast"></div>
 
-    </div>
 
-    <script src="js/auth.js"></script>
+    <!-- AUTH -->
+
+    <script src="/js/auth.js"></script>
+
+
+    <!-- SIDEBAR -->
+
+    <script src="/js/sidebar.js"></script>
+
 
     <script>
+
         /* =========================================================
            CONFIG
         ========================================================= */
@@ -1726,40 +1285,53 @@
 
             loadLeaves();
 
+
             const searchInput =
                 document.getElementById("searchInput");
 
             const statusFilter =
                 document.getElementById("statusFilter");
 
+
             if (searchInput) {
+
                 searchInput.addEventListener(
                     "input",
                     filterLeaves
                 );
+
             }
 
+
             if (statusFilter) {
+
                 statusFilter.addEventListener(
                     "change",
                     filterLeaves
                 );
+
             }
+
 
             const leaveModal =
                 document.getElementById("leaveModal");
 
+
             if (leaveModal) {
+
                 leaveModal.addEventListener(
                     "click",
                     function (event) {
 
                         if (event.target === this) {
+
                             closeModal();
+
                         }
 
                     }
                 );
+
             }
 
         });
@@ -1772,37 +1344,45 @@
         async function loadLeaves() {
 
             const tbody =
-                document.getElementById("leaveTableBody");
+                document.getElementById(
+                    "leaveTableBody"
+                );
+
 
             if (tbody) {
 
                 tbody.innerHTML = `
-                <tr>
-                    <td colspan="7">
-                        <div class="loader">
-                            Loading leave requests...
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    <tr>
+                        <td colspan="7">
+                            <div class="loader">
+                                Loading leave requests...
+                            </div>
+                        </td>
+                    </tr>
+                `;
 
             }
 
+
             try {
 
-                const response = await apiFetch(
-                    `${API_BASE_URL}/api/leaves/admin`
-                );
+                const response =
+                    await apiFetch(
+                        `${API_BASE_URL}/api/leaves/admin`
+                    );
+
 
                 if (!response.ok) {
 
                     let message =
                         "Failed to load leave requests";
 
+
                     try {
 
                         const error =
                             await response.json();
+
 
                         message =
                             error.message ||
@@ -1810,24 +1390,31 @@
                             message;
 
                     } catch (e) {
+
                         // Ignore invalid JSON
+
                     }
+
 
                     throw new Error(message);
 
                 }
 
+
                 const data =
                     await response.json();
+
 
                 leaves =
                     Array.isArray(data)
                         ? data
                         : [];
 
+
                 updateStats();
 
                 filterLeaves();
+
 
             } catch (error) {
 
@@ -1836,19 +1423,21 @@
                     error
                 );
 
+
                 if (tbody) {
 
                     tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7">
-                            <div class="empty">
-                                Failed to load leave requests.
-                            </div>
-                        </td>
-                    </tr>
-                `;
+                        <tr>
+                            <td colspan="7">
+                                <div class="empty">
+                                    Failed to load leave requests.
+                                </div>
+                            </td>
+                        </tr>
+                    `;
 
                 }
+
 
                 showToast(
                     error.message ||
@@ -1870,17 +1459,20 @@
             const total =
                 leaves.length;
 
+
             const pending =
                 leaves.filter(
                     leave =>
                         leave.status === "PENDING"
                 ).length;
 
+
             const approved =
                 leaves.filter(
                     leave =>
                         leave.status === "APPROVED"
                 ).length;
+
 
             const rejected =
                 leaves.filter(
@@ -1894,15 +1486,18 @@
                 total
             );
 
+
             setText(
                 "pendingLeaves",
                 pending
             );
 
+
             setText(
                 "approvedLeaves",
                 approved
             );
+
 
             setText(
                 "rejectedLeaves",
@@ -1922,6 +1517,7 @@
                 document.getElementById(
                     "searchInput"
                 );
+
 
             const statusFilter =
                 document.getElementById(
@@ -1949,17 +1545,11 @@
                     const searchable = [
 
                         leave.username,
-
                         leave.userId,
-
                         leave.leaveType,
-
                         leave.description,
-
                         leave.status,
-
                         leave.fromDate,
-
                         leave.toDate
 
                     ]
@@ -2016,14 +1606,14 @@
             if (!data || !data.length) {
 
                 tbody.innerHTML = `
-                <tr>
-                    <td colspan="7">
-                        <div class="empty">
-                            No leave requests found.
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    <tr>
+                        <td colspan="7">
+                            <div class="empty">
+                                No leave requests found.
+                            </div>
+                        </td>
+                    </tr>
+                `;
 
                 return;
 
@@ -2076,154 +1666,143 @@
 
 
                         return `
-                        <tr>
+                            <tr>
 
-                            <td>
-                                ${index + 1}
-                            </td>
+                                <td>
+                                    ${index + 1}
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div class="user-name">
-                                    ${escapeHtml(username)}
-                                </div>
+                                    <div class="user-name">
+                                        ${escapeHtml(username)}
+                                    </div>
 
-                                <div class="user-id">
-                                    ID:
-                                    ${escapeHtml(
+                                    <div class="user-id">
+                                        ID:
+                                        ${escapeHtml(
                             leave.userId ?? "-"
                         )}
-                                </div>
+                                    </div>
 
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div class="leave-type">
+                                    <div class="leave-type">
 
-                                    <span
-                                        class="badge ${typeClass}">
+                                        <span class="badge ${typeClass}">
 
-                                        ${escapeHtml(
+                                            ${escapeHtml(
                             leave.leaveType || "-"
                         )}
 
-                                    </span>
+                                        </span>
 
-                                </div>
+                                    </div>
 
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div class="date-info">
+                                    <div class="date-info">
 
-                                    ${escapeHtml(fromDate)}
+                                        ${escapeHtml(fromDate)}
 
-                                    ${fromDate !== toDate
+                                        ${fromDate !== toDate
                                 ? ` → ${escapeHtml(toDate)}`
                                 : ""
                             }
 
-                                </div>
+                                    </div>
 
-                                <div class="date-days">
+                                    <div class="date-days">
 
-                                    ${days}
-                                    ${days === 1
-                                ? "day"
-                                : "days"
-                            }
+                                        ${days}
+                                        ${days === 1 ? "day" : "days"}
 
-                                </div>
+                                    </div>
 
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div
-                                    class="description-preview"
-                                    title="${escapeHtml(
-                                description
-                            )}">
+                                    <div
+                                        class="description-preview"
+                                        title="${escapeHtml(description)}">
 
-                                    ${escapeHtml(
-                                description
-                            )}
+                                        ${escapeHtml(description)}
 
-                                </div>
+                                    </div>
 
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <span
-                                    class="badge ${statusClass}">
+                                    <span class="badge ${statusClass}">
 
-                                    ${escapeHtml(
+                                        ${escapeHtml(
                                 leave.status || "-"
                             )}
 
-                                </span>
+                                    </span>
 
-                            </td>
-
-
-                            <td>
-
-                                <div class="actions">
-
-                                    <button
-                                        type="button"
-                                        class="action-btn action-view"
-                                        onclick="viewLeave(${Number(leave.id)})">
-
-                                        View
-
-                                    </button>
+                                </td>
 
 
-                                    ${leave.status === "PENDING"
+                                <td>
 
-                                ?
+                                    <div class="actions">
 
-                                `
-                                            <button
-                                                type="button"
-                                                class="action-btn action-approve"
-                                                onclick="quickApprove(${Number(leave.id)})">
+                                        <button
+                                            type="button"
+                                            class="action-btn action-view"
+                                            onclick="viewLeave(${Number(leave.id)})">
 
-                                                Approve
+                                            View
 
-                                            </button>
+                                        </button>
 
 
-                                            <button
-                                                type="button"
-                                                class="action-btn action-reject"
-                                                onclick="quickReject(${Number(leave.id)})">
+                                        ${leave.status === "PENDING"
 
-                                                Reject
+                                ? `
 
-                                            </button>
-                                        `
+                                                    <button
+                                                        type="button"
+                                                        class="action-btn action-approve"
+                                                        onclick="quickApprove(${Number(leave.id)})">
 
-                                :
+                                                        Approve
 
-                                ""
+                                                    </button>
+
+
+                                                    <button
+                                                        type="button"
+                                                        class="action-btn action-reject"
+                                                        onclick="quickReject(${Number(leave.id)})">
+
+                                                        Reject
+
+                                                    </button>
+
+                                                `
+
+                                : ""
                             }
 
-                                </div>
+                                    </div>
 
-                            </td>
+                                </td>
 
-                        </tr>
-                    `;
+                            </tr>
+                        `;
 
                     }
                 ).join("");
@@ -2289,17 +1868,14 @@
             if (detailLeaveType) {
 
                 detailLeaveType.innerHTML = `
-                <span
-                    class="badge ${getLeaveTypeClass(
+                    <span class="badge ${getLeaveTypeClass(
                     leave.leaveType
                 )}">
-
-                    ${escapeHtml(
+                        ${escapeHtml(
                     leave.leaveType || "-"
                 )}
-
-                </span>
-            `;
+                    </span>
+                `;
 
             }
 
@@ -2313,17 +1889,14 @@
             if (detailStatus) {
 
                 detailStatus.innerHTML = `
-                <span
-                    class="badge ${getStatusClass(
+                    <span class="badge ${getStatusClass(
                     leave.status
                 )}">
-
-                    ${escapeHtml(
+                        ${escapeHtml(
                     leave.status || "-"
                 )}
-
-                </span>
-            `;
+                    </span>
+                `;
 
             }
 
@@ -2534,6 +2107,7 @@
 
             if (!confirmed) {
                 return;
+
             }
 
 
@@ -2703,14 +2277,8 @@
 
             const url =
                 action === "APPROVE"
-
-                    ?
-
-                    `${API_BASE_URL}/api/leaves/admin/${id}/approve`
-
-                    :
-
-                    `${API_BASE_URL}/api/leaves/admin/${id}/reject`;
+                    ? `${API_BASE_URL}/api/leaves/admin/${id}/approve`
+                    : `${API_BASE_URL}/api/leaves/admin/${id}/reject`;
 
 
             try {
@@ -2720,8 +2288,7 @@
                     method: "PUT",
 
                     headers: {
-                        "Content-Type":
-                            "application/json"
+                        "Content-Type": "application/json"
                     }
 
                 };
@@ -2749,14 +2316,8 @@
 
                     let message =
                         action === "APPROVE"
-
-                            ?
-
-                            "Unable to approve leave"
-
-                            :
-
-                            "Unable to reject leave";
+                            ? "Unable to approve leave"
+                            : "Unable to reject leave";
 
 
                     try {
@@ -2764,28 +2325,28 @@
                         const error =
                             await response.json();
 
+
                         message =
                             error.message ||
                             error.error ||
                             message;
 
                     } catch (e) {
+
                         // Ignore invalid JSON
+
                     }
 
 
-                    throw new Error(
-                        message
-                    );
+                    throw new Error(message);
 
                 }
 
 
                 /*
                  * Backend returns updated LeaveResponse.
-                 * We don't need to use it because
-                 * loadLeaves() refreshes the complete list.
                  */
+
                 await response.json();
 
 
@@ -2796,19 +2357,10 @@
 
 
                 showToast(
-
                     action === "APPROVE"
-
-                        ?
-
-                        "Leave approved successfully"
-
-                        :
-
-                        "Leave rejected successfully",
-
+                        ? "Leave approved successfully"
+                        : "Leave rejected successfully",
                     "success"
-
                 );
 
 
@@ -2926,13 +2478,8 @@
 
 
             if (
-                Number.isNaN(
-                    start.getTime()
-                )
-                ||
-                Number.isNaN(
-                    end.getTime()
-                )
+                Number.isNaN(start.getTime()) ||
+                Number.isNaN(end.getTime())
             ) {
 
                 return 0;
@@ -3067,29 +2614,6 @@
             if (adminRemark) {
 
                 adminRemark.value = "";
-
-            }
-
-        }
-
-
-        /* =========================================================
-           SIDEBAR MOBILE
-        ========================================================= */
-
-        function toggleSidebar() {
-
-            const sidebar =
-                document.getElementById(
-                    "sidebar"
-                );
-
-
-            if (sidebar) {
-
-                sidebar.classList.toggle(
-                    "open"
-                );
 
             }
 

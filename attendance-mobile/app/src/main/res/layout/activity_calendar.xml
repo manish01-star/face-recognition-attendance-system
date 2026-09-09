@@ -577,9 +577,9 @@
 
         </LinearLayout>
 
-
-
     </com.google.android.material.card.MaterialCardView>
+
+
     <!-- ===================================================== -->
     <!-- BOTTOM NAVIGATION -->
     <!-- ===================================================== -->
@@ -598,7 +598,9 @@
             android:gravity="center"
             android:orientation="horizontal">
 
+            <!-- ================================================= -->
             <!-- HOME -->
+            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/navHome"
@@ -627,10 +629,12 @@
             </LinearLayout>
 
 
-            <!-- CALENDAR -->
+            <!-- ================================================= -->
+            <!-- ATTENDANCE -->
+            <!-- ================================================= -->
 
             <LinearLayout
-                android:id="@+id/navCalendar"
+                android:id="@+id/navAttendance"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -640,12 +644,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iconAttendance"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_calendar"
                     app:tint="#7162E8" />
 
                 <TextView
+                    android:id="@+id/textAttendance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
@@ -657,7 +663,9 @@
             </LinearLayout>
 
 
+            <!-- ================================================= -->
             <!-- LEAVE -->
+            <!-- ================================================= -->
 
             <LinearLayout
                 android:id="@+id/navLeave"
@@ -670,12 +678,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iconLeave"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_event"
                     app:tint="#8A8A8A" />
 
                 <TextView
+                    android:id="@+id/textLeave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
@@ -683,6 +693,38 @@
                     android:textColor="#8A8A8A"
                     android:textSize="10sp" />
 
+            </LinearLayout>
+
+
+            <!-- ================================================= -->
+            <!-- PROFILE -->
+            <!-- ================================================= -->
+
+            <LinearLayout
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconProfile"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_person"
+                    app:tint="#8A8A8A" />
+
+                <TextView
+                    android:id="@+id/textProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/profile"
+                    android:textColor="#8A8A8A"
+                    android:textSize="10sp" />
 
             </LinearLayout>
 

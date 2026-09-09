@@ -17,7 +17,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.college.attendance.R;
 import com.college.attendance.api.ApiClient;
@@ -41,7 +40,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LeaveActivity extends AppCompatActivity {
+public class LeaveActivity extends BaseActivity {
 
     // =========================================================
     // VIEWS
@@ -76,6 +75,15 @@ public class LeaveActivity extends AppCompatActivity {
 
     private String selectedFromDate;
     private String selectedToDate;
+
+    // =========================================================
+    // CURRENT TAB
+    // =========================================================
+
+    @Override
+    protected Tab getCurrentTab() {
+        return Tab.LEAVE;
+    }
 
     // =========================================================
     // LIFECYCLE
@@ -142,50 +150,6 @@ public class LeaveActivity extends AppCompatActivity {
         btnApplyLeave.setOnClickListener(
                 v -> showApplyLeaveDialog()
         );
-
-        /*
-         * Bottom Navigation
-         */
-
-        View navHome = findViewById(R.id.navHome);
-        View navCalendar = findViewById(R.id.navCalendar);
-        View navLeave = findViewById(R.id.navLeave);
-
-        navHome.setOnClickListener(v -> {
-
-            Intent intent =
-                    new Intent(
-                            LeaveActivity.this,
-                            MainActivity.class
-                    );
-
-            intent.addFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            | Intent.FLAG_ACTIVITY_SINGLE_TOP
-            );
-
-            startActivity(intent);
-        });
-
-        navCalendar.setOnClickListener(v -> {
-
-            Intent intent =
-                    new Intent(
-                            LeaveActivity.this,
-                            CalendarActivity.class
-                    );
-
-            startActivity(intent);
-
-            finish();
-        });
-
-        /*
-         * Already on Leave.
-         */
-        navLeave.setOnClickListener(v -> {
-            // Nothing required.
-        });
     }
 
     // =========================================================
@@ -725,7 +689,10 @@ public class LeaveActivity extends AppCompatActivity {
         );
 
         type.setTextSize(14);
-        type.setTypeface(null, android.graphics.Typeface.BOLD);
+        type.setTypeface(
+                null,
+                android.graphics.Typeface.BOLD
+        );
 
         LinearLayout.LayoutParams typeParams =
                 new LinearLayout.LayoutParams(

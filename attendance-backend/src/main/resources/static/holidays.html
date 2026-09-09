@@ -7,7 +7,8 @@
 
     <title>Holidays | FaceAttend Admin</title>
 
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css" rel="stylesheet">
+    <!-- Shared Sidebar CSS -->
+    <link rel="stylesheet" href="/css/sidebar.css">
 
     <style>
         * {
@@ -20,103 +21,6 @@
             font-family: "Inter", "Segoe UI", Arial, sans-serif;
             background: #f5f7fb;
             color: #1e293b;
-        }
-
-        /* =====================================================
-           SIDEBAR
-        ===================================================== */
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 250px;
-            height: 100vh;
-            background: #111827;
-            color: #fff;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .brand {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            padding: 0 22px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-        }
-
-        .brand-icon {
-            width: 36px;
-            height: 36px;
-            border-radius: 10px;
-            background: #2563eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 11px;
-            font-size: 19px;
-        }
-
-        .brand-text {
-            font-size: 19px;
-            font-weight: 700;
-            letter-spacing: .2px;
-        }
-
-        .sidebar-section {
-            padding: 22px 18px 8px;
-            font-size: 11px;
-            color: #94a3b8;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 700;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-            padding: 0 10px;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 4px;
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 11px 13px;
-            border-radius: 8px;
-            color: #cbd5e1;
-            text-decoration: none;
-            font-size: 14px;
-            transition: .2s;
-        }
-
-        .sidebar-link i {
-            font-size: 17px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .sidebar-link:hover {
-            background: rgba(255, 255, 255, .06);
-            color: #fff;
-        }
-
-        .sidebar-link.active {
-            background: #2563eb;
-            color: #fff;
-        }
-
-        /* =====================================================
-           MAIN
-        ===================================================== */
-
-        .main {
-            margin-left: 250px;
-            min-height: 100vh;
         }
 
         /* =====================================================
@@ -140,14 +44,6 @@
             display: flex;
             align-items: center;
             gap: 13px;
-        }
-
-        .menu-toggle {
-            display: none;
-            border: none;
-            background: transparent;
-            font-size: 23px;
-            cursor: pointer;
         }
 
         .page-heading {
@@ -694,6 +590,7 @@
         ===================================================== */
 
         @media (max-width: 1100px) {
+
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
@@ -704,23 +601,6 @@
         }
 
         @media (max-width: 768px) {
-
-            .sidebar {
-                transform: translateX(-100%);
-                transition: .25s;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main {
-                margin-left: 0;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
 
             .navbar {
                 padding: 0 18px;
@@ -786,154 +666,28 @@
 <body>
 
     <!-- =====================================================
-         SIDEBAR
+         SHARED SIDEBAR
     ===================================================== -->
 
-    <aside class="sidebar" id="sidebar">
-
-        <div class="brand">
-            <div class="brand-icon">
-                <i class="bi bi-person-bounding-box"></i>
-            </div>
-
-            <div class="brand-text">
-                FaceAttend
-            </div>
-        </div>
-
-        <div class="sidebar-section">
-            Main
-        </div>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="index.html" class="sidebar-link" data-page="index.html">
-                    <i class="bi bi-grid-1x2"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
-
-        </ul>
-
-        <div class="sidebar-section">
-            Management
-        </div>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="students.html" class="sidebar-link" data-page="students.html">
-                    <i class="bi bi-people"></i>
-                    <span>Students</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="teachers.html" class="sidebar-link" data-page="teachers.html">
-                    <i class="bi bi-person-workspace"></i>
-                    <span>Teachers</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="departments.html" class="sidebar-link" data-page="departments.html">
-                    <i class="bi bi-building"></i>
-                    <span>Departments</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="courses.html" class="sidebar-link" data-page="courses.html">
-                    <i class="bi bi-journal-text"></i>
-                    <span>Courses</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="semesters.html" class="sidebar-link" data-page="semesters.html">
-                    <i class="bi bi-layers"></i>
-                    <span>Semesters</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="sections.html" class="sidebar-link" data-page="sections.html">
-                    <i class="bi bi-diagram-3"></i>
-                    <span>Sections</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="leaves.html" class="sidebar-link" data-page="leaves.html">
-                    <i class="bi bi-calendar2-x"></i>
-                    <span>Leave Requests</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="holidays.html" class="sidebar-link active" data-page="holidays.html">
-                    <i class="bi bi-calendar-event"></i>
-                    <span>Holidays</span>
-                </a>
-            </li>
-
-        </ul>
-
-        <div class="sidebar-section">
-            Attendance
-        </div>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="attendance.html" class="sidebar-link" data-page="attendance.html">
-                    <i class="bi bi-calendar-check"></i>
-                    <span>Attendance</span>
-                </a>
-            </li>
-
-            <li>
-                <a href="machine-attendance.html" class="sidebar-link" data-page="machine-attendance.html">
-                    <i class="bi bi-fingerprint"></i>
-                    <span>Machine Attendance</span>
-                </a>
-            </li>
-
-        </ul>
-
-        <div class="sidebar-section">
-            System
-        </div>
-
-        <ul class="sidebar-menu">
-
-            <li>
-                <a href="settings.html" class="sidebar-link" data-page="settings.html">
-                    <i class="bi bi-gear"></i>
-                    <span>Settings</span>
-                </a>
-            </li>
-
-        </ul>
-
-    </aside>
+    <div id="sidebar-container"></div>
 
 
     <!-- =====================================================
          MAIN
     ===================================================== -->
 
-    <main class="main">
+    <main class="main-wrapper">
 
-        <!-- NAVBAR -->
+        <!-- =================================================
+             NAVBAR
+        ================================================= -->
 
         <nav class="navbar">
 
             <div class="navbar-left">
 
-                <button class="menu-toggle" id="menuToggle">
-                    <i class="bi bi-list"></i>
+                <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+                    ☰
                 </button>
 
                 <div class="page-heading">
@@ -972,7 +726,9 @@
         </nav>
 
 
-        <!-- CONTENT -->
+        <!-- =================================================
+             CONTENT
+        ================================================= -->
 
         <section class="content">
 
@@ -981,13 +737,21 @@
             <div class="page-title-row">
 
                 <div class="page-title">
+
                     <h1>Holidays</h1>
-                    <p>Manage college holidays and non-working days.</p>
+
+                    <p>
+                        Manage college holidays and non-working days.
+                    </p>
+
                 </div>
 
                 <button class="btn btn-primary" id="addHolidayBtn">
+
                     <i class="bi bi-plus-lg"></i>
+
                     Add Holiday
+
                 </button>
 
             </div>
@@ -1002,6 +766,7 @@
                 <div class="stat-card">
 
                     <div>
+
                         <div class="stat-label">
                             Total Holidays
                         </div>
@@ -1009,6 +774,7 @@
                         <div class="stat-value" id="totalCount">
                             0
                         </div>
+
                     </div>
 
                     <div class="stat-icon">
@@ -1021,6 +787,7 @@
                 <div class="stat-card">
 
                     <div>
+
                         <div class="stat-label">
                             Active Holidays
                         </div>
@@ -1028,6 +795,7 @@
                         <div class="stat-value" id="activeCount">
                             0
                         </div>
+
                     </div>
 
                     <div class="stat-icon">
@@ -1040,6 +808,7 @@
                 <div class="stat-card">
 
                     <div>
+
                         <div class="stat-label">
                             Inactive Holidays
                         </div>
@@ -1047,6 +816,7 @@
                         <div class="stat-value" id="inactiveCount">
                             0
                         </div>
+
                     </div>
 
                     <div class="stat-icon">
@@ -1059,6 +829,7 @@
                 <div class="stat-card">
 
                     <div>
+
                         <div class="stat-label">
                             Current Year
                         </div>
@@ -1066,6 +837,7 @@
                         <div class="stat-value" id="currentYearCount">
                             0
                         </div>
+
                     </div>
 
                     <div class="stat-icon">
@@ -1086,10 +858,15 @@
                 <div class="card-header">
 
                     <div>
-                        <h3>Holiday List</h3>
+
+                        <h3>
+                            Holiday List
+                        </h3>
+
                         <span id="resultInfo">
                             Loading holidays...
                         </span>
+
                     </div>
 
                 </div>
@@ -1205,7 +982,9 @@
                 </h3>
 
                 <button class="close-btn" id="closeModalBtn">
+
                     <i class="bi bi-x-lg"></i>
+
                 </button>
 
             </div>
@@ -1218,8 +997,13 @@
                     <div class="form-group">
 
                         <label>
+
                             Holiday Name
-                            <span class="required">*</span>
+
+                            <span class="required">
+                                *
+                            </span>
+
                         </label>
 
                         <input type="text" id="holidayName" class="form-control" maxlength="100"
@@ -1233,8 +1017,13 @@
                         <div class="form-group">
 
                             <label>
+
                                 Holiday Date
-                                <span class="required">*</span>
+
+                                <span class="required">
+                                    *
+                                </span>
+
                             </label>
 
                             <input type="date" id="holidayDate" class="form-control" required>
@@ -1245,8 +1034,13 @@
                         <div class="form-group">
 
                             <label>
+
                                 Holiday Type
-                                <span class="required">*</span>
+
+                                <span class="required">
+                                    *
+                                </span>
+
                             </label>
 
                             <select id="holidayType" class="form-select" required>
@@ -1281,8 +1075,13 @@
                     <div class="form-group">
 
                         <label>
+
                             Description
-                            <span class="required">*</span>
+
+                            <span class="required">
+                                *
+                            </span>
+
                         </label>
 
                         <textarea id="holidayDescription" class="form-control" maxlength="500"
@@ -1317,12 +1116,16 @@
                 <div class="modal-footer">
 
                     <button type="button" class="btn btn-secondary" id="cancelBtn">
+
                         Cancel
+
                     </button>
+
 
                     <button type="submit" class="btn btn-primary" id="saveHolidayBtn">
 
                         <i class="bi bi-check-lg"></i>
+
                         Save Holiday
 
                     </button>
@@ -1340,14 +1143,15 @@
          TOAST
     ===================================================== -->
 
-    <div class="toast-container" id="toastContainer"></div>
+    <div class="toast-container" id="toastContainer">
+    </div>
 
 
     <!-- =====================================================
          AUTH
     ===================================================== -->
 
-    <script src="js/auth.js"></script>
+    <script src="/js/auth.js"></script>
 
 
     <!-- =====================================================
@@ -1417,17 +1221,6 @@
             document
                 .getElementById("yearFilter")
                 .addEventListener("change", applyFilters);
-
-
-            document
-                .getElementById("menuToggle")
-                .addEventListener("click", () => {
-
-                    document
-                        .getElementById("sidebar")
-                        .classList.toggle("open");
-
-                });
 
 
             document
@@ -1520,10 +1313,14 @@
 
             } catch (error) {
 
-                console.error("Load holidays error:", error);
+                console.error(
+                    "Load holidays error:",
+                    error
+                );
 
                 showError(
-                    error.message || "Failed to load holidays"
+                    error.message ||
+                    "Failed to load holidays"
                 );
 
             }
@@ -1620,6 +1417,7 @@
 
             renderTable();
 
+
             document.getElementById("resultInfo").textContent =
                 `${filteredHolidays.length} holiday(s) found`;
 
@@ -1641,6 +1439,7 @@
 
 
             const years = new Set();
+
 
             holidays.forEach(holiday => {
 
@@ -1677,6 +1476,7 @@
                     document.createElement("option");
 
                 option.value = year;
+
                 option.textContent = year;
 
                 yearSelect.appendChild(option);
@@ -1691,7 +1491,9 @@
                     sortedYears.includes(currentValue)
                 )
             ) {
+
                 yearSelect.value = currentValue;
+
             }
 
         }
@@ -1773,7 +1575,9 @@
 
                 tbody.innerHTML = `
                     <tr>
+
                         <td colspan="7">
+
                             <div class="empty-container">
 
                                 <i class="bi bi-calendar-x"></i>
@@ -1783,7 +1587,9 @@
                                 </p>
 
                             </div>
+
                         </td>
+
                     </tr>
                 `;
 
@@ -1907,24 +1713,31 @@
                     </td>
 
                     <td>
+
                         <div class="holiday-name">
                             ${escapeHtml(name)}
                         </div>
+
                     </td>
 
                     <td>
+
                         <div class="date-cell">
                             ${formattedDate}
                         </div>
+
                     </td>
 
                     <td>
+
                         <span class="type-badge">
                             ${escapeHtml(type)}
                         </span>
+
                     </td>
 
                     <td>
+
                         <div
                             class="holiday-description"
                             title="${escapeHtml(description)}">
@@ -1932,21 +1745,26 @@
                             ${escapeHtml(description)}
 
                         </div>
+
                     </td>
 
                     <td>
+
                         <span
                             class="status-badge ${statusClass}">
 
                             ${escapeHtml(status || "-")}
 
                         </span>
+
                     </td>
 
                     <td>
+
                         <div class="actions">
                             ${actions}
                         </div>
+
                     </td>
 
                 </tr>
@@ -1963,11 +1781,16 @@
 
             editingHolidayId = null;
 
-            document.getElementById("modalTitle").textContent =
+
+            document
+                .getElementById("modalTitle")
+                .textContent =
                 "Add Holiday";
 
 
-            document.getElementById("saveHolidayBtn").innerHTML =
+            document
+                .getElementById("saveHolidayBtn")
+                .innerHTML =
                 `<i class="bi bi-check-lg"></i> Save Holiday`;
 
 
@@ -1976,11 +1799,14 @@
                 .reset();
 
 
-            document.getElementById("statusGroup").style.display =
+            document
+                .getElementById("statusGroup")
+                .style.display =
                 "none";
 
 
-            document.getElementById("holidayModal")
+            document
+                .getElementById("holidayModal")
                 .classList.add("show");
 
         }
@@ -2016,53 +1842,73 @@
                 editingHolidayId = id;
 
 
-                document.getElementById("modalTitle")
+                document
+                    .getElementById("modalTitle")
                     .textContent =
                     "Edit Holiday";
 
 
-                document.getElementById("holidayName").value =
+                document
+                    .getElementById("holidayName")
+                    .value =
                     holiday.holidayName ??
                     holiday.name ??
                     "";
 
 
-                document.getElementById("holidayDate").value =
+                document
+                    .getElementById("holidayDate")
+                    .value =
                     holiday.holidayDate ??
                     "";
 
 
-                document.getElementById("holidayType").value =
+                document
+                    .getElementById("holidayType")
+                    .value =
                     holiday.holidayType ??
                     holiday.type ??
                     "";
 
 
-                document.getElementById("holidayDescription").value =
+                document
+                    .getElementById("holidayDescription")
+                    .value =
                     holiday.description ??
                     "";
 
 
-                document.getElementById("holidayStatus").value =
+                document
+                    .getElementById("holidayStatus")
+                    .value =
                     holiday.status ??
                     "ACTIVE";
 
 
-                document.getElementById("statusGroup").style.display =
+                document
+                    .getElementById("statusGroup")
+                    .style.display =
                     "block";
 
 
-                document.getElementById("saveHolidayBtn").innerHTML =
+                document
+                    .getElementById("saveHolidayBtn")
+                    .innerHTML =
                     `<i class="bi bi-check-lg"></i> Update Holiday`;
 
 
-                document.getElementById("holidayModal")
+                document
+                    .getElementById("holidayModal")
                     .classList.add("show");
 
 
             } catch (error) {
 
-                console.error("Get holiday error:", error);
+                console.error(
+                    "Get holiday error:",
+                    error
+                );
+
 
                 showToast(
                     error.message ||
@@ -2124,6 +1970,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2135,6 +1982,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2146,6 +1994,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -2157,14 +2006,18 @@
                 );
 
                 return;
+
             }
 
 
             const payload = {
 
                 holidayName: name,
+
                 holidayDate: date,
+
                 holidayType: type,
+
                 description: description
 
             };
@@ -2179,7 +2032,8 @@
 
 
             const saveButton =
-                document.getElementById("saveHolidayBtn");
+                document
+                    .getElementById("saveHolidayBtn");
 
 
             const originalText =
@@ -2248,7 +2102,11 @@
 
             } catch (error) {
 
-                console.error("Save holiday error:", error);
+                console.error(
+                    "Save holiday error:",
+                    error
+                );
+
 
                 showToast(
                     error.message ||
@@ -2276,7 +2134,8 @@
 
             const holiday =
                 holidays.find(
-                    h => Number(h.id) === Number(id)
+                    h =>
+                        Number(h.id) === Number(id)
                 );
 
 
@@ -2432,7 +2291,8 @@
 
         function showLoading() {
 
-            document.getElementById("holidayTableBody")
+            document
+                .getElementById("holidayTableBody")
                 .innerHTML = `
                     <tr>
 
@@ -2462,7 +2322,8 @@
 
         function showError(message) {
 
-            document.getElementById("holidayTableBody")
+            document
+                .getElementById("holidayTableBody")
                 .innerHTML = `
                     <tr>
 
@@ -2483,7 +2344,10 @@
                     </tr>
                 `;
 
-            document.getElementById("resultInfo").textContent =
+
+            document
+                .getElementById("resultInfo")
+                .textContent =
                 "Unable to load holidays";
 
         }
@@ -2528,11 +2392,19 @@
 
 
             const date =
-                new Date(`${dateString}T00:00:00`);
+                new Date(
+                    `${dateString}T00:00:00`
+                );
 
 
-            if (Number.isNaN(date.getTime())) {
+            if (
+                Number.isNaN(
+                    date.getTime()
+                )
+            ) {
+
                 return dateString;
+
             }
 
 
@@ -2611,6 +2483,13 @@
         }
 
     </script>
+
+
+    <!-- =====================================================
+         SHARED SIDEBAR JS
+    ===================================================== -->
+
+    <script src="/js/sidebar.js"></script>
 
 </body>
 

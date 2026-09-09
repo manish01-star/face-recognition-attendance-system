@@ -391,7 +391,7 @@ public class AttendanceService {
                                                                                 teacher.getDepartment() != null
                                                                                                 ? teacher.getDepartment()
                                                                                                                 .getName()
-                                                                                                                : null)
+                                                                                                : null)
 
                                                                 .build());
                         }
@@ -1135,7 +1135,6 @@ public class AttendanceService {
                         LocalDate date) {
 
                 if (date == null) {
-
                         throw new AttendanceException(
                                         "Attendance date is required");
                 }

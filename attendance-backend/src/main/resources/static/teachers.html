@@ -7,6 +7,11 @@
 
     <title>Teachers | Admin Panel</title>
 
+    <!-- =========================
+         SIDEBAR CSS
+    ========================== -->
+    <link rel="stylesheet" href="/css/sidebar.css">
+
     <style>
         * {
             margin: 0;
@@ -21,84 +26,7 @@
         }
 
         /* =========================
-           LAYOUT
-        ========================= */
-
-        .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* =========================
-           SIDEBAR
-        ========================= */
-
-        .sidebar {
-            width: 250px;
-            background: #111827;
-            color: white;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1000;
-            transition: 0.3s;
-        }
-
-        .brand {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            padding: 0 22px;
-            font-size: 20px;
-            font-weight: 700;
-            border-bottom: 1px solid #273244;
-        }
-
-        .brand span {
-            color: #60a5fa;
-            margin-right: 8px;
-        }
-
-        .menu {
-            padding: 20px 12px;
-        }
-
-        .menu-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #94a3b8;
-            padding: 0 12px;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #cbd5e1;
-            text-decoration: none;
-            padding: 12px 14px;
-            margin-bottom: 5px;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .menu a:hover,
-        .menu a.active {
-            background: #2563eb;
-            color: white;
-        }
-
-        .menu-icon {
-            width: 20px;
-            text-align: center;
-        }
-
-        /* =========================
-           MAIN
+           MAIN LAYOUT
         ========================= */
 
         .main {
@@ -115,10 +43,13 @@
             height: 70px;
             background: white;
             border-bottom: 1px solid #e5e7eb;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
+
             padding: 0 30px;
+
             position: sticky;
             top: 0;
             z-index: 500;
@@ -129,22 +60,28 @@
             font-weight: 700;
         }
 
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         .nav-right {
             display: flex;
             align-items: center;
             gap: 15px;
         }
 
-        .admin-info {
+        .navbar .admin-info {
             text-align: right;
         }
 
-        .admin-name {
+        .navbar .admin-name {
             font-size: 14px;
             font-weight: 600;
         }
 
-        .admin-role {
+        .navbar .admin-role {
             font-size: 11px;
             color: #64748b;
         }
@@ -152,20 +89,34 @@
         .avatar {
             width: 38px;
             height: 38px;
+
             background: #2563eb;
             color: white;
+
             border-radius: 50%;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             font-weight: 700;
         }
 
-        .menu-toggle {
+        /*
+         * This button is controlled by sidebar.js
+         */
+        .mobile-menu-btn {
             display: none;
-            border: none;
-            background: none;
+
+            border: 0;
+            background: transparent;
+
+            color: #111827;
+
             font-size: 24px;
+
+            padding: 0;
+
             cursor: pointer;
         }
 
@@ -194,15 +145,21 @@
         .stats {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
+
             gap: 18px;
+
             margin-bottom: 25px;
         }
 
         .stat-card {
             background: white;
+
             border-radius: 12px;
+
             padding: 20px;
+
             border: 1px solid #e5e7eb;
+
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -222,10 +179,13 @@
         .stat-icon {
             width: 48px;
             height: 48px;
+
             border-radius: 10px;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             font-size: 22px;
         }
 
@@ -247,17 +207,23 @@
 
         .card {
             background: white;
+
             border: 1px solid #e5e7eb;
+
             border-radius: 12px;
+
             overflow: hidden;
         }
 
         .card-header {
             padding: 20px;
+
             display: flex;
             justify-content: space-between;
             align-items: center;
+
             gap: 15px;
+
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -278,11 +244,16 @@
 
         .btn {
             border: none;
+
             border-radius: 7px;
+
             padding: 10px 16px;
+
             cursor: pointer;
+
             font-size: 13px;
             font-weight: 600;
+
             transition: 0.2s;
         }
 
@@ -326,8 +297,11 @@
 
         .filters {
             padding: 18px 20px;
+
             display: flex;
+
             gap: 12px;
+
             border-bottom: 1px solid #e5e7eb;
         }
 
@@ -338,18 +312,26 @@
         .input,
         .select {
             width: 100%;
+
             border: 1px solid #cbd5e1;
+
             border-radius: 7px;
+
             padding: 10px 12px;
+
             outline: none;
+
             background: white;
+
             font-size: 13px;
         }
 
         .input:focus,
         .select:focus {
             border-color: #2563eb;
-            box-shadow: 0 0 0 2px #dbeafe;
+
+            box-shadow:
+                0 0 0 2px #dbeafe;
         }
 
         .filter-select {
@@ -366,23 +348,33 @@
 
         table {
             width: 100%;
+
             border-collapse: collapse;
+
             min-width: 1000px;
         }
 
         th {
             background: #f8fafc;
+
             text-align: left;
+
             font-size: 11px;
+
             color: #64748b;
+
             text-transform: uppercase;
+
             padding: 13px 18px;
+
             letter-spacing: 0.4px;
         }
 
         td {
             padding: 15px 18px;
+
             border-top: 1px solid #eef2f7;
+
             font-size: 13px;
         }
 
@@ -397,30 +389,43 @@
         .teacher-cell {
             display: flex;
             align-items: center;
+
             gap: 12px;
         }
 
         .teacher-photo {
             width: 42px;
             height: 42px;
+
             border-radius: 50%;
+
             object-fit: cover;
+
             border: 1px solid #e2e8f0;
+
             background: #f1f5f9;
+
             flex-shrink: 0;
         }
 
         .teacher-photo-placeholder {
             width: 42px;
             height: 42px;
+
             border-radius: 50%;
+
             background: #dbeafe;
+
             color: #2563eb;
+
             display: flex;
             align-items: center;
             justify-content: center;
+
             font-size: 15px;
+
             font-weight: 700;
+
             flex-shrink: 0;
         }
 
@@ -430,7 +435,9 @@
 
         .teacher-code {
             color: #64748b;
+
             font-size: 11px;
+
             margin-top: 3px;
         }
 
@@ -440,9 +447,13 @@
 
         .badge {
             display: inline-block;
+
             padding: 5px 9px;
+
             border-radius: 20px;
+
             font-size: 11px;
+
             font-weight: 600;
         }
 
@@ -462,16 +473,23 @@
 
         .actions {
             display: flex;
+
             gap: 7px;
+
             flex-wrap: wrap;
         }
 
         .action-btn {
             border: none;
+
             padding: 7px 10px;
+
             border-radius: 6px;
+
             cursor: pointer;
+
             font-size: 11px;
+
             font-weight: 600;
         }
 
@@ -482,6 +500,7 @@
         .photo-section {
             display: flex;
             flex-direction: column;
+
             gap: 10px;
         }
 
@@ -492,17 +511,25 @@
 
         .photo-hint {
             font-size: 11px;
+
             color: #64748b;
+
             line-height: 1.5;
         }
 
         .photo-preview-wrapper {
             display: none;
+
             align-items: center;
+
             gap: 14px;
+
             padding: 10px;
+
             border: 1px solid #e2e8f0;
+
             border-radius: 8px;
+
             background: #f8fafc;
         }
 
@@ -513,8 +540,11 @@
         .photo-preview {
             width: 70px;
             height: 70px;
+
             border-radius: 50%;
+
             object-fit: cover;
+
             border: 2px solid #dbeafe;
         }
 
@@ -525,7 +555,9 @@
 
         .photo-preview-info strong {
             display: block;
+
             margin-bottom: 4px;
+
             color: #1e293b;
         }
 
@@ -535,12 +567,18 @@
 
         .modal-overlay {
             position: fixed;
+
             inset: 0;
+
             background: rgba(15, 23, 42, 0.55);
+
             display: none;
+
             align-items: center;
             justify-content: center;
+
             z-index: 2000;
+
             padding: 20px;
         }
 
@@ -550,18 +588,27 @@
 
         .modal {
             width: 100%;
+
             max-width: 650px;
+
             background: white;
+
             border-radius: 12px;
+
             max-height: 90vh;
+
             overflow-y: auto;
         }
 
         .modal-header {
             padding: 20px;
+
             border-bottom: 1px solid #e5e7eb;
+
             display: flex;
+
             justify-content: space-between;
+
             align-items: center;
         }
 
@@ -572,9 +619,13 @@
 
         .close {
             border: none;
+
             background: none;
+
             font-size: 24px;
+
             cursor: pointer;
+
             color: #64748b;
         }
 
@@ -584,13 +635,17 @@
 
         .form-grid {
             display: grid;
+
             grid-template-columns: 1fr 1fr;
+
             gap: 17px;
         }
 
         .form-group {
             display: flex;
+
             flex-direction: column;
+
             gap: 7px;
         }
 
@@ -600,7 +655,9 @@
 
         .form-label {
             font-size: 12px;
+
             font-weight: 600;
+
             color: #475569;
         }
 
@@ -610,9 +667,13 @@
 
         .modal-footer {
             padding: 18px 22px;
+
             border-top: 1px solid #e5e7eb;
+
             display: flex;
+
             justify-content: flex-end;
+
             gap: 10px;
         }
 
@@ -626,70 +687,100 @@
 
         .view-profile {
             text-align: center;
+
             padding: 10px 0 25px;
         }
 
         .view-profile-photo {
             width: 130px;
             height: 130px;
+
             border-radius: 50%;
+
             object-fit: cover;
+
             border: 4px solid #dbeafe;
+
             background: #f1f5f9;
+
             margin-bottom: 14px;
         }
 
         .view-profile-placeholder {
             width: 130px;
             height: 130px;
+
             border-radius: 50%;
+
             background: #dbeafe;
+
             color: #2563eb;
+
             display: flex;
+
             align-items: center;
             justify-content: center;
+
             font-size: 38px;
+
             font-weight: 700;
+
             margin: 0 auto 14px;
+
             border: 4px solid #dbeafe;
         }
 
         .view-profile-name {
             font-size: 21px;
+
             font-weight: 700;
+
             color: #1e293b;
         }
 
         .view-profile-code {
             margin-top: 5px;
+
             color: #64748b;
+
             font-size: 13px;
         }
 
         .profile-details {
             display: grid;
+
             grid-template-columns: 1fr 1fr;
+
             gap: 12px;
+
             margin-top: 10px;
         }
 
         .profile-detail {
             border: 1px solid #e5e7eb;
+
             border-radius: 8px;
+
             padding: 13px;
+
             background: #f8fafc;
         }
 
         .profile-detail-label {
             color: #64748b;
+
             font-size: 11px;
+
             margin-bottom: 5px;
         }
 
         .profile-detail-value {
             color: #1e293b;
+
             font-size: 13px;
+
             font-weight: 600;
+
             word-break: break-word;
         }
 
@@ -699,18 +790,31 @@
 
         .toast {
             position: fixed;
+
             right: 25px;
+
             bottom: 25px;
+
             min-width: 280px;
+
             max-width: 400px;
+
             background: #111827;
+
             color: white;
+
             padding: 14px 18px;
+
             border-radius: 8px;
+
             display: none;
+
             z-index: 3000;
+
             font-size: 13px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+
+            box-shadow:
+                0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
         .toast.show {
@@ -731,15 +835,21 @@
 
         .loader {
             text-align: center;
+
             padding: 35px;
+
             color: #64748b;
+
             font-size: 13px;
         }
 
         .empty {
             text-align: center;
+
             padding: 45px;
+
             color: #64748b;
+
             font-size: 13px;
         }
 
@@ -749,8 +859,11 @@
 
         footer {
             padding: 20px 30px;
+
             text-align: center;
+
             color: #94a3b8;
+
             font-size: 12px;
         }
 
@@ -758,22 +871,15 @@
            RESPONSIVE
         ========================= */
 
-        @media (max-width: 900px) {
-
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
+        @media (max-width: 991px) {
 
             .main {
                 margin-left: 0;
+
                 width: 100%;
             }
 
-            .menu-toggle {
+            .mobile-menu-btn {
                 display: block;
             }
 
@@ -783,6 +889,7 @@
 
             .card-header {
                 align-items: flex-start;
+
                 flex-direction: column;
             }
 
@@ -805,7 +912,7 @@
                 padding: 0 18px;
             }
 
-            .admin-info {
+            .navbar .admin-info {
                 display: none;
             }
 
@@ -829,320 +936,273 @@
 
 </head>
 
+
 <body>
 
-    <div class="app">
-
-        <!-- =========================
-         SIDEBAR
-    ========================== -->
-
-        <aside class="sidebar" id="sidebar">
-
-            <div class="brand">
-                <span>◆</span>
-                College Attendance
-            </div>
-
-            <div class="menu">
-
-                <div class="menu-title">
-                    Main
-                </div>
-
-                <a href="dashboard.html">
-                    <span class="menu-icon">▦</span>
-                    Dashboard
-                </a>
-
-                <div class="menu-title">
-                    Management
-                </div>
-
-                <a href="students.html">
-                    <span class="menu-icon">👨‍🎓</span>
-                    Students
-                </a>
-
-                <a href="teachers.html" class="active">
-                    <span class="menu-icon">👨‍🏫</span>
-                    Teachers
-                </a>
-
-                <a href="departments.html">
-                    <span class="menu-icon">🏢</span>
-                    Departments
-                </a>
-
-                <a href="courses.html">
-                    <span class="menu-icon">📚</span>
-                    Courses
-                </a>
-
-                <a href="semesters.html">
-                    <span class="menu-icon">📖</span>
-                    Semesters
-                </a>
-
-                <a href="sections.html">
-                    <span class="menu-icon">§</span>
-                    Sections
-                </a>
-
-                <div class="menu-title">
-                    Attendance
-                </div>
-
-                <a href="attendance.html">
-                    <span class="menu-icon">✓</span>
-                    Attendance
-                </a>
-
-            </div>
-
-        </aside>
-
-
-        <!-- =========================
-         MAIN
-    ========================== -->
-
-        <main class="main">
-
-            <nav class="navbar">
-
-                <div style="display:flex;align-items:center;gap:15px;">
-
-                    <button class="menu-toggle" onclick="toggleSidebar()">
-                        ☰
-                    </button>
-
-                    <div class="page-title">
-                        Teachers
-                    </div>
-
-                </div>
-
-                <div class="nav-right">
-
-                    <div class="admin-info">
-
-                        <div class="admin-name">
-                            Administrator
-                        </div>
-
-                        <div class="admin-role">
-                            System Admin
-                        </div>
-
-                    </div>
-
-                    <div class="avatar">
-                        A
-                    </div>
-
-                </div>
-
-            </nav>
-
-
-            <!-- =========================
-             CONTENT
-        ========================== -->
-
-            <section class="content">
-
-                <div class="breadcrumb">
-                    Admin / <span>Teachers</span>
-                </div>
-
-
-                <!-- =========================
-                 STATS
-            ========================== -->
-
-                <div class="stats">
-
-                    <div class="stat-card">
-
-                        <div>
-
-                            <div class="stat-label">
-                                Total Teachers
-                            </div>
-
-                            <div class="stat-value" id="totalTeachers">
-                                0
-                            </div>
-
-                        </div>
-
-                        <div class="stat-icon blue">
-                            👨‍🏫
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div>
-
-                            <div class="stat-label">
-                                Active Teachers
-                            </div>
-
-                            <div class="stat-value" id="activeTeachers">
-                                0
-                            </div>
-
-                        </div>
-
-                        <div class="stat-icon green">
-                            ✓
-                        </div>
-
-                    </div>
-
-
-                    <div class="stat-card">
-
-                        <div>
-
-                            <div class="stat-label">
-                                Inactive Teachers
-                            </div>
-
-                            <div class="stat-value" id="inactiveTeachers">
-                                0
-                            </div>
-
-                        </div>
-
-                        <div class="stat-icon gray">
-                            —
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!-- =========================
-                 TEACHER TABLE
-            ========================== -->
-
-                <div class="card">
-
-                    <div class="card-header">
-
-                        <div>
-
-                            <div class="card-title">
-                                Teacher Management
-                            </div>
-
-                            <div class="card-subtitle">
-                                Create, update and manage college teachers
-                            </div>
-
-                        </div>
-
-                        <button class="btn btn-primary" onclick="openAddModal()">
-                            + Add Teacher
-                        </button>
-
-                    </div>
-
-
-                    <!-- FILTERS -->
-
-                    <div class="filters">
-
-                        <div class="search">
-
-                            <input type="text" id="searchInput" class="input"
-                                placeholder="Search by name, employee code, phone or email..."
-                                oninput="filterTeachers()">
-
-                        </div>
-
-                        <div class="filter-select">
-
-                            <select id="statusFilter" class="select" onchange="filterTeachers()">
-
-                                <option value="ALL">
-                                    All Status
-                                </option>
-
-                                <option value="ACTIVE">
-                                    Active
-                                </option>
-
-                                <option value="INACTIVE">
-                                    Inactive
-                                </option>
-
-                            </select>
-
-                        </div>
-
-                    </div>
-
-
-                    <!-- TABLE -->
-
-                    <div class="table-wrapper">
-
-                        <table>
-
-                            <thead>
-
-                                <tr>
-
-                                    <th>#</th>
-
-                                    <th>Teacher</th>
-
-                                    <th>Employee Code</th>
-
-                                    <th>Phone</th>
-
-                                    <th>Email</th>
-
-                                    <th>Department</th>
-
-                                    <th>Status</th>
-
-                                    <th>Actions</th>
-
-                                </tr>
-
-                            </thead>
-
-                            <tbody id="teacherTableBody"></tbody>
-
-                        </table>
-
-                    </div>
-
-                </div>
-
-            </section>
-
-
-            <footer>
-                © 2026 College Attendance System. All rights reserved.
-            </footer>
-
-        </main>
-
-    </div>
+    <!-- =====================================================
+         REUSABLE SIDEBAR COMPONENT
+    ====================================================== -->
+
+    <div id="sidebar-container"></div>
 
 
     <!-- =====================================================
-     ADD / EDIT TEACHER MODAL
-===================================================== -->
+         MAIN
+    ====================================================== -->
+
+    <main class="main">
+
+        <!-- =========================
+             NAVBAR
+        ========================== -->
+
+        <nav class="navbar">
+
+            <div class="nav-left">
+
+                <!--
+                    sidebar.js looks for this ID
+                    and opens the reusable sidebar on mobile.
+                -->
+                <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
+
+                    ☰
+
+                </button>
+
+                <div class="page-title">
+                    Teachers
+                </div>
+
+            </div>
+
+
+            <div class="nav-right">
+
+                <div class="admin-info">
+
+                    <div class="admin-name">
+                        Administrator
+                    </div>
+
+                    <div class="admin-role">
+                        System Admin
+                    </div>
+
+                </div>
+
+                <div class="avatar">
+                    A
+                </div>
+
+            </div>
+
+        </nav>
+
+
+        <!-- =========================
+             CONTENT
+        ========================== -->
+
+        <section class="content">
+
+            <div class="breadcrumb">
+                Admin / <span>Teachers</span>
+            </div>
+
+
+            <!-- =========================
+                 STATS
+            ========================== -->
+
+            <div class="stats">
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Total Teachers
+                        </div>
+
+                        <div class="stat-value" id="totalTeachers">
+
+                            0
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-icon blue">
+                        👨‍🏫
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Active Teachers
+                        </div>
+
+                        <div class="stat-value" id="activeTeachers">
+
+                            0
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-icon green">
+                        ✓
+                    </div>
+
+                </div>
+
+
+                <div class="stat-card">
+
+                    <div>
+
+                        <div class="stat-label">
+                            Inactive Teachers
+                        </div>
+
+                        <div class="stat-value" id="inactiveTeachers">
+
+                            0
+
+                        </div>
+
+                    </div>
+
+                    <div class="stat-icon gray">
+                        —
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <!-- =========================
+                 TEACHER TABLE
+            ========================== -->
+
+            <div class="card">
+
+                <div class="card-header">
+
+                    <div>
+
+                        <div class="card-title">
+                            Teacher Management
+                        </div>
+
+                        <div class="card-subtitle">
+                            Create, update and manage college teachers
+                        </div>
+
+                    </div>
+
+                    <button type="button" class="btn btn-primary" onclick="openAddModal()">
+
+                        + Add Teacher
+
+                    </button>
+
+                </div>
+
+
+                <!-- FILTERS -->
+
+                <div class="filters">
+
+                    <div class="search">
+
+                        <input type="text" id="searchInput" class="input"
+                            placeholder="Search by name, employee code, phone or email..." oninput="filterTeachers()">
+
+                    </div>
+
+
+                    <div class="filter-select">
+
+                        <select id="statusFilter" class="select" onchange="filterTeachers()">
+
+                            <option value="ALL">
+                                All Status
+                            </option>
+
+                            <option value="ACTIVE">
+                                Active
+                            </option>
+
+                            <option value="INACTIVE">
+                                Inactive
+                            </option>
+
+                        </select>
+
+                    </div>
+
+                </div>
+
+
+                <!-- TABLE -->
+
+                <div class="table-wrapper">
+
+                    <table>
+
+                        <thead>
+
+                            <tr>
+
+                                <th>#</th>
+
+                                <th>Teacher</th>
+
+                                <th>Employee Code</th>
+
+                                <th>Phone</th>
+
+                                <th>Email</th>
+
+                                <th>Department</th>
+
+                                <th>Status</th>
+
+                                <th>Actions</th>
+
+                            </tr>
+
+                        </thead>
+
+                        <tbody id="teacherTableBody"></tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <footer>
+            © 2026 College Attendance System. All rights reserved.
+        </footer>
+
+    </main>
+
+
+    <!-- =====================================================
+         ADD / EDIT TEACHER MODAL
+    ====================================================== -->
 
     <div class="modal-overlay" id="teacherModal">
 
@@ -1151,11 +1211,15 @@
             <div class="modal-header">
 
                 <div class="modal-title" id="modalTitle">
+
                     Add Teacher
+
                 </div>
 
-                <button class="close" type="button" onclick="closeModal()">
+                <button type="button" class="close" onclick="closeModal()">
+
                     ×
+
                 </button>
 
             </div>
@@ -1272,7 +1336,9 @@
                                 Profile Photo
 
                                 <span class="required" id="photoRequired">
+
                                     *
+
                                 </span>
 
                             </label>
@@ -1316,11 +1382,15 @@
                 <div class="modal-footer">
 
                     <button type="button" class="btn btn-secondary" onclick="closeModal()">
+
                         Cancel
+
                     </button>
 
                     <button type="submit" class="btn btn-primary" id="saveBtn">
+
                         Save Teacher
+
                     </button>
 
                 </div>
@@ -1333,8 +1403,8 @@
 
 
     <!-- =====================================================
-     VIEW TEACHER MODAL
-===================================================== -->
+         VIEW TEACHER MODAL
+    ====================================================== -->
 
     <div class="modal-overlay" id="viewTeacherModal">
 
@@ -1346,8 +1416,10 @@
                     Teacher Profile
                 </div>
 
-                <button class="close" type="button" onclick="closeViewModal()">
+                <button type="button" class="close" onclick="closeViewModal()">
+
                     ×
+
                 </button>
 
             </div>
@@ -1358,17 +1430,19 @@
                 <div class="view-profile">
 
                     <div id="viewPhotoContainer">
-
                         <!-- Dynamic photo / initials -->
-
                     </div>
 
                     <div class="view-profile-name" id="viewTeacherName">
+
                         -
+
                     </div>
 
                     <div class="view-profile-code" id="viewTeacherCode">
+
                         -
+
                     </div>
 
                 </div>
@@ -1383,7 +1457,9 @@
                         </div>
 
                         <div class="profile-detail-value" id="viewEmployeeCode">
+
                             -
+
                         </div>
 
                     </div>
@@ -1396,7 +1472,9 @@
                         </div>
 
                         <div class="profile-detail-value" id="viewUsername">
+
                             -
+
                         </div>
 
                     </div>
@@ -1409,7 +1487,9 @@
                         </div>
 
                         <div class="profile-detail-value" id="viewPhone">
+
                             -
+
                         </div>
 
                     </div>
@@ -1422,7 +1502,9 @@
                         </div>
 
                         <div class="profile-detail-value" id="viewEmail">
+
                             -
+
                         </div>
 
                     </div>
@@ -1435,7 +1517,9 @@
                         </div>
 
                         <div class="profile-detail-value" id="viewDepartment">
+
                             -
+
                         </div>
 
                     </div>
@@ -1448,7 +1532,9 @@
                         </div>
 
                         <div class="profile-detail-value" id="viewStatus">
+
                             -
+
                         </div>
 
                     </div>
@@ -1461,7 +1547,9 @@
             <div class="modal-footer">
 
                 <button type="button" class="btn btn-secondary" onclick="closeViewModal()">
+
                     Close
+
                 </button>
 
             </div>
@@ -1472,12 +1560,16 @@
 
 
     <!-- =========================
-     TOAST
-========================= -->
+         TOAST
+    ========================== -->
 
     <div class="toast" id="toast">
     </div>
 
+
+    <!-- =====================================================
+         TEACHER JAVASCRIPT
+    ====================================================== -->
 
     <script>
 
@@ -1504,6 +1596,7 @@
                 localStorage.getItem("jwt") ||
                 localStorage.getItem("access_token")
             );
+
         }
 
 
@@ -1524,12 +1617,14 @@
                 return {
                     "Content-Type": "application/json"
                 };
+
             }
 
             return {
                 "Content-Type": "application/json",
                 "Authorization": `Bearer ${token}`
             };
+
         }
 
 
@@ -1548,11 +1643,13 @@
                 );
 
                 return {};
+
             }
 
             return {
                 "Authorization": `Bearer ${token}`
             };
+
         }
 
 
@@ -1657,14 +1754,14 @@
 
 
             tbody.innerHTML = `
-            <tr>
-                <td colspan="8">
-                    <div class="loader">
-                        Loading teachers...
-                    </div>
-                </td>
-            </tr>
-        `;
+                <tr>
+                    <td colspan="8">
+                        <div class="loader">
+                            Loading teachers...
+                        </div>
+                    </td>
+                </tr>
+            `;
 
 
             try {
@@ -1689,6 +1786,7 @@
                     throw new Error(
                         `Failed to load teachers (${response.status})`
                     );
+
                 }
 
 
@@ -1717,6 +1815,7 @@
                 } else {
 
                     teachers = [];
+
                 }
 
 
@@ -1734,14 +1833,14 @@
 
 
                 tbody.innerHTML = `
-                <tr>
-                    <td colspan="8">
-                        <div class="empty">
-                            Failed to load teachers.
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty">
+                                Failed to load teachers.
+                            </div>
+                        </td>
+                    </tr>
+                `;
 
 
                 showToast(
@@ -1749,7 +1848,9 @@
                     "Unable to load teachers",
                     "error"
                 );
+
             }
+
         }
 
 
@@ -1781,6 +1882,7 @@
                     throw new Error(
                         `Failed to load departments (${response.status})`
                     );
+
                 }
 
 
@@ -1819,10 +1921,10 @@
 
 
                 select.innerHTML = `
-                <option value="">
-                    Select Department
-                </option>
-            `;
+                    <option value="">
+                        Select Department
+                    </option>
+                `;
 
 
                 departments.forEach(
@@ -1844,7 +1946,9 @@
                             "-";
 
 
-                        select.appendChild(option);
+                        select.appendChild(
+                            option
+                        );
 
                     }
                 );
@@ -1862,7 +1966,9 @@
                     "Unable to load departments",
                     "error"
                 );
+
             }
+
         }
 
 
@@ -1893,6 +1999,7 @@
 
 
             return `${API_BASE_URL}/${url}`;
+
         }
 
 
@@ -1918,6 +2025,7 @@
                 return words[0]
                     .substring(0, 2)
                     .toUpperCase();
+
             }
 
 
@@ -1925,6 +2033,7 @@
                 words[0].charAt(0) +
                 words[words.length - 1].charAt(0)
             ).toUpperCase();
+
         }
 
 
@@ -1943,14 +2052,14 @@
             if (!data || !data.length) {
 
                 tbody.innerHTML = `
-                <tr>
-                    <td colspan="8">
-                        <div class="empty">
-                            No teachers found.
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty">
+                                No teachers found.
+                            </div>
+                        </td>
+                    </tr>
+                `;
 
                 return;
             }
@@ -1996,161 +2105,174 @@
                             profileImage
                                 ?
                                 `
-                            <img
-                                class="teacher-photo"
-                                src="${escapeHtml(profileImage)}"
-                                alt="${escapeHtml(teacherName)}"
-                                onerror="
-                                    this.style.display='none';
-                                    this.nextElementSibling.style.display='flex';
-                                ">
+                                <img
+                                    class="teacher-photo"
+                                    src="${escapeHtml(profileImage)}"
+                                    alt="${escapeHtml(teacherName)}"
+                                    onerror="
+                                        this.style.display='none';
+                                        this.nextElementSibling.style.display='flex';
+                                    ">
 
-                            <div
-                                class="teacher-photo-placeholder"
-                                style="display:none;">
-                                ${escapeHtml(
+                                <div
+                                    class="teacher-photo-placeholder"
+                                    style="display:none;">
+
+                                    ${escapeHtml(
                                     getInitials(
                                         teacherName
                                     )
                                 )}
-                            </div>
-                            `
+
+                                </div>
+                                `
                                 :
                                 `
-                            <div class="teacher-photo-placeholder">
-                                ${escapeHtml(
+                                <div class="teacher-photo-placeholder">
+
+                                    ${escapeHtml(
                                     getInitials(
                                         teacherName
                                     )
                                 )}
-                            </div>
-                            `;
+
+                                </div>
+                                `;
 
 
                         return `
-                        <tr>
+                            <tr>
 
-                            <td>
-                                ${index + 1}
-                            </td>
+                                <td>
+                                    ${index + 1}
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div class="teacher-cell">
+                                    <div class="teacher-cell">
 
-                                    ${photoHtml}
+                                        ${photoHtml}
 
-                                    <div>
+                                        <div>
 
-                                        <div class="teacher-name">
-                                            ${escapeHtml(
+                                            <div class="teacher-name">
+                                                ${escapeHtml(
                             teacherName
                         )}
-                                        </div>
+                                            </div>
 
-                                        <div class="teacher-code">
-                                            Username:
-                                            ${escapeHtml(
+                                            <div class="teacher-code">
+                                                Username:
+                                                ${escapeHtml(
                             teacher.username ||
                             "-"
                         )}
+                                            </div>
+
                                         </div>
 
                                     </div>
 
-                                </div>
-
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <strong>
-                                    ${escapeHtml(
+                                    <strong>
+                                        ${escapeHtml(
                             teacher.employeeCode ||
                             "-"
                         )}
-                                </strong>
+                                    </strong>
 
-                            </td>
+                                </td>
 
 
-                            <td>
-                                ${escapeHtml(
+                                <td>
+                                    ${escapeHtml(
                             teacher.phone ||
                             "-"
                         )}
-                            </td>
+                                </td>
 
 
-                            <td>
-                                ${escapeHtml(
+                                <td>
+                                    ${escapeHtml(
                             teacher.email ||
                             "-"
                         )}
-                            </td>
+                                </td>
 
 
-                            <td>
-                                ${escapeHtml(
+                                <td>
+                                    ${escapeHtml(
                             department
                         )}
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <span
-                                    class="badge ${statusClass}">
-                                    ${escapeHtml(
+                                    <span
+                                        class="badge ${statusClass}">
+
+                                        ${escapeHtml(
                             status
                         )}
-                                </span>
 
-                            </td>
+                                    </span>
 
-
-                            <td>
-
-                                <div class="actions">
-
-                                    <button
-                                        class="action-btn btn-view"
-                                        onclick="viewTeacher(${teacher.id})">
-                                        View
-                                    </button>
+                                </td>
 
 
-                                    <button
-                                        class="action-btn btn-edit"
-                                        onclick="editTeacher(${teacher.id})">
-                                        Edit
-                                    </button>
+                                <td>
+
+                                    <div class="actions">
+
+                                        <button
+                                            class="action-btn btn-view"
+                                            onclick="viewTeacher(${teacher.id})">
+
+                                            View
+
+                                        </button>
 
 
-                                    ${status === "ACTIVE"
+                                        <button
+                                            class="action-btn btn-edit"
+                                            onclick="editTeacher(${teacher.id})">
+
+                                            Edit
+
+                                        </button>
+
+
+                                        ${status === "ACTIVE"
                                 ?
                                 `
-                                        <button
-                                            class="action-btn btn-danger"
-                                            onclick="deactivateTeacher(${teacher.id})">
-                                            Deactivate
-                                        </button>
-                                        `
+                                                <button
+                                                    class="action-btn btn-danger"
+                                                    onclick="deactivateTeacher(${teacher.id})">
+
+                                                    Deactivate
+
+                                                </button>
+                                                `
                                 :
                                 ""
                             }
 
-                                </div>
+                                    </div>
 
-                            </td>
+                                </td>
 
-                        </tr>
-                    `;
+                            </tr>
+                        `;
 
                     }
                 ).join("");
+
         }
 
 
@@ -2184,13 +2306,13 @@
 
                         const searchable =
                             `
-                        ${teacher.name || ""}
-                        ${teacher.employeeCode || ""}
-                        ${teacher.phone || ""}
-                        ${teacher.email || ""}
-                        ${teacher.username || ""}
-                        ${teacher.departmentName || ""}
-                        `.toLowerCase();
+                            ${teacher.name || ""}
+                            ${teacher.employeeCode || ""}
+                            ${teacher.phone || ""}
+                            ${teacher.email || ""}
+                            ${teacher.username || ""}
+                            ${teacher.departmentName || ""}
+                            `.toLowerCase();
 
 
                         const matchesSearch =
@@ -2215,11 +2337,13 @@
                             matchesSearch &&
                             matchesStatus
                         );
+
                     }
                 );
 
 
             renderTeachers(filtered);
+
         }
 
 
@@ -2268,6 +2392,7 @@
             document.getElementById(
                 "inactiveTeachers"
             ).textContent = inactive;
+
         }
 
 
@@ -2383,16 +2508,18 @@
             if (profileImage) {
 
                 photoContainer.innerHTML = `
-                <img
-                    src="${escapeHtml(profileImage)}"
-                    class="view-profile-photo"
-                    alt="${escapeHtml(teacherName)}"
-                    onerror="showViewPhotoPlaceholder(
-                        '${escapeHtml(
-                    getInitials(teacherName)
+                    <img
+                        src="${escapeHtml(profileImage)}"
+                        class="view-profile-photo"
+                        alt="${escapeHtml(teacherName)}"
+                        onerror="showViewPhotoPlaceholder(
+                            '${escapeHtml(
+                    getInitials(
+                        teacherName
+                    )
                 )}'
-                    )">
-            `;
+                        )">
+                `;
 
             } else {
 
@@ -2401,6 +2528,7 @@
                         teacherName
                     )
                 );
+
             }
 
 
@@ -2411,6 +2539,7 @@
                 .classList.add(
                     "show"
                 );
+
         }
 
 
@@ -2423,10 +2552,11 @@
             document.getElementById(
                 "viewPhotoContainer"
             ).innerHTML = `
-            <div class="view-profile-placeholder">
-                ${escapeHtml(initials)}
-            </div>
-        `;
+                <div class="view-profile-placeholder">
+                    ${escapeHtml(initials)}
+                </div>
+            `;
+
         }
 
 
@@ -2443,6 +2573,7 @@
                 .classList.remove(
                     "show"
                 );
+
         }
 
 
@@ -2501,6 +2632,7 @@
                 .classList.add(
                     "show"
                 );
+
         }
 
 
@@ -2611,6 +2743,7 @@
             } else {
 
                 clearPhotoPreview();
+
             }
 
 
@@ -2621,6 +2754,7 @@
                 .classList.add(
                     "show"
                 );
+
         }
 
 
@@ -2696,6 +2830,7 @@
 
 
             reader.readAsDataURL(file);
+
         }
 
 
@@ -2748,6 +2883,7 @@
             wrapper.classList.add(
                 "show"
             );
+
         }
 
 
@@ -2775,6 +2911,7 @@
             wrapper.classList.remove(
                 "show"
             );
+
         }
 
 
@@ -2874,8 +3011,6 @@
                 editingTeacherId !== null;
 
 
-            // ADD = PHOTO REQUIRED
-
             if (
                 !isEdit &&
                 !selectedPhoto
@@ -2889,8 +3024,6 @@
                 return;
             }
 
-
-            // PHOTO VALIDATION
 
             if (selectedPhoto) {
 
@@ -2921,6 +3054,7 @@
 
                     return;
                 }
+
             }
 
 
@@ -2950,6 +3084,7 @@
 
                     method =
                         "PUT";
+
                 }
 
 
@@ -2979,6 +3114,7 @@
                         "file",
                         selectedPhoto
                     );
+
                 }
 
 
@@ -3034,12 +3170,14 @@
 
                         } catch (ignored) {
                         }
+
                     }
 
 
                     throw new Error(
                         message
                     );
+
                 }
 
 
@@ -3082,7 +3220,9 @@
                     editingTeacherId !== null
                         ? "Update Teacher"
                         : "Save Teacher";
+
             }
+
         }
 
 
@@ -3158,6 +3298,7 @@
                     throw new Error(
                         message
                     );
+
                 }
 
 
@@ -3183,12 +3324,14 @@
                     "Failed to deactivate teacher",
                     "error"
                 );
+
             }
+
         }
 
 
         // =====================================================
-        // CLOSE EDIT/ADD MODAL
+        // CLOSE EDIT / ADD MODAL
         // =====================================================
 
         function closeModal() {
@@ -3200,22 +3343,7 @@
                 .classList.remove(
                     "show"
                 );
-        }
 
-
-        // =====================================================
-        // SIDEBAR MOBILE
-        // =====================================================
-
-        function toggleSidebar() {
-
-            document
-                .getElementById(
-                    "sidebar"
-                )
-                .classList.toggle(
-                    "open"
-                );
         }
 
 
@@ -3252,6 +3380,7 @@
                 },
                 3000
             );
+
         }
 
 
@@ -3282,6 +3411,7 @@
                     "'",
                     "&#039;"
                 );
+
         }
 
 
@@ -3302,6 +3432,7 @@
                     ) {
 
                         closeModal();
+
                     }
 
                 }
@@ -3321,6 +3452,7 @@
                     ) {
 
                         closeViewModal();
+
                     }
 
                 }
@@ -3342,12 +3474,20 @@
                     closeModal();
 
                     closeViewModal();
+
                 }
 
             }
         );
 
     </script>
+
+
+    <!-- =====================================================
+         REUSABLE SIDEBAR JS
+    ====================================================== -->
+
+    <script src="/js/sidebar.js"></script>
 
 </body>
 

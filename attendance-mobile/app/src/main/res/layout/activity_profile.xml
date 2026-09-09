@@ -43,7 +43,6 @@
                 android:src="@android:drawable/ic_menu_revert"
                 app:tint="#222222" />
 
-
             <!-- TITLE -->
 
             <TextView
@@ -55,7 +54,6 @@
                 android:textColor="#1F1F1F"
                 android:textSize="20sp"
                 android:textStyle="bold" />
-
 
             <!-- LOGOUT -->
 
@@ -95,7 +93,6 @@
         android:paddingEnd="14dp"
         android:paddingBottom="14dp">
 
-
         <!-- ================================================= -->
         <!-- PROFILE HERO -->
         <!-- ================================================= -->
@@ -117,9 +114,7 @@
                 android:paddingStart="20dp"
                 android:paddingEnd="20dp">
 
-                <!-- ========================================= -->
                 <!-- PROFILE IMAGE -->
-                <!-- ========================================= -->
 
                 <com.google.android.material.imageview.ShapeableImageView
                     android:id="@+id/ivProfileImage"
@@ -130,10 +125,7 @@
                     android:src="@android:drawable/ic_menu_myplaces"
                     app:shapeAppearanceOverlay="@style/ProfileImageShape" />
 
-
-                <!-- ========================================= -->
                 <!-- PROFILE INFO -->
-                <!-- ========================================= -->
 
                 <LinearLayout
                     android:layout_width="0dp"
@@ -155,7 +147,6 @@
                         android:textSize="23sp"
                         android:textStyle="bold" />
 
-
                     <!-- ROLE -->
 
                     <TextView
@@ -172,7 +163,6 @@
                         android:textColor="#7063D9"
                         android:textSize="11sp"
                         android:textStyle="bold" />
-
 
                     <!-- ATTENDANCE METHOD -->
 
@@ -220,349 +210,488 @@
             app:strokeColor="#EEEEEE"
             app:strokeWidth="1dp">
 
-            <LinearLayout
+            <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="vertical"
-                android:paddingStart="18dp"
-                android:paddingTop="17dp"
-                android:paddingEnd="18dp"
-                android:paddingBottom="14dp">
-
-                <!-- TITLE -->
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/account_information"
-                    android:textColor="#202020"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-
-                <!-- ================================================= -->
-                <!-- ROW 1 : USER ID + USERNAME -->
-                <!-- ================================================= -->
+                android:fillViewport="true"
+                android:overScrollMode="never">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="15dp"
-                    android:orientation="horizontal">
-
-                    <!-- USER ID -->
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="User ID"
-                            android:textColor="#999999"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:id="@+id/tvUserIdValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="-"
-                            android:textColor="#222222"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-
-                    <!-- USERNAME -->
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/username"
-                            android:textColor="#999999"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:id="@+id/tvUsernameValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="@string/user"
-                            android:textColor="#222222"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-                <!-- DIVIDER -->
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
-                    android:background="#EEEEEE" />
-
-
-                <!-- ================================================= -->
-                <!-- ROW 2 : EMAIL + PHONE -->
-                <!-- ================================================= -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <!-- EMAIL -->
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Email"
-                            android:textColor="#999999"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:id="@+id/tvEmailValue"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:ellipsize="end"
-                            android:maxLines="1"
-                            android:text="-"
-                            android:textColor="#222222"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-
-                    <!-- PHONE -->
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Phone"
-                            android:textColor="#999999"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:id="@+id/tvPhoneValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="-"
-                            android:textColor="#222222"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-                <!-- DIVIDER -->
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
-                    android:background="#EEEEEE" />
-
-
-                <!-- ================================================= -->
-                <!-- ROW 3 : ROLE + STUDENT / TEACHER ID -->
-                <!-- ================================================= -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:orientation="horizontal">
-
-                    <!-- ROLE -->
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/role"
-                            android:textColor="#999999"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:id="@+id/tvRoleValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="@string/user_role"
-                            android:textColor="#222222"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-
-                    <!-- ROLL NUMBER -->
-
-                    <LinearLayout
-                        android:id="@+id/layoutRollNumber"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Roll Number"
-                            android:textColor="#999999"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:id="@+id/tvRollNumberValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="-"
-                            android:textColor="#222222"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-
-                    <!-- EMPLOYEE NUMBER -->
-
-                    <LinearLayout
-                        android:id="@+id/layoutEmployeeNumber"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical"
-                        android:visibility="gone">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Employee No."
-                            android:textColor="#999999"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:id="@+id/tvEmployeeNumberValue"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="-"
-                            android:textColor="#222222"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-                </LinearLayout>
-
-
-                <!-- DIVIDER -->
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginTop="12dp"
-                    android:background="#EEEEEE" />
-
-
-                <!-- ================================================= -->
-                <!-- ATTENDANCE -->
-                <!-- ================================================= -->
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="1"
-                        android:orientation="vertical">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/attendance"
-                            android:textColor="#999999"
-                            android:textSize="11sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="3dp"
-                            android:text="@string/face_recognition"
-                            android:textColor="#222222"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
-
-                    </LinearLayout>
-
-
-                    <!-- ACTIVE STATUS -->
+                    android:orientation="vertical"
+                    android:paddingStart="18dp"
+                    android:paddingTop="17dp"
+                    android:paddingEnd="18dp"
+                    android:paddingBottom="14dp">
+
+                    <!-- TITLE -->
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="#EAF7EE"
-                        android:paddingStart="12dp"
-                        android:paddingTop="5dp"
-                        android:paddingEnd="12dp"
-                        android:paddingBottom="5dp"
-                        android:text="ACTIVE"
-                        android:textColor="#218739"
-                        android:textSize="10sp"
+                        android:text="@string/account_information"
+                        android:textColor="#202020"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
+
+                    <!-- ================================================= -->
+                    <!-- ROW 1 -->
+                    <!-- ================================================= -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="15dp"
+                        android:orientation="horizontal">
+
+                        <!-- USER ID -->
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="User ID"
+                                android:textColor="#999999"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvUserIdValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="-"
+                                android:textColor="#222222"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- USERNAME -->
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/username"
+                                android:textColor="#999999"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvUsernameValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/user"
+                                android:textColor="#222222"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="#EEEEEE" />
+
+                    <!-- ================================================= -->
+                    <!-- ROW 2 -->
+                    <!-- ================================================= -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <!-- EMAIL -->
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Email"
+                                android:textColor="#999999"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvEmailValue"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:ellipsize="end"
+                                android:maxLines="2"
+                                android:text="-"
+                                android:textColor="#222222"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- PHONE -->
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Phone"
+                                android:textColor="#999999"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvPhoneValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="-"
+                                android:textColor="#222222"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="#EEEEEE" />
+
+                    <!-- ================================================= -->
+                    <!-- ROW 3 -->
+                    <!-- ================================================= -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:orientation="horizontal">
+
+                        <!-- ROLE -->
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/role"
+                                android:textColor="#999999"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvRoleValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="@string/user_role"
+                                android:textColor="#222222"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- ROLL NUMBER -->
+
+                        <LinearLayout
+                            android:id="@+id/layoutRollNumber"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Roll Number"
+                                android:textColor="#999999"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvRollNumberValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="-"
+                                android:textColor="#222222"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- EMPLOYEE NUMBER -->
+
+                        <LinearLayout
+                            android:id="@+id/layoutEmployeeNumber"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Employee No."
+                                android:textColor="#999999"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:id="@+id/tvEmployeeNumberValue"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="-"
+                                android:textColor="#222222"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginTop="12dp"
+                        android:background="#EEEEEE" />
+
+                    <!-- ================================================= -->
+                    <!-- ATTENDANCE -->
+                    <!-- ================================================= -->
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/attendance"
+                                android:textColor="#999999"
+                                android:textSize="11sp" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="3dp"
+                                android:text="@string/face_recognition"
+                                android:textColor="#222222"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
+
+                        <!-- ACTIVE STATUS -->
+
+                        <TextView
+                            android:id="@+id/tvStatusValue"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="#EAF7EE"
+                            android:paddingStart="12dp"
+                            android:paddingTop="5dp"
+                            android:paddingEnd="12dp"
+                            android:paddingBottom="5dp"
+                            android:text="ACTIVE"
+                            android:textColor="#218739"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+
+                    </LinearLayout>
 
                 </LinearLayout>
 
-            </LinearLayout>
+            </ScrollView>
 
         </com.google.android.material.card.MaterialCardView>
 
     </LinearLayout>
 
+
+    <!-- ===================================================== -->
+    <!-- BOTTOM NAVIGATION -->
+    <!-- ===================================================== -->
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        app:cardBackgroundColor="@android:color/white"
+        app:cardCornerRadius="0dp"
+        app:cardElevation="6dp"
+        app:strokeWidth="0dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <!-- HOME -->
+
+            <LinearLayout
+                android:id="@+id/navHome"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconHome"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_home"
+                    app:tint="#8A8A8A" />
+
+                <TextView
+                    android:id="@+id/textHome"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/home"
+                    android:textColor="#8A8A8A"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+
+            <!-- ATTENDANCE / CALENDAR -->
+
+            <LinearLayout
+                android:id="@+id/navAttendance"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconAttendance"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_calendar"
+                    app:tint="#8A8A8A" />
+
+                <TextView
+                    android:id="@+id/textAttendance"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/calendar_title"
+                    android:textColor="#8A8A8A"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+
+            <!-- LEAVE -->
+
+            <LinearLayout
+                android:id="@+id/navLeave"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconLeave"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_event"
+                    app:tint="#8A8A8A" />
+
+                <TextView
+                    android:id="@+id/textLeave"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/leave_title"
+                    android:textColor="#8A8A8A"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+
+            <!-- PROFILE -->
+
+            <LinearLayout
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconProfile"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_person"
+                    app:tint="#7162E8" />
+
+                <TextView
+                    android:id="@+id/textProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/profile"
+                    android:textColor="#7162E8"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </com.google.android.material.card.MaterialCardView>
+
 </LinearLayout>
+

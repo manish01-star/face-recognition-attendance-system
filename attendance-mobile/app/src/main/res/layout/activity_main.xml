@@ -31,6 +31,10 @@
             android:paddingStart="8dp"
             android:paddingEnd="8dp">
 
+            <!-- ================================================= -->
+            <!-- MENU -->
+            <!-- ================================================= -->
+
             <ImageButton
                 android:id="@+id/btnMenu"
                 android:layout_width="46dp"
@@ -41,7 +45,9 @@
                 android:src="@android:drawable/ic_menu_sort_by_size"
                 app:tint="#202124" />
 
+            <!-- ================================================= -->
             <!-- BRAND -->
+            <!-- ================================================= -->
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -71,6 +77,10 @@
 
             </LinearLayout>
 
+            <!-- ================================================= -->
+            <!-- NOTIFICATION -->
+            <!-- ================================================= -->
+
             <ImageButton
                 android:id="@+id/btnNotification"
                 android:layout_width="44dp"
@@ -82,16 +92,24 @@
                 android:src="@drawable/ic_notification"
                 app:tint="#666666" />
 
-            <ImageButton
+            <!-- ================================================= -->
+            <!-- USER PROFILE PHOTO -->
+            <!-- ================================================= -->
+
+            <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/btnProfile"
                 android:layout_width="44dp"
                 android:layout_height="44dp"
                 android:layout_marginStart="1dp"
-                android:background="@drawable/bg_profile_circle"
+                android:clickable="true"
+                android:focusable="true"
                 android:contentDescription="@string/profile"
-                android:padding="10dp"
+                android:scaleType="centerCrop"
                 android:src="@drawable/ic_person"
-                app:tint="#666666" />
+                android:background="@drawable/bg_profile_circle"
+                app:shapeAppearanceOverlay="@style/CircularImage"
+                app:strokeColor="#E5E5EA"
+                app:strokeWidth="1dp" />
 
         </LinearLayout>
 
@@ -118,7 +136,6 @@
             android:paddingTop="14dp"
             android:paddingEnd="16dp"
             android:paddingBottom="12dp">
-
 
             <!-- ================================================= -->
             <!-- GREETING -->
@@ -203,9 +220,6 @@
                     android:orientation="vertical"
                     android:padding="14dp">
 
-
-                    <!-- ATTENDANCE HEADER -->
-
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="32dp"
@@ -248,8 +262,7 @@
                         android:baselineAligned="false"
                         android:orientation="horizontal">
 
-
-                        <!-- ================= PUNCH IN ================= -->
+                        <!-- PUNCH IN -->
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="0dp"
@@ -314,7 +327,7 @@
                         </com.google.android.material.card.MaterialCardView>
 
 
-                        <!-- ================= PUNCH OUT ================= -->
+                        <!-- PUNCH OUT -->
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="0dp"
@@ -380,7 +393,7 @@
                         </com.google.android.material.card.MaterialCardView>
 
 
-                        <!-- ================= WORK HOURS ================= -->
+                        <!-- WORK HOURS -->
 
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="0dp"
@@ -447,8 +460,6 @@
                     </LinearLayout>
 
 
-                    <!-- VIEW CALENDAR -->
-
                     <TextView
                         android:id="@+id/tvViewCalendar"
                         android:layout_width="wrap_content"
@@ -471,7 +482,7 @@
 
 
             <!-- ================================================= -->
-            <!-- CURRENT DEVICE LOCATION -->
+            <!-- CURRENT LOCATION -->
             <!-- ================================================= -->
 
             <com.google.android.material.card.MaterialCardView
@@ -492,9 +503,6 @@
                     android:paddingStart="14dp"
                     android:paddingEnd="14dp">
 
-
-                    <!-- LOCATION ICON -->
-
                     <TextView
                         android:layout_width="42dp"
                         android:layout_height="42dp"
@@ -503,9 +511,6 @@
                         android:text="@string/location_symbol"
                         android:textColor="#E31B23"
                         android:textSize="22sp" />
-
-
-                    <!-- LOCATION TEXT -->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -535,9 +540,6 @@
                             android:textStyle="bold" />
 
                     </LinearLayout>
-
-
-                    <!-- GPS STATUS -->
 
                     <TextView
                         android:id="@+id/tvLocationRadius"
@@ -580,8 +582,6 @@
                     android:paddingStart="16dp"
                     android:paddingEnd="20dp">
 
-                    <!-- PUNCH BUTTON -->
-
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnMainPunch"
                         android:layout_width="62dp"
@@ -596,8 +596,6 @@
                         android:textSize="22sp"
                         app:cornerRadius="31dp"
                         app:elevation="2dp" />
-
-                    <!-- PUNCH DETAILS -->
 
                     <LinearLayout
                         android:layout_width="0dp"
@@ -722,26 +720,29 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iconHome"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_home"
-                    app:tint="#8A8A8A" />
+                    app:tint="#7162E8" />
 
                 <TextView
+                    android:id="@+id/textHome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="@string/home"
-                    android:textColor="#8A8A8A"
-                    android:textSize="10sp" />
+                    android:textColor="#7162E8"
+                    android:textSize="10sp"
+                    android:textStyle="bold" />
 
             </LinearLayout>
 
 
-            <!-- CALENDAR -->
+            <!-- ATTENDANCE -->
 
             <LinearLayout
-                android:id="@+id/navCalendar"
+                android:id="@+id/navAttendance"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_weight="1"
@@ -751,12 +752,14 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iconAttendance"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_calendar"
                     app:tint="#8A8A8A" />
 
                 <TextView
+                    android:id="@+id/textAttendance"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
@@ -780,25 +783,56 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iconLeave"
                     android:layout_width="22dp"
                     android:layout_height="22dp"
                     android:src="@drawable/ic_event"
-                    app:tint="#7162E8" />
+                    app:tint="#8A8A8A" />
 
                 <TextView
+                    android:id="@+id/textLeave"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="@string/leave_title"
-                    android:textColor="#7162E8"
-                    android:textSize="10sp"
-                    android:textStyle="bold" />
+                    android:textColor="#8A8A8A"
+                    android:textSize="10sp" />
+
+            </LinearLayout>
+
+
+            <!-- PROFILE -->
+
+            <LinearLayout
+                android:id="@+id/navProfile"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/iconProfile"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_person"
+                    app:tint="#8A8A8A" />
+
+                <TextView
+                    android:id="@+id/textProfile"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="@string/profile"
+                    android:textColor="#8A8A8A"
+                    android:textSize="10sp" />
 
             </LinearLayout>
 
         </LinearLayout>
 
     </com.google.android.material.card.MaterialCardView>
-
 
 </LinearLayout>

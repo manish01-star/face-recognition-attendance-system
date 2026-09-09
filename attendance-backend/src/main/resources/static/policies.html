@@ -2,13 +2,21 @@
 <html lang="en">
 
 <head>
+
     <meta charset="UTF-8">
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Attendance Policies | FaceAttend Admin</title>
 
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Common Sidebar CSS -->
+    <link rel="stylesheet" href="/css/sidebar.css">
 
     <style>
         * {
@@ -21,99 +29,6 @@
             font-family: Arial, Helvetica, sans-serif;
             background: #f5f7fb;
             color: #1e293b;
-        }
-
-        /* =====================================================
-           SIDEBAR
-        ===================================================== */
-
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 0;
-            width: 250px;
-            height: 100vh;
-            background: #111827;
-            color: #fff;
-            z-index: 1000;
-            overflow-y: auto;
-        }
-
-        .brand {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            padding: 0 22px;
-            border-bottom: 1px solid #1f2937;
-        }
-
-        .brand-icon {
-            width: 38px;
-            height: 38px;
-            border-radius: 10px;
-            background: #2563eb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 10px;
-        }
-
-        .brand h2 {
-            font-size: 19px;
-            font-weight: 700;
-        }
-
-        .sidebar-menu {
-            padding: 18px 12px;
-        }
-
-        .menu-title {
-            color: #64748b;
-            font-size: 11px;
-            text-transform: uppercase;
-            font-weight: 700;
-            padding: 12px 12px 7px;
-        }
-
-        .sidebar-menu ul {
-            list-style: none;
-        }
-
-        .sidebar-link {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 11px 13px;
-            margin-bottom: 4px;
-            color: #cbd5e1;
-            text-decoration: none;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .sidebar-link i {
-            font-size: 17px;
-            width: 20px;
-        }
-
-        .sidebar-link:hover {
-            background: #1f2937;
-            color: #fff;
-        }
-
-        .sidebar-link.active {
-            background: #2563eb;
-            color: #fff;
-        }
-
-        /* =====================================================
-           MAIN
-        ===================================================== */
-
-        .main {
-            margin-left: 250px;
-            min-height: 100vh;
         }
 
         /* =====================================================
@@ -130,7 +45,7 @@
             padding: 0 30px;
             position: sticky;
             top: 0;
-            z-index: 100;
+            z-index: 500;
         }
 
         .navbar-left {
@@ -144,21 +59,14 @@
             color: #111827;
         }
 
-        .menu-toggle {
-            display: none;
-            border: none;
-            background: transparent;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .admin-info {
+        /* Scoped so it does not conflict with sidebar admin-info */
+        .navbar .admin-info {
             display: flex;
             align-items: center;
             gap: 10px;
         }
 
-        .admin-avatar {
+        .navbar .admin-avatar {
             width: 38px;
             height: 38px;
             border-radius: 50%;
@@ -168,6 +76,17 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
+        }
+
+        .navbar .admin-name {
+            font-size: 14px;
+            font-weight: 600;
+            color: #111827;
+        }
+
+        .navbar .admin-role {
+            font-size: 11px;
+            color: #64748b;
         }
 
         /* =====================================================
@@ -194,6 +113,10 @@
             color: #64748b;
             font-size: 14px;
         }
+
+        /* =====================================================
+           BUTTONS
+        ===================================================== */
 
         .btn {
             border: none;
@@ -296,6 +219,10 @@
         .card-header h3 {
             font-size: 17px;
         }
+
+        /* =====================================================
+           FILTERS
+        ===================================================== */
 
         .filters {
             padding: 15px 20px;
@@ -411,6 +338,10 @@
             line-height: 1.6;
         }
 
+        /* =====================================================
+           ACTIONS
+        ===================================================== */
+
         .actions {
             display: flex;
             gap: 6px;
@@ -459,9 +390,11 @@
         }
 
         @keyframes spin {
+
             100% {
                 transform: rotate(360deg);
             }
+
         }
 
         /* =====================================================
@@ -555,6 +488,7 @@
             display: flex;
             gap: 25px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .checkbox-item {
@@ -612,26 +546,10 @@
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
+
         }
 
         @media (max-width: 768px) {
-
-            .sidebar {
-                transform: translateX(-100%);
-                transition: .25s;
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main {
-                margin-left: 0;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
 
             .content {
                 padding: 20px;
@@ -654,13 +572,10 @@
             .form-group.full {
                 grid-column: auto;
             }
+
         }
 
-        @media (max-width: 500px) {
-
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 600px) {
 
             .navbar {
                 padding: 0 15px;
@@ -669,207 +584,58 @@
             .content {
                 padding: 15px;
             }
+
+            .navbar .admin-info {
+                display: none;
+            }
+
+        }
+
+        @media (max-width: 500px) {
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
         }
     </style>
+
 </head>
+
 
 <body>
 
     <!-- =========================================================
-     SIDEBAR
-========================================================= -->
+         COMMON SIDEBAR
+    ========================================================= -->
 
-    <aside class="sidebar" id="sidebar">
-
-        <div class="brand">
-
-            <div class="brand-icon">
-                <i class="bi bi-person-bounding-box"></i>
-            </div>
-
-            <h2>FaceAttend</h2>
-
-        </div>
-
-        <div class="sidebar-menu">
-
-            <!-- MAIN -->
-
-            <div class="menu-title">
-                Main
-            </div>
-
-            <ul>
-
-                <li>
-                    <a href="dashboard.html" class="sidebar-link" data-page="dashboard.html">
-
-                        <i class="bi bi-grid"></i>
-                        <span>Dashboard</span>
-
-                    </a>
-                </li>
-
-            </ul>
-
-
-            <!-- MANAGEMENT -->
-
-            <div class="menu-title">
-                Management
-            </div>
-
-            <ul>
-
-                <li>
-                    <a href="students.html" class="sidebar-link" data-page="students.html">
-
-                        <i class="bi bi-people"></i>
-                        <span>Students</span>
-
-                    </a>
-                </li>
-
-                <li>
-                    <a href="teachers.html" class="sidebar-link" data-page="teachers.html">
-
-                        <i class="bi bi-person-video3"></i>
-                        <span>Teachers</span>
-
-                    </a>
-                </li>
-
-                <li>
-                    <a href="departments.html" class="sidebar-link" data-page="departments.html">
-
-                        <i class="bi bi-building"></i>
-                        <span>Departments</span>
-
-                    </a>
-                </li>
-
-                <li>
-                    <a href="courses.html" class="sidebar-link" data-page="courses.html">
-
-                        <i class="bi bi-book"></i>
-                        <span>Courses</span>
-
-                    </a>
-                </li>
-
-                <li>
-                    <a href="semesters.html" class="sidebar-link" data-page="semesters.html">
-
-                        <i class="bi bi-layers"></i>
-                        <span>Semesters</span>
-
-                    </a>
-                </li>
-
-                <li>
-                    <a href="sections.html" class="sidebar-link" data-page="sections.html">
-
-                        <i class="bi bi-diagram-3"></i>
-                        <span>Sections</span>
-
-                    </a>
-                </li>
-
-            </ul>
-
-
-            <!-- ATTENDANCE -->
-
-            <div class="menu-title">
-                Attendance
-            </div>
-
-            <ul>
-
-                <li>
-                    <a href="attendance.html" class="sidebar-link" data-page="attendance.html">
-
-                        <i class="bi bi-calendar-check"></i>
-                        <span>Attendance</span>
-
-                    </a>
-                </li>
-
-                <li>
-                    <a href="leaves.html" class="sidebar-link" data-page="leaves.html">
-
-                        <i class="bi bi-calendar2-x"></i>
-                        <span>Leave Requests</span>
-
-                    </a>
-                </li>
-
-                <li>
-                    <a href="holidays.html" class="sidebar-link" data-page="holidays.html">
-
-                        <i class="bi bi-calendar-event"></i>
-                        <span>Holidays</span>
-
-                    </a>
-                </li>
-
-                <li>
-                    <a href="policies.html" class="sidebar-link active" data-page="policies.html">
-
-                        <i class="bi bi-shield-check"></i>
-                        <span>Attendance Policies</span>
-
-                    </a>
-                </li>
-
-            </ul>
-
-
-            <!-- SYSTEM -->
-
-            <div class="menu-title">
-                System
-            </div>
-
-            <ul>
-
-                <li>
-                    <a href="settings.html" class="sidebar-link" data-page="settings.html">
-
-                        <i class="bi bi-gear"></i>
-                        <span>Settings</span>
-
-                    </a>
-                </li>
-
-            </ul>
-
-        </div>
-
-    </aside>
+    <div id="sidebar-container"></div>
 
 
     <!-- =========================================================
-     MAIN
-========================================================= -->
+         MAIN CONTENT
+    ========================================================= -->
 
-    <div class="main">
+    <main class="main-wrapper">
 
-        <!-- NAVBAR -->
+        <!-- =====================================================
+             NAVBAR
+        ===================================================== -->
 
         <nav class="navbar">
 
             <div class="navbar-left">
 
-                <button class="menu-toggle" onclick="toggleSidebar()">
+                <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
 
-                    <i class="bi bi-list"></i>
+                    ☰
 
                 </button>
 
                 <h3>Attendance Policies</h3>
 
             </div>
+
 
             <div class="admin-info">
 
@@ -884,7 +650,9 @@
         </nav>
 
 
-        <!-- CONTENT -->
+        <!-- =====================================================
+             CONTENT
+        ===================================================== -->
 
         <main class="content">
 
@@ -903,6 +671,7 @@
 
                 </div>
 
+
                 <button class="btn btn-primary" onclick="openAddModal()">
 
                     <i class="bi bi-plus-lg"></i>
@@ -914,9 +683,9 @@
             </div>
 
 
-            <!-- =====================================================
-             STATS
-        ===================================================== -->
+            <!-- =================================================
+                 STATS
+            ================================================= -->
 
             <div class="stats-grid">
 
@@ -1006,9 +775,9 @@
             </div>
 
 
-            <!-- =====================================================
-             TABLE CARD
-        ===================================================== -->
+            <!-- =================================================
+                 TABLE CARD
+            ================================================= -->
 
             <div class="card">
 
@@ -1084,6 +853,7 @@
 
                         </thead>
 
+
                         <tbody id="policyTableBody">
 
                         </tbody>
@@ -1096,12 +866,12 @@
 
         </main>
 
-    </div>
+    </main>
 
 
     <!-- =========================================================
-     ADD / EDIT MODAL
-========================================================= -->
+         ADD / EDIT MODAL
+    ========================================================= -->
 
     <div class="modal" id="policyModal">
 
@@ -1113,7 +883,7 @@
                     Add Attendance Policy
                 </h2>
 
-                <button class="close-modal" onclick="closeModal()">
+                <button class="close-modal" onclick="closeModal()" type="button">
 
                     <i class="bi bi-x"></i>
 
@@ -1287,13 +1057,14 @@
 
             <div class="modal-footer">
 
-                <button class="btn btn-secondary" onclick="closeModal()">
+                <button class="btn btn-secondary" onclick="closeModal()" type="button">
 
                     Cancel
 
                 </button>
 
-                <button class="btn btn-primary" onclick="savePolicy()">
+
+                <button class="btn btn-primary" onclick="savePolicy()" type="button">
 
                     <i class="bi bi-check-lg"></i>
 
@@ -1309,8 +1080,8 @@
 
 
     <!-- =========================================================
-     TOAST
-========================================================= -->
+         TOAST
+    ========================================================= -->
 
     <div class="toast" id="toast">
 
@@ -1320,11 +1091,15 @@
 
 
     <!-- =========================================================
-     AUTH
-========================================================= -->
+         AUTH
+    ========================================================= -->
 
-    <script src="js/auth.js"></script>
+    <script src="/js/auth.js"></script>
 
+
+    <!-- =========================================================
+         PAGE SCRIPT
+    ========================================================= -->
 
     <script>
 
@@ -1356,15 +1131,15 @@
                 document.getElementById("policyTableBody");
 
             tbody.innerHTML = `
-            <tr>
-                <td colspan="8">
-                    <div class="loader">
-                        <i class="bi bi-arrow-repeat"></i>
-                        <p>Loading policies...</p>
-                    </div>
-                </td>
-            </tr>
-        `;
+                <tr>
+                    <td colspan="8">
+                        <div class="loader">
+                            <i class="bi bi-arrow-repeat"></i>
+                            <p>Loading policies...</p>
+                        </div>
+                    </td>
+                </tr>
+            `;
 
             try {
 
@@ -1378,6 +1153,7 @@
                     throw new Error(
                         `HTTP ${response.status}`
                     );
+
                 }
 
                 policies = await response.json();
@@ -1394,21 +1170,25 @@
                 );
 
                 tbody.innerHTML = `
-                <tr>
-                    <td colspan="8">
-                        <div class="empty">
-                            <i class="bi bi-exclamation-circle"></i>
-                            <p>Failed to load attendance policies.</p>
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty">
+                                <i class="bi bi-exclamation-circle"></i>
+                                <p>
+                                    Failed to load attendance policies.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
 
                 showToast(
                     "Failed to load attendance policies",
                     "error"
                 );
+
             }
+
         }
 
 
@@ -1436,17 +1216,21 @@
                     p => p.status === "ACTIVE"
                 );
 
+
             document.getElementById(
                 "totalPolicies"
             ).textContent = total;
+
 
             document.getElementById(
                 "activePolicies"
             ).textContent = active;
 
+
             document.getElementById(
                 "inactivePolicies"
             ).textContent = inactive;
+
 
             document.getElementById(
                 "currentPolicy"
@@ -1454,6 +1238,7 @@
                 current
                     ? current.policyName
                     : "-";
+
         }
 
 
@@ -1470,10 +1255,12 @@
                     .trim()
                     .toLowerCase();
 
+
             const status =
                 document.getElementById(
                     "statusFilter"
                 ).value;
+
 
             filteredPolicies =
                 policies.filter(policy => {
@@ -1487,15 +1274,20 @@
                             .toLowerCase()
                             .includes(search);
 
+
                     const matchesStatus =
                         !status ||
                         policy.status === status;
 
+
                     return matchesSearch &&
                         matchesStatus;
+
                 });
 
+
             renderPolicies();
+
         }
 
 
@@ -1510,20 +1302,24 @@
                     "policyTableBody"
                 );
 
+
             if (!filteredPolicies.length) {
 
                 tbody.innerHTML = `
-                <tr>
-                    <td colspan="8">
-                        <div class="empty">
-                            <i class="bi bi-shield-x"></i>
-                            <p>No attendance policies found.</p>
-                        </div>
-                    </td>
-                </tr>
-            `;
+                    <tr>
+                        <td colspan="8">
+                            <div class="empty">
+                                <i class="bi bi-shield-x"></i>
+                                <p>
+                                    No attendance policies found.
+                                </p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
 
                 return;
+
             }
 
 
@@ -1539,12 +1335,22 @@
 
                         const workingDays = [];
 
+
                         if (!policy.saturdayOff) {
-                            workingDays.push("Saturday");
+
+                            workingDays.push(
+                                "Saturday"
+                            );
+
                         }
 
+
                         if (!policy.sundayOff) {
-                            workingDays.push("Sunday");
+
+                            workingDays.push(
+                                "Sunday"
+                            );
+
                         }
 
 
@@ -1566,133 +1372,137 @@
 
                         return `
 
-                        <tr>
+                            <tr>
 
-                            <td>
-                                ${index + 1}
-                            </td>
+                                <td>
+                                    ${index + 1}
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div class="policy-name">
-                                    ${escapeHtml(
+                                    <div class="policy-name">
+
+                                        ${escapeHtml(
                             policy.policyName || "-"
                         )}
-                                </div>
 
-                            </td>
+                                    </div>
 
-
-                            <td>
-
-                                <strong>
-                                    ${policy.workingHours ?? "-"}
-                                </strong>
-
-                                hrs
-
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div class="days">
-                                    ${escapeHtml(
+                                    <strong>
+                                        ${policy.workingHours ?? "-"}
+                                    </strong>
+
+                                    hrs
+
+                                </td>
+
+
+                                <td>
+
+                                    <div class="days">
+
+                                        ${escapeHtml(
                             workingDayText
                         )}
-                                </div>
 
-                            </td>
+                                    </div>
+
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div class="location">
+                                    <div class="location">
 
-                                    <i class="bi bi-geo-alt-fill"></i>
+                                        <i class="bi bi-geo-alt-fill"></i>
 
-                                    ${escapeHtml(
+                                        ${escapeHtml(
                             policy.locationName || "-"
                         )}
 
-                                </div>
+                                    </div>
 
-                            </td>
-
-
-                            <td>
-
-                                ${policy.allowedRadiusMeters ?? "-"}
-                                m
-
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <span class="status ${statusClass}">
+                                    ${policy.allowedRadiusMeters ?? "-"}
+                                    m
 
-                                    ${policy.status}
-
-                                </span>
-
-                            </td>
+                                </td>
 
 
-                            <td>
+                                <td>
 
-                                <div class="actions">
+                                    <span class="status ${statusClass}">
 
-                                    <button
-                                        class="action-btn action-edit"
-                                        title="Edit"
-                                        onclick="editPolicy(${policy.id})">
+                                        ${policy.status}
 
-                                        <i class="bi bi-pencil"></i>
+                                    </span>
 
-                                    </button>
+                                </td>
 
 
-                                    ${policy.status === "ACTIVE"
+                                <td>
 
+                                    <div class="actions">
+
+                                        <button
+                                            class="action-btn action-edit"
+                                            title="Edit"
+                                            onclick="editPolicy(${policy.id})">
+
+                                            <i class="bi bi-pencil"></i>
+
+                                        </button>
+
+
+                                        ${policy.status === "ACTIVE"
                                 ?
 
                                 `
-                                        <button
-                                            class="action-btn action-deactivate"
-                                            title="Deactivate"
-                                            onclick="deactivatePolicy(${policy.id})">
+                                                <button
+                                                    class="action-btn action-deactivate"
+                                                    title="Deactivate"
+                                                    onclick="deactivatePolicy(${policy.id})">
 
-                                            <i class="bi bi-x-circle"></i>
+                                                    <i class="bi bi-x-circle"></i>
 
-                                        </button>
-                                        `
+                                                </button>
+                                                `
 
                                 :
 
                                 `
-                                        <button
-                                            class="action-btn action-activate"
-                                            title="Activate"
-                                            onclick="activatePolicy(${policy.id})">
+                                                <button
+                                                    class="action-btn action-activate"
+                                                    title="Activate"
+                                                    onclick="activatePolicy(${policy.id})">
 
-                                            <i class="bi bi-check-circle"></i>
+                                                    <i class="bi bi-check-circle"></i>
 
-                                        </button>
-                                        `
+                                                </button>
+                                                `
                             }
 
-                                </div>
+                                    </div>
 
-                            </td>
+                                </td>
 
-                        </tr>
+                            </tr>
 
-                    `;
+                        `;
 
                     })
                     .join("");
+
         }
 
 
@@ -1707,37 +1517,46 @@
             ).textContent =
                 "Add Attendance Policy";
 
+
             document.getElementById(
                 "policyForm"
             ).reset();
+
 
             document.getElementById(
                 "policyId"
             ).value = "";
 
+
             document.getElementById(
                 "workingHours"
             ).value = "6";
+
 
             document.getElementById(
                 "allowedRadiusMeters"
             ).value = "200";
 
+
             document.getElementById(
                 "sundayOff"
             ).checked = true;
+
 
             document.getElementById(
                 "attendanceRequired"
             ).checked = true;
 
+
             document.getElementById(
                 "status"
             ).value = "ACTIVE";
 
+
             document.getElementById(
                 "policyModal"
             ).classList.add("show");
+
         }
 
 
@@ -1752,6 +1571,7 @@
                     p => p.id === id
                 );
 
+
             if (!policy) {
 
                 showToast(
@@ -1760,6 +1580,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -1838,6 +1659,7 @@
             document.getElementById(
                 "policyModal"
             ).classList.add("show");
+
         }
 
 
@@ -1860,15 +1682,18 @@
                         "policyName"
                     ).value.trim(),
 
+
                 saturdayOff:
                     document.getElementById(
                         "saturdayOff"
                     ).checked,
 
+
                 sundayOff:
                     document.getElementById(
                         "sundayOff"
                     ).checked,
+
 
                 workingHours:
                     parseFloat(
@@ -1877,15 +1702,18 @@
                         ).value
                     ),
 
+
                 attendanceRequired:
                     document.getElementById(
                         "attendanceRequired"
                     ).checked,
 
+
                 locationName:
                     document.getElementById(
                         "locationName"
                     ).value.trim(),
+
 
                 latitude:
                     parseFloat(
@@ -1894,12 +1722,14 @@
                         ).value
                     ),
 
+
                 longitude:
                     parseFloat(
                         document.getElementById(
                             "longitude"
                         ).value
                     ),
+
 
                 allowedRadiusMeters:
                     parseFloat(
@@ -1908,10 +1738,12 @@
                         ).value
                     ),
 
+
                 status:
                     document.getElementById(
                         "status"
                     ).value
+
             };
 
 
@@ -1923,6 +1755,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -1934,12 +1767,15 @@
                 );
 
                 return;
+
             }
 
 
-            if (isNaN(payload.latitude) ||
+            if (
+                isNaN(payload.latitude) ||
                 payload.latitude < -90 ||
-                payload.latitude > 90) {
+                payload.latitude > 90
+            ) {
 
                 showToast(
                     "Enter a valid latitude",
@@ -1947,12 +1783,15 @@
                 );
 
                 return;
+
             }
 
 
-            if (isNaN(payload.longitude) ||
+            if (
+                isNaN(payload.longitude) ||
                 payload.longitude < -180 ||
-                payload.longitude > 180) {
+                payload.longitude > 180
+            ) {
 
                 showToast(
                     "Enter a valid longitude",
@@ -1960,12 +1799,14 @@
                 );
 
                 return;
+
             }
 
 
             try {
 
                 let response;
+
 
                 if (id) {
 
@@ -1998,6 +1839,7 @@
                                     JSON.stringify(payload)
                             }
                         );
+
                 }
 
 
@@ -2006,14 +1848,17 @@
                     const errorText =
                         await response.text();
 
+
                     throw new Error(
                         errorText ||
                         `HTTP ${response.status}`
                     );
+
                 }
 
 
                 closeModal();
+
 
                 showToast(
                     id
@@ -2032,11 +1877,14 @@
                     error
                 );
 
+
                 showToast(
                     "Failed to save attendance policy",
                     "error"
                 );
+
             }
+
         }
 
 
@@ -2051,8 +1899,11 @@
                     "Are you sure you want to deactivate this attendance policy?"
                 );
 
+
             if (!confirmed) {
+
                 return;
+
             }
 
 
@@ -2072,6 +1923,7 @@
                     throw new Error(
                         `HTTP ${response.status}`
                     );
+
                 }
 
 
@@ -2090,11 +1942,14 @@
                     error
                 );
 
+
                 showToast(
                     "Failed to deactivate policy",
                     "error"
                 );
+
             }
+
         }
 
 
@@ -2109,8 +1964,11 @@
                     "Activate this policy? The current active policy will become inactive."
                 );
 
+
             if (!confirmed) {
+
                 return;
+
             }
 
 
@@ -2130,6 +1988,7 @@
                     throw new Error(
                         `HTTP ${response.status}`
                     );
+
                 }
 
 
@@ -2148,11 +2007,14 @@
                     error
                 );
 
+
                 showToast(
                     "Failed to activate policy",
                     "error"
                 );
+
             }
+
         }
 
 
@@ -2165,18 +2027,7 @@
             document.getElementById(
                 "policyModal"
             ).classList.remove("show");
-        }
 
-
-        // =========================================================
-        // SIDEBAR
-        // =========================================================
-
-        function toggleSidebar() {
-
-            document.getElementById(
-                "sidebar"
-            ).classList.toggle("open");
         }
 
 
@@ -2194,6 +2045,7 @@
                     "toast"
                 );
 
+
             const toastMessage =
                 document.getElementById(
                     "toastMessage"
@@ -2202,6 +2054,7 @@
 
             toastMessage.textContent =
                 message;
+
 
             toast.className =
                 `toast show ${type}`;
@@ -2214,6 +2067,7 @@
                 );
 
             }, 3000);
+
         }
 
 
@@ -2223,11 +2077,15 @@
 
         function escapeHtml(value) {
 
-            if (value === null ||
-                value === undefined) {
+            if (
+                value === null ||
+                value === undefined
+            ) {
 
                 return "";
+
             }
+
 
             return String(value)
                 .replace(/&/g, "&amp;")
@@ -2235,6 +2093,7 @@
                 .replace(/>/g, "&gt;")
                 .replace(/"/g, "&quot;")
                 .replace(/'/g, "&#039;");
+
         }
 
 
@@ -2251,7 +2110,9 @@
                 if (event.target === this) {
 
                     closeModal();
+
                 }
+
             }
         );
 
@@ -2267,11 +2128,20 @@
                 if (event.key === "Escape") {
 
                     closeModal();
+
                 }
+
             }
         );
 
     </script>
+
+
+    <!-- =========================================================
+         COMMON SIDEBAR JS
+    ========================================================= -->
+
+    <script src="/js/sidebar.js"></script>
 
 </body>
 

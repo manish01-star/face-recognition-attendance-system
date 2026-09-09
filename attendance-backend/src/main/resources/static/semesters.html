@@ -6,8 +6,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    ```
     <title>Semesters | Admin Panel</title>
+
+    <!-- Reusable Sidebar CSS -->
+    <link rel="stylesheet" href="/css/sidebar.css">
 
     <style>
         * {
@@ -27,85 +29,6 @@
     ========================= */
 
         .app {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        /* =========================
-       SIDEBAR
-    ========================= */
-
-        .sidebar {
-            width: 250px;
-            background: #111827;
-            color: white;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1000;
-            transition: 0.3s;
-        }
-
-        .brand {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            padding: 0 22px;
-            font-size: 20px;
-            font-weight: 700;
-            border-bottom: 1px solid #273244;
-        }
-
-        .brand span {
-            color: #60a5fa;
-            margin-right: 8px;
-        }
-
-        .menu {
-            padding: 20px 12px;
-        }
-
-        .menu-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #94a3b8;
-            padding: 0 12px;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #cbd5e1;
-            text-decoration: none;
-            padding: 12px 14px;
-            margin-bottom: 5px;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .menu a:hover,
-        .menu a.active {
-            background: #2563eb;
-            color: white;
-        }
-
-        .menu-icon {
-            width: 20px;
-            text-align: center;
-        }
-
-        /* =========================
-       MAIN
-    ========================= */
-
-        .main {
-            margin-left: 250px;
-            width: calc(100% - 250px);
             min-height: 100vh;
         }
 
@@ -137,16 +60,22 @@
             gap: 15px;
         }
 
-        .admin-info {
+        /*
+     * IMPORTANT:
+     * These are scoped to navbar so they don't
+     * conflict with sidebar.css .admin-info etc.
+     */
+
+        .navbar .admin-info {
             text-align: right;
         }
 
-        .admin-name {
+        .navbar .admin-name {
             font-size: 14px;
             font-weight: 600;
         }
 
-        .admin-role {
+        .navbar .admin-role {
             font-size: 11px;
             color: #64748b;
         }
@@ -161,14 +90,6 @@
             align-items: center;
             justify-content: center;
             font-weight: 700;
-        }
-
-        .menu-toggle {
-            display: none;
-            border: none;
-            background: none;
-            font-size: 24px;
-            cursor: pointer;
         }
 
         /* =========================
@@ -594,24 +515,12 @@
        RESPONSIVE
     ========================= */
 
+        /*
+     * Sidebar responsive behavior is handled
+     * by /css/sidebar.css.
+     */
+
         @media (max-width: 900px) {
-
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
 
             .stats {
                 grid-template-columns: 1fr;
@@ -641,7 +550,7 @@
                 padding: 0 18px;
             }
 
-            .admin-info {
+            .navbar .admin-info {
                 display: none;
             }
 
@@ -658,7 +567,6 @@
             }
         }
     </style>
-    ```
 
 </head>
 
@@ -666,90 +574,29 @@
 
     <div class="app">
 
-        ```
-        <!-- =========================
-     SIDEBAR
-========================== -->
+        <!-- =====================================================
+         REUSABLE SIDEBAR COMPONENT
+    ====================================================== -->
 
-        <aside class="sidebar" id="sidebar">
-
-            <div class="brand">
-                <span>◆</span>
-                College Attendance
-            </div>
-
-            <div class="menu">
-
-                <div class="menu-title">
-                    Main
-                </div>
-
-                <a href="dashboard.html">
-                    <span class="menu-icon">▦</span>
-                    Dashboard
-                </a>
-
-                <div class="menu-title">
-                    Management
-                </div>
-
-                <a href="students.html">
-                    <span class="menu-icon">👨‍🎓</span>
-                    Students
-                </a>
-
-                <a href="teachers.html">
-                    <span class="menu-icon">👨‍🏫</span>
-                    Teachers
-                </a>
-
-                <a href="departments.html">
-                    <span class="menu-icon">🏢</span>
-                    Departments
-                </a>
-
-                <a href="courses.html">
-                    <span class="menu-icon">📚</span>
-                    Courses
-                </a>
-
-                <a href="semesters.html" class="active">
-                    <span class="menu-icon">📖</span>
-                    Semesters
-                </a>
-
-                <a href="sections.html">
-                    <span class="menu-icon">§</span>
-                    Sections
-                </a>
-
-                <div class="menu-title">
-                    Attendance
-                </div>
-
-                <a href="attendance.html">
-                    <span class="menu-icon">✓</span>
-                    Attendance
-                </a>
-
-            </div>
-
-        </aside>
+        <div id="sidebar-container"></div>
 
 
-        <!-- =========================
-     MAIN
-========================== -->
+        <!-- =====================================================
+         MAIN CONTENT
+    ====================================================== -->
 
-        <main class="main">
+        <main class="main-wrapper">
 
-            <!-- NAVBAR -->
+            <!-- =========================
+             NAVBAR
+        ========================== -->
 
             <nav class="navbar">
 
                 <div style="display:flex;align-items:center;gap:15px;">
 
-                    <button class="menu-toggle" onclick="toggleSidebar()">
+                    <!-- Mobile Sidebar Button -->
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
                         ☰
                     </button>
 
@@ -758,6 +605,7 @@
                     </div>
 
                 </div>
+
 
                 <div class="nav-right">
 
@@ -782,7 +630,9 @@
             </nav>
 
 
-            <!-- CONTENT -->
+            <!-- =========================
+             CONTENT
+        ========================== -->
 
             <section class="content">
 
@@ -792,8 +642,8 @@
 
 
                 <!-- =========================
-             STATS
-        ========================== -->
+                 STATS
+            ========================== -->
 
                 <div class="stats">
 
@@ -863,8 +713,8 @@
 
 
                 <!-- =========================
-             SEMESTER TABLE
-        ========================== -->
+                 SEMESTER TABLE
+            ========================== -->
 
                 <div class="card">
 
@@ -889,7 +739,9 @@
                     </div>
 
 
-                    <!-- FILTERS -->
+                    <!-- =========================
+                     FILTERS
+                ========================== -->
 
                     <div class="filters">
 
@@ -897,9 +749,10 @@
 
                             <input type="text" id="searchInput" class="input"
                                 placeholder="Search by course name, course code or semester..."
-                                oninput="filterSemesters()">
+                                oninput="filterSemesters">
 
                         </div>
+
 
                         <div class="filter-select">
 
@@ -912,6 +765,7 @@
                             </select>
 
                         </div>
+
 
                         <div class="filter-select">
 
@@ -936,7 +790,9 @@
                     </div>
 
 
-                    <!-- TABLE -->
+                    <!-- =========================
+                     TABLE
+                ========================== -->
 
                     <div class="table-wrapper">
 
@@ -946,25 +802,15 @@
 
                                 <tr>
 
-                                    <th>
-                                        #
-                                    </th>
+                                    <th>#</th>
 
-                                    <th>
-                                        Course
-                                    </th>
+                                    <th>Course</th>
 
-                                    <th>
-                                        Semester
-                                    </th>
+                                    <th>Semester</th>
 
-                                    <th>
-                                        Status
-                                    </th>
+                                    <th>Status</th>
 
-                                    <th>
-                                        Actions
-                                    </th>
+                                    <th>Actions</th>
 
                                 </tr>
 
@@ -987,17 +833,16 @@
             </footer>
 
         </main>
-        ```
 
     </div>
 
+
     <!-- =========================
      ADD / EDIT MODAL
-========================= -->
+========================== -->
 
     <div class="modal-overlay" id="semesterModal">
 
-        ```
         <div class="modal">
 
             <div class="modal-header">
@@ -1026,7 +871,10 @@
                             <label class="form-label">
 
                                 Course
-                                <span class="required">*</span>
+
+                                <span class="required">
+                                    *
+                                </span>
 
                             </label>
 
@@ -1048,7 +896,10 @@
                             <label class="form-label">
 
                                 Semester Number
-                                <span class="required">*</span>
+
+                                <span class="required">
+                                    *
+                                </span>
 
                             </label>
 
@@ -1058,45 +909,16 @@
                                     Select Semester
                                 </option>
 
-                                <option value="1">
-                                    Semester 1
-                                </option>
-
-                                <option value="2">
-                                    Semester 2
-                                </option>
-
-                                <option value="3">
-                                    Semester 3
-                                </option>
-
-                                <option value="4">
-                                    Semester 4
-                                </option>
-
-                                <option value="5">
-                                    Semester 5
-                                </option>
-
-                                <option value="6">
-                                    Semester 6
-                                </option>
-
-                                <option value="7">
-                                    Semester 7
-                                </option>
-
-                                <option value="8">
-                                    Semester 8
-                                </option>
-
-                                <option value="9">
-                                    Semester 9
-                                </option>
-
-                                <option value="10">
-                                    Semester 10
-                                </option>
+                                <option value="1">Semester 1</option>
+                                <option value="2">Semester 2</option>
+                                <option value="3">Semester 3</option>
+                                <option value="4">Semester 4</option>
+                                <option value="5">Semester 5</option>
+                                <option value="6">Semester 6</option>
+                                <option value="7">Semester 7</option>
+                                <option value="8">Semester 8</option>
+                                <option value="9">Semester 9</option>
+                                <option value="10">Semester 10</option>
 
                             </select>
 
@@ -1106,6 +928,8 @@
 
                 </div>
 
+
+                <!-- MODAL FOOTER -->
 
                 <div class="modal-footer">
 
@@ -1122,24 +946,39 @@
             </form>
 
         </div>
-        ```
 
     </div>
+
 
     <!-- =========================
      TOAST
-========================= -->
+========================== -->
 
-    <div class="toast" id="toast">
-    </div>
+    <div class="toast" id="toast"></div>
 
-    <script src="js/auth.js"></script>
+
+    <!-- =========================
+     AUTH
+========================== -->
+
+    <script src="/js/auth.js"></script>
+
+
+    <!-- =========================
+     SIDEBAR COMPONENT
+========================== -->
+
+    <script src="/js/sidebar.js"></script>
+
+
+    <!-- =========================
+     SEMESTER JAVASCRIPT
+========================== -->
 
     <script>
 
         /*
-         * Change this if your backend
-         * is running on another host/port.
+         * Backend URL
          */
         const API_BASE_URL = "http://localhost:8080";
 
@@ -1156,6 +995,7 @@
         document.addEventListener("DOMContentLoaded", async () => {
 
             await loadCourses();
+
             await loadSemesters();
 
         });
@@ -1174,18 +1014,21 @@
                         `${API_BASE_URL}/api/admin/courses`
                     );
 
+
                 if (!response.ok) {
 
                     throw new Error(
                         "Failed to load courses"
                     );
+
                 }
 
-                courses = await response.json();
+
+                courses =
+                    await response.json();
 
 
                 populateCourseDropdown();
-
 
                 populateCourseFilter();
 
@@ -1194,11 +1037,14 @@
 
                 console.error(error);
 
+
                 showToast(
                     "Unable to load courses",
                     "error"
                 );
+
             }
+
         }
 
 
@@ -1224,16 +1070,23 @@
             courses.forEach(course => {
 
                 const option =
-                    document.createElement("option");
+                    document.createElement(
+                        "option"
+                    );
 
-                option.value = course.id;
+
+                option.value =
+                    course.id;
+
 
                 option.textContent =
                     `${course.name} (${course.code})`;
 
+
                 select.appendChild(option);
 
             });
+
         }
 
 
@@ -1259,16 +1112,23 @@
             courses.forEach(course => {
 
                 const option =
-                    document.createElement("option");
+                    document.createElement(
+                        "option"
+                    );
 
-                option.value = course.id;
+
+                option.value =
+                    course.id;
+
 
                 option.textContent =
                     `${course.name} (${course.code})`;
 
+
                 select.appendChild(option);
 
             });
+
         }
 
 
@@ -1308,6 +1168,7 @@
                     throw new Error(
                         "Failed to load semesters"
                     );
+
                 }
 
 
@@ -1317,7 +1178,9 @@
 
                 updateStats();
 
-                renderSemesters(semesters);
+                renderSemesters(
+                    semesters
+                );
 
 
             } catch (error) {
@@ -1340,7 +1203,9 @@
                     error.message,
                     "error"
                 );
+
             }
+
         }
 
 
@@ -1355,25 +1220,7 @@
                     Number(course.id) ===
                     Number(courseId)
             );
-        }
 
-
-        // ==========================================
-        // GET COURSE NAME
-        // ==========================================
-
-        function getCourseName(courseId) {
-
-            const course =
-                getCourse(courseId);
-
-
-            if (!course) {
-                return "-";
-            }
-
-
-            return course.name || "-";
         }
 
 
@@ -1402,6 +1249,7 @@
             `;
 
                 return;
+
             }
 
 
@@ -1453,8 +1301,7 @@
 
                             <td>
 
-                                <span
-                                    class="semester-number">
+                                <span class="semester-number">
                                     Semester
                                     ${escapeHtml(
                             semester.semesterNumber
@@ -1466,8 +1313,7 @@
 
                             <td>
 
-                                <span
-                                    class="badge ${statusClass}">
+                                <span class="badge ${statusClass}">
                                     ${escapeHtml(
                             semester.status || "-"
                         )}
@@ -1486,17 +1332,16 @@
                                         Edit
                                     </button>
 
+
                                     ${semester.status === "ACTIVE"
-                                ?
-                                `
-                                        <button
-                                            class="action-btn btn-danger"
-                                            onclick="deactivateSemester(${semester.id})">
-                                            Deactivate
-                                        </button>
-                                        `
-                                :
-                                ""
+                                ? `
+                                                <button
+                                                    class="action-btn btn-danger"
+                                                    onclick="deactivateSemester(${semester.id})">
+                                                    Deactivate
+                                                </button>
+                                              `
+                                : ""
                             }
 
                                 </div>
@@ -1505,8 +1350,10 @@
 
                         </tr>
                     `;
+
                     }
                 ).join("");
+
         }
 
 
@@ -1518,7 +1365,9 @@
 
             const search =
                 document
-                    .getElementById("searchInput")
+                    .getElementById(
+                        "searchInput"
+                    )
                     .value
                     .toLowerCase()
                     .trim();
@@ -1537,74 +1386,81 @@
 
 
             const filtered =
-                semesters.filter(semester => {
+                semesters.filter(
+                    semester => {
 
-                    const course =
-                        getCourse(
-                            semester.courseId
+                        const course =
+                            getCourse(
+                                semester.courseId
+                            );
+
+
+                        const courseName =
+                            course
+                                ? course.name || ""
+                                : "";
+
+
+                        const courseCode =
+                            course
+                                ? course.code || ""
+                                : "";
+
+
+                        const semesterNumber =
+                            semester.semesterNumber
+                            || "";
+
+
+                        const searchable =
+                            `
+                            ${courseName}
+                            ${courseCode}
+                            ${semesterNumber}
+                            semester
+                        `.toLowerCase();
+
+
+                        const matchesSearch =
+                            searchable.includes(
+                                search
+                            );
+
+
+                        const matchesCourse =
+                            courseFilter === "ALL"
+                            ||
+                            Number(
+                                semester.courseId
+                            ) ===
+                            Number(
+                                courseFilter
+                            );
+
+
+                        const matchesStatus =
+                            statusFilter === "ALL"
+                            ||
+                            semester.status ===
+                            statusFilter;
+
+
+                        return (
+                            matchesSearch
+                            &&
+                            matchesCourse
+                            &&
+                            matchesStatus
                         );
 
-
-                    const courseName =
-                        course
-                            ? course.name || ""
-                            : "";
+                    }
+                );
 
 
-                    const courseCode =
-                        course
-                            ? course.code || ""
-                            : "";
+            renderSemesters(
+                filtered
+            );
 
-
-                    const semesterNumber =
-                        semester.semesterNumber
-                        || "";
-
-
-                    const searchable =
-                        `
-                    ${courseName}
-                    ${courseCode}
-                    ${semesterNumber}
-                    semester
-                    `.toLowerCase();
-
-
-                    const matchesSearch =
-                        searchable.includes(
-                            search
-                        );
-
-
-                    const matchesCourse =
-                        courseFilter === "ALL"
-                        ||
-                        Number(
-                            semester.courseId
-                        ) === Number(
-                            courseFilter
-                        );
-
-
-                    const matchesStatus =
-                        statusFilter === "ALL"
-                        ||
-                        semester.status === statusFilter;
-
-
-                    return (
-                        matchesSearch
-                        &&
-                        matchesCourse
-                        &&
-                        matchesStatus
-                    );
-
-                });
-
-
-            renderSemesters(filtered);
         }
 
 
@@ -1634,17 +1490,21 @@
 
             document.getElementById(
                 "totalSemesters"
-            ).textContent = total;
+            ).textContent =
+                total;
 
 
             document.getElementById(
                 "activeSemesters"
-            ).textContent = active;
+            ).textContent =
+                active;
 
 
             document.getElementById(
                 "inactiveSemesters"
-            ).textContent = inactive;
+            ).textContent =
+                inactive;
+
         }
 
 
@@ -1654,7 +1514,8 @@
 
         function openAddModal() {
 
-            editingSemesterId = null;
+            editingSemesterId =
+                null;
 
 
             document.getElementById(
@@ -1670,13 +1531,20 @@
 
 
             document
-                .getElementById("semesterForm")
+                .getElementById(
+                    "semesterForm"
+                )
                 .reset();
 
 
             document
-                .getElementById("semesterModal")
-                .classList.add("show");
+                .getElementById(
+                    "semesterModal"
+                )
+                .classList.add(
+                    "show"
+                );
+
         }
 
 
@@ -1695,7 +1563,9 @@
 
 
             if (!semester) {
+
                 return;
+
             }
 
 
@@ -1728,8 +1598,13 @@
 
 
             document
-                .getElementById("semesterModal")
-                .classList.add("show");
+                .getElementById(
+                    "semesterModal"
+                )
+                .classList.add(
+                    "show"
+                );
+
         }
 
 
@@ -1768,6 +1643,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -1779,6 +1655,7 @@
                 );
 
                 return;
+
             }
 
 
@@ -1795,7 +1672,8 @@
 
             try {
 
-                saveBtn.disabled = true;
+                saveBtn.disabled =
+                    true;
 
 
                 saveBtn.textContent =
@@ -1808,7 +1686,8 @@
                     `${API_BASE_URL}/api/admin/semesters`;
 
 
-                let method = "POST";
+                let method =
+                    "POST";
 
 
                 if (editingSemesterId) {
@@ -1816,7 +1695,9 @@
                     url =
                         `${API_BASE_URL}/api/admin/semesters/${editingSemesterId}`;
 
-                    method = "PUT";
+                    method =
+                        "PUT";
+
                 }
 
 
@@ -1832,7 +1713,9 @@
                             },
 
                             body:
-                                JSON.stringify(request)
+                                JSON.stringify(
+                                    request
+                                )
                         }
                     );
 
@@ -1856,7 +1739,6 @@
                             ||
                             message;
 
-
                     } catch (e) {
 
                         // Ignore invalid JSON
@@ -1867,6 +1749,7 @@
                     throw new Error(
                         message
                     );
+
                 }
 
 
@@ -1890,7 +1773,6 @@
                     "success"
                 );
 
-
             } catch (error) {
 
                 console.error(error);
@@ -1901,17 +1783,19 @@
                     "error"
                 );
 
-
             } finally {
 
-                saveBtn.disabled = false;
+                saveBtn.disabled =
+                    false;
 
 
                 saveBtn.textContent =
                     editingSemesterId
                         ? "Update Semester"
                         : "Save Semester";
+
             }
+
         }
 
 
@@ -1930,7 +1814,9 @@
 
 
             if (!semester) {
+
                 return;
+
             }
 
 
@@ -1953,7 +1839,9 @@
 
 
             if (!confirmed) {
+
                 return;
+
             }
 
 
@@ -1973,6 +1861,7 @@
                     throw new Error(
                         "Failed to deactivate semester"
                     );
+
                 }
 
 
@@ -1984,7 +1873,6 @@
                     "success"
                 );
 
-
             } catch (error) {
 
                 console.error(error);
@@ -1994,7 +1882,9 @@
                     error.message,
                     "error"
                 );
+
             }
+
         }
 
 
@@ -2005,20 +1895,13 @@
         function closeModal() {
 
             document
-                .getElementById("semesterModal")
-                .classList.remove("show");
-        }
+                .getElementById(
+                    "semesterModal"
+                )
+                .classList.remove(
+                    "show"
+                );
 
-
-        // ==========================================
-        // SIDEBAR MOBILE
-        // ==========================================
-
-        function toggleSidebar() {
-
-            document
-                .getElementById("sidebar")
-                .classList.toggle("open");
         }
 
 
@@ -2045,13 +1928,17 @@
                 `toast show ${type}`;
 
 
-            setTimeout(() => {
+            setTimeout(
+                () => {
 
-                toast.classList.remove(
-                    "show"
-                );
+                    toast.classList.remove(
+                        "show"
+                    );
 
-            }, 3000);
+                },
+                3000
+            );
+
         }
 
 
@@ -2062,47 +1949,78 @@
         function escapeHtml(value) {
 
             return String(value)
+
                 .replaceAll(
                     "&",
                     "&amp;"
                 )
+
                 .replaceAll(
                     "<",
                     "&lt;"
                 )
+
                 .replaceAll(
                     ">",
                     "&gt;"
                 )
+
                 .replaceAll(
                     '"',
                     "&quot;"
                 )
+
                 .replaceAll(
                     "'",
                     "&#039;"
                 );
+
         }
 
 
         // ==========================================
-        // CLOSE MODAL OUTSIDE
+        // CLOSE MODAL OUTSIDE CLICK
         // ==========================================
 
         document
-            .getElementById("semesterModal")
+            .getElementById(
+                "semesterModal"
+            )
             .addEventListener(
                 "click",
                 function (event) {
 
                     if (
-                        event.target === this
+                        event.target ===
+                        this
                     ) {
 
                         closeModal();
+
                     }
+
                 }
             );
+
+
+        // ==========================================
+        // ESC KEY TO CLOSE MODAL
+        // ==========================================
+
+        document.addEventListener(
+            "keydown",
+            function (event) {
+
+                if (
+                    event.key === "Escape"
+                ) {
+
+                    closeModal();
+
+                }
+
+            }
+        );
 
     </script>
 

@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 
 <head>
@@ -6,6 +7,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <title>Courses | Admin Panel</title>
+
+    <!-- =========================
+     REUSABLE SIDEBAR CSS
+========================== -->
+    <link rel="stylesheet" href="/css/sidebar.css">
 
     <style>
         * {
@@ -21,95 +27,16 @@
         }
 
         /* =========================
-           LAYOUT
-        ========================= */
+       LAYOUT
+    ========================== */
 
         .app {
-            display: flex;
             min-height: 100vh;
         }
 
         /* =========================
-           SIDEBAR
-        ========================= */
-
-        .sidebar {
-            width: 250px;
-            background: #111827;
-            color: white;
-            position: fixed;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            z-index: 1000;
-            transition: 0.3s;
-        }
-
-        .brand {
-            height: 70px;
-            display: flex;
-            align-items: center;
-            padding: 0 22px;
-            font-size: 20px;
-            font-weight: 700;
-            border-bottom: 1px solid #273244;
-        }
-
-        .brand span {
-            color: #60a5fa;
-            margin-right: 8px;
-        }
-
-        .menu {
-            padding: 20px 12px;
-        }
-
-        .menu-title {
-            font-size: 11px;
-            text-transform: uppercase;
-            color: #94a3b8;
-            padding: 0 12px;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
-
-        .menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            color: #cbd5e1;
-            text-decoration: none;
-            padding: 12px 14px;
-            margin-bottom: 5px;
-            border-radius: 8px;
-            font-size: 14px;
-            transition: 0.2s;
-        }
-
-        .menu a:hover,
-        .menu a.active {
-            background: #2563eb;
-            color: white;
-        }
-
-        .menu-icon {
-            width: 20px;
-            text-align: center;
-        }
-
-        /* =========================
-           MAIN
-        ========================= */
-
-        .main {
-            margin-left: 250px;
-            width: calc(100% - 250px);
-            min-height: 100vh;
-        }
-
-        /* =========================
-           NAVBAR
-        ========================= */
+       NAVBAR
+    ========================== */
 
         .navbar {
             height: 70px;
@@ -135,16 +62,18 @@
             gap: 15px;
         }
 
-        .admin-info {
+        /* Scoped navbar admin styles.
+       Prevents conflict with sidebar.css */
+        .navbar .admin-info {
             text-align: right;
         }
 
-        .admin-name {
+        .navbar .admin-name {
             font-size: 14px;
             font-weight: 600;
         }
 
-        .admin-role {
+        .navbar .admin-role {
             font-size: 11px;
             color: #64748b;
         }
@@ -161,17 +90,9 @@
             font-weight: 700;
         }
 
-        .menu-toggle {
-            display: none;
-            border: none;
-            background: none;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
         /* =========================
-           CONTENT
-        ========================= */
+       CONTENT
+    ========================== */
 
         .content {
             padding: 30px;
@@ -188,8 +109,8 @@
         }
 
         /* =========================
-           STATS
-        ========================= */
+       STATS
+    ========================== */
 
         .stats {
             display: grid;
@@ -242,8 +163,8 @@
         }
 
         /* =========================
-           CARD
-        ========================= */
+       CARD
+    ========================== */
 
         .card {
             background: white;
@@ -273,8 +194,8 @@
         }
 
         /* =========================
-           BUTTONS
-        ========================= */
+       BUTTONS
+    ========================== */
 
         .btn {
             border: none;
@@ -316,8 +237,8 @@
         }
 
         /* =========================
-           FILTERS
-        ========================= */
+       FILTERS
+    ========================== */
 
         .filters {
             padding: 18px 20px;
@@ -352,8 +273,8 @@
         }
 
         /* =========================
-           TABLE
-        ========================= */
+       TABLE
+    ========================== */
 
         .table-wrapper {
             overflow-x: auto;
@@ -428,8 +349,8 @@
         }
 
         /* =========================
-           MODAL
-        ========================= */
+       MODAL
+    ========================== */
 
         .modal-overlay {
             position: fixed;
@@ -515,8 +436,8 @@
         }
 
         /* =========================
-           TOAST
-        ========================= */
+       TOAST
+    ========================== */
 
         .toast {
             position: fixed;
@@ -547,8 +468,8 @@
         }
 
         /* =========================
-           LOADER / EMPTY
-        ========================= */
+       LOADER / EMPTY
+    ========================== */
 
         .loader {
             text-align: center;
@@ -565,8 +486,8 @@
         }
 
         /* =========================
-           FOOTER
-        ========================= */
+       FOOTER
+    ========================== */
 
         footer {
             padding: 20px 30px;
@@ -576,27 +497,10 @@
         }
 
         /* =========================
-           RESPONSIVE
-        ========================= */
+       RESPONSIVE
+    ========================== */
 
         @media (max-width: 900px) {
-
-            .sidebar {
-                transform: translateX(-100%);
-            }
-
-            .sidebar.open {
-                transform: translateX(0);
-            }
-
-            .main {
-                margin-left: 0;
-                width: 100%;
-            }
-
-            .menu-toggle {
-                display: block;
-            }
 
             .stats {
                 grid-template-columns: 1fr;
@@ -626,7 +530,7 @@
                 padding: 0 18px;
             }
 
-            .admin-info {
+            .navbar .admin-info {
                 display: none;
             }
 
@@ -643,95 +547,36 @@
             }
         }
     </style>
+
 </head>
 
 <body>
 
     <div class="app">
 
-        <!-- =========================
-         SIDEBAR
-    ========================== -->
+        <!-- =====================================================
+         REUSABLE SIDEBAR COMPONENT
+    ====================================================== -->
 
-        <aside class="sidebar" id="sidebar">
-
-            <div class="brand">
-                <span>◆</span>
-                College Attendance
-            </div>
-
-            <div class="menu">
-
-                <div class="menu-title">
-                    Main
-                </div>
-
-                <a href="dashboard.html">
-                    <span class="menu-icon">▦</span>
-                    Dashboard
-                </a>
-
-                <div class="menu-title">
-                    Management
-                </div>
-
-                <a href="students.html">
-                    <span class="menu-icon">👨‍🎓</span>
-                    Students
-                </a>
-
-                <a href="teachers.html">
-                    <span class="menu-icon">👨‍🏫</span>
-                    Teachers
-                </a>
-
-                <a href="departments.html">
-                    <span class="menu-icon">🏢</span>
-                    Departments
-                </a>
-
-                <a href="courses.html" class="active">
-                    <span class="menu-icon">📚</span>
-                    Courses
-                </a>
-
-                <a href="semesters.html">
-                    <span class="menu-icon">📖</span>
-                    Semesters
-                </a>
-
-                <a href="sections.html">
-                    <span class="menu-icon">§</span>
-                    Sections
-                </a>
-
-                <div class="menu-title">
-                    Attendance
-                </div>
-
-                <a href="attendance.html">
-                    <span class="menu-icon">✓</span>
-                    Attendance
-                </a>
-
-            </div>
-
-        </aside>
+        <div id="sidebar-container"></div>
 
 
         <!-- =========================
-         MAIN
+         MAIN CONTENT
     ========================== -->
 
-        <main class="main">
+        <main class="main-wrapper">
 
-            <!-- NAVBAR -->
+            <!-- =========================
+             NAVBAR
+        ========================== -->
 
             <nav class="navbar">
 
                 <div style="display:flex;align-items:center;gap:15px;">
 
-                    <button class="menu-toggle" onclick="toggleSidebar()">
+                    <!-- Mobile Sidebar Button -->
+                    <button type="button" class="mobile-menu-btn" id="mobileMenuBtn" aria-label="Open menu">
                         ☰
                     </button>
 
@@ -740,6 +585,7 @@
                     </div>
 
                 </div>
+
 
                 <div class="nav-right">
 
@@ -764,7 +610,9 @@
             </nav>
 
 
-            <!-- CONTENT -->
+            <!-- =========================
+             CONTENT
+        ========================== -->
 
             <section class="content">
 
@@ -933,36 +781,23 @@
 
                                 <tr>
 
-                                    <th>
-                                        #
-                                    </th>
+                                    <th>#</th>
 
-                                    <th>
-                                        Course
-                                    </th>
+                                    <th>Course</th>
 
-                                    <th>
-                                        Course Code
-                                    </th>
+                                    <th>Course Code</th>
 
-                                    <th>
-                                        Department
-                                    </th>
+                                    <th>Department</th>
 
-                                    <th>
-                                        Status
-                                    </th>
+                                    <th>Status</th>
 
-                                    <th>
-                                        Actions
-                                    </th>
+                                    <th>Actions</th>
 
                                 </tr>
 
                             </thead>
 
                             <tbody id="courseTableBody">
-
                             </tbody>
 
                         </table>
@@ -973,6 +808,10 @@
 
             </section>
 
+
+            <!-- =========================
+             FOOTER
+        ========================== -->
 
             <footer>
                 © 2026 College Attendance System. All rights reserved.
@@ -985,7 +824,7 @@
 
     <!-- =========================
      ADD / EDIT MODAL
-========================= -->
+========================== -->
 
     <div class="modal-overlay" id="courseModal">
 
@@ -1104,16 +943,35 @@
 
     <!-- =========================
      TOAST
-========================= -->
+========================== -->
 
-    <div class="toast" id="toast">
-    </div>
+    <div class="toast" id="toast"></div>
 
-    <script src="js/auth.js"></script>
+
+    <!-- =========================
+     AUTH JS
+========================== -->
+
+    <script src="/js/auth.js"></script>
+
+
+    <!-- =========================
+     REUSABLE SIDEBAR JS
+========================== -->
+
+    <script src="/js/sidebar.js"></script>
+
+
+    <!-- =========================
+     COURSE PAGE JS
+========================== -->
 
     <script>
 
+        // ==========================================
         // AUTHENTICATION GUARD
+        // ==========================================
+
         if (!requireAuth()) {
             throw new Error("Authentication required");
         }
@@ -1160,6 +1018,11 @@
                     await apiFetch(
                         `${API_BASE_URL}/api/admin/departments`
                     );
+
+
+                if (!response) {
+                    return;
+                }
 
 
                 if (!response.ok) {
@@ -1329,6 +1192,11 @@
                     );
 
 
+                if (!response) {
+                    return;
+                }
+
+
                 if (!response.ok) {
 
                     throw new Error(
@@ -1464,8 +1332,7 @@
 
                             <td>
 
-                                <span
-                                    class="badge ${statusClass}">
+                                <span class="badge ${statusClass}">
 
                                     ${escapeHtml(
                             course.status || "-"
@@ -1493,15 +1360,15 @@
                                 ?
                                 `
 
-                                        <button
-                                            class="action-btn btn-danger"
-                                            onclick="deactivateCourse(${course.id})">
+                                                <button
+                                                    class="action-btn btn-danger"
+                                                    onclick="deactivateCourse(${course.id})">
 
-                                            Deactivate
+                                                    Deactivate
 
-                                        </button>
+                                                </button>
 
-                                        `
+                                            `
                                 :
                                 ""
                             }
@@ -1593,8 +1460,8 @@
 
                         const searchable =
                             `
-                        ${course.name || ""}
-                        ${course.code || ""}
+                            ${course.name || ""}
+                            ${course.code || ""}
                         `
                                 .toLowerCase();
 
@@ -1895,6 +1762,11 @@
                     );
 
 
+                if (!response) {
+                    return;
+                }
+
+
                 if (!response.ok) {
 
                     let message =
@@ -1928,7 +1800,19 @@
                 }
 
 
-                await response.json();
+                /*
+                 * Backend may return an empty body.
+                 * Therefore JSON parsing is optional.
+                 */
+                try {
+
+                    await response.json();
+
+                } catch (e) {
+
+                    // Empty response is allowed.
+
+                }
 
 
                 closeModal();
@@ -2017,6 +1901,11 @@
                     );
 
 
+                if (!response) {
+                    return;
+                }
+
+
                 if (!response.ok) {
 
                     throw new Error(
@@ -2062,23 +1951,6 @@
                 )
                 .classList.remove(
                     "show"
-                );
-
-        }
-
-
-        // ==========================================
-        // SIDEBAR MOBILE
-        // ==========================================
-
-        function toggleSidebar() {
-
-            document
-                .getElementById(
-                    "sidebar"
-                )
-                .classList.toggle(
-                    "open"
                 );
 
         }

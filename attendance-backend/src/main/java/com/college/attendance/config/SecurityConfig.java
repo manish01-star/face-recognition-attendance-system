@@ -88,6 +88,8 @@ public class SecurityConfig {
                                                                 "/auth.js",
                                                                 "/js/**",
                                                                 "/images/**",
+                                                                "/components/**",
+                                                                "/uploads/**",
                                                                 "/favicon.ico")
                                                 .permitAll()
 
@@ -112,10 +114,6 @@ public class SecurityConfig {
                                                                 "ADMIN",
                                                                 "TEACHER",
                                                                 "STUDENT") // for testing
-
-                                                .requestMatchers(
-                                                                "/uploads/**")
-                                                .permitAll()
 
                                                 .requestMatchers(
                                                                 "/api/attendance/**")
