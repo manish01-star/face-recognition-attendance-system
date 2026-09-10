@@ -185,7 +185,7 @@ public class FaceRegistrationService {
                                         .modelName(
                                                         faceResponse.getModel())
                                         .detectorBackend(
-                                                        "retinaface")
+                                                        "opencv")
                                         .status("ACTIVE")
                                         .build();
 
@@ -201,7 +201,7 @@ public class FaceRegistrationService {
                                         faceResponse.getModel());
 
                         faceEmbedding.setDetectorBackend(
-                                        "retinaface");
+                                        "opencv");
 
                         faceEmbedding.setStatus(
                                         "ACTIVE");

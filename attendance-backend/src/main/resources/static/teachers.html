@@ -562,6 +562,201 @@
         }
 
         /* =========================
+           FACE REGISTRATION
+        ========================= */
+
+        .icon {
+            width: 18px;
+            height: 18px;
+            display: inline-block;
+            vertical-align: middle;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 1.8;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .icon-sm {
+            width: 15px;
+            height: 15px;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+        }
+
+        .btn-face {
+            background: #ede9fe;
+            color: #6d28d9;
+        }
+
+        .face-subtitle {
+            font-size: 12px;
+            color: #64748b;
+            margin-bottom: 14px;
+        }
+
+        .face-camera {
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            min-height: 300px;
+            border-radius: 13px;
+            background: #111827;
+            overflow: hidden;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #faceCamera,
+        #facePreview {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        /* Live front camera shown as a natural selfie / mirror view.
+           The capture canvas is mirrored the same way so the saved
+           image matches the live preview. */
+        #faceCamera {
+            transform: scaleX(-1);
+        }
+
+        .face-guide {
+            position: absolute;
+            width: 48%;
+            height: 65%;
+            border: 2px dashed rgba(255, 255, 255, 0.75);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .face-guide-text {
+            position: absolute;
+            bottom: 12px;
+            left: 0;
+            right: 0;
+            padding: 6px;
+            background: rgba(0, 0, 0, 0.35);
+            color: #fff;
+            text-align: center;
+            font-size: 11px;
+            line-height: 1.4;
+        }
+
+        .face-placeholder {
+            padding: 15px;
+            color: #9ca3af;
+            text-align: center;
+        }
+
+        .face-placeholder .icon {
+            display: block;
+            width: 42px;
+            height: 42px;
+            margin: 0 auto 8px;
+        }
+
+        .face-placeholder div {
+            font-size: 14px;
+            line-height: 1.4;
+        }
+
+        .face-placeholder small {
+            display: block;
+            margin-top: 3px;
+            font-size: 11px;
+        }
+
+        .camera-status {
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 7px;
+            color: #64748b;
+            font-size: 11px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            background: #9ca3af;
+            transition: 0.2s;
+        }
+
+        .status-dot.active {
+            background: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+        }
+
+        .status-dot.captured {
+            background: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .face-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            margin-top: 11px;
+        }
+
+        .face-controls .btn {
+            width: 100%;
+            height: 44px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .face-controls-wide {
+            grid-column: 1 / -1;
+        }
+
+        .face-file-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: #475569;
+            margin: 16px 0 6px;
+        }
+
+        .face-info {
+            display: flex;
+            gap: 9px;
+            align-items: flex-start;
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            padding: 12px;
+            margin-top: 14px;
+            font-size: 12px;
+            color: #64748b;
+            line-height: 1.6;
+        }
+
+        .face-info .icon {
+            width: 18px;
+            height: 18px;
+            flex-shrink: 0;
+            margin-top: 1px;
+            color: #2563eb;
+        }
+
+        .face-info strong {
+            display: block;
+            margin-top: 4px;
+            color: #1e293b;
+        }
+
+        /* =========================
            MODAL
         ========================= */
 
@@ -1559,6 +1754,178 @@
     </div>
 
 
+    <!-- =====================================================
+         FACE REGISTRATION MODAL
+    ====================================================== -->
+
+    <div class="modal-overlay" id="faceModal">
+
+        <div class="modal">
+
+            <div class="modal-header">
+
+                <div>
+
+                    <div class="modal-title">
+                        Register Face
+                    </div>
+
+                </div>
+
+                <button type="button" class="close" onclick="closeFaceModal()">
+
+                    ×
+
+                </button>
+
+            </div>
+
+
+            <div class="modal-body">
+
+                <div class="face-subtitle" id="faceStudentName">
+                    Teacher
+                </div>
+
+
+                <div class="face-camera">
+
+                    <video id="faceCamera" autoplay playsinline></video>
+
+                    <img id="facePreview" alt="Face preview">
+
+                    <div id="faceGuide" class="face-guide" style="display:none;"></div>
+
+                    <div id="faceGuideText" class="face-guide-text" style="display:none;">
+                        Keep the face inside the frame
+                    </div>
+
+
+                    <div class="face-placeholder" id="facePlaceholder">
+
+                        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M15 10l4-2v8l-4-2"></path>
+                            <rect x="3" y="6" width="12" height="12" rx="2"></rect>
+                        </svg>
+
+                        <div>
+                            Camera is not started
+                        </div>
+
+                        <small>
+                            Capture a clear front-facing image
+                        </small>
+
+                    </div>
+
+                </div>
+
+
+                <div class="camera-status">
+
+                    <span id="faceStatusDot" class="status-dot"></span>
+
+                    <span id="faceCameraStatusText">
+                        Camera inactive
+                    </span>
+
+                </div>
+
+
+                <div class="face-controls">
+
+                    <button type="button" class="btn btn-primary" id="startFaceCameraBtn"
+                        onclick="startFaceCamera()">
+
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M15 10l4-2v8l-4-2"></path>
+                            <rect x="3" y="6" width="12" height="12" rx="2"></rect>
+                        </svg>
+
+                        Start Camera
+
+                    </button>
+
+
+                    <button type="button" class="btn btn-secondary" id="captureFaceBtn"
+                        onclick="captureFace()" disabled>
+
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M4 7h4l2-2h4l2 2h4v12H4z"></path>
+                            <circle cx="12" cy="13" r="4"></circle>
+                        </svg>
+
+                        Capture
+
+                    </button>
+
+
+                    <button type="button" class="btn btn-secondary face-controls-wide" id="restartFaceCameraBtn"
+                        onclick="startFaceCamera()" hidden>
+
+                        <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M20 11a8 8 0 0 0-14.9-4"></path>
+                            <path d="M4 4v5h5"></path>
+                            <path d="M4 13a8 8 0 0 0 14.9 4"></path>
+                            <path d="M20 20v-5h-5"></path>
+                        </svg>
+
+                        Restart Camera
+
+                    </button>
+
+                </div>
+
+
+                <label class="face-file-label" for="faceFileInput">
+                    Or upload a face image
+                </label>
+
+                <input type="file" id="faceFileInput" class="input photo-input" accept="image/*">
+
+
+                <div class="face-info">
+
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="9"></circle>
+                        <path d="M12 11v5"></path>
+                        <path d="M12 8h.01"></path>
+                    </svg>
+
+                    <span>
+                        Use a fresh clear image with one face visible.
+                        Avoid sunglasses, masks and dark lighting.
+                        <strong>
+                            Profile photo and face registration are separate.
+                        </strong>
+                    </span>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-footer">
+
+                <button type="button" class="btn btn-secondary" onclick="closeFaceModal()">
+
+                    Cancel
+
+                </button>
+
+                <button type="button" class="btn btn-primary" id="registerFaceBtn" onclick="registerFace()">
+
+                    Register Face
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
     <!-- =========================
          TOAST
     ========================== -->
@@ -2244,6 +2611,15 @@
                                             onclick="editTeacher(${teacher.id})">
 
                                             Edit
+
+                                        </button>
+
+
+                                        <button
+                                            class="action-btn btn-face"
+                                            onclick="openFaceRegistration(${teacher.id})">
+
+                                            Face
 
                                         </button>
 
@@ -3475,9 +3851,773 @@
 
                     closeViewModal();
 
+                    closeFaceModal();
+
                 }
 
             }
+        );
+
+
+        // =====================================================
+        // FACE REGISTRATION
+        // =====================================================
+
+        let faceUserId = null;
+
+        let faceFile = null;
+
+        let faceCameraStream = null;
+
+        let faceCameraStarting = false;
+
+
+        // -----------------------------------------------------
+        // OPEN FACE MODAL
+        // -----------------------------------------------------
+
+        function openFaceRegistration(id) {
+
+            const teacher =
+                teachers.find(
+                    item =>
+                        Number(item.id) ===
+                        Number(id)
+                );
+
+
+            if (!teacher) {
+
+                showToast(
+                    "Teacher not found",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!teacher.userId) {
+
+                showToast(
+                    "This teacher has no linked user account for face registration.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            faceUserId = teacher.userId;
+
+            faceFile = null;
+
+
+            document.getElementById(
+                "faceStudentName"
+            ).textContent =
+                `${teacher.name || "Teacher"} • User ID: ${teacher.userId}`;
+
+
+            document.getElementById(
+                "facePreview"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "faceCamera"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "facePlaceholder"
+            ).style.display = "block";
+
+
+            document.getElementById(
+                "faceFileInput"
+            ).value = "";
+
+
+            document.getElementById(
+                "captureFaceBtn"
+            ).disabled = true;
+
+
+            /* Make sure no previous stream is still alive and
+               reset the camera controls to their initial state. */
+            stopFaceCamera();
+
+
+            const restartBtn =
+                document.getElementById(
+                    "restartFaceCameraBtn"
+                );
+
+            if (restartBtn) {
+                restartBtn.hidden = true;
+            }
+
+
+            document
+                .getElementById("faceModal")
+                .classList.add("show");
+
+        }
+
+
+        // -----------------------------------------------------
+        // STATUS + GUIDE HELPERS
+        // -----------------------------------------------------
+
+        function setFaceStatus(text, state) {
+
+            const dot =
+                document.getElementById("faceStatusDot");
+
+            const label =
+                document.getElementById("faceCameraStatusText");
+
+            if (label) {
+                label.textContent = text;
+            }
+
+            if (dot) {
+                dot.className =
+                    "status-dot" + (state ? " " + state : "");
+            }
+
+        }
+
+
+        function toggleFaceGuide(show) {
+
+            const guide =
+                document.getElementById("faceGuide");
+
+            const guideText =
+                document.getElementById("faceGuideText");
+
+            if (guide) {
+                guide.style.display = show ? "block" : "none";
+            }
+
+            if (guideText) {
+                guideText.style.display = show ? "block" : "none";
+            }
+
+        }
+
+
+        // -----------------------------------------------------
+        // START / RESTART CAMERA
+        // -----------------------------------------------------
+
+        async function startFaceCamera() {
+
+            /* Ignore rapid double clicks while a start is in flight */
+            if (faceCameraStarting) {
+                return;
+            }
+
+
+            /* Never allow two live streams at the same time */
+            stopFaceCamera();
+
+
+            faceCameraStarting = true;
+
+
+            const startBtn =
+                document.getElementById("startFaceCameraBtn");
+
+            const restartBtn =
+                document.getElementById("restartFaceCameraBtn");
+
+            const captureBtn =
+                document.getElementById("captureFaceBtn");
+
+            const video =
+                document.getElementById("faceCamera");
+
+            const modal =
+                document.getElementById("faceModal");
+
+
+            captureBtn.disabled = true;
+            startBtn.disabled = true;
+            restartBtn.disabled = true;
+
+
+            try {
+
+                if (
+                    !navigator.mediaDevices ||
+                    !navigator.mediaDevices.getUserMedia
+                ) {
+
+                    throw new Error(
+                        "Camera is not supported by this browser."
+                    );
+
+                }
+
+
+                const stream =
+                    await navigator.mediaDevices.getUserMedia({
+                        video: { facingMode: "user" },
+                        audio: false
+                    });
+
+
+                /* Modal was closed while waiting for the permission
+                   prompt - drop the stream so the camera light goes off. */
+                if (!modal.classList.contains("show")) {
+
+                    stream
+                        .getTracks()
+                        .forEach(track => track.stop());
+
+                    return;
+
+                }
+
+
+                faceCameraStream = stream;
+
+
+                video.srcObject = stream;
+
+                video.style.display = "block";
+
+
+                document.getElementById(
+                    "facePreview"
+                ).style.display = "none";
+
+
+                document.getElementById(
+                    "facePlaceholder"
+                ).style.display = "none";
+
+
+                /* Enable Capture only once the camera is actually
+                   delivering frames. */
+                const enableCapture = () => {
+
+                    if (
+                        faceCameraStream === stream &&
+                        video.videoWidth
+                    ) {
+
+                        captureBtn.disabled = false;
+
+                    }
+
+                };
+
+
+                video.onloadedmetadata = () => {
+
+                    video.play().catch(() => { });
+
+                    enableCapture();
+
+                };
+
+
+                video.oncanplay = enableCapture;
+
+
+                if (video.readyState >= 2) {
+                    enableCapture();
+                }
+
+
+                startBtn.innerHTML = `
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M15 10l4-2v8l-4-2"></path>
+                        <rect x="3" y="6" width="12" height="12" rx="2"></rect>
+                    </svg>
+                    Camera Running
+                `;
+
+                restartBtn.hidden = false;
+
+                setFaceStatus("Camera active", "active");
+
+                toggleFaceGuide(true);
+
+
+            } catch (error) {
+
+                console.error(error);
+
+                stopFaceCamera();
+
+                showToast(
+                    "Unable to access camera. Please allow camera permission.",
+                    "error"
+                );
+
+            } finally {
+
+                faceCameraStarting = false;
+
+                startBtn.disabled = false;
+
+                restartBtn.disabled = false;
+
+            }
+
+        }
+
+
+        // -----------------------------------------------------
+        // CAPTURE FACE
+        // -----------------------------------------------------
+
+        function captureFace() {
+
+            const video =
+                document.getElementById("faceCamera");
+
+
+            if (!faceCameraStream || !video.videoWidth) {
+                return;
+            }
+
+
+            const canvas =
+                document.createElement("canvas");
+
+            canvas.width = video.videoWidth;
+
+            canvas.height = video.videoHeight;
+
+
+            const context =
+                canvas.getContext("2d");
+
+
+            /* Mirror the captured frame so the saved image
+               matches the mirrored live selfie preview. */
+            context.translate(canvas.width, 0);
+
+            context.scale(-1, 1);
+
+
+            context.drawImage(
+                video,
+                0,
+                0,
+                canvas.width,
+                canvas.height
+            );
+
+
+            canvas.toBlob(
+                blob => {
+
+                    if (!blob) {
+                        return;
+                    }
+
+
+                    faceFile =
+                        new File(
+                            [blob],
+                            "face-registration.jpg",
+                            { type: "image/jpeg" }
+                        );
+
+
+                    const preview =
+                        document.getElementById("facePreview");
+
+
+                    preview.src =
+                        URL.createObjectURL(faceFile);
+
+
+                    preview.style.display = "block";
+
+
+                    video.style.display = "none";
+
+
+                    /* Turn the camera OFF immediately after
+                       the frame has been captured. */
+                    stopFaceCamera();
+
+
+                    document.getElementById(
+                        "facePlaceholder"
+                    ).style.display = "none";
+
+
+                    const restartBtn =
+                        document.getElementById(
+                            "restartFaceCameraBtn"
+                        );
+
+                    if (restartBtn) {
+                        restartBtn.hidden = false;
+                    }
+
+
+                    setFaceStatus("Face captured", "captured");
+
+                    toggleFaceGuide(false);
+
+                },
+
+                "image/jpeg",
+
+                0.92
+
+            );
+
+        }
+
+
+        // -----------------------------------------------------
+        // FACE FILE UPLOAD
+        // -----------------------------------------------------
+
+        function handleFaceFileChange(event) {
+
+            const file =
+                event.target.files &&
+                event.target.files[0];
+
+
+            if (!file) {
+                return;
+            }
+
+
+            if (
+                !file.type ||
+                !file.type.startsWith("image/")
+            ) {
+
+                showToast(
+                    "Please select a valid image file.",
+                    "error"
+                );
+
+                event.target.value = "";
+
+                return;
+            }
+
+
+            if (file.size > 5 * 1024 * 1024) {
+
+                showToast(
+                    "Face image must be less than 5 MB.",
+                    "error"
+                );
+
+                event.target.value = "";
+
+                return;
+            }
+
+
+            faceFile = file;
+
+
+            const preview =
+                document.getElementById("facePreview");
+
+
+            preview.src =
+                URL.createObjectURL(file);
+
+
+            preview.style.display = "block";
+
+
+            document.getElementById(
+                "faceCamera"
+            ).style.display = "none";
+
+
+            document.getElementById(
+                "facePlaceholder"
+            ).style.display = "none";
+
+
+            /* An uploaded image replaces any live capture -
+               release the camera and update the status. */
+            stopFaceCamera();
+
+            setFaceStatus("Image selected", "captured");
+
+
+            const restartBtn =
+                document.getElementById(
+                    "restartFaceCameraBtn"
+                );
+
+            if (restartBtn) {
+                restartBtn.hidden = false;
+            }
+
+        }
+
+
+        // -----------------------------------------------------
+        // REGISTER FACE
+        // -----------------------------------------------------
+
+        async function registerFace() {
+
+            if (!faceUserId) {
+
+                showToast(
+                    "Teacher information is missing.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            if (!faceFile) {
+
+                showToast(
+                    "Please capture or upload a face image.",
+                    "error"
+                );
+
+                return;
+            }
+
+
+            const button =
+                document.getElementById("registerFaceBtn");
+
+
+            const formData =
+                new FormData();
+
+            formData.append("file", faceFile);
+
+
+            button.disabled = true;
+
+            button.textContent = "Registering...";
+
+
+            try {
+
+                const response =
+                    await fetch(
+                        `${API_BASE_URL}/api/admin/faces/register/${faceUserId}`,
+                        {
+                            method: "POST",
+                            headers: getMultipartHeaders(),
+                            body: formData
+                        }
+                    );
+
+
+                if (handleAuthError(response)) {
+                    return;
+                }
+
+
+                if (!response.ok) {
+
+                    let message =
+                        "Unable to register face";
+
+
+                    try {
+
+                        const error =
+                            await response.json();
+
+                        message =
+                            error.message ||
+                            error.error ||
+                            error.detail ||
+                            message;
+
+                    } catch (e) {
+
+                        try {
+
+                            const text =
+                                await response.text();
+
+                            if (text) {
+                                message = text;
+                            }
+
+                        } catch (ignored) {
+                        }
+
+                    }
+
+
+                    throw new Error(message);
+
+                }
+
+
+                showToast(
+                    "Teacher face registered successfully",
+                    "success"
+                );
+
+
+                closeFaceModal();
+
+
+            } catch (error) {
+
+                console.error(
+                    "Face registration error:",
+                    error
+                );
+
+
+                showToast(
+                    error.message ||
+                    "Unable to register face",
+                    "error"
+                );
+
+
+            } finally {
+
+                button.disabled = false;
+
+                button.textContent = "Register Face";
+
+            }
+
+        }
+
+
+        // -----------------------------------------------------
+        // STOP CAMERA
+        // -----------------------------------------------------
+
+        function stopFaceCamera() {
+
+            /* Stop every active track so the OS camera indicator
+               light is definitely turned off. */
+            if (faceCameraStream) {
+
+                faceCameraStream
+                    .getTracks()
+                    .forEach(track => track.stop());
+
+                faceCameraStream = null;
+
+            }
+
+
+            const video =
+                document.getElementById("faceCamera");
+
+
+            if (video) {
+
+                try {
+                    video.pause();
+                } catch (error) { }
+
+
+                video.onloadedmetadata = null;
+
+                video.oncanplay = null;
+
+
+                /* Fully detach the stream from the element. */
+                video.srcObject = null;
+
+
+                try {
+                    video.load();
+                } catch (error) { }
+
+            }
+
+
+            const captureBtn =
+                document.getElementById("captureFaceBtn");
+
+            if (captureBtn) {
+                captureBtn.disabled = true;
+            }
+
+
+            const startBtn =
+                document.getElementById("startFaceCameraBtn");
+
+            if (startBtn) {
+                startBtn.innerHTML = `
+                    <svg class="icon icon-sm" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M15 10l4-2v8l-4-2"></path>
+                        <rect x="3" y="6" width="12" height="12" rx="2"></rect>
+                    </svg>
+                    Start Camera
+                `;
+            }
+
+
+            toggleFaceGuide(false);
+
+            setFaceStatus("Camera inactive", "");
+
+        }
+
+
+        // -----------------------------------------------------
+        // CLOSE FACE MODAL
+        // -----------------------------------------------------
+
+        function closeFaceModal() {
+
+            stopFaceCamera();
+
+            document
+                .getElementById("faceModal")
+                .classList.remove("show");
+
+        }
+
+
+        document
+            .getElementById("faceFileInput")
+            .addEventListener("change", handleFaceFileChange);
+
+
+        document
+            .getElementById("faceModal")
+            .addEventListener(
+                "click",
+                function (event) {
+
+                    if (event.target === this) {
+
+                        closeFaceModal();
+
+                    }
+
+                }
+            );
+
+
+        window.addEventListener(
+            "beforeunload",
+            stopFaceCamera
         );
 
     </script>

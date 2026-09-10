@@ -58,8 +58,7 @@ public class AttendancePolicyService {
             deactivateAllActivePolicies();
         }
 
-        AttendancePolicy savedPolicy =
-                attendancePolicyRepository.save(policy);
+        AttendancePolicy savedPolicy = attendancePolicyRepository.save(policy);
 
         return mapToResponse(savedPolicy);
     }
@@ -96,12 +95,10 @@ public class AttendancePolicyService {
 
     public AttendancePolicyResponse getCurrentPolicy() {
 
-        AttendancePolicy policy =
-                attendancePolicyRepository
-                        .findFirstByStatusOrderByIdDesc(Status.ACTIVE)
-                        .orElseThrow(() ->
-                                new RuntimeException(
-                                        "No active attendance policy found"));
+        AttendancePolicy policy = attendancePolicyRepository
+                .findFirstByStatusOrderByIdDesc(Status.ACTIVE)
+                .orElseThrow(() -> new RuntimeException(
+                        "No active attendance policy found"));
 
         return mapToResponse(policy);
     }
@@ -128,16 +125,14 @@ public class AttendancePolicyService {
 
         validateRequest(request);
 
-        AttendancePolicy policy =
-                getPolicyEntity(id);
+        AttendancePolicy policy = getPolicyEntity(id);
 
         /*
          * Check duplicate policy name
          */
-        boolean duplicateName =
-                attendancePolicyRepository
-                        .existsByPolicyNameIgnoreCase(
-                                request.getPolicyName().trim());
+        boolean duplicateName = attendancePolicyRepository
+                .existsByPolicyNameIgnoreCase(
+                        request.getPolicyName().trim());
 
         if (duplicateName
                 && !policy.getPolicyName()
@@ -167,8 +162,7 @@ public class AttendancePolicyService {
             deactivateOtherActivePolicies(id);
         }
 
-        AttendancePolicy updatedPolicy =
-                attendancePolicyRepository.save(policy);
+        AttendancePolicy updatedPolicy = attendancePolicyRepository.save(policy);
 
         return mapToResponse(updatedPolicy);
     }
@@ -180,8 +174,7 @@ public class AttendancePolicyService {
     @Transactional
     public AttendancePolicyResponse deletePolicy(Long id) {
 
-        AttendancePolicy policy =
-                getPolicyEntity(id);
+        AttendancePolicy policy = getPolicyEntity(id);
 
         if (policy.getStatus() == Status.INACTIVE) {
             throw new RuntimeException(
@@ -190,8 +183,7 @@ public class AttendancePolicyService {
 
         policy.setStatus(Status.INACTIVE);
 
-        AttendancePolicy updatedPolicy =
-                attendancePolicyRepository.save(policy);
+        AttendancePolicy updatedPolicy = attendancePolicyRepository.save(policy);
 
         return mapToResponse(updatedPolicy);
     }
@@ -203,8 +195,7 @@ public class AttendancePolicyService {
     @Transactional
     public AttendancePolicyResponse activatePolicy(Long id) {
 
-        AttendancePolicy policy =
-                getPolicyEntity(id);
+        AttendancePolicy policy = getPolicyEntity(id);
 
         if (policy.getStatus() == Status.ACTIVE) {
             throw new RuntimeException(
@@ -218,8 +209,7 @@ public class AttendancePolicyService {
 
         policy.setStatus(Status.ACTIVE);
 
-        AttendancePolicy activatedPolicy =
-                attendancePolicyRepository.save(policy);
+        AttendancePolicy activatedPolicy = attendancePolicyRepository.save(policy);
 
         return mapToResponse(activatedPolicy);
     }
@@ -365,9 +355,8 @@ public class AttendancePolicyService {
 
     private void deactivateAllActivePolicies() {
 
-        List<AttendancePolicy> activePolicies =
-                attendancePolicyRepository
-                        .findByStatusOrderByIdDesc(Status.ACTIVE);
+        List<AttendancePolicy> activePolicies = attendancePolicyRepository
+                .findByStatusOrderByIdDesc(Status.ACTIVE);
 
         for (AttendancePolicy policy : activePolicies) {
             policy.setStatus(Status.INACTIVE);
@@ -382,9 +371,8 @@ public class AttendancePolicyService {
 
     private void deactivateOtherActivePolicies(Long currentId) {
 
-        List<AttendancePolicy> activePolicies =
-                attendancePolicyRepository
-                        .findByStatusOrderByIdDesc(Status.ACTIVE);
+        List<AttendancePolicy> activePolicies = attendancePolicyRepository
+                .findByStatusOrderByIdDesc(Status.ACTIVE);
 
         for (AttendancePolicy policy : activePolicies) {
 
@@ -409,9 +397,8 @@ public class AttendancePolicyService {
 
         return attendancePolicyRepository
                 .findById(id)
-                .orElseThrow(() ->
-                        new RuntimeException(
-                                "Attendance policy not found"));
+                .orElseThrow(() -> new RuntimeException(
+                        "Attendance policy not found"));
     }
 
     // =========================================================
@@ -421,8 +408,7 @@ public class AttendancePolicyService {
     private AttendancePolicyResponse mapToResponse(
             AttendancePolicy policy) {
 
-        AttendancePolicyResponse response =
-                new AttendancePolicyResponse();
+        AttendancePolicyResponse response = new AttendancePolicyResponse();
 
         BeanUtils.copyProperties(policy, response);
 
