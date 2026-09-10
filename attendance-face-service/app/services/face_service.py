@@ -5,13 +5,19 @@ from deepface import DeepFace
 
 class FaceService:
 
+    # =========================================================
+    # FACE CONFIGURATION
+    # =========================================================
+
     MODEL_NAME = "Facenet512"
-    DETECTOR_BACKEND = "retinaface"
+
+    # ONLY detector change:
+    # RetinaFace -> OpenCV
+    DETECTOR_BACKEND = "opencv"
+
     NORMALIZATION = "Facenet"
 
-    # Current threshold.
-    # Keep this unchanged until proper genuine/impostor
-    # threshold calibration is performed.
+    # Keep same threshold as old implementation.
     DISTANCE_THRESHOLD = 0.30
 
     EXPECTED_EMBEDDING_SIZE = 512
@@ -42,6 +48,42 @@ class FaceService:
         return image
 
     # =========================================================
+    # OPTIONAL MODEL WARM-UP
+    #
+    # Performance optimization:
+    # DeepFace normally loads the model on the first request.
+    # Warm-up can move that delay to startup.
+    #
+    # This does NOT change recognition/security logic.
+    # =========================================================
+
+    @classmethod
+    def warmup(cls):
+
+        try:
+
+            print(
+                "[WARMUP] Loading Facenet512 model..."
+            )
+
+            DeepFace.build_model(
+                task="facial_recognition",
+                model_name=cls.MODEL_NAME
+            )
+
+            print(
+                "[WARMUP] Facenet512 model loaded successfully"
+            )
+
+        except Exception as e:
+
+            # Do not crash the service because warm-up failed.
+            # DeepFace can still lazy-load the model on first request.
+            print(
+                f"[WARMUP] Model warm-up skipped: {str(e)}"
+            )
+
+    # =========================================================
     # REGISTERED EMBEDDING VALIDATION
     # =========================================================
 
@@ -54,11 +96,13 @@ class FaceService:
             registered_embedding,
             list
         ):
+
             raise ValueError(
                 "Registered face embedding must be a list"
             )
 
         if not registered_embedding:
+
             raise ValueError(
                 "Registered face embedding is empty"
             )
@@ -66,6 +110,7 @@ class FaceService:
         if len(registered_embedding) != (
                 FaceService.EXPECTED_EMBEDDING_SIZE
         ):
+
             raise ValueError(
                 "Invalid registered embedding size"
             )
@@ -185,6 +230,7 @@ class FaceService:
                 "Invalid face embedding"
             )
 
+        # Cosine similarity
         cosine_similarity = (
             np.dot(
                 registered_vector,
@@ -197,7 +243,7 @@ class FaceService:
             )
         )
 
-        # Numerical safety.
+        # Numerical safety
         cosine_similarity = float(
             np.clip(
                 cosine_similarity,
@@ -244,6 +290,9 @@ class FaceService:
 
     # =========================================================
     # FACE DETECTION
+    #
+    # Same DeepFace flow as old code.
+    # Only detector backend changed to OpenCV.
     # =========================================================
 
     @staticmethod
@@ -335,7 +384,7 @@ class FaceService:
     # =========================================================
     # ANTI-SPOOFING
     #
-    # Existing API.
+    # Same old DeepFace anti-spoofing flow.
     # =========================================================
 
     @staticmethod
@@ -485,7 +534,9 @@ class FaceService:
     # =========================================================
     # GENERATE EMBEDDING
     #
-    # Used during face registration.
+    # Used during registration.
+    #
+    # Existing DeepFace detection/crop is preserved.
     # =========================================================
 
     @staticmethod
@@ -565,6 +616,7 @@ class FaceService:
             }
 
         except ValueError:
+
             raise
 
         except Exception as e:
@@ -732,6 +784,7 @@ class FaceService:
             )
 
         except ValueError:
+
             raise
 
         except Exception as e:
@@ -743,17 +796,21 @@ class FaceService:
     # =========================================================
     # OPTIMIZED ATTENDANCE VERIFICATION
     #
-    # Attendance security flow:
+    # SECURITY FLOW:
     #
     # 1. Decode image
-    # 2. Detect exactly one face
-    # 3. Anti-spoof
-    # 4. Reuse detected face
-    # 5. Generate Facenet512 embedding
-    # 6. Compare ONLY against supplied registered embedding
-    # 7. Return verified only when all checks pass
+    # 2. DeepFace detects face using OpenCV
+    # 3. Exactly one real detected face required
+    # 4. Anti-spoof verification
+    # 5. Reuse DeepFace detected/cropped face
+    # 6. Generate Facenet512 embedding
+    # 7. Compare ONLY against logged-in user's
+    #    registered embedding
+    # 8. Return Verified only when every check passes
     #
-    # RetinaFace runs only ONCE.
+    # NO MANUAL CROP
+    # NO CUSTOM RESIZE
+    # NO SECOND FACE DETECTOR
     # =========================================================
 
     @staticmethod
@@ -764,13 +821,18 @@ class FaceService:
 
         # ---------------------------------------------------------
         # Validate registered embedding first.
-        # This is the trusted embedding fetched by Spring Boot
-        # for the logged-in user.
+        #
+        # This embedding is supplied by Spring Boot for
+        # the authenticated/logged-in student.
         # ---------------------------------------------------------
 
         FaceService._validate_registered_embedding(
             registered_embedding
         )
+
+        # ---------------------------------------------------------
+        # Decode image only once.
+        # ---------------------------------------------------------
 
         image = FaceService._decode_image(
             image_bytes
@@ -782,11 +844,17 @@ class FaceService:
             # STEP 1
             # FACE DETECTION + ANTI-SPOOF
             #
-            # enforce_detection=False is intentional.
+            # DeepFace performs:
             #
-            # This allows us to handle "no face" ourselves and
-            # return "Unregistered" instead of DeepFace throwing
-            # an exception.
+            # OpenCV detection
+            #       +
+            # face extraction/crop
+            #       +
+            # alignment
+            #       +
+            # anti-spoofing
+            #
+            # No manual/custom crop.
             # =====================================================
 
             faces = DeepFace.extract_faces(
@@ -807,10 +875,10 @@ class FaceService:
             # STEP 2
             # VALIDATE ACTUAL DETECTED FACES
             #
-            # When enforce_detection=False, DeepFace can return
-            # a fallback/dummy result when no face exists.
+            # enforce_detection=False can return a fallback/dummy
+            # result when no face exists.
             #
-            # Therefore we must inspect facial_area ourselves.
+            # Therefore we validate facial_area ourselves.
             # =====================================================
 
             valid_faces = []
@@ -841,7 +909,9 @@ class FaceService:
                     and height > 0
                 ):
 
-                    valid_faces.append(face)
+                    valid_faces.append(
+                        face
+                    )
 
             # =====================================================
             # NO FACE
@@ -877,6 +947,9 @@ class FaceService:
 
             # =====================================================
             # EXACTLY ONE FACE REQUIRED
+            #
+            # Important security check.
+            # Multiple faces are never accepted.
             # =====================================================
 
             if len(valid_faces) != 1:
@@ -929,9 +1002,11 @@ class FaceService:
                 )
             )
 
-            # -----------------------------------------------------
-            # Fake photo / screen / spoof
-            # -----------------------------------------------------
+            # =====================================================
+            # FAKE PHOTO / SCREEN / SPOOF
+            #
+            # Never continue to face matching if spoof detected.
+            # =====================================================
 
             if not is_real:
 
@@ -967,7 +1042,14 @@ class FaceService:
 
             # =====================================================
             # STEP 4
-            # GET FACE IMAGE FROM SAME DETECTION
+            # GET FACE IMAGE FROM SAME DEEPFACE DETECTION
+            #
+            # IMPORTANT:
+            #
+            # We are NOT manually cropping.
+            #
+            # DeepFace already detected and cropped the face.
+            # We simply reuse that result.
             # =====================================================
 
             face_image = detected_face.get(
@@ -1001,7 +1083,17 @@ class FaceService:
             #
             # detector_backend="skip"
             #
-            # RetinaFace does NOT run a second time.
+            # Why?
+            #
+            # Because DeepFace has ALREADY detected/cropped
+            # the face above.
+            #
+            # Running detector again would waste time and could
+            # produce another crop.
+            #
+            # This does NOT bypass face detection security because
+            # the image here is ONLY the face produced by the
+            # successful detection above.
             # =====================================================
 
             representations = (
@@ -1046,9 +1138,20 @@ class FaceService:
                     "Unable to generate current face embedding"
                 )
 
+            if len(current_embedding) != (
+                    FaceService.EXPECTED_EMBEDDING_SIZE
+            ):
+
+                raise ValueError(
+                    "Invalid current embedding size"
+                )
+
             # =====================================================
             # STEP 6
             # COMPARE ONLY WITH LOGGED-IN USER
+            #
+            # Never search all students here.
+            # Only compare against supplied registered embedding.
             # =====================================================
 
             verification = (
@@ -1105,6 +1208,15 @@ class FaceService:
             # =====================================================
             # STEP 8
             # FINAL SUCCESS
+            #
+            # All security checks passed:
+            #
+            # 1. Face detected
+            # 2. Exactly one face
+            # 3. Real/live face
+            # 4. Valid face embedding
+            # 5. Registered embedding valid
+            # 6. Face similarity within threshold
             # =====================================================
 
             return {
@@ -1143,6 +1255,7 @@ class FaceService:
             }
 
         except ValueError:
+
             raise
 
         except Exception as e:
