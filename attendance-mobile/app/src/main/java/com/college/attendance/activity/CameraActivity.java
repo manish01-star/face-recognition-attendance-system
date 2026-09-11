@@ -3,6 +3,8 @@ package com.college.attendance.activity;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.LocationManager;
 import android.net.Uri;
 import android.os.Bundle;
@@ -37,7 +39,10 @@ import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.CancellationTokenSource;
 import com.google.common.util.concurrent.ListenableFuture;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
 
 import okhttp3.MediaType;
@@ -105,8 +110,12 @@ public class CameraActivity extends AppCompatActivity {
 
     private String attendanceAction;
     private File pendingPhotoFile;
+    private File pendingUploadFile;
 
     private boolean isProcessing = false;
+
+    private android.view.View loadingOverlay;
+    private TextView tvLoadingMessage;
 
 
     // =========================================================
@@ -340,7 +349,40 @@ public class CameraActivity extends AppCompatActivity {
         btnCapture =
                 findViewById(R.id.btnCapture);
 
+        loadingOverlay =
+                findViewById(R.id.loadingOverlay);
+
+        tvLoadingMessage =
+                findViewById(R.id.tvLoadingMessage);
+
         Log.d(TAG, "Views initialized");
+    }
+
+
+    // =========================================================
+    // ATTENDANCE PROCESSING LOADER
+    // =========================================================
+
+    private void showLoading(String message) {
+
+        if (tvLoadingMessage != null
+                && message != null) {
+
+            tvLoadingMessage.setText(message);
+        }
+
+        if (loadingOverlay != null) {
+
+            loadingOverlay.setVisibility(View.VISIBLE);
+        }
+    }
+
+    private void hideLoading() {
+
+        if (loadingOverlay != null) {
+
+            loadingOverlay.setVisibility(View.GONE);
+        }
     }
 
 
@@ -664,6 +706,8 @@ public class CameraActivity extends AppCompatActivity {
 
         isProcessing = true;
 
+        showLoading("Capturing photo...");
+
         btnCapture.setEnabled(false);
 
         Log.d(
@@ -767,6 +811,8 @@ public class CameraActivity extends AppCompatActivity {
                         // LOCATION + API
                         // =================================================
 
+                        showLoading("Fetching location...");
+
                         getLocationAndSubmit();
                     }
 
@@ -806,6 +852,8 @@ public class CameraActivity extends AppCompatActivity {
                         );
 
                         isProcessing = false;
+
+                        hideLoading();
 
                         btnCapture.setEnabled(true);
 
@@ -962,6 +1010,8 @@ public class CameraActivity extends AppCompatActivity {
             );
 
             isProcessing = false;
+
+            hideLoading();
 
             Toast.makeText(
                     this,
@@ -1156,6 +1206,8 @@ public class CameraActivity extends AppCompatActivity {
 
                                     isProcessing = false;
 
+                                    hideLoading();
+
                                     Toast.makeText(
                                             CameraActivity.this,
                                             R.string.location_unavailable_message,
@@ -1236,6 +1288,8 @@ public class CameraActivity extends AppCompatActivity {
 
                                 isProcessing = false;
 
+                                hideLoading();
+
                                 Toast.makeText(
                                         CameraActivity.this,
                                         "Location failed: "
@@ -1257,10 +1311,109 @@ public class CameraActivity extends AppCompatActivity {
 
             isProcessing = false;
 
+            hideLoading();
+
             requestLocationPermission();
         }
     }
 
+
+    // =========================================================
+    // COMPRESS IMAGE BEFORE UPLOAD
+    //
+    // Resizes to a max dimension and re-encodes as JPEG so the
+    // upload is fast even on slow/local WiFi. Falls back to the
+    // original file if compression fails for any reason.
+    // =========================================================
+
+    private static final int UPLOAD_MAX_DIMENSION = 800;
+    private static final int UPLOAD_JPEG_QUALITY = 80;
+
+    private File compressForUpload(File originalFile) {
+
+        try {
+
+            BitmapFactory.Options boundsOptions = new BitmapFactory.Options();
+            boundsOptions.inJustDecodeBounds = true;
+            BitmapFactory.decodeFile(
+                    originalFile.getAbsolutePath(),
+                    boundsOptions
+            );
+
+            int sourceWidth = boundsOptions.outWidth;
+            int sourceHeight = boundsOptions.outHeight;
+
+            if (sourceWidth <= 0 || sourceHeight <= 0) {
+                return originalFile;
+            }
+
+            int longestSide = Math.max(sourceWidth, sourceHeight);
+
+            int sampleSize = 1;
+            while ((longestSide / sampleSize) > UPLOAD_MAX_DIMENSION * 2) {
+                sampleSize *= 2;
+            }
+
+            BitmapFactory.Options decodeOptions = new BitmapFactory.Options();
+            decodeOptions.inSampleSize = sampleSize;
+
+            Bitmap sampledBitmap = BitmapFactory.decodeFile(
+                    originalFile.getAbsolutePath(),
+                    decodeOptions
+            );
+
+            if (sampledBitmap == null) {
+                return originalFile;
+            }
+
+            int width = sampledBitmap.getWidth();
+            int height = sampledBitmap.getHeight();
+            int longestSampledSide = Math.max(width, height);
+
+            Bitmap finalBitmap = sampledBitmap;
+
+            if (longestSampledSide > UPLOAD_MAX_DIMENSION) {
+
+                float scale = UPLOAD_MAX_DIMENSION / (float) longestSampledSide;
+
+                finalBitmap = Bitmap.createScaledBitmap(
+                        sampledBitmap,
+                        Math.max(1, Math.round(width * scale)),
+                        Math.max(1, Math.round(height * scale)),
+                        true
+                );
+            }
+
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            finalBitmap.compress(
+                    Bitmap.CompressFormat.JPEG,
+                    UPLOAD_JPEG_QUALITY,
+                    outputStream
+            );
+
+            File compressedFile = new File(
+                    originalFile.getParentFile(),
+                    "upload_" + originalFile.getName()
+            );
+
+            try (FileOutputStream fileOutputStream =
+                         new FileOutputStream(compressedFile)) {
+                fileOutputStream.write(outputStream.toByteArray());
+            }
+
+            return compressedFile;
+
+        } catch (IOException | OutOfMemoryError e) {
+
+            Log.e(
+                    TAG,
+                    "Image compression failed, uploading original file",
+                    e
+            );
+
+            return originalFile;
+        }
+    }
 
     // =========================================================
     // UPLOAD ATTENDANCE
@@ -1294,6 +1447,8 @@ public class CameraActivity extends AppCompatActivity {
 
             isProcessing = false;
 
+            hideLoading();
+
             return;
         }
 
@@ -1311,6 +1466,8 @@ public class CameraActivity extends AppCompatActivity {
             );
 
             isProcessing = false;
+
+            hideLoading();
 
             Toast.makeText(
                     this,
@@ -1433,16 +1590,23 @@ public class CameraActivity extends AppCompatActivity {
                         "text/plain"
                 );
 
+        // Full-resolution camera photos can be several MB; downscaling +
+        // recompressing before upload cuts upload time and face-service
+        // processing time without hurting recognition accuracy (the face
+        // service downscales further anyway before detection).
+        File uploadFile = compressForUpload(imageFile);
+        pendingUploadFile = (uploadFile != imageFile) ? uploadFile : null;
+
         RequestBody imageRequestBody =
                 RequestBody.create(
-                        imageFile,
+                        uploadFile,
                         imageMediaType
                 );
 
         MultipartBody.Part filePart =
                 MultipartBody.Part.createFormData(
                         "file",
-                        imageFile.getName(),
+                        uploadFile.getName(),
                         imageRequestBody
                 );
 
@@ -1506,6 +1670,8 @@ public class CameraActivity extends AppCompatActivity {
                 TAG,
                 "API CALL CREATED"
         );
+
+        showLoading("Verifying face...");
 
         // =====================================================
         // API CALL
@@ -1660,6 +1826,8 @@ public class CameraActivity extends AppCompatActivity {
 
                             isProcessing = false;
 
+                            hideLoading();
+
                             String message =
                                     result.getMessage();
 
@@ -1767,6 +1935,8 @@ public class CameraActivity extends AppCompatActivity {
 
                         isProcessing = false;
 
+                        hideLoading();
+
                         // =================================================
                         // 401
                         // =================================================
@@ -1846,6 +2016,8 @@ public class CameraActivity extends AppCompatActivity {
                             @NonNull Throwable t) {
 
                         isProcessing = false;
+
+                        hideLoading();
 
                         Log.e(
                                 TAG,
@@ -1979,6 +2151,8 @@ public class CameraActivity extends AppCompatActivity {
 
         isProcessing = false;
 
+        hideLoading();
+
         deletePendingPhoto();
 
         sessionManager.logout();
@@ -2091,6 +2265,8 @@ public class CameraActivity extends AppCompatActivity {
 
                     isProcessing = true;
 
+                    showLoading("Fetching location...");
+
                     btnCapture.setEnabled(false);
 
                     getLocationAndSubmit();
@@ -2104,6 +2280,8 @@ public class CameraActivity extends AppCompatActivity {
                 );
 
                 isProcessing = false;
+
+                hideLoading();
 
                 deletePendingPhoto();
 
@@ -2145,6 +2323,14 @@ public class CameraActivity extends AppCompatActivity {
         }
 
         pendingPhotoFile = null;
+
+        if (pendingUploadFile != null
+                && pendingUploadFile.exists()) {
+
+            pendingUploadFile.delete();
+        }
+
+        pendingUploadFile = null;
     }
 
 

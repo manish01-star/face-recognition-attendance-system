@@ -13,6 +13,8 @@ public class AttendanceUserResponse {
 
     private String name;
 
+    private String profileImageUrl;
+
     /**
      * STUDENT / STAFF
      */

@@ -36,8 +36,16 @@ import org.springframework.web.multipart.MultipartFile;
 import tools.jackson.core.type.TypeReference;
 import tools.jackson.databind.ObjectMapper;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -307,6 +315,9 @@ public class AttendanceService {
                                                                 .name(
                                                                                 student.getName())
 
+                                                                .profileImageUrl(
+                                                                                student.getUser().getProfileImageUrl())
+
                                                                 .type(
                                                                                 "STUDENT")
 
@@ -381,6 +392,9 @@ public class AttendanceService {
                                                                 .name(
                                                                                 teacher.getName())
 
+                                                                .profileImageUrl(
+                                                                                teacher.getUser().getProfileImageUrl())
+
                                                                 .type(
                                                                                 "STAFF")
 
@@ -436,11 +450,6 @@ public class AttendanceService {
                 // JWT user
                 User user = getLoggedInUser();
 
-                // Face verification
-                FaceVerificationResult faceResult = verifyFace(
-                                user.getId(),
-                                file);
-
                 // Today
                 LocalDate today = LocalDate.now();
 
@@ -451,7 +460,9 @@ public class AttendanceService {
                                                 today)
                                 .orElse(null);
 
-                // Already checked in
+                // Already checked in - fail fast before the costly face
+                // verification call (cheaper, faster, and avoids
+                // hammering the face service with pointless requests).
                 if (attendance != null
                                 && attendance.getCheckInTime() != null) {
 
@@ -460,6 +471,11 @@ public class AttendanceService {
                                         "CHECK_IN",
                                         "You have already checked in today");
                 }
+
+                // Face verification
+                FaceVerificationResult faceResult = verifyFace(
+                                user.getId(),
+                                file);
 
                 // Create attendance
                 if (attendance == null) {
@@ -479,6 +495,13 @@ public class AttendanceService {
 
                 attendance.setCheckInLongitude(
                                 longitude);
+
+                attendance.setCheckInImageUrl(
+                                saveAttendanceImage(
+                                                user.getId(),
+                                                today,
+                                                "checkin",
+                                                file));
 
                 attendance.setStatus(
                                 AttendanceStatus.PRESENT);
@@ -543,16 +566,6 @@ public class AttendanceService {
                                 user.getId(),
                                 user.getUsername());
 
-                FaceVerificationResult faceResult = verifyFace(
-                                user.getId(),
-                                file);
-
-                log.info(
-                                "Mobile Check-Out Face Verified: userId={}, distance={}, threshold={}",
-                                user.getId(),
-                                faceResult.getDistance(),
-                                faceResult.getThreshold());
-
                 LocalDate today = LocalDate.now();
 
                 Attendance attendance = attendanceRepository
@@ -568,6 +581,8 @@ public class AttendanceService {
                                         "Please check-in first");
                 }
 
+                // Already checked out - fail fast before the costly face
+                // verification call.
                 if (attendance.getCheckOutTime() != null) {
 
                         return buildAlreadyMarkedResponse(
@@ -575,6 +590,16 @@ public class AttendanceService {
                                         "CHECK_OUT",
                                         "You have already checked out today");
                 }
+
+                FaceVerificationResult faceResult = verifyFace(
+                                user.getId(),
+                                file);
+
+                log.info(
+                                "Mobile Check-Out Face Verified: userId={}, distance={}, threshold={}",
+                                user.getId(),
+                                faceResult.getDistance(),
+                                faceResult.getThreshold());
 
                 attendance.setCheckOutTime(
                                 LocalTime.now());
@@ -584,6 +609,13 @@ public class AttendanceService {
 
                 attendance.setCheckOutLongitude(
                                 longitude);
+
+                attendance.setCheckOutImageUrl(
+                                saveAttendanceImage(
+                                                user.getId(),
+                                                today,
+                                                "checkout",
+                                                file));
 
                 attendance.setSource(
                                 AttendanceSource.MOBILE);
@@ -633,10 +665,6 @@ public class AttendanceService {
 
                 validateActiveUser(user);
 
-                FaceVerificationResult faceResult = verifyFace(
-                                userId,
-                                file);
-
                 LocalDate today = LocalDate.now();
 
                 Attendance attendance = attendanceRepository
@@ -653,6 +681,10 @@ public class AttendanceService {
                                         "CHECK_IN",
                                         "Attendance already marked today");
                 }
+
+                FaceVerificationResult faceResult = verifyFace(
+                                userId,
+                                file);
 
                 if (attendance == null) {
 
@@ -673,6 +705,13 @@ public class AttendanceService {
                  */
                 attendance.setCheckInLatitude(null);
                 attendance.setCheckInLongitude(null);
+
+                attendance.setCheckInImageUrl(
+                                saveAttendanceImage(
+                                                userId,
+                                                today,
+                                                "checkin",
+                                                file));
 
                 attendance.setStatus(
                                 AttendanceStatus.PRESENT);
@@ -725,10 +764,6 @@ public class AttendanceService {
 
                 validateActiveUser(user);
 
-                FaceVerificationResult faceResult = verifyFace(
-                                userId,
-                                file);
-
                 LocalDate today = LocalDate.now();
 
                 Attendance attendance = attendanceRepository
@@ -752,6 +787,10 @@ public class AttendanceService {
                                         "Attendance already checked out today");
                 }
 
+                FaceVerificationResult faceResult = verifyFace(
+                                userId,
+                                file);
+
                 attendance.setCheckOutTime(
                                 LocalTime.now());
 
@@ -762,6 +801,13 @@ public class AttendanceService {
                  */
                 attendance.setCheckOutLatitude(null);
                 attendance.setCheckOutLongitude(null);
+
+                attendance.setCheckOutImageUrl(
+                                saveAttendanceImage(
+                                                userId,
+                                                today,
+                                                "checkout",
+                                                file));
 
                 attendance.setSource(
                                 AttendanceSource.MACHINE);
@@ -785,6 +831,98 @@ public class AttendanceService {
         }
 
         // ============================================================
+        // SAVE ATTENDANCE IMAGE TO DISK
+        // ============================================================
+
+        /*
+         * Persists the face image captured at check-in/check-out.
+         *
+         * Actual image:
+         * uploads/attendance/{userId}/{date}_{action}.jpg
+         */
+        private String saveAttendanceImage(
+                        Long userId,
+                        LocalDate date,
+                        String action,
+                        MultipartFile file) {
+
+                try {
+
+                        Path uploadDir = Paths.get(
+                                        "uploads/attendance",
+                                        String.valueOf(userId));
+
+                        Files.createDirectories(uploadDir);
+
+                        String fileName = date.format(
+                                        DateTimeFormatter.ISO_LOCAL_DATE)
+                                        + "_"
+                                        + action.toLowerCase()
+                                        + ".jpg";
+
+                        Path filePath = uploadDir.resolve(fileName);
+
+                        byte[] rawBytes = file.getBytes();
+
+                        String contentType = file.getContentType();
+
+                        // Already JPEG (the mobile app always sends JPEG): write
+                        // the bytes as-is instead of decoding/re-encoding with
+                        // ImageIO, which costs CPU time for no benefit here.
+                        if (contentType != null
+                                        && contentType.equalsIgnoreCase("image/jpeg")) {
+
+                                Files.write(
+                                                filePath,
+                                                rawBytes);
+
+                        } else {
+
+                                BufferedImage image = ImageIO.read(
+                                                new java.io.ByteArrayInputStream(rawBytes));
+
+                                if (image == null) {
+
+                                        throw new AttendanceException(
+                                                        "Invalid attendance image file");
+                                }
+
+                                ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+                                boolean written = ImageIO.write(
+                                                image,
+                                                "jpg",
+                                                outputStream);
+
+                                if (!written) {
+
+                                        throw new AttendanceException(
+                                                        "Unable to process attendance image");
+                                }
+
+                                Files.write(
+                                                filePath,
+                                                outputStream.toByteArray());
+                        }
+
+                        return "/uploads/attendance/"
+                                        + userId
+                                        + "/"
+                                        + fileName;
+
+                } catch (IOException e) {
+
+                        log.error(
+                                        "Unable to save attendance image for userId={}",
+                                        userId,
+                                        e);
+
+                        throw new AttendanceException(
+                                        "Unable to save attendance image");
+                }
+        }
+
+        // ============================================================
         // FACE VERIFICATION
         // ============================================================
 
@@ -797,6 +935,8 @@ public class AttendanceService {
                         throw new FaceVerificationException(
                                         "User ID is required");
                 }
+
+                enforceAttemptCooldown(userId);
 
                 validateFaceFile(file);
 
@@ -1103,6 +1243,11 @@ public class AttendanceService {
 
                                 .longitude(longitude)
 
+                                .imageUrl(
+                                                "CHECK_OUT".equals(action)
+                                                                ? attendance.getCheckOutImageUrl()
+                                                                : attendance.getCheckInImageUrl())
+
                                 .source(
                                                 attendance.getSource())
 
@@ -1180,6 +1325,11 @@ public class AttendanceService {
         // FACE FILE VALIDATION
         // ============================================================
 
+        // Reject oversized images before they're decoded/uploaded anywhere -
+        // phone photos are typically well under this, so it only blocks
+        // abuse, not real attendance photos.
+        private static final long MAX_FACE_IMAGE_BYTES = 8L * 1024 * 1024;
+
         private void validateFaceFile(
                         MultipartFile file) {
 
@@ -1188,6 +1338,12 @@ public class AttendanceService {
 
                         throw new FaceVerificationException(
                                         "Face image is required");
+                }
+
+                if (file.getSize() > MAX_FACE_IMAGE_BYTES) {
+
+                        throw new FaceVerificationException(
+                                        "Face image is too large");
                 }
 
                 String contentType = file.getContentType();
@@ -1199,6 +1355,32 @@ public class AttendanceService {
 
                         throw new FaceVerificationException(
                                         "Only image files are allowed");
+                }
+        }
+
+        // ============================================================
+        // PER-USER COOLDOWN
+        //
+        // Prevents a user (or a buggy/malicious client) from firing
+        // repeated attendance attempts back-to-back and hammering the
+        // face-recognition service with pointless calls.
+        // ============================================================
+
+        private static final long ATTENDANCE_ATTEMPT_COOLDOWN_MS = 3000;
+
+        private final java.util.concurrent.ConcurrentHashMap<Long, Long> lastAttendanceAttemptAt = new java.util.concurrent.ConcurrentHashMap<>();
+
+        private void enforceAttemptCooldown(Long userId) {
+
+                long now = System.currentTimeMillis();
+
+                Long previous = lastAttendanceAttemptAt.put(userId, now);
+
+                if (previous != null
+                                && (now - previous) < ATTENDANCE_ATTEMPT_COOLDOWN_MS) {
+
+                        throw new AttendanceException(
+                                        "Please wait a moment before trying again");
                 }
         }
 
@@ -1420,6 +1602,11 @@ public class AttendanceService {
                                 .longitude(
                                                 attendance.getCheckInLongitude())
 
+                                .imageUrl(
+                                                "CHECK_OUT".equals(action)
+                                                                ? attendance.getCheckOutImageUrl()
+                                                                : attendance.getCheckInImageUrl())
+
                                 .source(
                                                 attendance.getSource())
 
@@ -1458,6 +1645,9 @@ public class AttendanceService {
                                 .username(
                                                 user.getUsername())
 
+                                .profileImageUrl(
+                                                user.getProfileImageUrl())
+
                                 .attendanceDate(
                                                 attendance.getAttendanceDate())
 
@@ -1484,6 +1674,12 @@ public class AttendanceService {
 
                                 .checkOutLongitude(
                                                 attendance.getCheckOutLongitude())
+
+                                .checkInImageUrl(
+                                                attendance.getCheckInImageUrl())
+
+                                .checkOutImageUrl(
+                                                attendance.getCheckOutImageUrl())
 
                                 .source(
                                                 attendance.getSource())

@@ -40,6 +40,8 @@ CREATE TABLE `attendance` (
   `check_in_longitude` double DEFAULT NULL,
   `check_out_latitude` double DEFAULT NULL,
   `check_out_longitude` double DEFAULT NULL,
+  `check_in_image_url` varchar(255) DEFAULT NULL,
+  `check_out_image_url` varchar(255) DEFAULT NULL,
   `source` enum('MACHINE','MOBILE') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -47,13 +49,13 @@ CREATE TABLE `attendance` (
 -- Dumping data for table `attendance`
 --
 
-INSERT INTO `attendance` (`id`, `attendance_date`, `check_in_time`, `check_out_time`, `confidence`, `created_at`, `status`, `user_id`, `check_in_latitude`, `check_in_longitude`, `check_out_latitude`, `check_out_longitude`, `source`) VALUES
-(1, '2026-08-25', '09:05:00', NULL, 0.94, '2026-08-25 14:40:30.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, 'MACHINE'),
-(2, '2026-09-01', '09:37:02', '15:38:35', 0.8259, '2026-09-01 09:37:02.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, 'MACHINE'),
-(3, '2026-09-02', '14:08:28', NULL, 43.33333333333332, '2026-09-02 14:08:28.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, 'MACHINE'),
-(4, '2026-09-03', '14:15:16', NULL, NULL, '2026-09-03 14:15:16.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, 'MACHINE'),
-(5, '2026-09-04', '15:49:39', '17:10:28', 74.1, '2026-09-04 15:49:39.000000', 'PRESENT', 8, NULL, NULL, 28.1228822, 77.5542396, 'MOBILE'),
-(6, '2026-09-07', '14:55:00', NULL, 86.58, '2026-09-07 14:55:00.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, 'MACHINE');
+INSERT INTO `attendance` (`id`, `attendance_date`, `check_in_time`, `check_out_time`, `confidence`, `created_at`, `status`, `user_id`, `check_in_latitude`, `check_in_longitude`, `check_out_latitude`, `check_out_longitude`, `check_in_image_url`, `check_out_image_url`, `source`) VALUES
+(1, '2026-08-25', '09:05:00', NULL, 0.94, '2026-08-25 14:40:30.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, NULL, NULL, 'MACHINE'),
+(2, '2026-09-01', '09:37:02', '15:38:35', 0.8259, '2026-09-01 09:37:02.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, NULL, NULL, 'MACHINE'),
+(3, '2026-09-02', '14:08:28', NULL, 43.33333333333332, '2026-09-02 14:08:28.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, NULL, NULL, 'MACHINE'),
+(4, '2026-09-03', '14:15:16', NULL, NULL, '2026-09-03 14:15:16.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, NULL, NULL, 'MACHINE'),
+(5, '2026-09-04', '15:49:39', '17:10:28', 74.1, '2026-09-04 15:49:39.000000', 'PRESENT', 8, NULL, NULL, 28.1228822, 77.5542396, NULL, NULL, 'MOBILE'),
+(6, '2026-09-07', '14:55:00', NULL, 86.58, '2026-09-07 14:55:00.000000', 'PRESENT', 8, NULL, NULL, NULL, NULL, NULL, NULL, 'MACHINE');
 
 -- --------------------------------------------------------
 

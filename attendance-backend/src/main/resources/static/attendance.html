@@ -666,6 +666,21 @@
 
             flex-shrink: 0;
 
+            overflow: hidden;
+
+        }
+
+
+        .person-avatar img,
+        .selected-avatar img,
+        .modal-avatar img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
         }
 
 
@@ -839,6 +854,8 @@
             font-weight: 700;
 
             flex-shrink: 0;
+
+            overflow: hidden;
 
         }
 
@@ -1506,6 +1523,13 @@
 
         .modal-body {
 
+            padding: 0;
+
+        }
+
+
+        .modal-body-inner {
+
             padding: 20px;
 
         }
@@ -1695,6 +1719,247 @@
 
 
         /* =========================================================
+           MODAL - USER HEADER
+        ========================================================= */
+
+        .modal-user-header {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 13px;
+
+            padding: 16px 20px;
+
+            background: #f9fafb;
+
+            border-bottom:
+                1px solid #e5e7eb;
+
+        }
+
+
+        .modal-avatar {
+
+            width: 52px;
+
+            height: 52px;
+
+            border-radius: 50%;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            flex-shrink: 0;
+
+            overflow: hidden;
+
+        }
+
+
+        .modal-user-name {
+
+            font-size: 15px;
+
+            font-weight: 700;
+
+            color: #111827;
+
+        }
+
+
+        .modal-user-meta {
+
+            margin-top: 3px;
+
+            font-size: 11px;
+
+            color: #6b7280;
+
+        }
+
+
+        /* =========================================================
+           MODAL - CAPTURED FACE PHOTOS
+        ========================================================= */
+
+        .face-capture-grid {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(2, minmax(0, 1fr));
+
+            gap: 12px;
+
+            margin-top: 14px;
+
+        }
+
+
+        .face-capture-card {
+
+            border:
+                1px solid #e5e7eb;
+
+            border-radius: 10px;
+
+            overflow: hidden;
+
+            background: #f9fafb;
+
+        }
+
+
+        .face-capture-img-wrapper {
+
+            width: 100%;
+
+            aspect-ratio: 1 / 1;
+
+            background: #e5e7eb;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            overflow: hidden;
+
+        }
+
+
+        .face-capture-img-wrapper img {
+
+            width: 100%;
+
+            height: 100%;
+
+            object-fit: cover;
+
+            cursor: zoom-in;
+
+        }
+
+
+        .face-capture-img-wrapper i {
+
+            font-size: 22px;
+
+            color: #9ca3af;
+
+        }
+
+
+        .face-capture-label {
+
+            padding: 7px 10px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 6px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+            color: #374151;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.3px;
+
+        }
+
+
+        .face-capture-time {
+
+            font-size: 9px;
+
+            font-weight: 600;
+
+            color: #9ca3af;
+
+            text-transform: none;
+
+            letter-spacing: 0;
+
+        }
+
+
+        /* =========================================================
+           SOURCE / LOCATION BADGE
+        ========================================================= */
+
+        .source-badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 5px;
+
+            padding: 3px 8px;
+
+            border-radius: 999px;
+
+            font-size: 10px;
+
+            font-weight: 700;
+
+        }
+
+
+        .source-mobile {
+
+            background: #eff6ff;
+
+            color: #1d4ed8;
+
+        }
+
+
+        .source-machine {
+
+            background: #f5f3ff;
+
+            color: #6d28d9;
+
+        }
+
+
+        .location-link {
+
+            color: #2563eb;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+        }
+
+
+        .location-link:hover {
+
+            text-decoration: underline;
+
+        }
+
+
+        /* =========================================================
            RESPONSIVE
         ========================================================= */
 
@@ -1852,6 +2117,14 @@
                     1fr;
 
                 gap: 4px;
+
+            }
+
+
+            .face-capture-grid {
+
+                grid-template-columns:
+                    1fr;
 
             }
 
@@ -2993,6 +3266,31 @@
 
 
         /* =========================================================
+           RESOLVE ASSET URL
+           ========================================================= */
+
+        function resolveAssetUrl(path) {
+
+            if (!path) {
+
+                return null;
+
+            }
+
+
+            if (/^https?:\/\//i.test(path)) {
+
+                return path;
+
+            }
+
+
+            return `${API_BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+
+        }
+
+
+        /* =========================================================
            MAP USER
            ========================================================= */
 
@@ -3003,6 +3301,9 @@
                 id: apiUser.userId,
 
                 name: apiUser.name,
+
+                profileImageUrl:
+                    apiUser.profileImageUrl || null,
 
                 type:
                     String(
@@ -3631,9 +3932,10 @@
                     : "avatar-staff"
                 }">
 
-                            ${escapeHtml(
-                    initials
-                )}
+                            ${user.profileImageUrl
+                    ? `<img src="${escapeHtml(resolveAssetUrl(user.profileImageUrl))}" alt="${escapeHtml(user.name)}" loading="lazy">`
+                    : escapeHtml(initials)
+                }
 
                         </div>
 
@@ -3846,9 +4148,10 @@
                     : "avatar-staff"
                 }">
 
-                    ${escapeHtml(
-                    initials
-                )}
+                    ${selectedUser.profileImageUrl
+                    ? `<img src="${escapeHtml(resolveAssetUrl(selectedUser.profileImageUrl))}" alt="${escapeHtml(selectedUser.name)}" loading="lazy">`
+                    : escapeHtml(initials)
+                }
 
                 </div>
 
@@ -5814,7 +6117,69 @@
                     : 0;
 
 
+            const headerInitials =
+                selectedUser
+                    ? getInitials(selectedUser.name)
+                    : "";
+
+
+            const headerPhotoUrl =
+                selectedUser?.profileImageUrl
+                    ? resolveAssetUrl(selectedUser.profileImageUrl)
+                    : null;
+
+
             let html = `
+
+            <div class="modal-user-header">
+
+                <div class="modal-avatar ${selectedUser?.type === "STUDENT"
+                    ? "avatar-student"
+                    : "avatar-staff"
+                }">
+
+                    ${headerPhotoUrl
+                    ? `<img src="${escapeHtml(headerPhotoUrl)}" alt="${escapeHtml(selectedUser?.name || "")}" loading="lazy">`
+                    : escapeHtml(headerInitials)
+                }
+
+                </div>
+
+
+                <div>
+
+                    <div class="modal-user-name">
+
+                        ${selectedUser
+                    ? escapeHtml(selectedUser.name)
+                    : "-"
+                }
+
+                    </div>
+
+
+                    <div class="modal-user-meta">
+
+                        ${selectedUser
+                    ? `ID ${escapeHtml(selectedUser.id)}` +
+                    (selectedUser.type === "STUDENT" && selectedUser.rollNumber
+                        ? ` · Roll ${escapeHtml(selectedUser.rollNumber)}`
+                        : "") +
+                    (selectedUser.type === "STAFF" && selectedUser.employeeCode
+                        ? ` · ${escapeHtml(selectedUser.employeeCode)}`
+                        : "")
+                    : "-"
+                }
+
+                    </div>
+
+                </div>
+
+            </div>
+
+
+            <div class="modal-body-inner">
+
 
             <div class="detail-row">
 
@@ -6101,6 +6466,73 @@
                 </div>
 
 
+                ${attendance.source
+                    ? `
+                    <div class="detail-row">
+
+                        <div class="detail-label">
+                            Source
+                        </div>
+
+                        <div class="detail-value">
+
+                            <span class="source-badge ${attendance.source === "MOBILE"
+                        ? "source-mobile"
+                        : "source-machine"
+                    }">
+
+                                <i class="bi ${attendance.source === "MOBILE"
+                        ? "bi-phone"
+                        : "bi-pc-display"
+                    }"></i>
+
+                                ${escapeHtml(attendance.source)}
+
+                            </span>
+
+                        </div>
+
+                    </div>
+                    `
+                    : ""
+                }
+
+
+                ${attendance.source === "MOBILE" &&
+                    (attendance.checkInLatitude || attendance.checkOutLatitude)
+                    ? `
+                    <div class="detail-row">
+
+                        <div class="detail-label">
+                            Location
+                        </div>
+
+                        <div class="detail-value">
+
+                            ${attendance.checkInLatitude && attendance.checkInLongitude
+                        ? `<a class="location-link" target="_blank" rel="noopener"
+                                    href="https://www.google.com/maps?q=${attendance.checkInLatitude},${attendance.checkInLongitude}">
+                                    <i class="bi bi-geo-alt"></i> Check-in location
+                                </a>`
+                        : ""
+                    }
+
+                            ${attendance.checkOutLatitude && attendance.checkOutLongitude
+                        ? `${attendance.checkInLatitude ? " · " : ""}<a class="location-link" target="_blank" rel="noopener"
+                                    href="https://www.google.com/maps?q=${attendance.checkOutLatitude},${attendance.checkOutLongitude}">
+                                    <i class="bi bi-geo-alt"></i> Check-out location
+                                </a>`
+                        : ""
+                    }
+
+                        </div>
+
+                    </div>
+                    `
+                    : ""
+                }
+
+
                 <div class="detail-row">
 
                     <div class="detail-label">
@@ -6220,6 +6652,67 @@
                     `
                         : ""
                     }
+
+
+                ${(attendance.checkInImageUrl || attendance.checkOutImageUrl)
+                    ? `
+                    <div class="detail-label mt-3">
+                        Captured Photos
+                    </div>
+
+                    <div class="face-capture-grid">
+
+                        <div class="face-capture-card">
+
+                            <div class="face-capture-img-wrapper">
+
+                                ${attendance.checkInImageUrl
+                        ? `<img src="${escapeHtml(resolveAssetUrl(attendance.checkInImageUrl))}" alt="Check-in photo" loading="lazy" onclick="window.open(this.src, '_blank')">`
+                        : `<i class="bi bi-camera-fill"></i>`
+                    }
+
+                            </div>
+
+                            <div class="face-capture-label">
+
+                                Check In
+
+                                <span class="face-capture-time">
+                                    ${escapeHtml(formatTime(attendance.checkInTime))}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+
+                        <div class="face-capture-card">
+
+                            <div class="face-capture-img-wrapper">
+
+                                ${attendance.checkOutImageUrl
+                        ? `<img src="${escapeHtml(resolveAssetUrl(attendance.checkOutImageUrl))}" alt="Check-out photo" loading="lazy" onclick="window.open(this.src, '_blank')">`
+                        : `<i class="bi bi-camera-fill"></i>`
+                    }
+
+                            </div>
+
+                            <div class="face-capture-label">
+
+                                Check Out
+
+                                <span class="face-capture-time">
+                                    ${escapeHtml(formatTime(attendance.checkOutTime))}
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    `
+                    : ""
+                }
 
             `;
 
@@ -6341,6 +6834,13 @@
             `;
 
             }
+
+
+            html += `
+
+            </div>
+
+        `;
 
 
             document.getElementById(

@@ -22,6 +22,12 @@ class FaceService:
 
     EXPECTED_EMBEDDING_SIZE = 512
 
+    # Phone cameras send large images (several MB, 3000-4000px wide).
+    # OpenCV detection + Facenet embedding cost scales with pixel count,
+    # so downscaling to this size before detection is the single
+    # biggest latency win available without touching model/accuracy.
+    MAX_IMAGE_DIMENSION = 800
+
     # =========================================================
     # COMMON IMAGE DECODER
     # =========================================================
@@ -45,7 +51,30 @@ class FaceService:
         if image is None:
             raise ValueError("Invalid image file")
 
-        return image
+        return FaceService._downscale_if_needed(image)
+
+    @staticmethod
+    def _downscale_if_needed(image):
+
+        height, width = image.shape[:2]
+
+        longest_side = max(height, width)
+
+        if longest_side <= FaceService.MAX_IMAGE_DIMENSION:
+            return image
+
+        scale = FaceService.MAX_IMAGE_DIMENSION / float(longest_side)
+
+        new_size = (
+            max(1, int(width * scale)),
+            max(1, int(height * scale))
+        )
+
+        return cv2.resize(
+            image,
+            new_size,
+            interpolation=cv2.INTER_AREA
+        )
 
     # =========================================================
     # OPTIONAL MODEL WARM-UP

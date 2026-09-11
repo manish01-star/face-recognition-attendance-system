@@ -22,6 +22,8 @@ public class AttendanceMarkResponse {
     private Double latitude;
     private Double longitude;
 
+    private String imageUrl;
+
     private String source;
 
     public AttendanceMarkResponse() {
@@ -137,6 +139,14 @@ public class AttendanceMarkResponse {
 
     public void setLongitude(Double longitude) {
         this.longitude = longitude;
+    }
+
+    public String getImageUrl() {
+        return imageUrl;
+    }
+
+    public void setImageUrl(String imageUrl) {
+        this.imageUrl = imageUrl;
     }
 
     public String getSource() {

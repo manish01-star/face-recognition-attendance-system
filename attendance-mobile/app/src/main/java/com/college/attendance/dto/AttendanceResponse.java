@@ -5,6 +5,7 @@ public class AttendanceResponse {
     private Long id;
     private Long userId;
     private String username;
+    private String profileImageUrl;
 
     private String attendanceDate;
     private String checkInTime;
@@ -18,6 +19,9 @@ public class AttendanceResponse {
 
     private Double checkOutLatitude;
     private Double checkOutLongitude;
+
+    private String checkInImageUrl;
+    private String checkOutImageUrl;
 
     private String source;
     private String createdAt;
@@ -47,6 +51,14 @@ public class AttendanceResponse {
 
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    public String getProfileImageUrl() {
+        return profileImageUrl;
+    }
+
+    public void setProfileImageUrl(String profileImageUrl) {
+        this.profileImageUrl = profileImageUrl;
     }
 
     public String getAttendanceDate() {
@@ -119,6 +131,22 @@ public class AttendanceResponse {
 
     public void setCheckOutLongitude(Double checkOutLongitude) {
         this.checkOutLongitude = checkOutLongitude;
+    }
+
+    public String getCheckInImageUrl() {
+        return checkInImageUrl;
+    }
+
+    public void setCheckInImageUrl(String checkInImageUrl) {
+        this.checkInImageUrl = checkInImageUrl;
+    }
+
+    public String getCheckOutImageUrl() {
+        return checkOutImageUrl;
+    }
+
+    public void setCheckOutImageUrl(String checkOutImageUrl) {
+        this.checkOutImageUrl = checkOutImageUrl;
     }
 
     public String getSource() {

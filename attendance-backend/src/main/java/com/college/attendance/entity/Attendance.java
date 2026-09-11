@@ -67,6 +67,21 @@ public class Attendance {
 
     /*
      * ============================================================
+     * ATTENDANCE IMAGES
+     * ============================================================
+     *
+     * Face image captured at the moment of check-in / check-out,
+     * stored on disk and referenced here by URL.
+     */
+
+    @Column(name = "check_in_image_url")
+    private String checkInImageUrl;
+
+    @Column(name = "check_out_image_url")
+    private String checkOutImageUrl;
+
+    /*
+     * ============================================================
      * MOBILE LOCATION
      * ============================================================
      */

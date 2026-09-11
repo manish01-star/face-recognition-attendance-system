@@ -5,13 +5,17 @@ import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.View;
 import android.widget.GridLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.bumptech.glide.Glide;
 import com.college.attendance.R;
 import com.college.attendance.api.ApiClient;
 import com.college.attendance.api.ApiService;
@@ -35,6 +39,16 @@ import retrofit2.Callback;
 import retrofit2.Response;
 
 public class CalendarActivity extends BaseActivity {
+
+    // =========================================================
+    // CONSTANTS
+    // =========================================================
+
+    /*
+     * Must match ApiClient.BASE_URL (same active entry).
+     */
+    private static final String ATTENDANCE_IMAGE_BASE_URL =
+            "http://192.168.137.1:8080";
 
     // =========================================================
     // CURRENT TAB
@@ -67,6 +81,10 @@ public class CalendarActivity extends BaseActivity {
     private TextView tvSelectedCheckIn;
     private TextView tvSelectedCheckOut;
     private TextView tvSelectedWorkHours;
+
+    private LinearLayout layoutSelectedPhotos;
+    private ImageView ivSelectedCheckInPhoto;
+    private ImageView ivSelectedCheckOutPhoto;
 
     private GridLayout calendarGrid;
 
@@ -254,6 +272,15 @@ public class CalendarActivity extends BaseActivity {
 
         tvSelectedWorkHours =
                 findViewById(R.id.tvSelectedWorkHours);
+
+        layoutSelectedPhotos =
+                findViewById(R.id.layoutSelectedPhotos);
+
+        ivSelectedCheckInPhoto =
+                findViewById(R.id.ivSelectedCheckInPhoto);
+
+        ivSelectedCheckOutPhoto =
+                findViewById(R.id.ivSelectedCheckOutPhoto);
 
         calendarGrid =
                 findViewById(R.id.calendarGrid);
@@ -1598,6 +1625,8 @@ public class CalendarActivity extends BaseActivity {
 
             tvSelectedWorkHours.setText("-");
 
+            showSelectedPhotos(null);
+
             return;
         }
 
@@ -1621,6 +1650,113 @@ public class CalendarActivity extends BaseActivity {
                         checkOut
                 )
         );
+
+        showSelectedPhotos(attendance);
+    }
+
+    // =========================================================
+    // SHOW CAPTURED FACE PHOTOS
+    // =========================================================
+
+    private void showSelectedPhotos(
+            AttendanceResponse attendance) {
+
+        if (layoutSelectedPhotos == null) {
+            return;
+        }
+
+        String checkInImageUrl =
+                attendance != null
+                        ? attendance.getCheckInImageUrl()
+                        : null;
+
+        String checkOutImageUrl =
+                attendance != null
+                        ? attendance.getCheckOutImageUrl()
+                        : null;
+
+        boolean hasAnyPhoto =
+                hasTimeValue(checkInImageUrl)
+                        || hasTimeValue(checkOutImageUrl);
+
+        if (!hasAnyPhoto) {
+
+            layoutSelectedPhotos.setVisibility(
+                    View.GONE
+            );
+
+            return;
+        }
+
+        layoutSelectedPhotos.setVisibility(
+                View.VISIBLE
+        );
+
+        loadAttendancePhoto(
+                ivSelectedCheckInPhoto,
+                checkInImageUrl
+        );
+
+        loadAttendancePhoto(
+                ivSelectedCheckOutPhoto,
+                checkOutImageUrl
+        );
+    }
+
+    // =========================================================
+    // LOAD ATTENDANCE PHOTO
+    // =========================================================
+
+    private void loadAttendancePhoto(
+            ImageView imageView,
+            String path) {
+
+        if (imageView == null) {
+            return;
+        }
+
+        if (!hasTimeValue(path)) {
+
+            imageView.setImageResource(
+                    R.drawable.ic_person
+            );
+
+            return;
+        }
+
+        String url =
+                resolveAttendanceImageUrl(path);
+
+        Glide.with(this)
+                .load(url)
+                .placeholder(R.drawable.ic_person)
+                .error(R.drawable.ic_person)
+                .centerCrop()
+                .into(imageView);
+    }
+
+    // =========================================================
+    // RESOLVE ATTENDANCE IMAGE URL
+    // =========================================================
+
+    private String resolveAttendanceImageUrl(
+            String path) {
+
+        String value =
+                path.trim();
+
+        if (value.startsWith("http://")
+                || value.startsWith("https://")) {
+
+            return value;
+        }
+
+        if (!value.startsWith("/")) {
+
+            value = "/" + value;
+        }
+
+        return ATTENDANCE_IMAGE_BASE_URL + value;
     }
 
     // =========================================================

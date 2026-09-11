@@ -42,5 +42,7 @@ public class AttendanceMarkResponse {
 
     private Double longitude;
 
+    private String imageUrl;
+
     private AttendanceSource source;
 }

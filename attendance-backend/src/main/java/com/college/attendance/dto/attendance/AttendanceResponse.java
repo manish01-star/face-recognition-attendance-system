@@ -21,6 +21,8 @@ public class AttendanceResponse {
 
     private String username;
 
+    private String profileImageUrl;
+
     private LocalDate attendanceDate;
 
     private LocalTime checkInTime;
@@ -38,6 +40,10 @@ public class AttendanceResponse {
     private Double checkOutLatitude;
 
     private Double checkOutLongitude;
+
+    private String checkInImageUrl;
+
+    private String checkOutImageUrl;
 
     private AttendanceSource source;
 
